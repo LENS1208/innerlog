@@ -597,7 +597,10 @@
 }
 
 /* ===== KPI card refinements ===== */
-.kpi-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.kpi-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); max-width: 100%; }
+@media (min-width: 1024px) {
+  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+}
 .kpi-card { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
 .kpi-title { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); margin-bottom:4px; }
 .kpi-value { display:flex; align-items:baseline; gap:4px; font-size:20px; font-weight:700; }
