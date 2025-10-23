@@ -198,7 +198,7 @@ export default function ReportsMarket() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>通貨ペア Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSymbol.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {topSymbol.symbol} {formatValue(topSymbol.profit, "profit")}
+            {topSymbol.symbol}：{formatValue(topSymbol.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {topSymbol.winRate.toFixed(0)}% / 取引 {topSymbol.count}件
@@ -207,7 +207,7 @@ export default function ReportsMarket() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>通貨ペア Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSymbol.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {bottomSymbol.symbol} {formatValue(bottomSymbol.profit, "profit")}
+            {bottomSymbol.symbol}：{formatValue(bottomSymbol.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {bottomSymbol.winRate.toFixed(0)}% / 取引 {bottomSymbol.count}件
@@ -216,7 +216,7 @@ export default function ReportsMarket() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>価格帯 Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topPipsRange.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {topPipsRange.label} {formatValue(topPipsRange.profit, "profit")}
+            {topPipsRange.label}：{formatValue(topPipsRange.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             バケット平均 {formatValue(topPipsRange.avgProfit, "avgProfit")}/件
@@ -226,11 +226,11 @@ export default function ReportsMarket() {
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>主要通貨 vs クロス</h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
             <span style={{ color: majorVsCrossData.major.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              主要 {formatValue(majorVsCrossData.major.profit, "profit")}
+              主要：{formatValue(majorVsCrossData.major.profit, "profit")}
             </span>
             {" / "}
             <span style={{ color: majorVsCrossData.cross.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              クロス {formatValue(majorVsCrossData.cross.profit, "profit")}
+              クロス：{formatValue(majorVsCrossData.cross.profit, "profit")}
             </span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>

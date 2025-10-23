@@ -285,35 +285,35 @@ export default function ReportsRisk() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>最大ドローダウン</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            {Math.round(drawdownData.maxDD).toLocaleString("ja-JP")}円
+            最大DD：{Math.round(drawdownData.maxDD).toLocaleString("ja-JP")}円
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>ピーク→ボトムの最大下落</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>連敗（最大）</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            {streakData.maxLossStreak} 連敗
+            連敗：{streakData.maxLossStreak}回
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での負け数</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>連勝（最大）</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-            {streakData.maxWinStreak} 連勝
+            連勝：{streakData.maxWinStreak}回
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での勝ち数</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>単取引の最大損失</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            {Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")}円
+            最大損失：{Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")}円
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最悪1件の損失</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>単取引の最大利益</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-            +{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")}円
+            最大利益：+{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")}円
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最高1件の利益</div>
         </div>

@@ -198,7 +198,7 @@ export default function ReportsStrategy() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>セットアップ Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {topSetup.setup} {formatValue(topSetup.profit, "profit")}
+            {topSetup.setup}：{formatValue(topSetup.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {topSetup.winRate.toFixed(0)}% / 取引 {topSetup.count}件
@@ -207,7 +207,7 @@ export default function ReportsStrategy() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>セットアップ Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {bottomSetup.setup} {formatValue(bottomSetup.profit, "profit")}
+            {bottomSetup.setup}：{formatValue(bottomSetup.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {bottomSetup.winRate.toFixed(0)}% / 取引 {bottomSetup.count}件
@@ -217,11 +217,11 @@ export default function ReportsStrategy() {
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>方向比較</h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
             <span style={{ color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              買い {formatValue(sideData.long.profit, "profit")}
+              買い：{formatValue(sideData.long.profit, "profit")}
             </span>
             {" / "}
             <span style={{ color: sideData.short.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              売り {formatValue(sideData.short.profit, "profit")}
+              売り：{formatValue(sideData.short.profit, "profit")}
             </span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
@@ -231,9 +231,9 @@ export default function ReportsStrategy() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
-            <span style={{ color: "var(--gain)" }}>{formatValue(avgWinLoss.avgWin, "profit")}</span>
+            <span style={{ color: "var(--gain)" }}>勝ち：{formatValue(avgWinLoss.avgWin, "profit")}</span>
             {" / "}
-            <span style={{ color: "var(--loss)" }}>{formatValue(avgWinLoss.avgLoss, "profit")}</span>
+            <span style={{ color: "var(--loss)" }}>負け：{formatValue(avgWinLoss.avgLoss, "profit")}</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>各セットアップ横断の平均</div>
         </div>
