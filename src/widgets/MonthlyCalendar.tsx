@@ -329,7 +329,7 @@ export default function MonthlyCalendar() {
                       className="calendar-day"
                       onClick={() => {
                         if (hasTradesValue) {
-                          location.hash = `/calendar/day/${day.date}`;
+                          console.log("Navigate to daily report:", day.date);
                         }
                       }}
                       style={{

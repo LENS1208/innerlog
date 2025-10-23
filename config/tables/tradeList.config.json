@@ -1,13 +1,13 @@
 {
   "columns": [
-    { "id":"datetime","label":"決済日時","format":"datetime_simple" },
+    { "id":"datetime","label":"日時(UTC)","format":"datetime_utc" },
     { "id":"symbol","label":"銘柄","format":"symbol" },
     { "id":"side","label":"方向","format":"side_caps" },
-    { "id":"pnl_jpy","label":"損益","format":"yen_signed_colored" },
+    { "id":"pnl_jpy","label":"損益(¥)","format":"yen_signed_colored" },
     { "id":"pips","label":"pips","format":"pips_signed_colored" },
-    { "id":"size","label":"ロット数","format":"lots" },
+    { "id":"r_multiple","label":"R","format":"r_1" },
+    { "id":"size","label":"サイズ","format":"int" },
     { "id":"entry","label":"建値","format":"price_raw" },
-    { "id":"exit","label":"決済","format":"price_raw" },
-    { "id":"note","label":"ノート","format":"note_icon" }
+    { "id":"exit","label":"決済","format":"price_raw" }
   ]
 }

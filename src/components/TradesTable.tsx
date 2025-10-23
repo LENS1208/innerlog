@@ -10,7 +10,7 @@ export default function TradesTable({rows}:{rows:Row[]}){
         <thead>
           <tr>
             {cfg.columns.map(c=>(
-              <th key={c.id} style={{position:"sticky",top:0,background:"var(--surface)",borderBottom:"1px solid var(--line)",textAlign:"left",padding:8,fontSize:12,color:"var(--muted)"}}>
+              <th key={c.id} style={{position:"sticky",top:0,background:"#f9fafb",borderBottom:"1px solid var(--line)",textAlign:"left",padding:8,fontSize:12,color:"var(--muted)"}}>
                 {c.label}
               </th>
             ))}
@@ -22,14 +22,13 @@ export default function TradesTable({rows}:{rows:Row[]}){
               key={i}
               className="trade-row"
               onClick={() => { location.hash = `/notebook/${i}`; }}
-              style={{cursor:"pointer"}}
             >
               {cfg.columns.map(c=>{
                 const val = r[c.id];
                 const out = (fmt as any)[c.format]?.(val) ?? val;
                 const text = out?.text ?? out;
                 const cls  = out?.cls ?? "";
-                return <td key={c.id} className={cls} style={{padding:10,height:"var(--row-h)",background:"var(--surface)",borderBottom:"1px solid var(--line)"}}>{text}</td>;
+                return <td key={c.id} className={cls} style={{padding:10,height:"var(--row-h)"}}>{text}</td>;
               })}
             </tr>
           ))}
