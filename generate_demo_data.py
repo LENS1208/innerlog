@@ -21,7 +21,9 @@ def generate_dataset_a(num_trades=500):
     trades = []
     cumulative_profit = 0
 
-    base_date = datetime(2022, 1, 1)
+    # 今日の日付から逆算して開始日を設定（約3年前から今日まで）
+    today = datetime.now()
+    base_date = today - timedelta(days=1095)
 
     # フェーズごとの設定
     # フェーズ1: 上昇期（0-30%） 15万円まで
@@ -140,7 +142,9 @@ def generate_dataset_b(num_trades=380):
     cumulative_profit = 0
     consecutive_wins = 0
 
-    base_date = datetime(2022, 1, 1)
+    # 今日の日付から逆算して開始日を設定（約3年前から今日まで）
+    today = datetime.now()
+    base_date = today - timedelta(days=1095)
 
     # フェーズごとの設定（より激しい変動）
     # フェーズ1: 初期急上昇（0-25%） 200万円まで
@@ -266,7 +270,9 @@ def generate_dataset_c(num_trades=620):
     cumulative_profit = 0
     consecutive_losses = 0
 
-    base_date = datetime(2022, 1, 1)
+    # 今日の日付から逆算して開始日を設定（約3年前から今日まで）
+    today = datetime.now()
+    base_date = today - timedelta(days=1095)
 
     # フェーズごとの設定（激しい変動、最終的に利益）
     # フェーズ1: 急上昇（0-15%） 80万円まで
