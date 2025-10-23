@@ -673,9 +673,11 @@ export default function TradeDiaryPage() {
       </div>
 
       {/* 2列グリッド */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-        {/* エントリー/エグジット */}
-        <section className="td-card compact" id="entryCard">
+      <div className="grid-main" style={{ marginTop: 16 }}>
+        {/* 左列 */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* エントリー/エグジット */}
+          <section className="td-card compact" id="entryCard">
             <div className="td-section-title">
               <h2>エントリー / エグジット</h2><span className="pill">実績</span>
             </div>
@@ -688,41 +690,15 @@ export default function TradeDiaryPage() {
               <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
               <div>手数料 / スワップ</div><div>{row.commission.toLocaleString("ja-JP")}円 / {row.swap.toLocaleString("ja-JP")}円</div>
             </div>
-        </section>
+          </section>
 
-        {/* 損益内訳 */}
-        <section className="td-card" id="pnlCard">
-          <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
-          <div className="pnl-two-cols">
-            <table role="grid">
-              <tbody>
-                <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num">{fmtJPY(kpi.net)}</td></tr>
-                <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num">{fmtJPY(kpi.gross)}</td></tr>
-                <tr className="row"><td>{UI_TEXT.cost}（手数料＋スワップ）</td><td className="num">{fmtJPY(kpi.cost)}</td></tr>
-                <tr className="row"><td>手数料</td><td className="num">{fmtJPY(row.commission)}</td></tr>
-              </tbody>
-            </table>
-            <table role="grid">
-              <tbody>
-                <tr className="row"><td>スワップ</td><td className="num">{fmtJPY(row.swap)}</td></tr>
-                <tr className="row"><td>獲得pips</td><td className="num">{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
-                <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
-                <tr className="row"><td>リスクリワード（RRR）</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
-              </tbody>
-            </table>
+          {/* トレード日記 */}
+          <div style={{ marginTop: 0 }}>
+            <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
           </div>
-        </section>
-      </div>
 
-      {/* トレード日記タイトル */}
-      <div style={{ marginTop: 16 }}>
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
-      </div>
-
-      {/* エントリー前・直後 と ポジション保有中+画像 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-        {/* エントリー前・直後 */}
-        <section className="td-card" id="entryBeforeCard">
+          {/* エントリー前・直後 */}
+          <section className="td-card" id="entryBeforeCard">
             <div className="td-section-title">
               <h2>エントリー前・直後</h2>
             </div>
@@ -764,89 +740,10 @@ export default function TradeDiaryPage() {
                 <option>選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option>
               </select>
             </label>
-        </section>
-
-        {/* 右列：ポジション保有中+画像（縦に2つ並べる） */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* ポジション保有中 */}
-          <section className="td-card" id="positionHoldCard" style={{ flex: "0 0 auto" }}>
-            <div className="td-section-title">
-              <h2>ポジション保有中</h2>
-            </div>
-            <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-              options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-            <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-              options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-            <label>
-              <div className="muted small">ルールの守り具合</div>
-              <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-                <option>選択しない</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-              </select>
-            </label>
           </section>
 
-          {/* 画像 */}
-          <section className="td-card" id="imageCard" style={{ flex: "0 0 auto" }}>
-              <div className="td-section-title"><h2>画像</h2></div>
-              <div className="upanel">
-                <div className="uactions">
-                  <label className="td-btn" htmlFor="imgFile">画像を選択</label>
-                  <span className="small muted">.jpg/.jpeg/.gif/.png、上限 <strong>3ファイル・3MB</strong></span>
-                  <button
-                    className="td-btn"
-                    style={{ marginLeft: "auto" }}
-                    onClick={() => {
-                      captureCanvas(equityRef.current);
-                      captureCanvas(histRef.current);
-                      captureCanvas(heatRef.current);
-                      alert("3つのチャートを保存しました");
-                    }}
-                  >
-                    画像を保存
-                  </button>
-                </div>
-                <input
-                  id="imgFile"
-                  type="file"
-                  accept=".jpg,.jpeg,.gif,.png,image/jpeg,image/png,image/gif"
-                  multiple
-                  style={{ display: "none" }}
-                  onChange={(e) => onFiles(e.target.files)}
-                />
-                <div className="thumbs">
-                  {images.length === 0 && <div className="muted small">まだ画像はありません。</div>}
-                  {images.map((img) => (
-                    <div
-                      key={img.id}
-                      className="thumb"
-                      onClick={() => setImgPreview(img.url)}
-                    >
-                      <img src={img.url} alt="chart" />
-                      <button
-                        className="del"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (confirm("削除しますか？")) {
-                            const next = images.filter((x) => x.id !== img.id);
-                            setImages(next);
-                            localStorage.setItem(IMG_KEY, JSON.stringify(next));
-                          }
-                        }}
-                      >
-                        削除
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-        </div>
-      </div>
-
-      {/* ポジション決済後 と パフォーマンス分析 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-        {/* ポジション決済後 */}
-        <section className="td-card" id="exitCard">
+          {/* ポジション決済後 */}
+          <section className="td-card" id="exitCard">
             <div className="td-section-title">
               <h2>ポジション決済後</h2>
             </div>
@@ -869,36 +766,135 @@ export default function TradeDiaryPage() {
             <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
               options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
 
-            <div style={{ marginTop: 8 }}>
+            <div className="note-grid" style={{ marginTop: 8 }}>
               <label><div className="muted small">うまくいった点</div><textarea className="note" value={noteRight} onChange={(e) => setNoteRight(e.target.value)} /></label>
               <label><div className="muted small">改善点</div><textarea className="note" value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} /></label>
               <label><div className="muted small">次回の約束</div><textarea className="note" value={noteNext} onChange={(e) => setNoteNext(e.target.value)} /></label>
               <label><div className="muted small">自由メモ</div><textarea className="note" value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="気づきやリンクなど" /></label>
             </div>
 
-          <div style={{ marginTop: 12 }}>
-            <div className="muted small">タグ</div>
-            <div className="chips-wrap">
-              <div className="chips" id="tagArea">
-                {tags.map((t) => (
-                  <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
+            <div style={{ marginTop: 12 }}>
+              <div className="muted small">タグ</div>
+              <div className="chips-wrap">
+                <div className="chips" id="tagArea">
+                  {tags.map((t) => (
+                    <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="tag-actions">
+                <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
+              </div>
+            </div>
+
+            <div className="actions" style={{ marginTop: 16 }}>
+              <button className="td-btn" onClick={savePayload}>保存</button>
+            </div>
+          </section>
+        </div>
+
+        {/* 右列 */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* 損益内訳 */}
+          <section className="td-card" id="pnlCard">
+            <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
+            <div className="pnl-two-cols">
+              <table role="grid">
+                <tbody>
+                  <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num">{fmtJPY(kpi.net)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num">{fmtJPY(kpi.gross)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.cost}（手数料＋スワップ）</td><td className="num">{fmtJPY(kpi.cost)}</td></tr>
+                  <tr className="row"><td>手数料</td><td className="num">{fmtJPY(row.commission)}</td></tr>
+                </tbody>
+              </table>
+              <table role="grid">
+                <tbody>
+                  <tr className="row"><td>スワップ</td><td className="num">{fmtJPY(row.swap)}</td></tr>
+                  <tr className="row"><td>獲得pips</td><td className="num">{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
+                  <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
+                  <tr className="row"><td>リスクリワード（RRR）</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* ポジション保有中 */}
+          <section className="td-card" id="positionHoldCard">
+            <div className="td-section-title">
+              <h2>ポジション保有中</h2>
+            </div>
+            <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+              options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+            <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+              options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+            <label>
+              <div className="muted small">ルールの守り具合</div>
+              <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+                <option>選択しない</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+              </select>
+            </label>
+          </section>
+
+          {/* 画像アップロード */}
+          <section className="td-card" id="imageCard">
+            <div className="td-section-title"><h2>画像</h2></div>
+            <div className="upanel">
+              <div className="uactions">
+                <label className="td-btn" htmlFor="imgFile">画像を選択</label>
+                <span className="small muted">.jpg/.jpeg/.gif/.png、上限 <strong>3ファイル・3MB</strong></span>
+                <button
+                  className="td-btn"
+                  style={{ marginLeft: "auto" }}
+                  onClick={() => {
+                    captureCanvas(equityRef.current);
+                    captureCanvas(histRef.current);
+                    captureCanvas(heatRef.current);
+                    alert("3つのチャートを保存しました");
+                  }}
+                >
+                  画像を保存
+                </button>
+              </div>
+              <input
+                id="imgFile"
+                type="file"
+                accept=".jpg,.jpeg,.gif,.png,image/jpeg,image/png,image/gif"
+                multiple
+                style={{ display: "none" }}
+                onChange={(e) => onFiles(e.target.files)}
+              />
+              <div className="thumbs">
+                {images.length === 0 && <div className="muted small">まだ画像はありません。</div>}
+                {images.map((img) => (
+                  <div
+                    key={img.id}
+                    className="thumb"
+                    onClick={() => setImgPreview(img.url)}
+                  >
+                    <img src={img.url} alt="chart" />
+                    <button
+                      className="del"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (confirm("削除しますか？")) {
+                          const next = images.filter((x) => x.id !== img.id);
+                          setImages(next);
+                          localStorage.setItem(IMG_KEY, JSON.stringify(next));
+                        }
+                      }}
+                    >
+                      削除
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
-            <div className="tag-actions">
-              <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
-            </div>
-          </div>
+          </section>
 
-          <div className="actions" style={{ marginTop: 16 }}>
-            <button className="td-btn" onClick={savePayload}>保存</button>
-          </div>
-        </section>
-
-        {/* パフォーマンス分析 */}
-        <section className="td-card" id="vizCard">
+          {/* 可視化（3枚） */}
+          <section className="td-card" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div className="charts">
               <div className="chart-card">
                 <h4>{UI_TEXT.cumulativeProfit}（時間）<span className="legend">決済順の累計</span></h4>
                 <div className="chart-box"><canvas ref={equityRef} /></div>
@@ -911,33 +907,57 @@ export default function TradeDiaryPage() {
                 <h4>曜日×時間ヒートマップ<span className="legend">勝率（%）</span></h4>
                 <div className="chart-box"><canvas ref={heatRef} /></div>
               </div>
-          </div>
-        </section>
+            </div>
+          </section>
+        </div>
       </div>
 
-      {/* リンク済みメモ（全幅） */}
+      {/* 直近10件 */}
       <section className="td-card td-card-full">
-        <div className="td-section-title"><h2>リンク済みメモ</h2></div>
-        <table role="grid">
+        <div className="td-section-title"><h2>直近10件の取引</h2></div>
+        <table
+          role="grid"
+          style={{ cursor: "pointer" }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
+          tabIndex={0}
+          aria-label="（テーブルをクリック/Enter/Spaceで）このトレード日記のトップへ移動"
+        >
           <thead>
             <tr>
-              <th>タイトル</th>
-              <th>種類</th>
-              <th>更新</th>
-              <th>操作</th>
+              <th className="nowrap">日時</th>
+              <th>通貨ペア</th>
+              <th>方向</th>
+              <th className="num">サイズ(lot)</th>
+              <th className="num">損益（円）</th>
+              <th className="num">pips</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td colSpan={4} className="muted small" style={{ textAlign: "center", padding: "20px" }}>
-                リンク済みのメモはありません。
-              </td>
-            </tr>
+            {last10.map((t) => (
+              <tr key={t.ticket} className="row">
+                <td className="nowrap">
+                  {t.openTime.toLocaleString()} → {t.closeTime.toLocaleString()}
+                </td>
+                <td>{t.item}</td>
+                <td>{t.side === "BUY" ? "買い" : "売り"}</td>
+                <td className="num">{t.size.toFixed(2)}</td>
+                <td className={`num ${t.profit >= 0 ? "text-pos" : "text-neg"}`}>
+                  {Math.round(t.profit).toLocaleString("ja-JP")}円
+                </td>
+                <td className={`num ${t.pips >= 0 ? "text-pos" : "text-neg"}`}>
+                  {(t.pips >= 0 ? "+" : "") + t.pips.toFixed(1)}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </section>
-
-      {/* 直近10件の取引 - 削除済み */}
 
       {/* 画像プレビュー */}
       {imgPreview && (

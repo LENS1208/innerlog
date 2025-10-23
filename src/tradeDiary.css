@@ -29,19 +29,10 @@
 .kpi .lab{ font-size:11px; color:var(--muted); }
 .kpi .val{ font-weight:800; font-size:18px; }
 
-/* 2列グリッド - 新レイアウト（inlineスタイルで管理） */
+/* 2列グリッド - 新レイアウト */
+.grid-main{ display:grid; gap:16px; grid-template-columns:1fr 1fr; }
+@media (max-width:1080px){ .grid-main{ grid-template-columns:1fr; } }
 .compact{ padding:12px; }
-
-/* カードの高さを揃える */
-.td-card[style*="height: 100%"]{ display: flex; flex-direction: column; }
-
-/* レスポンシブ対応 - 画面幅1080px以下で1列に */
-@media (max-width:1080px){
-  div[style*="gridTemplateColumns: \"1fr 1fr\""],
-  div[style*="gridTemplateColumns: '1fr 1fr'"]{
-    grid-template-columns: 1fr !important;
-  }
-}
 
 /* 表・表現 */
 .kv{ display:grid; grid-template-columns:160px 1fr; row-gap:8px; column-gap:12px; }
