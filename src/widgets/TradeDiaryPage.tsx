@@ -766,10 +766,10 @@ export default function TradeDiaryPage() {
             </label>
         </section>
 
-        {/* 右列：ポジション保有中+画像（縦に2つ並べ、左列と高さを揃える） */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16, height: "100%" }}>
+        {/* 右列：ポジション保有中+画像（縦に2つ並べる） */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* ポジション保有中 */}
-          <section className="td-card" id="positionHoldCard">
+          <section className="td-card" id="positionHoldCard" style={{ flex: "0 0 auto" }}>
             <div className="td-section-title">
               <h2>ポジション保有中</h2>
             </div>
@@ -786,7 +786,7 @@ export default function TradeDiaryPage() {
           </section>
 
           {/* 画像 */}
-          <section className="td-card" id="imageCard">
+          <section className="td-card" id="imageCard" style={{ flex: "0 0 auto" }}>
               <div className="td-section-title"><h2>画像</h2></div>
               <div className="upanel">
                 <div className="uactions">
