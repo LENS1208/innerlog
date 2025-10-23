@@ -16,11 +16,11 @@ The React Compiler is not enabled on this template because of its impact on dev 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules: 
 
 ```js　　
-export default defineConfig([  
-  globalIgnores(['dist']),　  
+export default defineConfig([ 
+  globalIgnores(['dist']),　 
   {　 
     files: ['**/*.{ts,tsx}'],　　 
-    extends: [  
+    extends: [ 
       // Other configs...　　
 
       // Remove tseslint.configs.recommended and replace with this
@@ -30,7 +30,7 @@ export default defineConfig([
       // Optionally, add this for stylistic rules
       tseslint.configs.stylisticTypeChecked,
 
-      // Other configs... 
+      // Other configs...
     ],
     languageOptions: {
       parserOptions: { 

@@ -150,9 +150,10 @@ function MultiSelect({
   };
   const title = value.length
     ? `${value.join("、")}（${value.length}）`
-    : label;
+    : "選択しない";
   return (
     <label className="ms-wrap">
+      <div className="muted small">{label}</div>
       <button type="button" id={triggerId} className="ms-trigger" onClick={toggle}>
         {title}
       </button>
@@ -686,8 +687,8 @@ export default function TradeDiaryPage() {
   const [ruleExec, setRuleExec] = useState("");
 
   const [aiSide, setAiSide] = useState("");
-  const [aiFollow, setAiFollow] = useState("");
-  const [aiHit, setAiHit] = useState("");
+  const [aiFollow, setAiFollow] = useState("選択しない");
+  const [aiHit, setAiHit] = useState("未評価");
   const [aiPros, setAiPros] = useState<string[]>([]);
   const [aiNote, setAiNote] = useState("");
 
@@ -790,84 +791,140 @@ export default function TradeDiaryPage() {
           </div>
         </section>
 
-        {/* エントリー前・直後 */}
-        <section className="td-card" id="entryCard2">
-          <div className="td-section-title"><h2>エントリー前・直後</h2></div>
+        {/* トレード日記 */}
+        <section className="td-card" id="diaryCard">
+          <div className="td-section-title"><h2>トレード日記</h2></div>
 
-          <label>
-            <select className="select" value={entryEmotion} onChange={(e) => setEntryEmotion(e.target.value)}>
-              <option value="">エントリー時の感情</option>
-              <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
-              <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
-            </select>
-          </label>
+          {/* エントリー前・直後 */}
+          <div className="td-card subcard">
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>エントリー前・直後</h3>
 
-          <div style={{ marginTop: 12 }}>
-            <MultiSelect label="エントリー根拠（最大2つ）" value={entryBasis} onChange={setEntryBasis}
-              options={ENTRY_BASIS_OPTS} triggerId="msEntryBasisBtn" menuId="msEntryBasisMenu" />
+            <div className="row2" style={{ margin: "8px 0" }}>
+              <label>
+                <div className="muted small">エントリー時の感情</div>
+                <select className="select" value={entryEmotion} onChange={(e) => setEntryEmotion(e.target.value)}>
+                  <option value="">選択しない</option>
+                  <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
+                  <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
+                </select>
+              </label>
+              <div />
+            </div>
+
+            <div className="row2">
+              <MultiSelect label="エントリー根拠（最大2つ）" value={entryBasis} onChange={setEntryBasis}
+                options={ENTRY_BASIS_OPTS} triggerId="msEntryBasisBtn" menuId="msEntryBasisMenu" />
+              <MultiSelect label="テクニカル条件（最大2つ）" value={techSet} onChange={setTechSet}
+                options={TECH_OPTS} triggerId="msTechBtn" menuId="msTechMenu" />
+            </div>
+
+            <div className="row2" style={{ marginTop: 12 }}>
+              <MultiSelect label="マーケット環境（最大2つ）" value={marketSet} onChange={setMarketSet}
+                options={MARKET_OPTS} triggerId="msMarketBtn" menuId="msMarketMenu" />
+              <div />
+            </div>
+
+            <div className="row2" style={{ marginTop: 12 }}>
+              <MultiSelect label="ファンダメンタルズ（最大2つ）" value={fundSet} onChange={setFundSet}
+                options={FUND_OPTS} triggerId="msFundBtn" menuId="msFundMenu" />
+              <label>
+                <div className="muted small">ファンダメモ（自由入力）</div>
+                <textarea className="note" rows={3} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
+                  placeholder="例）CPI直後の乱高下を想定、要人発言あり など" />
+              </label>
+            </div>
+
+            <div className="hr" />
+
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>AIの予想</h3>
+            <div className="row2" style={{ marginTop: 8 }}>
+              <label>
+                <div className="muted small">AIの方向感</div>
+                <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
+                  <option value="">設定なし</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
+                </select>
+              </label>
+              <label>
+                <div className="muted small">トレードの判断</div>
+                <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
+                  <option>選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option>
+                </select>
+              </label>
+            </div>
           </div>
 
-          <div style={{ marginTop: 12 }}>
-            <MultiSelect label="テクニカル条件（最大2つ）" value={techSet} onChange={setTechSet}
-              options={TECH_OPTS} triggerId="msTechBtn" menuId="msTechMenu" />
+          {/* ポジション保有中 */}
+          <div className="td-card subcard">
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>ポジション保有中</h3>
+            <div className="row2" style={{ margin: "8px 0" }}>
+              <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+                options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+              <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+                options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+            </div>
+            <div className="row2" style={{ marginTop: 12 }}>
+              <label>
+                <div className="muted small">ルールの守り具合</div>
+                <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+                  <option>選択しない</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+                </select>
+              </label>
+              <div />
+            </div>
           </div>
 
-          <div style={{ marginTop: 12 }}>
-            <MultiSelect label="マーケット環境（最大2つ）" value={marketSet} onChange={setMarketSet}
-              options={MARKET_OPTS} triggerId="msMarketBtn" menuId="msMarketMenu" />
+          {/* 決済・振り返り */}
+          <div className="td-card subcard">
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>決済・振り返り</h3>
+
+            <div className="row2" style={{ margin: "8px 0" }}>
+              <MultiSelect label="決済のきっかけ（最大2つ）" value={exitTriggers} onChange={setExitTriggers}
+                options={EXIT_TRIG_OPTS} triggerId="msExitTriggerBtn" menuId="msExitTriggerMenu" />
+              <label>
+                <div className="muted small">決済時の感情</div>
+                <select className="select" value={exitEmotion} onChange={(e) => setExitEmotion(e.target.value)}>
+                  <option>選択しない</option><option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
+                  <option>怖くなった</option><option>安堵した</option><option>悔しい</option><option>反省している</option>
+                </select>
+              </label>
+            </div>
+
+            <div className="row2" style={{ marginTop: 12 }}>
+              <label>
+                <div className="muted small">当たり外れ（AI）</div>
+                <select className="select" value={aiHit} onChange={(e) => setAiHit(e.target.value)}>
+                  <option>未評価</option><option>当たり</option><option>惜しい</option><option>外れ</option>
+                </select>
+              </label>
+              <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
+                options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
+            </div>
+
+            <div className="note-grid" style={{ marginTop: 8 }}>
+              <label><div className="muted small">うまくいった点</div><textarea className="note" value={noteRight} onChange={(e) => setNoteRight(e.target.value)} /></label>
+              <label><div className="muted small">改善点</div><textarea className="note" value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} /></label>
+              <label><div className="muted small">次回の約束</div><textarea className="note" value={noteNext} onChange={(e) => setNoteNext(e.target.value)} /></label>
+              <label><div className="muted small">自由メモ</div><textarea className="note" value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="気づきやリンクなど" /></label>
+            </div>
           </div>
 
-          <div style={{ marginTop: 12 }}>
-            <MultiSelect label="ファンダメンタルズ（最大2つ）" value={fundSet} onChange={setFundSet}
-              options={FUND_OPTS} triggerId="msFundBtn" menuId="msFundMenu" />
+          {/* タグ（モーダル対応） */}
+          <div style={{ marginTop: 4 }}>
+            <div className="muted small">タグ</div>
+            <div className="chips-wrap">
+              <div className="chips" id="tagArea">
+                {tags.map((t) => (
+                  <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
+                ))}
+              </div>
+            </div>
+            <div className="tag-actions">
+              <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
+            </div>
           </div>
 
-          <label style={{ marginTop: 12, display: "block" }}>
-            <div className="muted small">ファンダメモ（自由入力）</div>
-            <textarea className="note" rows={3} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
-              placeholder="例）CPI直後の乱高下を想定、要人発言あり など" />
-          </label>
-
-          <div className="hr" />
-
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>AIの予想</h3>
-          <label>
-            <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-              <option value="">AIの方向感</option>
-              <option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
-            </select>
-          </label>
-          <label style={{ marginTop: 8, display: "block" }}>
-            <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
-              <option value="">トレードの判断</option>
-              <option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option>
-            </select>
-          </label>
-        </section>
-
-        {/* ポジション保有中 */}
-        <section className="td-card" id="holdingCard">
-          <div className="td-section-title"><h2>ポジション保有中</h2></div>
-
-          <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-            options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-
-          <div style={{ marginTop: 12 }}>
-            <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-              options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-          </div>
-
-          <label style={{ marginTop: 12, display: "block" }}>
-            <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-              <option value="">ルールの守り具合</option>
-              <option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-            </select>
-          </label>
-        </section>
-
-        {/* 画像 */}
-        <section className="td-card" id="imageCard">
-          <div className="td-section-title"><h2>画像</h2></div>
+          {/* 画像アップロード */}
+          <div className="td-section-title" style={{ marginTop: 16 }}><h2>チャート画像を保存</h2></div>
           <div className="upanel">
             <div className="uactions">
               <label className="td-btn" htmlFor="imgFile">画像を選択</label>
@@ -917,54 +974,6 @@ export default function TradeDiaryPage() {
                   </button>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* 決済・振り返り */}
-        <section className="td-card" id="exitCard">
-          <div className="td-section-title"><h2>決済・振り返り</h2></div>
-
-          <MultiSelect label="決済のきっかけ（最大2つ）" value={exitTriggers} onChange={setExitTriggers}
-            options={EXIT_TRIG_OPTS} triggerId="msExitTriggerBtn" menuId="msExitTriggerMenu" />
-
-          <label style={{ marginTop: 12, display: "block" }}>
-            <select className="select" value={exitEmotion} onChange={(e) => setExitEmotion(e.target.value)}>
-              <option value="">決済時の感情</option>
-              <option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
-              <option>怖くなった</option><option>安堵した</option><option>悔しい</option><option>反省している</option>
-            </select>
-          </label>
-
-          <label style={{ marginTop: 12, display: "block" }}>
-            <select className="select" value={aiHit} onChange={(e) => setAiHit(e.target.value)}>
-              <option value="">当たり外れ（AI）</option>
-              <option>当たり</option><option>惜しい</option><option>外れ</option>
-            </select>
-          </label>
-
-          <div style={{ marginTop: 12 }}>
-            <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
-              options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
-          </div>
-
-          <label style={{ marginTop: 12, display: "block" }}><div className="muted small">うまくいった点</div><textarea className="note" value={noteRight} onChange={(e) => setNoteRight(e.target.value)} /></label>
-          <label style={{ marginTop: 12, display: "block" }}><div className="muted small">改善点</div><textarea className="note" value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} /></label>
-          <label style={{ marginTop: 12, display: "block" }}><div className="muted small">次回の約束</div><textarea className="note" value={noteNext} onChange={(e) => setNoteNext(e.target.value)} /></label>
-          <label style={{ marginTop: 12, display: "block" }}><div className="muted small">自由メモ</div><textarea className="note" value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="気づきやリンクなど" /></label>
-
-          {/* タグ */}
-          <div style={{ marginTop: 12 }}>
-            <div className="muted small">タグ</div>
-            <div className="chips-wrap">
-              <div className="chips" id="tagArea">
-                {tags.map((t) => (
-                  <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
-                ))}
-              </div>
-            </div>
-            <div className="tag-actions">
-              <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
             </div>
           </div>
 

@@ -30,9 +30,9 @@
 .kpi .val{ font-weight:800; font-size:18px; }
 
 /* 2列グリッド */
-.grid-main{ display:grid; gap:16px; grid-template-columns:1fr 1fr; grid-template-areas:"entry pnl" "entry2 holding" "image exit" "viz viz"; }
-@media (max-width:1080px){ .grid-main{ grid-template-columns:1fr; grid-template-areas:"entry" "pnl" "entry2" "holding" "image" "exit" "viz"; } }
-#entryCard{ grid-area:entry; } #pnlCard{ grid-area:pnl; } #entryCard2{ grid-area:entry2; } #holdingCard{ grid-area:holding; } #imageCard{ grid-area:image; } #exitCard{ grid-area:exit; } #vizCard{ grid-area:viz; }
+.grid-main{ display:grid; gap:16px; grid-template-columns:1fr 1fr; grid-template-areas:"entry pnl" "diary diary" "viz viz"; }
+@media (max-width:1080px){ .grid-main{ grid-template-columns:1fr; grid-template-areas:"entry" "pnl" "diary" "viz"; } }
+#entryCard{ grid-area:entry; } #pnlCard{ grid-area:pnl; } #diaryCard{ grid-area:diary; } #vizCard{ grid-area:viz; }
 .compact{ padding:12px; }
 
 /* 表・表現 */
