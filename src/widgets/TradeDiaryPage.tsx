@@ -918,7 +918,23 @@ export default function TradeDiaryPage() {
       {/* リンク済みメモ（全幅） */}
       <section className="td-card td-card-full">
         <div className="td-section-title"><h2>リンク済みメモ</h2></div>
-        <div className="muted small">リンク済みのメモはありません。</div>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th>タイトル</th>
+              <th>種類</th>
+              <th>更新</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colSpan={4} className="muted small" style={{ textAlign: "center", padding: "20px" }}>
+                リンク済みのメモはありません。
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       {/* 直近10件の取引 - 削除済み */}
