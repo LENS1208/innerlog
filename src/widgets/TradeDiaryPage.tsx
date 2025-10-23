@@ -766,25 +766,84 @@ export default function TradeDiaryPage() {
             </label>
         </section>
 
-        {/* ポジション保有中 */}
-        <section className="td-card" id="positionHoldCard" style={{ height: "100%" }}>
-          <div className="td-section-title">
-            <h2>ポジション保有中</h2>
-          </div>
-          <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-            options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-          <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-            options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-          <label>
-            <div className="muted small">ルールの守り具合</div>
-            <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-              <option>選択しない</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-            </select>
-          </label>
-        </section>
+        {/* 右列：ポジション保有中+画像（縦に2つ並べる） */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* ポジション保有中 */}
+          <section className="td-card" id="positionHoldCard">
+            <div className="td-section-title">
+              <h2>ポジション保有中</h2>
+            </div>
+            <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+              options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+            <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+              options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+            <label>
+              <div className="muted small">ルールの守り具合</div>
+              <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+                <option>選択しない</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+              </select>
+            </label>
+          </section>
+
+          {/* 画像 */}
+          <section className="td-card" id="imageCard">
+              <div className="td-section-title"><h2>画像</h2></div>
+              <div className="upanel">
+                <div className="uactions">
+                  <label className="td-btn" htmlFor="imgFile">画像を選択</label>
+                  <span className="small muted">.jpg/.jpeg/.gif/.png、上限 <strong>3ファイル・3MB</strong></span>
+                  <button
+                    className="td-btn"
+                    style={{ marginLeft: "auto" }}
+                    onClick={() => {
+                      captureCanvas(equityRef.current);
+                      captureCanvas(histRef.current);
+                      captureCanvas(heatRef.current);
+                      alert("3つのチャートを保存しました");
+                    }}
+                  >
+                    画像を保存
+                  </button>
+                </div>
+                <input
+                  id="imgFile"
+                  type="file"
+                  accept=".jpg,.jpeg,.gif,.png,image/jpeg,image/png,image/gif"
+                  multiple
+                  style={{ display: "none" }}
+                  onChange={(e) => onFiles(e.target.files)}
+                />
+                <div className="thumbs">
+                  {images.length === 0 && <div className="muted small">まだ画像はありません。</div>}
+                  {images.map((img) => (
+                    <div
+                      key={img.id}
+                      className="thumb"
+                      onClick={() => setImgPreview(img.url)}
+                    >
+                      <img src={img.url} alt="chart" />
+                      <button
+                        className="del"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm("削除しますか？")) {
+                            const next = images.filter((x) => x.id !== img.id);
+                            setImages(next);
+                            localStorage.setItem(IMG_KEY, JSON.stringify(next));
+                          }
+                        }}
+                      >
+                        削除
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+        </div>
       </div>
 
-      {/* ポジション決済後 と 画像 */}
+      {/* ポジション決済後 と パフォーマンス分析 */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
         {/* ポジション決済後 */}
         <section className="td-card" id="exitCard">
@@ -836,71 +895,6 @@ export default function TradeDiaryPage() {
           </div>
         </section>
 
-        {/* 画像アップロード */}
-        <section className="td-card" id="imageCard">
-            <div className="td-section-title"><h2>画像</h2></div>
-            <div className="upanel">
-              <div className="uactions">
-                <label className="td-btn" htmlFor="imgFile">画像を選択</label>
-                <span className="small muted">.jpg/.jpeg/.gif/.png、上限 <strong>3ファイル・3MB</strong></span>
-                <button
-                  className="td-btn"
-                  style={{ marginLeft: "auto" }}
-                  onClick={() => {
-                    captureCanvas(equityRef.current);
-                    captureCanvas(histRef.current);
-                    captureCanvas(heatRef.current);
-                    alert("3つのチャートを保存しました");
-                  }}
-                >
-                  画像を保存
-                </button>
-              </div>
-              <input
-                id="imgFile"
-                type="file"
-                accept=".jpg,.jpeg,.gif,.png,image/jpeg,image/png,image/gif"
-                multiple
-                style={{ display: "none" }}
-                onChange={(e) => onFiles(e.target.files)}
-              />
-              <div className="thumbs">
-                {images.length === 0 && <div className="muted small">まだ画像はありません。</div>}
-                {images.map((img) => (
-                  <div
-                    key={img.id}
-                    className="thumb"
-                    onClick={() => setImgPreview(img.url)}
-                  >
-                    <img src={img.url} alt="chart" />
-                    <button
-                      className="del"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (confirm("削除しますか？")) {
-                          const next = images.filter((x) => x.id !== img.id);
-                          setImages(next);
-                          localStorage.setItem(IMG_KEY, JSON.stringify(next));
-                        }
-                      }}
-                    >
-                      削除
-                    </button>
-                  </div>
-                ))}
-              </div>
-          </div>
-        </section>
-      </div>
-
-      {/* リンク済みメモ と パフォーマンス分析 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
-        {/* リンク済みメモ */}
-        <section className="td-card" id="linkedMemoCard">
-          <div className="td-section-title"><h2>リンク済みメモ</h2></div>
-          <div className="muted small">リンク済みのメモはありません。</div>
-        </section>
-
         {/* パフォーマンス分析 */}
         <section className="td-card" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
@@ -921,52 +915,13 @@ export default function TradeDiaryPage() {
         </section>
       </div>
 
-      {/* 直近10件 */}
+      {/* リンク済みメモ（全幅） */}
       <section className="td-card td-card-full">
-        <div className="td-section-title"><h2>直近10件の取引</h2></div>
-        <table
-          role="grid"
-          style={{ cursor: "pointer" }}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          }}
-          tabIndex={0}
-          aria-label="（テーブルをクリック/Enter/Spaceで）このトレード日記のトップへ移動"
-        >
-          <thead>
-            <tr>
-              <th className="nowrap">日時</th>
-              <th>通貨ペア</th>
-              <th>方向</th>
-              <th className="num">サイズ(lot)</th>
-              <th className="num">損益（円）</th>
-              <th className="num">pips</th>
-            </tr>
-          </thead>
-          <tbody>
-            {last10.map((t) => (
-              <tr key={t.ticket} className="row">
-                <td className="nowrap">
-                  {t.openTime.toLocaleString()} → {t.closeTime.toLocaleString()}
-                </td>
-                <td>{t.item}</td>
-                <td>{t.side === "BUY" ? "買い" : "売り"}</td>
-                <td className="num">{t.size.toFixed(2)}</td>
-                <td className={`num ${t.profit >= 0 ? "text-pos" : "text-neg"}`}>
-                  {Math.round(t.profit).toLocaleString("ja-JP")}円
-                </td>
-                <td className={`num ${t.pips >= 0 ? "text-pos" : "text-neg"}`}>
-                  {(t.pips >= 0 ? "+" : "") + t.pips.toFixed(1)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="td-section-title"><h2>リンク済みメモ</h2></div>
+        <div className="muted small">リンク済みのメモはありません。</div>
       </section>
+
+      {/* 直近10件の取引 - 削除済み */}
 
       {/* 画像プレビュー */}
       {imgPreview && (
