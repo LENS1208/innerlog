@@ -212,7 +212,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
         <div className="kpi-title">勝率</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
           <div>
-            <div className="kpi-value" style={{ fontSize: 28 }}>
+            <div className="kpi-value">
               {(dash.winRate * 100).toFixed(1)} <span className="kpi-unit">%</span>
             </div>
           </div>
