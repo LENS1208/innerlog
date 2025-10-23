@@ -126,7 +126,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
   const [entryHour, setEntryHour] = useState<string>(pad2(now.getHours())); const [entryMin, setEntryMin] = useState<string>(pad2(now.getMinutes()));
 
   const [emotion, setEmotion] = useState<string>(""); const [aiSide, setAiSide] = useState<string>("設定なし");
-  const [aiFollow, setAiFollow] = useState<string>("従った"); const [note, setNote] = useState<string>("");
+  const [aiFollow, setAiFollow] = useState<string>("選択しない"); const [note, setNote] = useState<string>("");
 
   // 画像ステージング
   const [stageImgs, setStageImgs] = useState<DiaryImage[]>([]); const fileRef = useRef<HTMLInputElement | null>(null);
@@ -146,7 +146,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
   const removeStageImg = (id: string) => setStageImgs(prev => prev.filter(x => x.id !== id));
 
   const { show, Toast } = useToast();
-  useEffect(() => { if (open) { setSymbol(""); setSide("BUY"); setActual(""); setSize(""); const n = new Date(); setEntryDate(toLocalDate(n)); setEntryHour(pad2(n.getHours())); setEntryMin(pad2(n.getMinutes())); setEmotion(""); setAiSide("設定なし"); setAiFollow("従った"); setNote(""); setStageImgs([]); } }, [open]);
+  useEffect(() => { if (open) { setSymbol(""); setSide("BUY"); setActual(""); setSize(""); const n = new Date(); setEntryDate(toLocalDate(n)); setEntryHour(pad2(n.getHours())); setEntryMin(pad2(n.getMinutes())); setEmotion(""); setAiSide("設定なし"); setAiFollow("選択しない"); setNote(""); setStageImgs([]); } }, [open]);
 
   const onSave = () => {
     const sym = upper(symbol); if (!sym) { alert("通貨ペアを入力してください（例：USDJPY）"); return; }
@@ -192,7 +192,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
 
           <label><div className="muted small">エントリー時の感情</div>
             <select className="select" value={emotion} onChange={(e) => setEmotion(e.target.value)}>
-              <option value="">（選択なし）</option>
+              <option value="">選択しない</option>
               <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
               <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
             </select>
@@ -200,9 +200,9 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
           <label><div className="muted small">AIの方向感</div><select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
             <option>設定なし</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option></select></label>
 
-          <label><div className="muted small">判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
-            <option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option></select></label>
-          <label><div className="muted small">一言メモ（任意）</div><input className="input" placeholder="押し目 など" value={note} onChange={(e) => setNote(e.target.value)} /></label>
+          <label><div className="muted small">トレードの判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
+            <option>選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option></select></label>
+          <label><div className="muted small">ファンダメモ（自由入力）</div><input className="input" placeholder="例）CPI直後の乱高下を想定、要人発言あり など" value={note} onChange={(e) => setNote(e.target.value)} /></label>
         </div>
 
         <div className="td-section-title" style={{ marginTop: 6 }}><h2>チャート画像を添付</h2></div>
