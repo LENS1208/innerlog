@@ -720,7 +720,7 @@ export default function TradeDiaryPage() {
       </div>
 
       {/* エントリー前・直後 と ポジション保有中+画像 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16, alignItems: "stretch" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
         {/* エントリー前・直後 */}
         <section className="td-card" id="entryBeforeCard">
             <div className="td-section-title">
