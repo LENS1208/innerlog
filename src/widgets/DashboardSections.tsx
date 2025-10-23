@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Line } from 'react-chartjs-2'
+import { Line, Bar } from 'react-chartjs-2'
 import { ja } from 'date-fns/locale'
 import type { Trade } from '../lib/types'
 import '../lib/dashboard.css'
@@ -174,9 +174,66 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
 }
 
 export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { labels, profits } = useMemo(() => {
+    const dailyMap = new Map<string, number>()
+
+    trades.forEach(t => {
+      const date = parseDateTime(t.datetime || t.time)
+      const dateStr = date.toISOString().split('T')[0]
+      dailyMap.set(dateStr, (dailyMap.get(dateStr) || 0) + getProfit(t))
+    })
+
+    const sorted = Array.from(dailyMap.entries()).sort((a, b) => a[0].localeCompare(b[0]))
+    const labels = sorted.map(([date]) => new Date(date).getTime())
+    const profits = sorted.map(([, profit]) => profit)
+
+    return { labels, profits }
+  }, [trades])
+
+  const data = {
+    labels,
+    datasets: [{
+      label: '日次損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      borderWidth: 1,
+    }]
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type: 'time' as const,
+        adapters: { date: { locale: ja } },
+        ticks: { maxRotation: 0 },
+        time: { tooltipFormat: 'yyyy/MM/dd', unit: 'day' as const },
+        grid: { color: '#f3f4f6' }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
+        },
+        grid: { color: '#f3f4f6' }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleDateString('ja-JP') : '',
+          label: (item: any) => `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
+        }
+      }
+    }
+  }
+
   return (
-    <div className="chart-placeholder">
-      日次損益チャート（実装予定）
+    <div style={{ height: 420 }}>
+      {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
 }
@@ -273,20 +330,226 @@ export function WeekCalendar({ trades }: { trades: TradeWithProfit[] }) {
   )
 }
 
-export function SegmentCharts() {
+export function WeekdayChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { labels, profits, counts } = useMemo(() => {
+    const weekdayMap = new Map<number, { profit: number; count: number }>()
+
+    for (let i = 0; i < 7; i++) {
+      weekdayMap.set(i, { profit: 0, count: 0 })
+    }
+
+    trades.forEach(t => {
+      const date = parseDateTime(t.datetime || t.time)
+      const day = date.getDay()
+      const current = weekdayMap.get(day)!
+      current.profit += getProfit(t)
+      current.count += 1
+    })
+
+    const days = ['日', '月', '火', '水', '木', '金', '土']
+    const labels = days
+    const profits = days.map((_, i) => weekdayMap.get(i)!.profit)
+    const counts = days.map((_, i) => weekdayMap.get(i)!.count)
+
+    return { labels, profits, counts }
+  }, [trades])
+
+  const data = {
+    labels,
+    datasets: [{
+      label: '損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      borderWidth: 1,
+    }]
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { grid: { color: '#f3f4f6' } },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v)
+        },
+        grid: { color: '#f3f4f6' }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (item: any) => [
+            `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`,
+            `取引数: ${counts[item.dataIndex]}回`
+          ]
+        }
+      }
+    }
+  }
+
+  return (
+    <div style={{ height: 200 }}>
+      {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
+    </div>
+  )
+}
+
+export function TimeOfDayChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { labels, profits, counts } = useMemo(() => {
+    const hourMap = new Map<number, { profit: number; count: number }>()
+
+    for (let i = 0; i < 24; i++) {
+      hourMap.set(i, { profit: 0, count: 0 })
+    }
+
+    trades.forEach(t => {
+      const date = parseDateTime(t.datetime || t.time)
+      const hour = date.getHours()
+      const current = hourMap.get(hour)!
+      current.profit += getProfit(t)
+      current.count += 1
+    })
+
+    const labels = Array.from({ length: 24 }, (_, i) => `${i}時`)
+    const profits = Array.from({ length: 24 }, (_, i) => hourMap.get(i)!.profit)
+    const counts = Array.from({ length: 24 }, (_, i) => hourMap.get(i)!.count)
+
+    return { labels, profits, counts }
+  }, [trades])
+
+  const data = {
+    labels,
+    datasets: [{
+      label: '損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      borderWidth: 1,
+    }]
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        grid: { color: '#f3f4f6' },
+        ticks: { maxRotation: 45, minRotation: 45 }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v)
+        },
+        grid: { color: '#f3f4f6' }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (item: any) => [
+            `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`,
+            `取引数: ${counts[item.dataIndex]}回`
+          ]
+        }
+      }
+    }
+  }
+
+  return (
+    <div style={{ height: 200 }}>
+      {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
+    </div>
+  )
+}
+
+export function CurrencyPairChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { labels, profits, counts } = useMemo(() => {
+    const pairMap = new Map<string, { profit: number; count: number }>()
+
+    trades.forEach(t => {
+      if (!t.pair) return
+      const pair = t.pair
+      if (!pairMap.has(pair)) {
+        pairMap.set(pair, { profit: 0, count: 0 })
+      }
+      const current = pairMap.get(pair)!
+      current.profit += getProfit(t)
+      current.count += 1
+    })
+
+    const sorted = Array.from(pairMap.entries()).sort((a, b) => b[1].profit - a[1].profit)
+    const labels = sorted.map(([pair]) => pair)
+    const profits = sorted.map(([, data]) => data.profit)
+    const counts = sorted.map(([, data]) => data.count)
+
+    return { labels, profits, counts }
+  }, [trades])
+
+  const data = {
+    labels,
+    datasets: [{
+      label: '損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      borderWidth: 1,
+    }]
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y' as const,
+    scales: {
+      x: {
+        beginAtZero: true,
+        ticks: {
+          callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v)
+        },
+        grid: { color: '#f3f4f6' }
+      },
+      y: { grid: { color: '#f3f4f6' } }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (item: any) => [
+            `損益: ${item.parsed.x >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.x)} 円`,
+            `取引数: ${counts[item.dataIndex]}回`
+          ]
+        }
+      }
+    }
+  }
+
+  return (
+    <div style={{ height: 200 }}>
+      {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
+    </div>
+  )
+}
+
+export function SegmentCharts({ trades }: { trades: TradeWithProfit[] }) {
   return (
     <div className="dash-row-3">
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>曜日別</h3>
-        <div className="chart-placeholder chart-sm">曜日別チャート（実装予定）</div>
+        <WeekdayChart trades={trades} />
       </div>
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>時間帯別</h3>
-        <div className="chart-placeholder chart-sm">時間帯別チャート（実装予定）</div>
+        <TimeOfDayChart trades={trades} />
       </div>
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>通貨ペア別</h3>
-        <div className="chart-placeholder chart-sm">通貨ペア別チャート（実装予定）</div>
+        <CurrencyPairChart trades={trades} />
       </div>
     </div>
   )

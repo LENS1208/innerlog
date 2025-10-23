@@ -706,7 +706,7 @@ const EquityCurvePage: React.FC = () => {
 
             {/* セグメント分析 */}
             <section style={{ marginBottom: 16 }}>
-              <SegmentCharts />
+              <SegmentCharts trades={filteredTrades as any} />
             </section>
             <SetupChart />
           </div>
