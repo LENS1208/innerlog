@@ -647,7 +647,7 @@ const EquityCurvePage: React.FC = () => {
           {/* 右：KPI＋チャート */}
           <div>
             {/* 期間フィルター */}
-            <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", justifyContent: "flex-end" }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
               <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
                 {(["ALL", 30, 60, 90] as const).map((range) => (
                   <button
