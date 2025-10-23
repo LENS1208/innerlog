@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDataset } from "../lib/dataset.context";
+import ReportsTimeAxis from "./ReportsTimeAxis";
 
 type TabKey = "time" | "market" | "strategy" | "risk";
 
@@ -64,18 +65,7 @@ export default function ReportsPage() {
 
       {/* コンテンツ */}
       <div>
-        {activeTab === "time" && (
-          <iframe
-            src="/reports/time/analysis_time_v_0.html"
-            style={{
-              width: "100%",
-              height: "calc(100vh - 200px)",
-              border: "1px solid var(--line)",
-              borderRadius: 8,
-            }}
-            title="時間軸レポート"
-          />
-        )}
+        {activeTab === "time" && <ReportsTimeAxis />}
         {activeTab === "market" && <div style={{ padding: 20 }}>市況分析レポート（開発中）</div>}
         {activeTab === "strategy" && <div style={{ padding: 20 }}>戦略分析レポート（開発中）</div>}
         {activeTab === "risk" && <div style={{ padding: 20 }}>リスク分析レポート（開発中）</div>}
