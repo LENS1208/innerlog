@@ -262,37 +262,129 @@ export default function ReportsTimeAxis() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>曜日 Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            （{topDayOfWeek.day}） {formatValue(topDayOfWeek.profit, "profit")}
+            {topDayOfWeek.day}曜日：{formatValue(topDayOfWeek.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {topDayOfWeek.winRate.toFixed(0)}% / 取引 {topDayOfWeek.count}件
+          </div>
+          <div style={{ height: 60, marginTop: 8 }}>
+            <Bar
+              data={{
+                labels: dayOfWeekData.map((d) => d.day),
+                datasets: [
+                  {
+                    data: dayOfWeekData.map((d) => d.profit),
+                    backgroundColor: dayOfWeekData.map((d) =>
+                      d.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                    ),
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: {
+                  x: { display: false },
+                  y: { display: false, beginAtZero: true },
+                },
+              }}
+            />
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>曜日 Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            （{bottomDayOfWeek.day}） {formatValue(bottomDayOfWeek.profit, "profit")}
+            {bottomDayOfWeek.day}曜日：{formatValue(bottomDayOfWeek.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {bottomDayOfWeek.winRate.toFixed(0)}% / 取引 {bottomDayOfWeek.count}件
+          </div>
+          <div style={{ height: 60, marginTop: 8 }}>
+            <Bar
+              data={{
+                labels: dayOfWeekData.map((d) => d.day),
+                datasets: [
+                  {
+                    data: dayOfWeekData.map((d) => d.profit),
+                    backgroundColor: dayOfWeekData.map((d) =>
+                      d.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                    ),
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: {
+                  x: { display: false },
+                  y: { display: false, beginAtZero: true },
+                },
+              }}
+            />
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>時間帯 Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {topHour.label} {formatValue(topHour.profit, "profit")}
+            {topHour.label.replace('-', '時-')}時：{formatValue(topHour.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {topHour.winRate.toFixed(0)}% / 取引 {topHour.count}件
+          </div>
+          <div style={{ height: 60, marginTop: 8 }}>
+            <Bar
+              data={{
+                labels: hourData.map((h) => h.label),
+                datasets: [
+                  {
+                    data: hourData.map((h) => h.profit),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: {
+                  x: { display: false },
+                  y: { display: false, beginAtZero: true },
+                },
+              }}
+            />
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>時間帯 Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {bottomHour.label} {formatValue(bottomHour.profit, "profit")}
+            {bottomHour.label.replace('-', '時-')}時：{formatValue(bottomHour.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {bottomHour.winRate.toFixed(0)}% / 取引 {bottomHour.count}件
+          </div>
+          <div style={{ height: 60, marginTop: 8 }}>
+            <Bar
+              data={{
+                labels: hourData.map((h) => h.label),
+                datasets: [
+                  {
+                    data: hourData.map((h) => h.profit),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: {
+                  x: { display: false },
+                  y: { display: false, beginAtZero: true },
+                },
+              }}
+            />
           </div>
         </div>
       </div>
@@ -591,7 +683,7 @@ export default function ReportsTimeAxis() {
                   onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                 >
                   <td style={{ padding: 10, fontSize: 13 }}>曜日</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>（{d.day}）</td>
+                  <td style={{ padding: 10, fontSize: 13 }}>{d.day}曜日</td>
                   <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{d.count}</td>
                   <td
                     style={{
