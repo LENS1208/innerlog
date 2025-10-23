@@ -21,9 +21,7 @@ def generate_dataset_a(num_trades=500):
     trades = []
     cumulative_profit = 0
 
-    # 基準日を2023年1月1日に設定し、約1025日分（2025年10月22日まで）のデータを生成
-    base_date = datetime(2023, 1, 1)
-    date_range_days = 1025
+    base_date = datetime(2022, 1, 1)
 
     # フェーズごとの設定
     # フェーズ1: 上昇期（0-30%） 15万円まで
@@ -38,7 +36,7 @@ def generate_dataset_a(num_trades=500):
         size = random.choice([0.30, 0.50, 1.00, 2.00])
 
         # 開始時間
-        open_time = base_date + timedelta(days=random.randint(0, date_range_days), hours=random.randint(0, 23), minutes=random.randint(0, 59))
+        open_time = base_date + timedelta(days=random.randint(0, 1095), hours=random.randint(0, 23), minutes=random.randint(0, 59))
         # 終了時間（30分〜5時間後）
         close_time = open_time + timedelta(minutes=random.randint(30, 300))
 
@@ -142,9 +140,7 @@ def generate_dataset_b(num_trades=380):
     cumulative_profit = 0
     consecutive_wins = 0
 
-    # 基準日を2023年1月1日に設定し、約1025日分（2025年10月22日まで）のデータを生成
-    base_date = datetime(2023, 1, 1)
-    date_range_days = 1025
+    base_date = datetime(2022, 1, 1)
 
     # フェーズごとの設定（より激しい変動）
     # フェーズ1: 初期急上昇（0-25%） 200万円まで
@@ -159,7 +155,7 @@ def generate_dataset_b(num_trades=380):
         side = random.choice(['buy', 'sell'])
         size = random.choice([0.30, 0.50, 1.00, 2.00])
 
-        open_time = base_date + timedelta(days=random.randint(0, date_range_days), hours=random.randint(0, 23), minutes=random.randint(0, 59))
+        open_time = base_date + timedelta(days=random.randint(0, 1095), hours=random.randint(0, 23), minutes=random.randint(0, 59))
         close_time = open_time + timedelta(minutes=random.randint(30, 300))
 
         progress_ratio = i / num_trades
@@ -270,9 +266,7 @@ def generate_dataset_c(num_trades=620):
     cumulative_profit = 0
     consecutive_losses = 0
 
-    # 基準日を2023年1月1日に設定し、約1025日分（2025年10月22日まで）のデータを生成
-    base_date = datetime(2023, 1, 1)
-    date_range_days = 1025
+    base_date = datetime(2022, 1, 1)
 
     # フェーズごとの設定（激しい変動、最終的に利益）
     # フェーズ1: 急上昇（0-15%） 80万円まで
@@ -292,7 +286,7 @@ def generate_dataset_c(num_trades=620):
         else:
             size = random.choice([0.30, 0.50, 1.00, 2.00])
 
-        open_time = base_date + timedelta(days=random.randint(0, date_range_days), hours=random.randint(0, 23), minutes=random.randint(0, 59))
+        open_time = base_date + timedelta(days=random.randint(0, 1095), hours=random.randint(0, 23), minutes=random.randint(0, 59))
         close_time = open_time + timedelta(minutes=random.randint(30, 300))
 
         progress_ratio = i / num_trades

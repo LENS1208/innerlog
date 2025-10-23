@@ -202,27 +202,11 @@ tr.row td { background: var(--bg); }
 .dropzone-large{ border:2px dashed var(--line); border-radius:12px; background:var(--bg); color:var(--muted); height:180px; display:grid; place-items:center; cursor:pointer; }
 .modal{ z-index:9999; } .quick-btn{ z-index:10000; }
 
-/* リスト項目のホバーエフェクト */
-.trade-row,
-tr.row {
+/* 取引一覧のホバーエフェクト */
+.trade-row {
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
-.trade-row:hover,
-tr.row:hover {
-  background-color: var(--chip) !important;
-}
-.trade-row:hover td,
-tr.row:hover td {
-  background-color: var(--chip) !important;
-}
-
-/* pending-cardのホバー効果 */
-.pending-card {
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.pending-card:hover {
-  background-color: var(--chip);
-  border-color: var(--accent);
+.trade-row:hover {
+  background-color: var(--bg) !important;
 }

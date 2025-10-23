@@ -356,6 +356,7 @@ export default function AppShell({ children }: Props) {
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>("dashboard");
   const drawerRef = useRef<HTMLDivElement>(null);
+  const [quickOpen, setQuickOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -389,6 +390,12 @@ export default function AppShell({ children }: Props) {
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: Event) => setQuickOpen((e as CustomEvent).detail ?? true);
+    window.addEventListener("fx:openQuickDiary", handler);
+    return () => window.removeEventListener("fx:openQuickDiary", handler);
   }, []);
 
   return (
@@ -483,6 +490,46 @@ export default function AppShell({ children }: Props) {
           <Banner />
           <main style={{ flex: 1, padding: "var(--px-mobile)", width: "100%" }} className="main-container">{children}</main>
         </div>
+
+        {/* 右下：グローバル新規日記ボタン */}
+        <button
+          className="quick-btn"
+          onClick={() => setQuickOpen(true)}
+          style={{
+            position: "fixed",
+            bottom: 24,
+            right: 24,
+            zIndex: 1000,
+          }}
+        >
+          ＋ 新しい日記をつける
+        </button>
+
+        {/* 新規日記モーダル */}
+        {quickOpen && (
+          <div className="modal" onClick={() => setQuickOpen(false)} aria-hidden={false}>
+            <div className="panel" onClick={(e) => e.stopPropagation()}>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>新規日記</div>
+              <div style={{ color: "var(--muted)", fontSize: 14 }}>
+                このモーダルはトレード日記ページ（個別トレード）から実装を移行します。
+              </div>
+              <div style={{ marginTop: 16, display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                <button
+                  style={{
+                    padding: "8px 16px",
+                    border: "1px solid var(--line)",
+                    borderRadius: 8,
+                    background: "var(--surface)",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setQuickOpen(false)}
+                >
+                  閉じる
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </DatasetProvider>
   );

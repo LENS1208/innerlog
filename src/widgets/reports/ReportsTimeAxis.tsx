@@ -228,6 +228,25 @@ export default function ReportsTimeAxis() {
         }}
       >
         <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
+          {[30, 60, 90].map((days) => (
+            <button
+              key={days}
+              onClick={() => setDayRange(days)}
+              style={{
+                height: 32,
+                padding: "0 12px",
+                background: dayRange === days ? "var(--chip)" : "var(--surface)",
+                border: "none",
+                borderRight: days !== 90 ? "1px solid var(--line)" : "none",
+                color: "var(--ink)",
+                cursor: "pointer",
+              }}
+            >
+              {days}日
+            </button>
+          ))}
+        </div>
+        <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
           {[
             { key: "profit", label: "損益" },
             { key: "winRate", label: "勝率" },

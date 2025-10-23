@@ -183,10 +183,15 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
     <div className="kpi-grid" style={{ marginBottom: 12 }}>
       <div className="kpi-card">
         <div className="kpi-title">総損益</div>
-        <div className="kpi-value" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
-          {Math.round(dash.gross).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <div>
+            <div className="kpi-value" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
+              {Math.round(dash.gross).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+            </div>
+            <div className="kpi-desc">全取引の合計損益</div>
+          </div>
+          <Gauge winRate={dash.winRate} profitFactor={dash.profitFactor} />
         </div>
-        <div className="kpi-desc">全取引の合計損益</div>
       </div>
 
       <div className="kpi-card">
@@ -212,7 +217,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
         <div className="kpi-title">勝率</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
           <div>
-            <div className="kpi-value">
+            <div className="kpi-value" style={{ fontSize: 28 }}>
               {(dash.winRate * 100).toFixed(1)} <span className="kpi-unit">%</span>
             </div>
           </div>
