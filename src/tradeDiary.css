@@ -29,10 +29,9 @@
 .kpi .lab{ font-size:11px; color:var(--muted); }
 .kpi .val{ font-weight:800; font-size:18px; }
 
-/* 2列グリッド */
-.grid-main{ display:grid; gap:16px; grid-template-columns:1fr 1fr; grid-template-areas:"entry pnl" "diary diary" "viz viz"; }
-@media (max-width:1080px){ .grid-main{ grid-template-columns:1fr; grid-template-areas:"entry" "pnl" "diary" "viz"; } }
-#entryCard{ grid-area:entry; } #pnlCard{ grid-area:pnl; } #diaryCard{ grid-area:diary; } #vizCard{ grid-area:viz; }
+/* 2列グリッド - 新レイアウト */
+.grid-main{ display:grid; gap:16px; grid-template-columns:1fr 1fr; }
+@media (max-width:1080px){ .grid-main{ grid-template-columns:1fr; } }
 .compact{ padding:12px; }
 
 /* 表・表現 */
@@ -54,6 +53,10 @@ td.num{ text-align:right; }
 .select,.input{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
 .note{ width:100%; min-height:110px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); padding:12px; }
 .actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+
+/* Single column layout for form inputs */
+.td-card label{ display:block; margin-bottom:12px; }
+.td-card label:last-child{ margin-bottom:0; }
 
 /* 日記サブカード */
 .subcard{ border:1px solid var(--line); border-radius:12px; background:var(--surface); padding:12px; margin-bottom:12px; }
