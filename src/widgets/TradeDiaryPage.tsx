@@ -719,10 +719,10 @@ export default function TradeDiaryPage() {
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
       </div>
 
-      {/* エントリー前・直後 と ポジション保有中 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+      {/* エントリー前・直後 と ポジション保有中+画像 */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16, alignItems: "stretch" }}>
         {/* エントリー前・直後 */}
-        <section className="td-card" id="entryBeforeCard" style={{ height: "100%" }}>
+        <section className="td-card" id="entryBeforeCard">
             <div className="td-section-title">
               <h2>エントリー前・直後</h2>
             </div>
@@ -766,8 +766,8 @@ export default function TradeDiaryPage() {
             </label>
         </section>
 
-        {/* 右列：ポジション保有中+画像（縦に2つ並べる） */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* 右列：ポジション保有中+画像（縦に2つ並べ、左列と高さを揃える） */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, height: "100%" }}>
           {/* ポジション保有中 */}
           <section className="td-card" id="positionHoldCard">
             <div className="td-section-title">
@@ -869,7 +869,7 @@ export default function TradeDiaryPage() {
             <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
               options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
 
-            <div className="note-grid" style={{ marginTop: 8 }}>
+            <div style={{ marginTop: 8 }}>
               <label><div className="muted small">うまくいった点</div><textarea className="note" value={noteRight} onChange={(e) => setNoteRight(e.target.value)} /></label>
               <label><div className="muted small">改善点</div><textarea className="note" value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} /></label>
               <label><div className="muted small">次回の約束</div><textarea className="note" value={noteNext} onChange={(e) => setNoteNext(e.target.value)} /></label>
@@ -898,7 +898,7 @@ export default function TradeDiaryPage() {
         {/* パフォーマンス分析 */}
         <section className="td-card" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
-            <div className="charts">
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               <div className="chart-card">
                 <h4>{UI_TEXT.cumulativeProfit}（時間）<span className="legend">決済順の累計</span></h4>
                 <div className="chart-box"><canvas ref={equityRef} /></div>
