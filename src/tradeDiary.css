@@ -6,12 +6,12 @@
 .td-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
 .td-title{ font-size:20px; margin:0; }
 .td-actions{ display:flex; gap:8px; }
-.td-btn{ padding:8px 12px; border-radius:999px; border:1px solid var(--line); background: var(--bg2); cursor:pointer; font-size:14px; }
+.td-btn{ padding:8px 12px; border-radius:999px; border:1px solid var(--line); background: var(--surface); cursor:pointer; font-size:14px; }
 .td-btn:hover{ filter:brightness(.98); }
 .td-btn.td-accent{ background:var(--accent); border-color:var(--accent); color:#fff; }
 
 /* カード・共通 */
-.td-card{ background: var(--bg2); border:1px solid var(--line); border-radius: var(--radius); padding:16px; }
+.td-card{ background: var(--surface); border:1px solid var(--line); border-radius: var(--radius); padding:16px; }
 .td-card-full{ margin-top:16px; }
 .td-section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .td-section-title h2{ margin:0; font-size:16px; }
@@ -43,19 +43,19 @@
 @media (max-width:720px){ .pnl-two-cols{ grid-template-columns:1fr; } }
 table{ width:100%; border-collapse:separate; border-spacing:0 10px; }
 th,td{ padding:10px 12px; border-bottom:1px solid var(--line); font-size:13px; background:transparent; }
-td{ background:var(--bg); }
+td{ background:var(--surface); }
 tr.row{ border-radius:10px; overflow:hidden; }
 td.num{ text-align:right; }
 
 /* 入力系 */
 .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 @media (max-width:720px){ .row2{ grid-template-columns:1fr; } }
-.select,.input{ border:1px solid var(--line); background:var(--bg); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
-.note{ width:100%; min-height:110px; border:1px solid var(--line); border-radius:12px; background:var(--bg); color:var(--ink); padding:12px; }
+.select,.input{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
+.note{ width:100%; min-height:110px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); padding:12px; }
 .actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
 
 /* 日記サブカード */
-.subcard{ border:1px solid var(--line); border-radius:12px; background:var(--bg); padding:12px; margin-bottom:12px; }
+.subcard{ border:1px solid var(--line); border-radius:12px; background:var(--surface); padding:12px; margin-bottom:12px; }
 
 /* タグ */
 .chips-wrap{ max-height:48px; overflow:auto; padding-right:4px; }
@@ -64,18 +64,18 @@ td.num{ text-align:right; }
 
 /* マルチセレクト */
 .ms-wrap{ position:relative; }
-.ms-trigger{ border:1px solid var(--line); background:var(--bg); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
+.ms-trigger{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
 .ms-menu{
   position:absolute; z-index:20; left:0; right:0; top:calc(100% + 6px);
-  background:var(--bg); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12);
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12);
   padding:6px; max-height:280px; overflow:auto; font-size:13px; line-height:1.5;
 }
 .ms-item{ display:flex; gap:8px; align-items:center; padding:8px; border-radius:8px; cursor:pointer; }
-.ms-item:hover{ background:var(--bg2); }
+.ms-item:hover{ background:var(--chip); }
 .ms-footer{ display:flex; justify-content:space-between; align-items:center; padding:6px 4px 0; color:var(--muted); font-size:12px; }
 
 /* 画像 */
-.upanel{ border:1px dashed var(--line); border-radius:12px; background:var(--bg); padding:10px; }
+.upanel{ border:1px dashed var(--line); border-radius:12px; background:var(--surface); padding:10px; }
 .uactions{ display:flex; align-items:center; gap:8px; margin-bottom:8px; }
 .uactions .right{ margin-left:auto; }
 .thumbs{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
@@ -202,11 +202,27 @@ tr.row td { background: var(--bg); }
 .dropzone-large{ border:2px dashed var(--line); border-radius:12px; background:var(--bg); color:var(--muted); height:180px; display:grid; place-items:center; cursor:pointer; }
 .modal{ z-index:9999; } .quick-btn{ z-index:10000; }
 
-/* 取引一覧のホバーエフェクト */
-.trade-row {
+/* リスト項目のホバーエフェクト */
+.trade-row,
+tr.row {
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
-.trade-row:hover {
-  background-color: var(--bg) !important;
+.trade-row:hover,
+tr.row:hover {
+  background-color: var(--chip) !important;
+}
+.trade-row:hover td,
+tr.row:hover td {
+  background-color: var(--chip) !important;
+}
+
+/* pending-cardのホバー効果 */
+.pending-card {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.pending-card:hover {
+  background-color: var(--chip);
+  border-color: var(--accent);
 }

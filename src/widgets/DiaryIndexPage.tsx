@@ -116,6 +116,11 @@ function Dropzone({ tempId, maxFiles = 3 }: { tempId: string; maxFiles?: number 
 }
 
 /* ========= 新規/編集/候補モーダル ========= */
+const ENTRY_BASIS_OPTS = ["押し目・戻り", "ブレイク", "ダブルトップ／ダブルボトム", "三角持ち合い／ペナント／フラッグ", "チャネル反発／上限・下限タッチ", "だまし（フェイク）", "ピンバー／包み足／はらみ足", "フィボ反発（38.2／50／61.8)"];
+const TECH_OPTS = ["MAクロス（ゴールデン／デッド）", "ボリンジャー（±2σタッチ→内戻り）", "RSI 50回復／割れ", "RSI 過熱（70↑）／逆張り（30↓）", "一目均衡表合致（雲反発／雲抜け／三役）", "MACDクロス（上向き／下向き）", "フィボ合致（38.2／50／61.8）", "ピボット（R1／R2／S1／S2）", "ATR 高め／低め", "ADX 強め／弱め"];
+const MARKET_OPTS = ["トレンド相場", "レンジ相場", "市場オープン切替（東京→欧州／欧州→NY）", "ボラ高め", "ボラ低め", "高値圏", "安値圏", "薄商い", "オプションバリア付近", "ニュース直後", "指標前"];
+const FUND_OPTS = ["金利見通し", "中銀スタンス", "景気サプライズ", "インフレ圧力", "リスクオン・リスクオフ", "原油・商品", "ポジション偏り", "地政学ヘッドライン"];
+
 function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: () => void; onSaved: (d: Diary) => void; }) {
   const [symbol, setSymbol] = useState(""); const [side, setSide] = useState<"BUY" | "SELL">("BUY");
   const [actual, setActual] = useState<string>(""); const [size, setSize] = useState<string>("");
@@ -127,6 +132,12 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
 
   const [emotion, setEmotion] = useState<string>(""); const [aiSide, setAiSide] = useState<string>("設定なし");
   const [aiFollow, setAiFollow] = useState<string>("従った"); const [note, setNote] = useState<string>("");
+
+  const [entryBasis, setEntryBasis] = useState<string>("");
+  const [technical, setTechnical] = useState<string>("");
+  const [market, setMarket] = useState<string>("");
+  const [fundamental, setFundamental] = useState<string>("");
+  const [fundNote, setFundNote] = useState<string>("");
 
   // 画像ステージング
   const [stageImgs, setStageImgs] = useState<DiaryImage[]>([]); const fileRef = useRef<HTMLInputElement | null>(null);
@@ -146,7 +157,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
   const removeStageImg = (id: string) => setStageImgs(prev => prev.filter(x => x.id !== id));
 
   const { show, Toast } = useToast();
-  useEffect(() => { if (open) { setSymbol(""); setSide("BUY"); setActual(""); setSize(""); const n = new Date(); setEntryDate(toLocalDate(n)); setEntryHour(pad2(n.getHours())); setEntryMin(pad2(n.getMinutes())); setEmotion(""); setAiSide("設定なし"); setAiFollow("従った"); setNote(""); setStageImgs([]); } }, [open]);
+  useEffect(() => { if (open) { setSymbol(""); setSide("BUY"); setActual(""); setSize(""); const n = new Date(); setEntryDate(toLocalDate(n)); setEntryHour(pad2(n.getHours())); setEntryMin(pad2(n.getMinutes())); setEmotion(""); setAiSide("設定なし"); setAiFollow("従った"); setNote(""); setEntryBasis(""); setTechnical(""); setMarket(""); setFundamental(""); setFundNote(""); setStageImgs([]); } }, [open]);
 
   const onSave = () => {
     const sym = upper(symbol); if (!sym) { alert("通貨ペアを入力してください（例：USDJPY）"); return; }
@@ -155,7 +166,16 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
     const d: Diary = {
       tempId, symbol: sym, side,
       entry: { actual: actual ? Number(actual) : null, size: size ? Number(size) : null, time: iso },
-      entry_emotion: emotion || null, ai: { side: aiSide, follow: aiFollow }, note: note || "", linkedTo: null,
+      entry_emotion: emotion || null,
+      ai: { side: aiSide, follow: aiFollow },
+      note: JSON.stringify({
+        entryBasis,
+        technical,
+        market,
+        fundamental,
+        fundNote,
+      }),
+      linkedTo: null,
     };
     const arr = loadDiaries(); arr.unshift(d); saveDiaries(arr);
     if (stageImgs.length) saveImages(tempId, stageImgs);
@@ -192,37 +212,78 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
 
           <label><div className="muted small">エントリー時の感情</div>
             <select className="select" value={emotion} onChange={(e) => setEmotion(e.target.value)}>
-              <option value="">（選択なし）</option>
+              <option value="">選択しない</option>
               <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
               <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
             </select>
           </label>
-          <label><div className="muted small">AIの方向感</div><select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-            <option>設定なし</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option></select></label>
+          <div />
 
-          <label><div className="muted small">判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
-            <option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option></select></label>
-          <label><div className="muted small">一言メモ（任意）</div><input className="input" placeholder="押し目 など" value={note} onChange={(e) => setNote(e.target.value)} /></label>
+          <label><div className="muted small">エントリー根拠（最大2つ）</div>
+            <select className="select" value={entryBasis} onChange={(e) => setEntryBasis(e.target.value)}>
+              <option value="">選択しない</option>
+              {ENTRY_BASIS_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            </select>
+          </label>
+          <label><div className="muted small">テクニカル条件（最大2つ）</div>
+            <select className="select" value={technical} onChange={(e) => setTechnical(e.target.value)}>
+              <option value="">選択しない</option>
+              {TECH_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            </select>
+          </label>
+
+          <label><div className="muted small">マーケット環境（最大2つ）</div>
+            <select className="select" value={market} onChange={(e) => setMarket(e.target.value)}>
+              <option value="">選択しない</option>
+              {MARKET_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            </select>
+          </label>
+          <label><div className="muted small">ファンダメンタルズ（最大2つ）</div>
+            <select className="select" value={fundamental} onChange={(e) => setFundamental(e.target.value)}>
+              <option value="">選択しない</option>
+              {FUND_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+            </select>
+          </label>
         </div>
 
-        <div className="td-section-title" style={{ marginTop: 6 }}><h2>チャート画像を添付</h2></div>
-        <div className="uactions" style={{ marginBottom: 8 }}>
-          <label className="td-btn" htmlFor="newDiaryFile">ファイル選択</label>
-          <span className="small muted">選択されていません</span>
-          <button className="td-btn" style={{ marginLeft: "auto" }} onClick={() => fileRef.current?.click()}>画像を選択</button>
-        </div>
-        <input id="newDiaryFile" ref={fileRef} type="file" accept=".jpg,.jpeg,.gif,.png,image/jpeg,image/png,image/gif" multiple style={{ display: "none" }} onChange={(e) => e.target.files && addImages(e.target.files)} />
-
-        <div className="dropzone-large" onDragOver={(e) => e.preventDefault()} onDrop={onDrop} onClick={() => fileRef.current?.click()}>
-          ここに画像をドロップ（または貼り付け / 画像選択）
+        <div style={{ marginTop: 12 }}>
+          <label><div className="muted small">ファンダメモ（自由入力）</div>
+            <textarea className="note" rows={2} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
+              placeholder="例）CPI直後の乱高下を想定、要人発言あり など" />
+          </label>
         </div>
 
-        <div className="thumbs" style={{ marginTop: 10 }}>
-          {stageImgs.length === 0 && <div className="muted small">まだ画像はありません。</div>}
-          {stageImgs.map(im => (<div key={im.id} className="thumb"><img src={im.dataUrl} alt="img" /><button className="del" onClick={() => removeStageImg(im.id)}>削除</button></div>))}
+        <div className="dlg-grid" style={{ marginTop: 12 }}>
+          <label><div className="muted small">AIの方向感</div>
+            <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
+              <option>設定なし</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
+            </select>
+          </label>
+          <label><div className="muted small">判断</div>
+            <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
+              <option value="">選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option>
+            </select>
+          </label>
         </div>
 
-        <div className="actions" style={{ marginTop: 12 }}>
+        <div style={{ marginTop: 12 }}>
+          <div className="muted small" style={{ marginBottom: 6 }}>チャート画像を添付</div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <input type="file" accept="image/*" multiple style={{ display: "none" }} id="newDiaryFile" ref={fileRef} onChange={(e) => e.target.files && addImages(e.target.files)} />
+            <button className="td-btn" onClick={() => fileRef.current?.click()}>ファイル選択</button>
+            <span className="muted small">選択されていません</span>
+            <button className="td-btn" style={{ marginLeft: "auto" }} onClick={() => fileRef.current?.click()}>画像を選択</button>
+          </div>
+          <div style={{ marginTop: 8, padding: 12, border: "1px dashed var(--line)", borderRadius: 12, textAlign: "center", color: "var(--muted)", fontSize: 12 }}
+            onDragOver={(e) => e.preventDefault()} onDrop={onDrop} onClick={() => fileRef.current?.click()}>
+            ここに画像をドロップ（または貼り付け / 画像選択）
+          </div>
+          <div className="muted small" style={{ marginTop: 8 }}>
+            {stageImgs.length === 0 ? "まだ画像はありません。" : `${stageImgs.length}枚の画像が選択されています。`}
+          </div>
+        </div>
+
+        <div className="actions" style={{ marginTop: 16 }}>
           <button className="td-btn" onClick={onClose}>閉じる</button>
           <button className="td-btn td-accent" onClick={onSave}>保存</button>
         </div>
@@ -350,7 +411,7 @@ export default function DiaryIndexPage() {
             </thead>
             <tbody>
               {rows.map(d => (
-                <tr key={d.tempId} className="row">
+                <tr key={d.tempId} className="row" onClick={(e) => { if ((e.target as HTMLElement).tagName !== 'BUTTON') { setEditTarget(d); setOpenEdit(true); } }}>
                   <td className="nowrap">{fmtJIS(d.entry.time)}</td>
                   <td>{d.symbol}</td>
                   <td>{d.side === "BUY" ? "買い" : "売り"}</td>
@@ -358,9 +419,9 @@ export default function DiaryIndexPage() {
                   <td className="num">{isFinite(Number(d.entry.actual)) ? String(Number(d.entry.actual)) : "—"}</td>
                   <td>
                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-                      <button className="td-btn" onClick={() => { setEditTarget(d); setOpenEdit(true); }}>編集</button>
-                      <button className="td-btn" onClick={() => { setCandTarget(d); setOpenCand(true); }}>候補を見る</button>
-                      <button className="td-btn" onClick={() => removeDiary(d.tempId)}>削除</button>
+                      <button className="td-btn" onClick={(e) => { e.stopPropagation(); setEditTarget(d); setOpenEdit(true); }}>編集</button>
+                      <button className="td-btn" onClick={(e) => { e.stopPropagation(); setCandTarget(d); setOpenCand(true); }}>候補を見る</button>
+                      <button className="td-btn" onClick={(e) => { e.stopPropagation(); removeDiary(d.tempId); }}>削除</button>
                     </div>
                   </td>
                 </tr>

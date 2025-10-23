@@ -12,10 +12,10 @@ function mapToRow(t: Trade) {
     side: t.side,
     pnl_jpy: t.profitYen,
     pips: t.pips,
-    r_multiple: undefined,
     size: t.volume,
     entry: t.openPrice,
     exit: t.closePrice,
+    note: t.memo || t.comment || "",
   };
 }
 

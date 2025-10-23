@@ -510,13 +510,19 @@ export default function TradeDiaryPage() {
   const qRef = useRef({
     symbol: "",
     side: "BUY" as "BUY" | "SELL",
-    planned: "",
     actual: "",
     size: "",
+    entryDate: "",
+    entryHour: "14",
+    entryMinute: "17",
     emotion: "",
+    entryBasis: "",
+    technical: "",
+    market: "",
+    fundamental: "",
+    fundNote: "",
     aiSide: "",
-    aiFollow: "従った",
-    note: "",
+    aiFollow: "",
   });
 
   useEffect(() => {
@@ -540,14 +546,22 @@ export default function TradeDiaryPage() {
       symbol,
       side: qRef.current.side,
       entry: {
-        planned: parseFloat(qRef.current.planned || (NaN as any)),
+        planned: NaN,
         actual: parseFloat(qRef.current.actual || (NaN as any)),
         size: parseFloat(qRef.current.size || (NaN as any)),
-        time: new Date().toISOString(),
+        time: qRef.current.entryDate ?
+          `${qRef.current.entryDate}T${qRef.current.entryHour.padStart(2, "0")}:${qRef.current.entryMinute.padStart(2, "0")}:00` :
+          new Date().toISOString(),
       },
       entry_emotion: qRef.current.emotion || "",
       ai: { side: qRef.current.aiSide || "", follow: qRef.current.aiFollow },
-      note: qRef.current.note || "",
+      note: JSON.stringify({
+        entryBasis: qRef.current.entryBasis,
+        technical: qRef.current.technical,
+        market: qRef.current.market,
+        fundamental: qRef.current.fundamental,
+        fundNote: qRef.current.fundNote,
+      }),
       linkedTo: null,
     };
     const arr = loadQuick();
@@ -558,15 +572,21 @@ export default function TradeDiaryPage() {
     qRef.current = {
       symbol: "",
       side: "BUY",
-      planned: "",
       actual: "",
       size: "",
+      entryDate: "",
+      entryHour: "14",
+      entryMinute: "17",
       emotion: "",
+      entryBasis: "",
+      technical: "",
+      market: "",
+      fundamental: "",
+      fundNote: "",
       aiSide: "",
-      aiFollow: "従った",
-      note: "",
+      aiFollow: "",
     };
-    alert("仮保存しました");
+    alert("保存しました");
   };
 
   /* ===== トレード日記：選択肢・状態 ===== */
@@ -1041,13 +1061,13 @@ export default function TradeDiaryPage() {
         <div className="modal" onClick={() => setQuickOpen(false)} aria-hidden={false}>
           <div className="panel" onClick={(e) => e.stopPropagation()}>
             <div className="top">
-              <h3>＋ 日記をつける</h3>
+              <h3>新規日記</h3>
               <button className="td-btn" onClick={() => setQuickOpen(false)}>閉じる</button>
             </div>
 
             <div className="row2">
               <label>
-                <div className="muted small">通貨ペア</div>
+                <div className="muted small">通貨ペア（例: USDJPY）</div>
                 <input className="input" onChange={(e) => (qRef.current.symbol = e.target.value)} placeholder="例: USDJPY" />
               </label>
               <label>
@@ -1059,12 +1079,27 @@ export default function TradeDiaryPage() {
             </div>
 
             <div className="row2" style={{ marginTop: 8 }}>
-              <label><div className="muted small">予定エントリー</div><input className="input" onChange={(e) => (qRef.current.planned = e.target.value)} placeholder="価格（任意）" /></label>
-              <label><div className="muted small">実エントリー</div><input className="input" onChange={(e) => (qRef.current.actual = e.target.value)} placeholder="価格（任意）" /></label>
+              <label><div className="muted small">実エントリー価格（任意）</div><input className="input" onChange={(e) => (qRef.current.actual = e.target.value)} placeholder="150.123" /></label>
+              <label><div className="muted small">サイズ（lot 任意）</div><input className="input" onChange={(e) => (qRef.current.size = e.target.value)} placeholder="0.50" /></label>
             </div>
 
-            <div className="row2" style={{ marginTop: 8 }}>
-              <label><div className="muted small">サイズ（lot）</div><input className="input" onChange={(e) => (qRef.current.size = e.target.value)} placeholder="0.5 など（任意）" /></label>
+            <div style={{ marginTop: 12 }}>
+              <label>
+                <div className="muted small">エントリー日時</div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <input type="date" className="input" style={{ flex: 1 }} onChange={(e) => (qRef.current.entryDate = e.target.value)} />
+                  <select className="select" style={{ width: 80 }} onChange={(e) => (qRef.current.entryHour = e.target.value)}>
+                    {Array.from({ length: 24 }, (_, i) => <option key={i} value={i}>{i}</option>)}
+                  </select>
+                  <span style={{ lineHeight: "38px" }}>:</span>
+                  <select className="select" style={{ width: 80 }} onChange={(e) => (qRef.current.entryMinute = e.target.value)}>
+                    {Array.from({ length: 60 }, (_, i) => <option key={i} value={i}>{String(i).padStart(2, "0")}</option>)}
+                  </select>
+                </div>
+              </label>
+            </div>
+
+            <div className="row2" style={{ marginTop: 12 }}>
               <label>
                 <div className="muted small">エントリー時の感情</div>
                 <select className="select" onChange={(e) => (qRef.current.emotion = e.target.value)}>
@@ -1073,29 +1108,82 @@ export default function TradeDiaryPage() {
                   <option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
                 </select>
               </label>
+              <div />
             </div>
 
-            <div className="row2" style={{ marginTop: 8 }}>
-              <label><div className="muted small">AIの方向感</div>
+            <div className="row2" style={{ marginTop: 12 }}>
+              <label>
+                <div className="muted small">エントリー根拠（最大2つ）</div>
+                <select className="select" onChange={(e) => (qRef.current.entryBasis = e.target.value)}>
+                  <option value="">選択しない</option>
+                  {ENTRY_BASIS_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                </select>
+              </label>
+              <label>
+                <div className="muted small">テクニカル条件（最大2つ）</div>
+                <select className="select" onChange={(e) => (qRef.current.technical = e.target.value)}>
+                  <option value="">選択しない</option>
+                  {TECH_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                </select>
+              </label>
+            </div>
+
+            <div className="row2" style={{ marginTop: 12 }}>
+              <label>
+                <div className="muted small">マーケット環境（最大2つ）</div>
+                <select className="select" onChange={(e) => (qRef.current.market = e.target.value)}>
+                  <option value="">選択しない</option>
+                  {MARKET_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                </select>
+              </label>
+              <label>
+                <div className="muted small">ファンダメンタルズ（最大2つ）</div>
+                <select className="select" onChange={(e) => (qRef.current.fundamental = e.target.value)}>
+                  <option value="">選択しない</option>
+                  {FUND_OPTS.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                </select>
+              </label>
+            </div>
+
+            <div style={{ marginTop: 12 }}>
+              <label>
+                <div className="muted small">ファンダメモ（自由入力）</div>
+                <textarea className="note" rows={2} onChange={(e) => (qRef.current.fundNote = e.target.value)} placeholder="例）CPI直後の乱高下を想定、要人発言あり など" />
+              </label>
+            </div>
+
+            <div className="row2" style={{ marginTop: 12 }}>
+              <label>
+                <div className="muted small">AIの方向感</div>
                 <select className="select" onChange={(e) => (qRef.current.aiSide = e.target.value)}>
-                  <option value="">選択しない</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
+                  <option value="">設定なし</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
                 </select>
               </label>
-              <label><div className="muted small">判断</div>
-                <select className="select" defaultValue="従った" onChange={(e) => (qRef.current.aiFollow = e.target.value)}>
-                  <option>従った</option><option>一部従った</option><option>気にせず行動した</option><option>見送った</option>
+              <label>
+                <div className="muted small">判断</div>
+                <select className="select" onChange={(e) => (qRef.current.aiFollow = e.target.value)}>
+                  <option value="">選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option>
                 </select>
               </label>
             </div>
 
-            <div style={{ marginTop: 8 }}>
-              <label><div className="muted small">一言メモ（任意）</div>
-                <input className="input" onChange={(e) => (qRef.current.note = e.target.value)} placeholder="例：押し目＋直近高値上抜け" />
-              </label>
+            <div style={{ marginTop: 12 }}>
+              <div className="muted small" style={{ marginBottom: 6 }}>チャート画像を添付</div>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <input type="file" accept="image/*" style={{ display: "none" }} id="quickImageUpload" />
+                <button className="td-btn" onClick={() => document.getElementById("quickImageUpload")?.click()}>ファイル選択</button>
+                <span className="muted small">選択されていません</span>
+                <button className="td-btn" style={{ marginLeft: "auto" }}>画像を選択</button>
+              </div>
+              <div style={{ marginTop: 8, padding: 12, border: "1px dashed var(--line)", borderRadius: 12, textAlign: "center", color: "var(--muted)", fontSize: 12 }}>
+                ここに画像をドロップ（または貼り付け / 画像選択）
+              </div>
+              <div className="muted small" style={{ marginTop: 8 }}>まだ画像はありません。</div>
             </div>
 
-            <div className="actions">
-              <button className="td-btn td-accent" onClick={saveQuickMemo}>仮保存</button>
+            <div className="actions" style={{ marginTop: 16 }}>
+              <button className="td-btn" onClick={() => setQuickOpen(false)}>閉じる</button>
+              <button className="td-btn td-accent" onClick={saveQuickMemo}>保存</button>
             </div>
           </div>
         </div>

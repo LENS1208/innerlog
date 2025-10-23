@@ -305,6 +305,7 @@ const EquityCurvePage: React.FC = () => {
   const [to, setTo] = useState<string>(""); // 'YYYY-MM-DD'
   const [side, setSide] = useState<"ALL" | "buy" | "sell">("ALL");
   const [outcome, setOutcome] = useState<OutcomeKey>("ALL");
+  const [dayRange, setDayRange] = useState<30 | 60 | 90 | "ALL">("ALL");
 
   /** 期間ピッカー用（トリガー＋ポップオーバー） */
   const [preset, setPreset] = useState<RangePreset>("ALL");
@@ -330,6 +331,7 @@ const EquityCurvePage: React.FC = () => {
     setTo("");
     setSide("ALL");
     setOutcome("ALL");
+    setDayRange("ALL");
   };
 
   // ① 起動時に前回状態を復元、またはデモデータAを読み込み
@@ -532,8 +534,18 @@ const EquityCurvePage: React.FC = () => {
   // フィルタ
   const filteredTrades = useMemo(() => {
     if (!current) return [];
-    const fromMs = from ? new Date(from + "T00:00:00").getTime() : null;
+    let fromMs = from ? new Date(from + "T00:00:00").getTime() : null;
     const toMs = to ? new Date(to + "T23:59:59.999").getTime() : null;
+
+    // dayRangeが設定されている場合（"ALL"以外）、fromMsを上書き
+    if (dayRange !== "ALL" && typeof dayRange === "number") {
+      const today = new Date();
+      const rangeStart = new Date(today);
+      rangeStart.setDate(today.getDate() - (dayRange - 1));
+      rangeStart.setHours(0, 0, 0, 0);
+      fromMs = rangeStart.getTime();
+    }
+
     return current.trades.filter((t) => {
       if (pair !== "ALL" && t.symbol !== pair) return false;
       if (side !== "ALL" && (t.type || "").toLowerCase() !== side) return false;
@@ -548,7 +560,7 @@ const EquityCurvePage: React.FC = () => {
       if (weekday !== "ALL" && d.getDay() !== Number(weekday)) return false;
       return true;
     });
-  }, [current, pair, side, outcome, from, to, session, weekday]);
+  }, [current, pair, side, outcome, from, to, session, weekday, dayRange]);
 
   // 累積損益 & KPI
   const { labels, equity, dd, kpi } = useMemo(() => {
@@ -635,6 +647,30 @@ const EquityCurvePage: React.FC = () => {
 
           {/* 右：KPI＋チャート */}
           <div>
+            {/* 期間フィルタ */}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 16, alignItems: 'center', justifyContent: 'flex-end' }}>
+              <div style={{ display: 'flex', border: '1px solid var(--line)', borderRadius: 10, overflow: 'hidden' }}>
+                {[30, 60, 90, 'ALL'].map((option, idx) => (
+                  <button
+                    key={option}
+                    onClick={() => setDayRange(option as 30 | 60 | 90 | "ALL")}
+                    style={{
+                      height: 32,
+                      padding: '0 12px',
+                      background: dayRange === option ? 'var(--chip)' : 'var(--surface)',
+                      border: 'none',
+                      borderRight: idx < 3 ? '1px solid var(--line)' : 'none',
+                      color: 'var(--ink)',
+                      cursor: 'pointer',
+                      fontSize: 13,
+                    }}
+                  >
+                    {option === 'ALL' ? '全期間' : `${option}日`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* ダッシュボードKPI */}
             <DashboardKPI trades={filteredTrades} />
 
