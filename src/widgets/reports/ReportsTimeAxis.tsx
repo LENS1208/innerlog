@@ -13,7 +13,6 @@ const dayNames: DayOfWeek[] = ["日", "月", "火", "水", "木", "金", "土"];
 export default function ReportsTimeAxis() {
   const { dataset, filters } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [dayRange, setDayRange] = useState(30);
   const [metric, setMetric] = useState<MetricType>("profit");
 
   useEffect(() => {
@@ -31,9 +30,8 @@ export default function ReportsTimeAxis() {
   }, [dataset]);
 
   const filteredTrades = useMemo(() => {
-    const result = filterTrades(trades, filters);
-    return result.slice(-dayRange * 10);
-  }, [trades, filters, dayRange]);
+    return filterTrades(trades, filters);
+  }, [trades, filters]);
 
   const dayOfWeekData = useMemo(() => {
     const map = new Map<DayOfWeek, { profit: number; count: number; wins: number }>();
@@ -111,9 +109,8 @@ export default function ReportsTimeAxis() {
       });
     });
     return Array.from(map.entries())
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .slice(-dayRange);
-  }, [filteredTrades, dayRange]);
+      .sort((a, b) => a[0].localeCompare(b[0]));
+  }, [filteredTrades]);
 
   const weeklyData = useMemo(() => {
     const map = new Map<string, { profit: number; count: number }>();
@@ -227,25 +224,6 @@ export default function ReportsTimeAxis() {
           alignItems: "center",
         }}
       >
-        <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
-          {[30, 60, 90].map((days) => (
-            <button
-              key={days}
-              onClick={() => setDayRange(days)}
-              style={{
-                height: 32,
-                padding: "0 12px",
-                background: dayRange === days ? "var(--chip)" : "var(--surface)",
-                border: "none",
-                borderRight: days !== 90 ? "1px solid var(--line)" : "none",
-                color: "var(--ink)",
-                cursor: "pointer",
-              }}
-            >
-              {days}日
-            </button>
-          ))}
-        </div>
         <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
           {[
             { key: "profit", label: "損益" },
