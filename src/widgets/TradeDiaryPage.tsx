@@ -673,11 +673,9 @@ export default function TradeDiaryPage() {
       </div>
 
       {/* 2列グリッド */}
-      <div className="grid-main" style={{ marginTop: 16 }}>
-        {/* 左列 */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* エントリー/エグジット */}
-          <section className="td-card compact" id="entryCard">
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+        {/* エントリー/エグジット */}
+        <section className="td-card compact" id="entryCard">
             <div className="td-section-title">
               <h2>エントリー / エグジット</h2><span className="pill">実績</span>
             </div>
@@ -690,15 +688,41 @@ export default function TradeDiaryPage() {
               <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
               <div>手数料 / スワップ</div><div>{row.commission.toLocaleString("ja-JP")}円 / {row.swap.toLocaleString("ja-JP")}円</div>
             </div>
-          </section>
+        </section>
 
-          {/* トレード日記 */}
-          <div style={{ marginTop: 0 }}>
-            <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
+        {/* 損益内訳 */}
+        <section className="td-card" id="pnlCard">
+          <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
+          <div className="pnl-two-cols">
+            <table role="grid">
+              <tbody>
+                <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num">{fmtJPY(kpi.net)}</td></tr>
+                <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num">{fmtJPY(kpi.gross)}</td></tr>
+                <tr className="row"><td>{UI_TEXT.cost}（手数料＋スワップ）</td><td className="num">{fmtJPY(kpi.cost)}</td></tr>
+                <tr className="row"><td>手数料</td><td className="num">{fmtJPY(row.commission)}</td></tr>
+              </tbody>
+            </table>
+            <table role="grid">
+              <tbody>
+                <tr className="row"><td>スワップ</td><td className="num">{fmtJPY(row.swap)}</td></tr>
+                <tr className="row"><td>獲得pips</td><td className="num">{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
+                <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
+                <tr className="row"><td>リスクリワード（RRR）</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
+              </tbody>
+            </table>
           </div>
+        </section>
+      </div>
 
-          {/* エントリー前・直後 */}
-          <section className="td-card" id="entryBeforeCard">
+      {/* トレード日記タイトル */}
+      <div style={{ marginTop: 16 }}>
+        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
+      </div>
+
+      {/* エントリー前・直後 と ポジション保有中 */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+        {/* エントリー前・直後 */}
+        <section className="td-card" id="entryBeforeCard" style={{ height: "100%" }}>
             <div className="td-section-title">
               <h2>エントリー前・直後</h2>
             </div>
@@ -740,10 +764,30 @@ export default function TradeDiaryPage() {
                 <option>選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option>
               </select>
             </label>
-          </section>
+        </section>
 
-          {/* ポジション決済後 */}
-          <section className="td-card" id="exitCard">
+        {/* ポジション保有中 */}
+        <section className="td-card" id="positionHoldCard" style={{ height: "100%" }}>
+          <div className="td-section-title">
+            <h2>ポジション保有中</h2>
+          </div>
+          <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+            options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+          <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+            options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+          <label>
+            <div className="muted small">ルールの守り具合</div>
+            <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+              <option>選択しない</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+            </select>
+          </label>
+        </section>
+      </div>
+
+      {/* ポジション決済後 と 画像 */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+        {/* ポジション決済後 */}
+        <section className="td-card" id="exitCard">
             <div className="td-section-title">
               <h2>ポジション決済後</h2>
             </div>
@@ -773,70 +817,27 @@ export default function TradeDiaryPage() {
               <label><div className="muted small">自由メモ</div><textarea className="note" value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="気づきやリンクなど" /></label>
             </div>
 
-            <div style={{ marginTop: 12 }}>
-              <div className="muted small">タグ</div>
-              <div className="chips-wrap">
-                <div className="chips" id="tagArea">
-                  {tags.map((t) => (
-                    <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="tag-actions">
-                <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
+          <div style={{ marginTop: 12 }}>
+            <div className="muted small">タグ</div>
+            <div className="chips-wrap">
+              <div className="chips" id="tagArea">
+                {tags.map((t) => (
+                  <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
+                ))}
               </div>
             </div>
-
-            <div className="actions" style={{ marginTop: 16 }}>
-              <button className="td-btn" onClick={savePayload}>保存</button>
+            <div className="tag-actions">
+              <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
             </div>
-          </section>
-        </div>
+          </div>
 
-        {/* 右列 */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* 損益内訳 */}
-          <section className="td-card" id="pnlCard">
-            <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
-            <div className="pnl-two-cols">
-              <table role="grid">
-                <tbody>
-                  <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num">{fmtJPY(kpi.net)}</td></tr>
-                  <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num">{fmtJPY(kpi.gross)}</td></tr>
-                  <tr className="row"><td>{UI_TEXT.cost}（手数料＋スワップ）</td><td className="num">{fmtJPY(kpi.cost)}</td></tr>
-                  <tr className="row"><td>手数料</td><td className="num">{fmtJPY(row.commission)}</td></tr>
-                </tbody>
-              </table>
-              <table role="grid">
-                <tbody>
-                  <tr className="row"><td>スワップ</td><td className="num">{fmtJPY(row.swap)}</td></tr>
-                  <tr className="row"><td>獲得pips</td><td className="num">{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
-                  <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
-                  <tr className="row"><td>リスクリワード（RRR）</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+          <div className="actions" style={{ marginTop: 16 }}>
+            <button className="td-btn" onClick={savePayload}>保存</button>
+          </div>
+        </section>
 
-          {/* ポジション保有中 */}
-          <section className="td-card" id="positionHoldCard">
-            <div className="td-section-title">
-              <h2>ポジション保有中</h2>
-            </div>
-            <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-              options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-            <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-              options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-            <label>
-              <div className="muted small">ルールの守り具合</div>
-              <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-                <option>選択しない</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-              </select>
-            </label>
-          </section>
-
-          {/* 画像アップロード */}
-          <section className="td-card" id="imageCard">
+        {/* 画像アップロード */}
+        <section className="td-card" id="imageCard">
             <div className="td-section-title"><h2>画像</h2></div>
             <div className="upanel">
               <div className="uactions">
@@ -888,11 +889,20 @@ export default function TradeDiaryPage() {
                   </div>
                 ))}
               </div>
-            </div>
-          </section>
+          </div>
+        </section>
+      </div>
 
-          {/* 可視化（3枚） */}
-          <section className="td-card" id="vizCard">
+      {/* リンク済みメモ と パフォーマンス分析 */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 16 }}>
+        {/* リンク済みメモ */}
+        <section className="td-card" id="linkedMemoCard">
+          <div className="td-section-title"><h2>リンク済みメモ</h2></div>
+          <div className="muted small">リンク済みのメモはありません。</div>
+        </section>
+
+        {/* パフォーマンス分析 */}
+        <section className="td-card" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
             <div className="charts">
               <div className="chart-card">
@@ -907,9 +917,8 @@ export default function TradeDiaryPage() {
                 <h4>曜日×時間ヒートマップ<span className="legend">勝率（%）</span></h4>
                 <div className="chart-box"><canvas ref={heatRef} /></div>
               </div>
-            </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
 
       {/* 直近10件 */}
