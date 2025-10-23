@@ -315,7 +315,8 @@ export default function CalendarDayPage() {
                 return (
                   <tr
                     key={idx}
-                    style={{ borderBottom: "1px solid #f3f4f6", cursor: "pointer" }}
+                    className="trade-row"
+                    style={{ borderBottom: "1px solid #f3f4f6" }}
                     onClick={() => {
                       location.hash = `/notebook/${idx}`;
                     }}

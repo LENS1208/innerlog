@@ -44,7 +44,8 @@
 table{ width:100%; border-collapse:separate; border-spacing:0 10px; }
 th,td{ padding:10px 12px; border-bottom:1px solid var(--line); font-size:13px; background:transparent; }
 td{ background:var(--surface); }
-tr.row{ border-radius:10px; overflow:hidden; }
+tr.row{ border-radius:10px; overflow:hidden; cursor:pointer; transition:background-color 0.15s ease; }
+tr.row:hover td{ background:var(--bg2) !important; }
 td.num{ text-align:right; }
 
 /* 入力系 */
@@ -207,6 +208,6 @@ tr.row td { background: var(--bg); }
   cursor: pointer;
   transition: background-color 0.15s ease;
 }
-.trade-row:hover {
-  background-color: var(--bg) !important;
+.trade-row:hover td {
+  background-color: var(--bg2) !important;
 }
