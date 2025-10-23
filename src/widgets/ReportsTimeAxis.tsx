@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { useDataset } from "../lib/dataset.context";
 import { Trade } from "../lib/types";
-import { fmt } from "../lib/formatters";
 
 const formatCurrency = (n: number): string => {
   const sign = n >= 0 ? "+" : "";
@@ -167,10 +166,11 @@ export default function ReportsTimeAxis() {
   return (
     <div style={{ width: "100%" }}>
       <section
+        className="kpi"
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: 16,
+          gap: 12,
+          gridTemplateColumns: "repeat(2, 1fr)",
           marginBottom: 16,
         }}
         aria-label="ハイライト"
@@ -178,6 +178,7 @@ export default function ReportsTimeAxis() {
         {analysis.highlights.map((item, idx) => (
           <div
             key={idx}
+            className="card"
             style={{
               background: "var(--panel)",
               border: "1px solid var(--line)",
@@ -189,20 +190,23 @@ export default function ReportsTimeAxis() {
               {item.title}
             </h3>
             <div
+              className={item.isGood ? "good" : "bad"}
               style={{
                 fontSize: 18,
                 fontWeight: 700,
-                color: item.isGood ? "var(--accent-2)" : "var(--danger)",
               }}
             >
               {item.value}
             </div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>{item.sub}</div>
+            <div className="sub" style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
+              {item.sub}
+            </div>
           </div>
         ))}
       </section>
 
       <section
+        className="row row-3"
         style={{
           display: "grid",
           gridTemplateColumns: "1fr",
@@ -217,51 +221,265 @@ export default function ReportsTimeAxis() {
             gap: 16,
           }}
         >
-          {[
-            "曜日別",
-            "時間帯別",
-            "日別推移（小）",
-            "週別推移（小）",
-            "平均保有時間（バケット）",
-            "日別勝率（小）",
-            "散布図：時刻×損益",
-            "散布図：保有時間×損益",
-            "連敗ヒート（時間帯）",
-          ].map((title, idx) => (
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              曜日別
+            </h3>
             <div
-              key={idx}
+              className="chart sm"
               style={{
-                background: "var(--panel)",
-                border: "1px solid var(--line)",
-                borderRadius: 16,
-                padding: 12,
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
               }}
-            >
-              <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
-                {title}
-              </h3>
-              <div
-                style={{
-                  height: 180,
-                  borderRadius: 14,
-                  background:
-                    "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
-                  border: "1px dashed var(--line)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "var(--muted)",
-                  fontSize: 12,
-                }}
-              >
-                グラフ準備中
-              </div>
-            </div>
-          ))}
+              aria-hidden="true"
+            ></div>
+          </div>
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              時間帯別
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              日別推移（小）
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
         </div>
       </section>
 
       <section
+        className="row row-3"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 16,
+          }}
+        >
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              週別推移（小）
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              平均保有時間（バケット）
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              日別勝率（小）
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className="row row-3"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gap: 16,
+          marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: 16,
+          }}
+        >
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              散布図：時刻×損益
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              散布図：保有時間×損益
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
+          <div
+            className="card"
+            style={{
+              background: "var(--panel)",
+              border: "1px solid var(--line)",
+              borderRadius: 16,
+              padding: 12,
+            }}
+          >
+            <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
+              連敗ヒート（時間帯）
+            </h3>
+            <div
+              className="chart sm"
+              style={{
+                height: 180,
+                borderRadius: 14,
+                background:
+                  "linear-gradient(180deg, rgba(34,197,94,.18), transparent 60%), var(--panel-2)",
+                border: "1px dashed var(--line)",
+              }}
+              aria-hidden="true"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        className="card"
         style={{
           background: "var(--panel)",
           border: "1px solid var(--line)",
@@ -270,9 +488,9 @@ export default function ReportsTimeAxis() {
         }}
       >
         <h3 style={{ margin: "0 0 12px 0", fontSize: 13, color: "var(--muted)", fontWeight: 400 }}>
-          セグメント別明細
+          セグメント別明細（クリックで取引一覧へ）
         </h3>
-        <div style={{ maxHeight: "60vh", overflowY: "auto", borderRadius: 12 }}>
+        <div className="table-wrap" style={{ maxHeight: "60vh", overflow: "auto", borderRadius: 12 }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
@@ -359,10 +577,12 @@ export default function ReportsTimeAxis() {
               {analysis.segments.map((seg, idx) => (
                 <tr
                   key={idx}
+                  className="clickable"
                   style={{
                     height: 44,
                     cursor: "pointer",
                   }}
+                  title="詳細へ"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "var(--canvas)";
                   }}
@@ -376,11 +596,11 @@ export default function ReportsTimeAxis() {
                     {seg.count}
                   </td>
                   <td
+                    className={seg.netPnl > 0 ? "good" : "bad"}
                     style={{
                       padding: 10,
                       borderBottom: "1px solid var(--line)",
                       textAlign: "right",
-                      color: seg.netPnl > 0 ? "var(--accent-2)" : "var(--danger)",
                       fontWeight: 600,
                     }}
                   >
@@ -407,8 +627,9 @@ export default function ReportsTimeAxis() {
             </tbody>
           </table>
         </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
           <span
+            className="badge"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -421,14 +642,46 @@ export default function ReportsTimeAxis() {
               color: "var(--muted)",
             }}
           >
-            データはA/B/C切替で即時反映
+            クリックで一覧にドリルダウン
+          </span>
+          <span
+            className="badge"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "2px 8px",
+              borderRadius: 999,
+              background: "var(--canvas)",
+              border: "1px solid var(--line)",
+              fontSize: 12,
+              color: "var(--muted)",
+            }}
+          >
+            行はロールオーバーでグレー
           </span>
         </div>
       </section>
 
-      <footer style={{ fontSize: 12, color: "var(--muted)", marginTop: 16 }}>
-        v0.2 React版。グローバルフィルタカードを削除し、散布図×2・連敗ヒート（時間帯）を追加。データはリアルタイム集計。
+      <footer className="sub" style={{ fontSize: 12, color: "var(--muted)", marginTop: 16 }}>
+        v0.2 HTMLモック（静的）。グローバルフィルタカードを削除し、散布図×2・連敗ヒート（時間帯）を追加。30/60/90日、メトリクス切替は上部コントロールに統一。
       </footer>
+
+      <style>{`
+        @media (min-width: 768px) {
+          .kpi {
+            grid-template-columns: repeat(4, 1fr) !important;
+          }
+          .chart.sm {
+            height: 220px !important;
+          }
+        }
+        @media (min-width: 1280px) {
+          .row-3 > div {
+            grid-template-columns: 1fr 1fr 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
