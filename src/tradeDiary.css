@@ -1,0 +1,228 @@
+/* src/tradeDiary.css */
+/* CSS variables are inherited from tokens.css - do not redefine here */
+
+/* ルート / ヘッダ */
+.td-root{ color: var(--ink); background: var(--bg); min-height: 100%; }
+.td-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
+.td-title{ font-size:20px; margin:0; }
+.td-actions{ display:flex; gap:8px; }
+.td-btn{ padding:8px 12px; border-radius:999px; border:1px solid var(--line); background: var(--surface); cursor:pointer; font-size:14px; }
+.td-btn:hover{ filter:brightness(.98); }
+.td-btn.td-accent{ background:var(--accent); border-color:var(--accent); color:#fff; }
+
+/* カード・共通 */
+.td-card{ background: var(--surface); border:1px solid var(--line); border-radius: var(--radius); padding:16px; }
+.td-card-full{ margin-top:16px; }
+.td-section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.td-section-title h2{ margin:0; font-size:16px; }
+.subhead{ margin:0 0 8px 0; font-size:13px; color:var(--muted); }
+.pill{ font-size:11px; color:var(--muted); }
+.muted{ color:var(--muted); }
+.small{ font-size:12px; }
+.nowrap{ white-space:nowrap; }
+.text-pos{ color: var(--pos); } .text-neg{ color: var(--neg); }
+.hr{ height:1px; background: var(--line); margin:12px 0; }
+
+/* KPI */
+.kpi{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+.kpi .i{ border:1px dashed var(--line); border-radius:12px; padding:10px; }
+.kpi .lab{ font-size:11px; color:var(--muted); }
+.kpi .val{ font-weight:800; font-size:18px; }
+
+/* 2列グリッド */
+.grid-main{ display:grid; gap:16px; grid-template-columns:1fr 1fr; grid-template-areas:"entry pnl" "entry2 holding" "image exit" "viz viz"; }
+@media (max-width:1080px){ .grid-main{ grid-template-columns:1fr; grid-template-areas:"entry" "pnl" "entry2" "holding" "image" "exit" "viz"; } }
+#entryCard{ grid-area:entry; } #pnlCard{ grid-area:pnl; } #entryCard2{ grid-area:entry2; } #holdingCard{ grid-area:holding; } #imageCard{ grid-area:image; } #exitCard{ grid-area:exit; } #vizCard{ grid-area:viz; }
+.compact{ padding:12px; }
+
+/* 表・表現 */
+.kv{ display:grid; grid-template-columns:160px 1fr; row-gap:8px; column-gap:12px; }
+.kv > div:nth-child(odd){ color:var(--muted); }
+.kv small{ font-size:12px; color:var(--muted); }
+.pnl-two-cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:720px){ .pnl-two-cols{ grid-template-columns:1fr; } }
+table{ width:100%; border-collapse:separate; border-spacing:0 10px; }
+th,td{ padding:10px 12px; border-bottom:1px solid var(--line); font-size:13px; background:transparent; }
+td{ background:var(--surface); }
+tr.row{ border-radius:10px; overflow:hidden; }
+td.num{ text-align:right; }
+
+/* 入力系 */
+.row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:720px){ .row2{ grid-template-columns:1fr; } }
+.select,.input{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
+.note{ width:100%; min-height:110px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); padding:12px; }
+.actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+
+/* 日記サブカード */
+.subcard{ border:1px solid var(--line); border-radius:12px; background:var(--surface); padding:12px; margin-bottom:12px; }
+
+/* タグ */
+.chips-wrap{ max-height:48px; overflow:auto; padding-right:4px; }
+.chips{ display:flex; flex-wrap:wrap; gap:6px; }
+.chip{ background:rgba(2,132,199,.12); color:#0369a1; border:1px solid var(--line); padding:2px 8px; border-radius:999px; font-size:12px; cursor:pointer; }
+
+/* マルチセレクト */
+.ms-wrap{ position:relative; }
+.ms-trigger{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
+.ms-menu{
+  position:absolute; z-index:20; left:0; right:0; top:calc(100% + 6px);
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12);
+  padding:6px; max-height:280px; overflow:auto; font-size:13px; line-height:1.5;
+}
+.ms-item{ display:flex; gap:8px; align-items:center; padding:8px; border-radius:8px; cursor:pointer; }
+.ms-item:hover{ background:var(--chip); }
+.ms-footer{ display:flex; justify-content:space-between; align-items:center; padding:6px 4px 0; color:var(--muted); font-size:12px; }
+
+/* 画像 */
+.upanel{ border:1px dashed var(--line); border-radius:12px; background:var(--surface); padding:10px; }
+.uactions{ display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.uactions .right{ margin-left:auto; }
+.thumbs{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+.thumb{ position:relative; border:1px solid var(--line); border-radius:10px; overflow:hidden; height:100px; background:var(--bg2); display:flex; align-items:center; justify-content:center; }
+.thumb img{ max-height:100%; max-width:100%; display:block; }
+.thumb .del{ position:absolute; top:6px; right:6px; border:none; background:rgba(0,0,0,.55); color:#fff; border-radius:999px; padding:4px 6px; font-size:11px; cursor:pointer; }
+
+/* モーダル（画像/クイック日記/タグ） */
+.img-modal{ position:fixed; inset:0; background:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:80; }
+.img-modal[aria-hidden="true"]{ display:none; }
+.img-modal img{ max-width:90vw; max-height:90vh; border-radius:12px; box-shadow:0 12px 30px rgba(0,0,0,.35); }
+
+.modal{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index:50; }
+.modal[aria-hidden="true"]{ display:none; }
+.modal .panel{ background:var(--bg); color:var(--ink); border:1px solid var(--line); border-radius:16px; max-width:760px; width:92%; padding:14px; max-height:80vh; overflow:auto; font-size:13px; }
+.modal .top{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.modal .top h3{ margin:0; font-size:14px; }
+
+/* チャート */
+.charts{ display:grid; gap:16px; grid-template-columns:repeat(3,1fr); }
+@media (max-width:1080px){ .charts{ grid-template-columns:1fr; } }
+.chart-card{ background:var(--bg2); border:1px solid var(--line); border-radius:var(--radius); padding:12px; display:flex; flex-direction:column; }
+.chart-card h4{ margin:0 0 8px 0; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+.legend{ font-size:12px; color:var(--muted); }
+
+/* チャートのサイズ安定 */
+.chart-box{ position:relative; width:100%; height:260px; }
+.chart-box > canvas{ width:100% !important; height:100% !important; display:block; flex:0 0 auto; }
+
+/* 保留メモ */
+.pending-list{ display:grid; gap:12px; }
+.pending-card{ border:1px solid var(--line); border-radius:12px; background:var(--bg2); padding:12px; display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; }
+.pending-meta{ font-size:12px; color:#6b7280; }
+.pending-actions{ display:flex; gap:8px; }
+
+/* 右下ショートカット */
+.quick-btn{ position:fixed; right:20px; bottom:20px; z-index:60; background:var(--accent); color:#fff; border:none; border-radius:999px; padding:12px 16px; font-weight:700; box-shadow:0 6px 16px rgba(0,0,0,.18); cursor:pointer; }
+
+/* メモ欄のグリッド（補強） */
+.note-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+@media (max-width:720px){ .note-grid{ grid-template-columns:1fr; } }
+/* ==== モーダルを最前面に（他UIより上へ） ==== */
+.modal{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;           /* ← もともと50。十分に高くします */
+}
+.modal .panel{
+  position: relative;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  width: 92%;
+  max-width: 760px;
+  max-height: 80vh;
+  overflow: auto;
+  padding: 14px;
+  font-size: 13px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.30);
+}
+
+/* 右下の「＋ 新しい日記をつける」ボタンが他UIの下に潜らないように */
+.quick-btn{
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10000;          /* ← モーダルと同格以上に */
+}
+
+/* ドロップゾーンはクリック可能に（親のflex影響を受けない） */
+.dropzone{
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+
+/* テーブルの行がradiusでクリップされず見えなくなるのを防ぐ */
+tr.row td { background: var(--bg); }
+
+/* メイン領域が空の時も圧縮されないよう最低高を確保 */
+.diary-list {
+  min-height: 360px;  /* お好みで 320〜480px に調整可 */
+}
+
+/* ヘッダー右側のボタン折返し防止（モバイルでの見栄えを少し安定） */
+.td-actions .td-btn { white-space: nowrap; }
+
+/* 新規日記ダイアログの2列グリッドと余白 */
+.dlg-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 8px;
+}
+@media (max-width: 720px){
+  .dlg-grid{ grid-template-columns: 1fr; }
+}
+
+/* 画像添付: 大きめドロップゾーン（クリックでファイル選択） */
+.dropzone-large{
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--muted);
+  height: 180px;                 /* スペースの余裕 */
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.dropzone-large:focus{
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(14,165,233,.25);
+}
+.dlg-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; }
+@media (max-width:720px){ .dlg-grid{ grid-template-columns:1fr; } }
+.time-row{ display:grid; grid-template-columns:1fr auto 8px auto; align-items:center; gap:8px; }
+.time-select{ width:84px; } .time-sep{ width:8px; text-align:center; color:var(--muted); }
+.diary-list{ min-height:360px; }
+.dropzone-large{ border:2px dashed var(--line); border-radius:12px; background:var(--bg); color:var(--muted); height:180px; display:grid; place-items:center; cursor:pointer; }
+.modal{ z-index:9999; } .quick-btn{ z-index:10000; }
+
+/* リスト項目のホバーエフェクト */
+.trade-row,
+tr.row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.trade-row:hover,
+tr.row:hover {
+  background-color: var(--chip) !important;
+}
+.trade-row:hover td,
+tr.row:hover td {
+  background-color: var(--chip) !important;
+}
+
+/* pending-cardのホバー効果 */
+.pending-card {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.pending-card:hover {
+  background-color: var(--chip);
+  border-color: var(--accent);
+}

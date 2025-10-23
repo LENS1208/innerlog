@@ -1,0 +1,144 @@
+/* Dashboard-specific styles */
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.dash-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.dash-row-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 1280px) {
+  .dash-row-2 {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.dash-row-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.chart-placeholder {
+  height: 300px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.08), transparent 60%),
+    #ffffff;
+  border: 1px dashed var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+.chart-sm {
+  height: 180px;
+}
+
+@media (min-width: 768px) {
+  .chart-placeholder {
+    height: 420px;
+  }
+  .chart-sm {
+    height: 220px;
+  }
+}
+
+.dash-table-wrap {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dash-table th,
+.dash-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.dash-table tbody tr {
+  height: 44px;
+  cursor: pointer;
+}
+
+.dash-table tbody tr:hover {
+  background: var(--chip, #f1f3f8);
+}
+
+.dash-cal {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.dash-day {
+  min-height: 120px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-2, var(--surface));
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dash-day-date {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-weight: 700;
+}
+
+.dash-day-date .d {
+  font-size: 18px;
+}
+
+.dash-day-date .w {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.dash-pill {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.dash-pill.pos {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--accent-2, #22c55e);
+}
+
+.dash-pill.neg {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--danger, #ef4444);
+}
+
+.dash-day.sat,
+.dash-day.sun {
+  background: var(--chip, #f1f3f8);
+}
+
+.accent-2 {
+  color: var(--accent-2, #22c55e);
+}
+
+.danger {
+  color: var(--danger, #ef4444);
+}
