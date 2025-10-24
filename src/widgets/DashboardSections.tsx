@@ -98,7 +98,7 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 420 }}>
+    <div style={{ height: 420, minWidth: 0, width: '100%' }}>
       {labels.length ? <Line data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
@@ -167,7 +167,7 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 420 }}>
+    <div style={{ height: 420, minWidth: 0, width: '100%' }}>
       {labels.length ? <Line data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
@@ -232,7 +232,7 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 420 }}>
+    <div style={{ height: 420, minWidth: 0, width: '100%' }}>
       {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
@@ -404,7 +404,7 @@ export function WeekdayChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 200 }}>
+    <div style={{ height: 200, minWidth: 0, width: '100%' }}>
       {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
@@ -474,7 +474,7 @@ export function TimeOfDayChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 200 }}>
+    <div style={{ height: 200, minWidth: 0, width: '100%' }}>
       {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
@@ -542,7 +542,7 @@ export function CurrencyPairChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 200 }}>
+    <div style={{ height: 200, minWidth: 0, width: '100%' }}>
       {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )

@@ -7,6 +7,7 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  min-width: 0;
 }
 
 .dash-grid {
@@ -18,42 +19,18 @@
 
 .dash-row-2 {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: 16px;
   width: 100%;
   max-width: 100%;
-}
-
-@media (min-width: 768px) {
-  .dash-row-2 {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width: 1280px) {
-  .dash-row-2 {
-    grid-template-columns: 2fr 1fr;
-  }
 }
 
 .dash-row-3 {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 16px;
   width: 100%;
   max-width: 100%;
-}
-
-@media (min-width: 640px) {
-  .dash-row-3 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .dash-row-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 
 .chart-placeholder {
@@ -68,6 +45,7 @@
   color: var(--muted);
   width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
 .chart-sm {
@@ -143,6 +121,7 @@
   gap: 4px;
   width: 100%;
   max-width: 100%;
+  overflow-x: auto;
 }
 
 @media (min-width: 640px) {
@@ -153,14 +132,16 @@
 
 .dash-day {
   min-height: 80px;
+  min-width: 0;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(--panel-2, var(--surface));
-  padding: 6px;
+  padding: 4px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
+  gap: 2px;
+  font-size: 11px;
+  overflow: hidden;
 }
 
 @media (min-width: 640px) {
@@ -169,6 +150,7 @@
     padding: 8px;
     gap: 6px;
     font-size: 13px;
+    border-radius: 12px;
   }
 }
 
@@ -182,24 +164,52 @@
 .dash-day-date {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 3px;
   font-weight: 700;
 }
 
+@media (min-width: 640px) {
+  .dash-day-date {
+    gap: 6px;
+  }
+}
+
 .dash-day-date .d {
-  font-size: 18px;
+  font-size: 14px;
+}
+
+@media (min-width: 640px) {
+  .dash-day-date .d {
+    font-size: 18px;
+  }
 }
 
 .dash-day-date .w {
-  font-size: 12px;
+  font-size: 10px;
   color: var(--muted);
+}
+
+@media (min-width: 640px) {
+  .dash-day-date .w {
+    font-size: 12px;
+  }
 }
 
 .dash-pill {
   display: inline-block;
-  padding: 2px 6px;
+  padding: 2px 4px;
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 640px) {
+  .dash-pill {
+    padding: 2px 6px;
+    font-size: 12px;
+  }
 }
 
 .dash-pill.pos {
