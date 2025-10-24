@@ -190,8 +190,8 @@ export default function TradeDiaryPage() {
     net: row.profit,
     pips: row.pips,
     hold: holdMs(row.openTime, row.closeTime),
-    gross: row.profit + row.commission + row.swap,
-    cost: -(row.commission + row.swap),
+    gross: row.profit + row.commission,
+    cost: -row.commission,
     rrr: row.sl
       ? Math.abs(row.pips) /
         Math.abs((row.openPrice - row.sl) * pipFactor(row.item))
@@ -667,7 +667,7 @@ export default function TradeDiaryPage() {
           <div className="i"><div className="lab">pips</div><div className={`val ${kpi.pips >= 0 ? "text-pos" : "text-neg"}`}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
           <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
           <div className="i"><div className="lab">総損益（Gross）/ コスト</div><div className="val small"><span>{fmtJPY(kpi.gross)}</span> / <span>{fmtJPY(kpi.cost)}</span></div></div>
-          <div className="i"><div className="lab">リスクリワード（RRR）</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
+          <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
         </div>
       </div>
 
@@ -797,7 +797,7 @@ export default function TradeDiaryPage() {
                 <tbody>
                   <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num">{fmtJPY(kpi.net)}</td></tr>
                   <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num">{fmtJPY(kpi.gross)}</td></tr>
-                  <tr className="row"><td>{UI_TEXT.cost}（手数料＋スワップ）</td><td className="num">{fmtJPY(kpi.cost)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.cost}（手数料）</td><td className="num">{fmtJPY(kpi.cost)}</td></tr>
                   <tr className="row"><td>手数料</td><td className="num">{fmtJPY(row.commission)}</td></tr>
                 </tbody>
               </table>
@@ -806,7 +806,7 @@ export default function TradeDiaryPage() {
                   <tr className="row"><td>スワップ</td><td className="num">{fmtJPY(row.swap)}</td></tr>
                   <tr className="row"><td>獲得pips</td><td className="num">{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
                   <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
-                  <tr className="row"><td>リスクリワード（RRR）</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
+                  <tr className="row"><td>リスクリワード</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
                 </tbody>
               </table>
             </div>
