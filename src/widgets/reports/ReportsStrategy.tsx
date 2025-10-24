@@ -10,7 +10,7 @@ type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 export default function ReportsStrategy() {
   const { dataset, filters } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [metric, setMetric] = useState<MetricType>("profit");
+  const metric: MetricType = "profit";
 
   useEffect(() => {
     (async () => {
@@ -151,41 +151,6 @@ export default function ReportsStrategy() {
 
   return (
     <div style={{ width: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          marginBottom: 16,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
-          {[
-            { key: "profit", label: "損益" },
-            { key: "winRate", label: "勝率" },
-            { key: "pf", label: "PF" },
-            { key: "avgProfit", label: "平均損益" },
-          ].map((m, idx, arr) => (
-            <button
-              key={m.key}
-              onClick={() => setMetric(m.key as MetricType)}
-              style={{
-                height: 32,
-                padding: "0 12px",
-                background: metric === m.key ? "var(--chip)" : "var(--surface)",
-                border: "none",
-                borderRight: idx < arr.length - 1 ? "1px solid var(--line)" : "none",
-                color: "var(--ink)",
-                cursor: "pointer",
-                fontSize: 13,
-              }}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <div
         style={{
@@ -269,7 +234,7 @@ export default function ReportsStrategy() {
                 scales: {
                   y: {
                     beginAtZero: true,
-                    ticks: { callback: (value) => formatValue(value as number, metric) },
+                    ticks: { callback: (value) => formatValue(value as number, "profit") },
                   },
                 },
               }}
