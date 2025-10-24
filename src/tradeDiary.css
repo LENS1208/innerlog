@@ -226,6 +226,7 @@ td.num{ text-align:right; }
 /* エントリー前・直後の高さ */
 .td-entry-before {
   height: 800px;
+  padding-bottom: 0;
 }
 
 /* ポジション保有中＋画像の合計高さをエントリー前・直後と揃える */
@@ -240,6 +241,7 @@ td.num{ text-align:right; }
 /* ポジション決済後とパフォーマンス分析の高さを揃える */
 .td-exit, .td-viz {
   height: 1400px;
+  padding-bottom: 0;
 }
 
 /* 縦並びレイアウト */
