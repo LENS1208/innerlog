@@ -301,6 +301,7 @@ export function WeekCalendar({ trades }: { trades: TradeWithProfit[] }) {
 
       days.push({
         date: date.getDate(),
+        dateStr,
         weekday: getWeekdayJP(date),
         profit,
         count: dayTrades.length,
@@ -315,7 +316,18 @@ export function WeekCalendar({ trades }: { trades: TradeWithProfit[] }) {
   return (
     <div className="dash-cal">
       {weekData.map((day, i) => (
-        <div key={i} className={`dash-day ${day.isSat ? 'sat' : ''} ${day.isSun ? 'sun' : ''}`}>
+        <div
+          key={i}
+          className={`dash-day ${day.isSat ? 'sat' : ''} ${day.isSun ? 'sun' : ''}`}
+          onClick={() => {
+            if (day.count > 0) {
+              location.hash = `/calendar/day/${day.dateStr}`;
+            }
+          }}
+          style={{
+            cursor: day.count > 0 ? 'pointer' : 'default'
+          }}
+        >
           <div className="dash-day-date">
             <span className="d">{day.date}</span>
             <span className="w">（{day.weekday}）</span>
