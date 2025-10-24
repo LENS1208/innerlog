@@ -150,10 +150,9 @@ function MultiSelect({
   };
   const title = value.length
     ? `${value.join("、")}（${value.length}）`
-    : "選択しない";
+    : label;
   return (
     <label className="ms-wrap">
-      <div className="muted small">{label}</div>
       <button type="button" id={triggerId} className="ms-trigger" onClick={toggle}>
         {title}
       </button>
