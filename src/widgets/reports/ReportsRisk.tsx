@@ -10,7 +10,7 @@ type UnitType = "yen" | "r";
 export default function ReportsRisk() {
   const { dataset, filters } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [unit, setUnit] = useState<UnitType>("yen");
+  const unit: UnitType = "yen";
 
   useEffect(() => {
     (async () => {
@@ -240,39 +240,6 @@ export default function ReportsRisk() {
 
   return (
     <div style={{ width: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          marginBottom: 16,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
-          {[
-            { key: "yen", label: "円" },
-            { key: "r", label: "R" },
-          ].map((u, idx, arr) => (
-            <button
-              key={u.key}
-              onClick={() => setUnit(u.key as UnitType)}
-              style={{
-                height: 32,
-                padding: "0 12px",
-                background: unit === u.key ? "var(--chip)" : "var(--surface)",
-                border: "none",
-                borderRight: idx < arr.length - 1 ? "1px solid var(--line)" : "none",
-                color: "var(--ink)",
-                cursor: "pointer",
-                fontSize: 13,
-              }}
-            >
-              {u.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <div
         style={{
