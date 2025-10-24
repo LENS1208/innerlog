@@ -677,7 +677,7 @@ export default function TradeDiaryPage() {
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* エントリー/エグジット */}
-          <section className="td-card compact" id="entryCard">
+          <section className="td-card compact td-entry-exit" id="entryCard">
             <div className="td-section-title">
               <h2>エントリー / エグジット</h2><span className="pill">実績</span>
             </div>
@@ -698,7 +698,7 @@ export default function TradeDiaryPage() {
           </div>
 
           {/* エントリー前・直後 */}
-          <section className="td-card" id="entryBeforeCard">
+          <section className="td-card td-entry-before" id="entryBeforeCard">
             <div className="td-section-title">
               <h2>エントリー前・直後</h2>
             </div>
@@ -743,7 +743,7 @@ export default function TradeDiaryPage() {
           </section>
 
           {/* ポジション決済後 */}
-          <section className="td-card" id="exitCard">
+          <section className="td-card td-exit" id="exitCard">
             <div className="td-section-title">
               <h2>ポジション決済後</h2>
             </div>
@@ -819,7 +819,7 @@ export default function TradeDiaryPage() {
           </section>
 
           {/* ポジション保有中 */}
-          <section className="td-card" id="positionHoldCard">
+          <section className="td-card td-position-hold" id="positionHoldCard">
             <div className="td-section-title">
               <h2>ポジション保有中</h2>
             </div>
@@ -892,7 +892,7 @@ export default function TradeDiaryPage() {
           </section>
 
           {/* 可視化（3枚） */}
-          <section className="td-card" id="vizCard">
+          <section className="td-card td-viz" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
             <div className="charts">
               <div className="chart-card">
@@ -911,53 +911,6 @@ export default function TradeDiaryPage() {
           </section>
         </div>
       </div>
-
-      {/* 直近10件 */}
-      <section className="td-card td-card-full">
-        <div className="td-section-title"><h2>直近10件の取引</h2></div>
-        <table
-          role="grid"
-          style={{ cursor: "pointer" }}
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          }}
-          tabIndex={0}
-          aria-label="（テーブルをクリック/Enter/Spaceで）このトレード日記のトップへ移動"
-        >
-          <thead>
-            <tr>
-              <th className="nowrap">日時</th>
-              <th>通貨ペア</th>
-              <th>方向</th>
-              <th className="num">サイズ(lot)</th>
-              <th className="num">損益（円）</th>
-              <th className="num">pips</th>
-            </tr>
-          </thead>
-          <tbody>
-            {last10.map((t) => (
-              <tr key={t.ticket} className="row">
-                <td className="nowrap">
-                  {t.openTime.toLocaleString()} → {t.closeTime.toLocaleString()}
-                </td>
-                <td>{t.item}</td>
-                <td>{t.side === "BUY" ? "買い" : "売り"}</td>
-                <td className="num">{t.size.toFixed(2)}</td>
-                <td className={`num ${t.profit >= 0 ? "text-pos" : "text-neg"}`}>
-                  {Math.round(t.profit).toLocaleString("ja-JP")}円
-                </td>
-                <td className={`num ${t.pips >= 0 ? "text-pos" : "text-neg"}`}>
-                  {(t.pips >= 0 ? "+" : "") + t.pips.toFixed(1)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
 
       {/* 画像プレビュー */}
       {imgPreview && (

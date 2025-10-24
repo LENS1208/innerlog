@@ -215,3 +215,12 @@ td.num{ text-align:right; }
 .trade-row:hover td {
   background-color: rgba(0, 0, 0, 0.03) !important;
 }
+
+/* トレード日記詳細ページのレイアウト調整 */
+.td-entry-before, .td-position-hold {
+  min-height: 520px;
+}
+
+.td-exit, .td-viz {
+  min-height: 640px;
+}
