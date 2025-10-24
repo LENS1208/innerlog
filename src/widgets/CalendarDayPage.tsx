@@ -1,11 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
-import type { Trade } from "../lib/types";
-import { parseCsvText } from "../lib/csv";
-import { useDataset } from "../lib/dataset.context";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+
+type Trade = {
+  ticket: string;
+  symbol: string;
+  type: "Buy" | "Sell" | string;
+  time: number;
+  profitJPY: number;
+  entryPrice?: number;
+  exitPrice?: number;
+  size?: number;
+  openTimeMs?: number;
+};
 
 type DailyKPI = {
   winRate: number;
@@ -18,34 +27,89 @@ type DailyKPI = {
   totalProfit: number;
 };
 
+function simpleHash(str: string): string {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = (h << 5) - h + str.charCodeAt(i);
+    h |= 0;
+  }
+  return ("h" + (h >>> 0).toString(16)).padStart(9, "0");
+}
+
+function parseCSV(text: string): string[][] {
+  const firstNL = text.indexOf("\n");
+  const head = (firstNL >= 0 ? text.slice(0, firstNL) : text).replace(/^\uFEFF/, "");
+  const tabCount = (head.match(/\t/g) || []).length;
+  const commaCount = (head.match(/,/g) || []).length;
+  const delim = tabCount > commaCount ? "\t" : ",";
+
+  const rows: string[][] = [];
+  let i = 0, f = "", row: string[] = [], q = false;
+  while (i < text.length) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { f += '"'; i += 2; continue; }
+        q = false; i++; continue;
+      }
+      f += c; i++; continue;
+    } else {
+      if (c === '"') { q = true; i++; continue; }
+      if (c === delim) { row.push(f); f = ""; i++; continue; }
+      if (c === "\n") { row.push(f); rows.push(row); row = []; f = ""; i++; continue; }
+      if (c === "\r") { i++; continue; }
+      f += c; i++; continue;
+    }
+  }
+  row.push(f); rows.push(row);
+  return rows.filter(r => !(r.length === 1 && r[0].trim() === ""));
+}
+
+function toUTCms(s: string): number {
+  const t = Date.parse(s.replace(/\./g, "-").replace(/\//g, "-"));
+  return Number.isNaN(t) ? NaN : new Date(t).getTime();
+}
+
 function loadData(ds: "A" | "B" | "C"): Promise<Trade[]> {
   if (ds === "A" || ds === "B" || ds === "C") {
     const cacheBuster = `?t=${Date.now()}`;
-    return fetch(`/demo/${ds}.csv${cacheBuster}`)
+    return fetch(`/demo/${ds}.csv${cacheBuster}`, { cache: "no-store" })
       .then((r) => r.text())
-      .then((text) => parseCsvText(text));
+      .then((text) => {
+        const rows = parseCSV(text);
+        const header = rows[0].map((h) => h.trim());
+        const lower = header.map((h) => h.toLowerCase());
+        const i = {
+          ticket: lower.indexOf("ticket"),
+          symbol: lower.indexOf("symbol") >= 0 ? lower.indexOf("symbol") : lower.indexOf("item"),
+          type: lower.indexOf("type"),
+          profit: lower.indexOf("profit"),
+          openTime: lower.indexOf("open time"),
+          time: lower.indexOf("time"),
+          closeTime: lower.indexOf("close time"),
+        };
+        const trades: Trade[] = [];
+        for (let r = 1; r < rows.length; r++) {
+          const row = rows[r];
+          if (!row || row.length < header.length) continue;
+          const ticket = row[i.ticket]?.trim();
+          const symbol = row[i.symbol]?.trim();
+          const type = row[i.type]?.trim();
+          const profit = Number(row[i.profit]?.replace(/[, ]/g, ""));
+          const tsRaw = row[i.closeTime ?? -1] ?? row[i.time ?? -1] ?? row[i.openTime ?? -1] ?? "";
+          const t = toUTCms(tsRaw);
+          if (!ticket || !symbol || !type || Number.isNaN(profit) || Number.isNaN(t)) continue;
+          trades.push({ ticket, symbol, type: type as any, time: t, profitJPY: profit });
+        }
+        trades.sort((a, b) => a.time - b.time);
+        return trades;
+      });
   }
   return Promise.resolve([]);
 }
 
-function normalizeDate(dateStr: string): string {
-  const normalized = dateStr.replace(/\./g, "-").trim();
-  const datePart = normalized.split(" ")[0];
-  return datePart;
-}
-
-function parseDateSafe(dateStr: string): Date {
-  const normalized = dateStr.replace(/\./g, "-").trim();
-  const datePart = normalized.split(" ")[0];
-  const [yearStr, monthStr, dayStr] = datePart.split("-");
-  const year = parseInt(yearStr, 10);
-  const month = parseInt(monthStr, 10) - 1;
-  const day = parseInt(dayStr, 10);
-  return new Date(year, month, day);
-}
-
 export default function CalendarDayPage() {
-  const { dataset } = useDataset();
+  const [dataset, setDataset] = useState<"A" | "B" | "C">("A");
   const [trades, setTrades] = useState<Trade[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [dailyMemo, setDailyMemo] = useState<string>("");
@@ -64,29 +128,39 @@ export default function CalendarDayPage() {
     });
   }, [dataset]);
 
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("fxtool:v1:currentId");
+      if (stored === "A" || stored === "B" || stored === "C") {
+        setDataset(stored);
+      }
+    } catch {}
+  }, []);
+
   const dayTrades = useMemo(() => {
     return trades.filter((t) => {
-      const tradeDateStr = normalizeDate(t.datetime);
+      const tradeDate = new Date(t.time);
+      const tradeDateStr = tradeDate.toISOString().split('T')[0];
       return tradeDateStr === selectedDate;
     });
   }, [trades, selectedDate]);
 
   const kpi: DailyKPI = useMemo(() => {
     const tradeCount = dayTrades.length;
-    const winTrades = dayTrades.filter((t) => t.profitYen > 0);
-    const lossTrades = dayTrades.filter((t) => t.profitYen < 0);
+    const winTrades = dayTrades.filter((t) => t.profitJPY > 0);
+    const lossTrades = dayTrades.filter((t) => t.profitJPY < 0);
     const winCount = winTrades.length;
     const lossCount = lossTrades.length;
     const winRate = tradeCount > 0 ? winCount / tradeCount : 0;
 
-    const totalProfit = dayTrades.reduce((sum, t) => sum + t.profitYen, 0);
+    const totalProfit = dayTrades.reduce((sum, t) => sum + t.profitJPY, 0);
     const avgProfit = tradeCount > 0 ? totalProfit / tradeCount : 0;
 
-    const grossProfit = winTrades.reduce((sum, t) => sum + t.profitYen, 0);
-    const grossLoss = Math.abs(lossTrades.reduce((sum, t) => sum + t.profitYen, 0));
+    const grossProfit = winTrades.reduce((sum, t) => sum + t.profitJPY, 0);
+    const grossLoss = Math.abs(lossTrades.reduce((sum, t) => sum + t.profitJPY, 0));
     const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : grossProfit > 0 ? 999 : 0;
 
-    const totalPips = dayTrades.reduce((sum, t) => sum + (t.pips || 0), 0);
+    const totalPips = 0;
 
     return {
       winRate,
@@ -103,7 +177,7 @@ export default function CalendarDayPage() {
   const equityCurve = useMemo(() => {
     let cumulative = 0;
     return dayTrades.map((t, idx) => {
-      cumulative += t.profitYen;
+      cumulative += t.profitJPY;
       return {
         x: idx + 1,
         y: cumulative,
@@ -310,42 +384,40 @@ export default function CalendarDayPage() {
             </thead>
             <tbody>
               {dayTrades.map((t, idx) => {
-                const dtString = new Date(t.datetime).toISOString().slice(0, 16).replace("T", " ");
-                const hasNote = (t.memo || t.comment || "").trim() !== "";
+                const dtString = new Date(t.time).toISOString().slice(0, 16).replace("T", " ");
                 return (
                   <tr
                     key={idx}
                     className="trade-row"
                     style={{ borderBottom: "1px solid #f3f4f6" }}
                     onClick={() => {
-                      location.hash = `/notebook/${idx}`;
+                      location.hash = `/notebook/${t.ticket}`;
                     }}
                   >
                     <td style={{ padding: "12px 8px", fontSize: 13 }}>{dtString}</td>
-                    <td style={{ padding: "12px 8px", fontSize: 13 }}>{t.pair}</td>
-                    <td style={{ padding: "12px 8px", fontSize: 13 }}>{t.side}</td>
+                    <td style={{ padding: "12px 8px", fontSize: 13 }}>{t.symbol}</td>
+                    <td style={{ padding: "12px 8px", fontSize: 13 }}>{t.type}</td>
                     <td style={{
                       padding: "12px 8px",
                       fontSize: 14,
                       fontWeight: 600,
                       textAlign: "right",
-                      color: t.profitYen >= 0 ? "var(--gain)" : "var(--loss)"
+                      color: t.profitJPY >= 0 ? "var(--gain)" : "var(--loss)"
                     }}>
-                      {t.profitYen >= 0 ? "+" : ""}¥{Math.abs(t.profitYen).toLocaleString("ja-JP")}
+                      {t.profitJPY >= 0 ? "+" : ""}¥{Math.abs(t.profitJPY).toLocaleString("ja-JP")}
                     </td>
                     <td style={{
                       padding: "12px 8px",
                       fontSize: 13,
-                      textAlign: "right",
-                      color: (t.pips || 0) >= 0 ? "var(--gain)" : "var(--loss)"
+                      textAlign: "right"
                     }}>
-                      {(t.pips || 0) >= 0 ? "+" : ""}{(t.pips || 0).toFixed(1)}
+                      —
                     </td>
-                    <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.volume?.toFixed(2)}</td>
-                    <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.openPrice}</td>
-                    <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.closePrice}</td>
+                    <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.size?.toFixed(2) ?? "—"}</td>
+                    <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.entryPrice ?? "—"}</td>
+                    <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.exitPrice ?? "—"}</td>
                     <td style={{ padding: "12px 8px", fontSize: 16, textAlign: "center" }}>
-                      {hasNote ? "📝" : "—"}
+                      —
                     </td>
                   </tr>
                 );
