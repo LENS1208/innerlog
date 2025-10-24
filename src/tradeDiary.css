@@ -224,3 +224,20 @@ td.num{ text-align:right; }
 .td-exit, .td-viz {
   min-height: 640px;
 }
+
+/* 縦並びレイアウト */
+.note-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note-vertical label {
+  margin-bottom: 0;
+}
+
+.charts-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

@@ -766,7 +766,7 @@ export default function TradeDiaryPage() {
             <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
               options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
 
-            <div className="note-grid" style={{ marginTop: 8 }}>
+            <div className="note-vertical" style={{ marginTop: 8 }}>
               <label><div className="muted small">うまくいった点</div><textarea className="note" value={noteRight} onChange={(e) => setNoteRight(e.target.value)} /></label>
               <label><div className="muted small">改善点</div><textarea className="note" value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} /></label>
               <label><div className="muted small">次回の約束</div><textarea className="note" value={noteNext} onChange={(e) => setNoteNext(e.target.value)} /></label>
@@ -894,7 +894,7 @@ export default function TradeDiaryPage() {
           {/* 可視化（3枚） */}
           <section className="td-card td-viz" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
-            <div className="charts">
+            <div className="charts-vertical">
               <div className="chart-card">
                 <h4>{UI_TEXT.cumulativeProfit}（時間）<span className="legend">決済順の累計</span></h4>
                 <div className="chart-box"><canvas ref={equityRef} /></div>
