@@ -704,9 +704,8 @@ export default function TradeDiaryPage() {
             </div>
 
             <label>
-              <div className="muted small">エントリー前の心理</div>
               <select className="select" value={entryEmotion} onChange={(e) => setEntryEmotion(e.target.value)}>
-                <option value="">選択してください</option>
+                <option value="">エントリー時の感情</option>
                 <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
                 <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
               </select>
@@ -729,15 +728,13 @@ export default function TradeDiaryPage() {
 
             <h3 style={{ margin: "12px 0 8px 0", fontSize: 13, color: "var(--muted)" }}>AIの予想</h3>
             <label>
-              <div className="muted small">AIの方向</div>
               <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-                <option value="">選択してください</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
+                <option value="">AIの方向感</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
               </select>
             </label>
             <label>
-              <div className="muted small">AIに従ったか</div>
               <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
-                <option value="">選択してください</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
+                <option value="">トレードの判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
               </select>
             </label>
           </section>
@@ -751,16 +748,14 @@ export default function TradeDiaryPage() {
             <MultiSelect label="決済のきっかけ（最大2つ）" value={exitTriggers} onChange={setExitTriggers}
               options={EXIT_TRIG_OPTS} triggerId="msExitTriggerBtn" menuId="msExitTriggerMenu" />
             <label>
-              <div className="muted small">決済時の心理</div>
               <select className="select" value={exitEmotion} onChange={(e) => setExitEmotion(e.target.value)}>
-                <option value="">選択してください</option><option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
+                <option value="">決済時の感情</option><option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
                 <option>怖くなった</option><option>安堵した</option><option>悔しい</option><option>反省している</option>
               </select>
             </label>
             <label>
-              <div className="muted small">AI評価</div>
               <select className="select" value={aiHit} onChange={(e) => setAiHit(e.target.value)}>
-                <option value="">選択してください</option><option>当たり</option><option>惜しい</option><option>外れ</option>
+                <option value="">当たり外れ（AI）</option><option>当たり</option><option>惜しい</option><option>外れ</option>
               </select>
             </label>
             <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
@@ -828,9 +823,8 @@ export default function TradeDiaryPage() {
             <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
               options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
             <label>
-              <div className="muted small">ルール順守</div>
               <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-                <option value="">選択してください</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+                <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
               </select>
             </label>
           </section>
