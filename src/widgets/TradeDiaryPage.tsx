@@ -912,6 +912,75 @@ export default function TradeDiaryPage() {
         </div>
       )}
 
+      {/* リンク済みメモ */}
+      <section className="td-card td-card-full">
+        <div className="td-section-title">
+          <h2>リンク済みメモ</h2>
+        </div>
+        <div className="linked-memos-table">
+          <table>
+            <thead>
+              <tr>
+                <th>タイトル</th>
+                <th>種類</th>
+                <th>更新</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loadQuick().filter(m => m.linkedTo).length === 0 ? (
+                <tr>
+                  <td colSpan={4} style={{ textAlign: 'center' }} className="muted small">
+                    リンク済みメモはありません
+                  </td>
+                </tr>
+              ) : (
+                loadQuick().filter(m => m.linkedTo).map((m) => {
+                  const linkedTrade = trades.find(t => t.ticket === m.linkedTo);
+                  const title = linkedTrade
+                    ? `${linkedTrade.item} | ${m.linkedTo === row.ticket ? '取引' : ''}ノート (${new Date(m.entry.time).toLocaleDateString('ja-JP')})`
+                    : `メモ (${new Date(m.entry.time).toLocaleDateString('ja-JP')})`;
+                  const type = m.linkedTo === row.ticket ? '取引' : '日次';
+                  const updated = new Date(m.entry.time).toLocaleString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }).replace(/\//g, '/');
+
+                  return (
+                    <tr key={m.tempId}>
+                      <td>{title}</td>
+                      <td>{type}</td>
+                      <td>{updated}</td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <button className="td-btn" onClick={() => {
+                            alert(`詳細表示機能は未実装です。\nメモ内容: ${m.note || 'なし'}`);
+                          }}>表示</button>
+                          <button className="td-btn" onClick={() => {
+                            if (confirm('このメモのリンクを解除しますか？')) {
+                              let arr = loadQuick();
+                              const idx = arr.findIndex(x => x.tempId === m.tempId);
+                              if (idx >= 0) {
+                                arr[idx].linkedTo = undefined;
+                                saveQuick(arr);
+                                setPending(arr.filter((x) => !x.linkedTo));
+                              }
+                            }
+                          }}>リンク解除</button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       {/* 未リンクメモ（簡易表示） */}
       <section className="td-card td-card-full">
         <div className="td-section-title">
