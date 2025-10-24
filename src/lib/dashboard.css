@@ -4,17 +4,30 @@
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .dash-grid {
   display: grid;
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
 }
 
 .dash-row-2 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .dash-row-2 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (min-width: 1280px) {
@@ -25,12 +38,26 @@
 
 .dash-row-3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .dash-row-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .dash-row-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .chart-placeholder {
-  height: 300px;
+  height: 250px;
   border-radius: 14px;
   background: linear-gradient(180deg, rgba(34, 197, 94, 0.08), transparent 60%),
     #ffffff;
@@ -39,13 +66,33 @@
   align-items: center;
   justify-content: center;
   color: var(--muted);
+  width: 100%;
+  max-width: 100%;
 }
 
 .chart-sm {
-  height: 180px;
+  height: 160px;
+}
+
+@media (min-width: 640px) {
+  .chart-placeholder {
+    height: 300px;
+  }
+  .chart-sm {
+    height: 180px;
+  }
 }
 
 @media (min-width: 768px) {
+  .chart-placeholder {
+    height: 350px;
+  }
+  .chart-sm {
+    height: 200px;
+  }
+}
+
+@media (min-width: 1024px) {
   .chart-placeholder {
     height: 420px;
   }
@@ -57,18 +104,28 @@
 .dash-table-wrap {
   max-height: 300px;
   overflow: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 .dash-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
 }
 
 .dash-table th,
 .dash-table td {
-  padding: 10px;
+  padding: 8px;
   border-bottom: 1px solid var(--line);
   text-align: left;
+}
+
+@media (min-width: 768px) {
+  .dash-table th,
+  .dash-table td {
+    padding: 10px;
+  }
 }
 
 .dash-table tbody tr {
@@ -83,18 +140,43 @@
 .dash-cal {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  gap: 4px;
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 640px) {
+  .dash-cal {
+    gap: 8px;
+  }
 }
 
 .dash-day {
-  min-height: 120px;
+  min-height: 80px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--panel-2, var(--surface));
-  padding: 8px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  font-size: 12px;
+}
+
+@media (min-width: 640px) {
+  .dash-day {
+    min-height: 100px;
+    padding: 8px;
+    gap: 6px;
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dash-day {
+    min-height: 120px;
+    font-size: 14px;
+  }
 }
 
 .dash-day-date {

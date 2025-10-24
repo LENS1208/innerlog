@@ -629,9 +629,9 @@ const EquityCurvePage: React.FC = () => {
 
   // ---- UI ----
   return (
-    <div style={{ width: "100%" }}>
-      <div style={{ width: "100%" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+    <div style={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
+      <div style={{ width: "100%", maxWidth: "100%" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16, width: "100%", maxWidth: "100%" }}>
           {/* 左：CSV取り込み（ヘッダーに集約。CSV inputだけ非表示で残す） */}
           <div>
             <input
@@ -647,15 +647,15 @@ const EquityCurvePage: React.FC = () => {
           {/* 右：KPI＋チャート */}
           <div>
             {/* 期間フィルター */}
-            <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
-              <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
+            <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", width: "100%", maxWidth: "100%" }}>
+              <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden", width: "100%", maxWidth: "fit-content" }}>
                 {(["ALL", 30, 60, 90] as const).map((range) => (
                   <button
                     key={range}
                     onClick={() => setDayRange(range)}
                     style={{
                       height: 32,
-                      padding: "0 16px",
+                      padding: "0 12px",
                       background: dayRange === range ? "var(--chip)" : "var(--surface)",
                       border: "none",
                       borderRight: range !== 90 ? "1px solid var(--line)" : "none",
@@ -663,6 +663,7 @@ const EquityCurvePage: React.FC = () => {
                       cursor: "pointer",
                       fontSize: 13,
                       fontWeight: dayRange === range ? 600 : 400,
+                      whiteSpace: "nowrap",
                     }}
                   >
                     {range === "ALL" ? "全期間" : `${range}日`}
