@@ -761,10 +761,10 @@ export default function TradeDiaryPage() {
               options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
 
             <div className="note-vertical" style={{ marginTop: 8 }}>
-              <label><div className="muted small">うまくいった点</div><textarea className="note" value={noteRight} onChange={(e) => setNoteRight(e.target.value)} /></label>
-              <label><div className="muted small">改善点</div><textarea className="note" value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} /></label>
-              <label><div className="muted small">次回の約束</div><textarea className="note" value={noteNext} onChange={(e) => setNoteNext(e.target.value)} /></label>
-              <label><div className="muted small">自由メモ</div><textarea className="note" value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="気づきやリンクなど" /></label>
+              <label><div className="muted small">うまくいった点</div><textarea className="note" value={noteRight} onChange={(e) => setNoteRight(e.target.value)} placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。" /></label>
+              <label><div className="muted small">改善点</div><textarea className="note" value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} placeholder="例）利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。" /></label>
+              <label><div className="muted small">次回の約束</div><textarea className="note" value={noteNext} onChange={(e) => setNoteNext(e.target.value)} placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。" /></label>
+              <label><div className="muted small">自由メモ</div><textarea className="note" value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="例）今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。" /></label>
             </div>
 
             <div style={{ marginTop: 12 }}>

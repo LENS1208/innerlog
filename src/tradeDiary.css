@@ -52,6 +52,7 @@ td.num{ text-align:right; }
 @media (max-width:720px){ .row2{ grid-template-columns:1fr; } }
 .select,.input{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:8px 10px; width:100%; text-align:left; }
 .note{ width:100%; min-height:110px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:var(--ink); padding:12px; }
+.note::placeholder{ color:rgba(0, 0, 0, 0.3); opacity:1; }
 .actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
 
 /* Single column layout for form inputs */
