@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDataset } from "../lib/dataset.context";
-import ReportsTimeAxis from "./reports/ReportsTimeAxis";
-import ReportsMarket from "./reports/ReportsMarket";
-import ReportsStrategy from "./reports/ReportsStrategy";
-import ReportsRisk from "./reports/ReportsRisk";
+
+const ReportsTimeAxis = () => <div style={{ padding: "20px" }}><h3>時間軸レポート</h3><p>実装予定</p></div>;
+const ReportsMarket = () => <div style={{ padding: "20px" }}><h3>市場レポート</h3><p>実装予定</p></div>;
+const ReportsStrategy = () => <div style={{ padding: "20px" }}><h3>戦略レポート</h3><p>実装予定</p></div>;
+const ReportsRisk = () => <div style={{ padding: "20px" }}><h3>リスクレポート</h3><p>実装予定</p></div>;
 
 type TabKey = "time" | "market" | "strategy" | "risk";
 
