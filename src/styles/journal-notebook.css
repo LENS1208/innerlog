@@ -79,7 +79,7 @@
   display: inline-flex;
   gap: 6px;
   align-items: center;
-  padding: 4px 8px;
+  padding: 2px 8px;
   border-radius: 999px;
   background: var(--chip, #f3f4f6);
   border: 1px solid var(--line, #e5e7eb);
@@ -92,10 +92,10 @@
 .note {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 6px 10px;
+  gap: 6px;
+  padding: 8px 12px;
   border: 1px solid var(--line, #e5e7eb);
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   background: var(--surface, #ffffff);
   transition: background-color 0.15s;
@@ -114,9 +114,8 @@
 
 .note .title {
   font-weight: 600;
-  font-size: 13px;
+  font-size: 14px;
   flex: 1;
-  line-height: 1.4;
 }
 
 .note .actions {
@@ -127,12 +126,11 @@
 }
 
 .note .meta-line {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--muted, #6b7280);
   display: flex;
   justify-content: space-between;
-  min-height: 16px;
-  line-height: 1.4;
+  min-height: 18px;
 }
 
 .note .meta {
@@ -261,7 +259,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .seg {
