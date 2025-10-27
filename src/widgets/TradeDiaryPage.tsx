@@ -676,26 +676,27 @@ export default function TradeDiaryPage() {
         </div>
       </div>
 
+      {/* トレード情報 */}
+      <section className="td-card compact td-trade-info" id="tradeInfoCard" style={{ marginTop: 16 }}>
+        <div className="td-section-title">
+          <h2>トレード情報</h2><span className="pill">実績</span>
+        </div>
+        <div className="kv">
+          <div>通貨ペア</div><div>{row.item}</div>
+          <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
+          <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
+          <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
+          <div>エントリー時刻</div><div>{row.openTime.toLocaleString()}</div>
+          <div>エントリー価格</div><div><strong>{row.openPrice}</strong></div>
+          <div>決済時刻</div><div>{row.closeTime.toLocaleString()}</div>
+          <div>決済価格</div><div><strong>{row.closePrice}</strong></div>
+        </div>
+      </section>
+
       {/* 2列グリッド */}
       <div className="grid-main" style={{ marginTop: 16 }}>
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* トレード情報 */}
-          <section className="td-card compact td-trade-info" id="tradeInfoCard" style={{ gridColumn: '1 / -1' }}>
-            <div className="td-section-title">
-              <h2>トレード情報</h2><span className="pill">実績</span>
-            </div>
-            <div className="kv" style={{ gridTemplateColumns: 'repeat(4, 160px 1fr)' }}>
-              <div>通貨ペア</div><div>{row.item}</div>
-              <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
-              <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
-              <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
-              <div>エントリー時刻</div><div>{row.openTime.toLocaleString()}</div>
-              <div>エントリー価格</div><div><strong>{row.openPrice}</strong></div>
-              <div>決済時刻</div><div>{row.closeTime.toLocaleString()}</div>
-              <div>決済価格</div><div><strong>{row.closePrice}</strong></div>
-            </div>
-          </section>
 
           {/* トレード日記 */}
           <div className="td-diary-heading" style={{ marginTop: 0 }}>
