@@ -175,14 +175,20 @@ export default function CalendarDayPage() {
   }, [dayTrades]);
 
   const equityCurve = useMemo(() => {
+    if (dayTrades.length === 0) return [];
     let cumulative = 0;
-    return dayTrades.map((t, idx) => {
+    const points = [{
+      x: 0,
+      y: 0,
+    }];
+    dayTrades.forEach((t, idx) => {
       cumulative += t.profitJPY;
-      return {
+      points.push({
         x: idx + 1,
         y: cumulative,
-      };
+      });
     });
+    return points;
   }, [dayTrades]);
 
   const goToPrevDay = () => {
@@ -299,12 +305,26 @@ export default function CalendarDayPage() {
                   {
                     label: "累積損益",
                     data: equityCurve.map((d) => d.y),
-                    borderColor: kpi.totalProfit >= 0 ? "#16a34a" : "#ef4444",
-                    backgroundColor: kpi.totalProfit >= 0 ? "rgba(22, 163, 74, 0.2)" : "rgba(239, 68, 68, 0.2)",
+                    borderColor: "#3b82f6",
+                    backgroundColor: (context) => {
+                      const chart = context.chart;
+                      const {ctx, chartArea} = chart;
+                      if (!chartArea) return;
+                      const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                      gradient.addColorStop(0, 'rgba(239, 68, 68, 0.3)');
+                      gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
+                      gradient.addColorStop(1, 'rgba(22, 163, 74, 0.3)');
+                      return gradient;
+                    },
                     fill: true,
                     tension: 0.3,
                     pointRadius: 0,
-                    pointHoverRadius: 4,
+                    pointHoverRadius: 6,
+                    segment: {
+                      borderColor: (ctx) => {
+                        return ctx.p1.parsed.y >= 0 ? '#16a34a' : '#ef4444';
+                      }
+                    }
                   },
                 ],
               }}
