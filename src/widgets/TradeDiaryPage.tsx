@@ -668,11 +668,10 @@ export default function TradeDiaryPage() {
       {/* KPI */}
       <div className="td-card">
         <div className="kpi">
-          <div className="i"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
-          <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
-          <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
-          <div className="i"><div className="lab">総損益（Gross）/ コスト</div><div className="val small"><span style={{ color: kpi.gross >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.gross)}</span> / <span style={{ color: 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.cost)}</span></div></div>
-          <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
+          <div className="i" style={{ background: 'transparent', border: 'none' }}><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
+          <div className="i" style={{ background: 'transparent', border: 'none' }}><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
+          <div className="i" style={{ background: 'transparent', border: 'none' }}><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
+          <div className="i" style={{ background: 'transparent', border: 'none' }}><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
         </div>
       </div>
 
@@ -681,11 +680,11 @@ export default function TradeDiaryPage() {
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* トレード情報 */}
-          <section className="td-card compact td-trade-info" id="tradeInfoCard" style={{ gridColumn: '1 / -1' }}>
+          <section className="td-card compact td-trade-info" id="tradeInfoCard" style={{ gridColumn: '1 / -1', width: '100%' }}>
             <div className="td-section-title">
               <h2>トレード情報</h2><span className="pill">実績</span>
             </div>
-            <div className="kv" style={{ gridTemplateColumns: 'repeat(4, 160px 1fr)' }}>
+            <div className="kv" style={{ gridTemplateColumns: '160px 1fr' }}>
               <div>通貨ペア</div><div>{row.item}</div>
               <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
               <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
