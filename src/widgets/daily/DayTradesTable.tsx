@@ -41,16 +41,6 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
                       location.hash = `/notebook/${trade.ticket}`;
                     }
                   }}
-                  onMouseEnter={(e) => {
-                    if (trade.ticket) {
-                      e.currentTarget.style.backgroundColor = "var(--chip)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (trade.ticket) {
-                      e.currentTarget.style.backgroundColor = "";
-                    }
-                  }}
                 >
                   <td>{trade.time}</td>
                   <td>{trade.symbol}</td>
