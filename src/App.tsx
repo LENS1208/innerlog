@@ -11,6 +11,7 @@ import DiaryIndexPage from "./widgets/DiaryIndexPage";
 import MonthlyCalendar from "./widgets/MonthlyCalendar";
 import ReportsPage from "./widgets/ReportsPage";
 import CalendarDayPage from "./widgets/CalendarDayPage";
+import DailyNotePage from "./widgets/DailyNotePage";
 
 type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/forecast" | "/notebook" | `/notebook/${string}` | "/settings";
 
@@ -59,7 +60,7 @@ export default function App() {
   let Page: JSX.Element;
   if (route === "/dashboard") Page = <EquityCurvePage />;
   else if (route === "/calendar") Page = <MonthlyCalendar />;
-  else if (route.startsWith("/calendar/day/")) Page = <CalendarDayPage />;
+  else if (route.startsWith("/calendar/day/")) Page = <DailyNotePage />;
   else if (route === "/trades") Page = <TradeListPage />;
   else if (route.startsWith("/reports")) Page = <ReportsPage />;
   else if (route === "/forecast") Page = <ForecastHybrid />;
