@@ -663,10 +663,10 @@ export default function TradeDiaryPage() {
       {/* KPI */}
       <div className="td-card">
         <div className="kpi">
-          <div className="i"><div className="lab">損益（円）</div><div className={`val ${kpi.net >= 0 ? "text-pos" : "text-neg"}`}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
-          <div className="i"><div className="lab">pips</div><div className={`val ${kpi.pips >= 0 ? "text-pos" : "text-neg"}`}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
+          <div className="i"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
+          <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
           <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
-          <div className="i"><div className="lab">総損益（Gross）/ コスト</div><div className="val small"><span>{fmtJPY(kpi.gross)}</span> / <span>{fmtJPY(kpi.cost)}</span></div></div>
+          <div className="i"><div className="lab">総損益（Gross）/ コスト</div><div className="val small"><span style={{ color: kpi.gross >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.gross)}</span> / <span style={{ color: 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.cost)}</span></div></div>
           <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
         </div>
       </div>
@@ -798,16 +798,16 @@ export default function TradeDiaryPage() {
             <div className="pnl-two-cols">
               <table role="grid">
                 <tbody>
-                  <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num">{fmtJPY(kpi.net)}</td></tr>
-                  <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num">{fmtJPY(kpi.gross)}</td></tr>
-                  <tr className="row"><td>{UI_TEXT.cost}（手数料）</td><td className="num">{fmtJPY(kpi.cost)}</td></tr>
-                  <tr className="row"><td>手数料</td><td className="num">{fmtJPY(row.commission)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{fmtJPY(kpi.net)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num" style={{ color: kpi.gross >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.gross)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.cost}（手数料）</td><td className="num" style={{ color: 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.cost)}</td></tr>
+                  <tr className="row"><td>手数料</td><td className="num" style={{ color: row.commission < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>{fmtJPY(row.commission)}</td></tr>
                 </tbody>
               </table>
               <table role="grid">
                 <tbody>
-                  <tr className="row"><td>スワップ</td><td className="num">{fmtJPY(row.swap)}</td></tr>
-                  <tr className="row"><td>獲得pips</td><td className="num">{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
+                  <tr className="row"><td>スワップ</td><td className="num" style={{ color: row.swap < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #22c55e)' }}>{fmtJPY(row.swap)}</td></tr>
+                  <tr className="row"><td>獲得pips</td><td className="num" style={{ color: row.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
                   <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
                   <tr className="row"><td>リスクリワード</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
                 </tbody>
