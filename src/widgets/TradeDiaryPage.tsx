@@ -682,7 +682,7 @@ export default function TradeDiaryPage() {
           <h2>トレード情報</h2><span className="pill">実績</span>
         </div>
         <div>
-          <div style={{ display: 'grid', gridTemplateColumns: '100px 60px 90px 110px 160px 110px 160px 110px', gap: 12, marginBottom: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 16, marginBottom: 12 }}>
             <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>通貨ペア</div>
             <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>方向</div>
             <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>サイズ</div>
@@ -692,14 +692,14 @@ export default function TradeDiaryPage() {
             <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>決済時刻</div>
             <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>決済価格</div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '100px 60px 90px 110px 160px 110px 160px 110px', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 16 }}>
             <div style={{ fontWeight: 500 }}>{row.item}</div>
             <div style={{ fontWeight: 500 }}>{row.side === "BUY" ? "買い" : "売り"}</div>
             <div style={{ fontWeight: 500 }}>{row.size.toFixed(2)} lot</div>
             <div style={{ fontWeight: 500 }}>— / {row.sl ?? "—"}</div>
-            <div style={{ fontWeight: 500, fontSize: 13 }}>{row.openTime.toLocaleString()}</div>
+            <div style={{ fontWeight: 500 }}>{row.openTime.toLocaleString()}</div>
             <div style={{ fontWeight: 500 }}><strong>{row.openPrice}</strong></div>
-            <div style={{ fontWeight: 500, fontSize: 13 }}>{row.closeTime.toLocaleString()}</div>
+            <div style={{ fontWeight: 500 }}>{row.closeTime.toLocaleString()}</div>
             <div style={{ fontWeight: 500 }}><strong>{row.closePrice}</strong></div>
           </div>
         </div>
