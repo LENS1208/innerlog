@@ -300,10 +300,11 @@ export default function CalendarDayPage() {
                     label: "累積損益",
                     data: equityCurve.map((d) => d.y),
                     borderColor: kpi.totalProfit >= 0 ? "#16a34a" : "#ef4444",
-                    backgroundColor: kpi.totalProfit >= 0 ? "rgba(22, 163, 74, 0.1)" : "rgba(239, 68, 68, 0.1)",
-                    tension: 0.1,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
+                    backgroundColor: kpi.totalProfit >= 0 ? "rgba(22, 163, 74, 0.2)" : "rgba(239, 68, 68, 0.2)",
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
                   },
                 ],
               }}
@@ -314,15 +315,35 @@ export default function CalendarDayPage() {
                   legend: {
                     display: false,
                   },
+                  tooltip: {
+                    callbacks: {
+                      label: function(context) {
+                        const value = context.parsed.y;
+                        return `損益: ${value >= 0 ? '+' : ''}${Math.round(value).toLocaleString('ja-JP')}円`;
+                      }
+                    }
+                  }
                 },
                 scales: {
                   y: {
-                    beginAtZero: false,
+                    beginAtZero: true,
                     grid: {
                       color: "rgba(0,0,0,0.05)",
                     },
+                    ticks: {
+                      callback: function(value) {
+                        return '¥' + value.toLocaleString('ja-JP');
+                      }
+                    }
                   },
                   x: {
+                    title: {
+                      display: true,
+                      text: '取引番号',
+                      font: {
+                        size: 11
+                      }
+                    },
                     grid: {
                       display: false,
                     },
