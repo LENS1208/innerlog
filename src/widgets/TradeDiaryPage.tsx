@@ -922,6 +922,41 @@ export default function TradeDiaryPage() {
             )}
           </section>
 
+          {/* ポジション保有中 */}
+          <section className="td-card td-position-hold" id="positionHoldCard">
+            <div className="td-section-title">
+              <h2>ポジション保有中</h2>
+            </div>
+
+            <label>
+              <div className="muted small">自由メモ</div>
+              <textarea className="note" rows={1} placeholder="保有中の気づきや感想をメモ" />
+            </label>
+
+            <button
+              type="button"
+              className="td-btn"
+              style={{ marginTop: 8, width: "100%" }}
+              onClick={() => setExpandHold(!expandHold)}
+            >
+              {expandHold ? "詳細を閉じる" : "詳細を開く"}
+            </button>
+
+            {expandHold && (
+              <div style={{ marginTop: 12 }}>
+                <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+                  options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+                <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+                  options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+                <label>
+                  <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+                    <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+                  </select>
+                </label>
+              </div>
+            )}
+          </section>
+
           {/* ポジション決済後 */}
           <section className="td-card td-exit" id="exitCard">
             <div className="td-section-title">
@@ -994,41 +1029,6 @@ export default function TradeDiaryPage() {
           <div className="td-diary-heading" style={{ marginTop: 0 }}>
             <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700, opacity: 0, pointerEvents: "none" }}>スペーサー</h2>
           </div>
-
-          {/* ポジション保有中 */}
-          <section className="td-card td-position-hold" id="positionHoldCard">
-            <div className="td-section-title">
-              <h2>ポジション保有中</h2>
-            </div>
-
-            <label>
-              <div className="muted small">自由メモ</div>
-              <textarea className="note" rows={1} placeholder="保有中の気づきや感想をメモ" />
-            </label>
-
-            <button
-              type="button"
-              className="td-btn"
-              style={{ marginTop: 8, width: "100%" }}
-              onClick={() => setExpandHold(!expandHold)}
-            >
-              {expandHold ? "詳細を閉じる" : "詳細を開く"}
-            </button>
-
-            {expandHold && (
-              <div style={{ marginTop: 12 }}>
-                <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-                  options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-                <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-                  options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-                <label>
-                  <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-                    <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-                  </select>
-                </label>
-              </div>
-            )}
-          </section>
 
           {/* 画像アップロード */}
           <section className="td-card" id="imageCard">
