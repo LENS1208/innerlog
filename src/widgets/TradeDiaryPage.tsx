@@ -507,30 +507,8 @@ export default function TradeDiaryPage() {
   const [pending, setPending] = useState<QuickMemo[]>([]);
 
   useEffect(() => {
-    const memos = loadQuick();
-    // ダミーデータがない場合はサンプルを1件挿入
-    if (memos.length === 0) {
-      const sample: QuickMemo = {
-        tempId: 'demo_pending_001',
-        symbol: 'USDJPY',
-        side: 'BUY',
-        entry: { planned: 148.5, actual: 148.52, size: 0.5, time: new Date().toISOString() },
-        note: 'ドル円の押し目を狙ったエントリー。まだポジション保有中。',
-        linkedTo: undefined
-      };
-      const linkedSample: QuickMemo = {
-        tempId: 'demo_linked_001',
-        symbol: 'EURUSD',
-        side: 'SELL',
-        entry: { planned: 1.062, actual: 1.0618, size: 1.0, time: new Date(Date.now() - 86400000).toISOString() },
-        note: 'ユーロドルのブレイクアウト。すでに決済済み。',
-        linkedTo: row.ticket
-      };
-      memos.push(sample, linkedSample);
-      saveQuick(memos);
-    }
-    setPending(memos.filter((m) => !m.linkedTo));
-  }, [row.ticket]);
+    setPending(loadQuick().filter((m) => !m.linkedTo));
+  }, []);
 
   /* ===== トレード日記：選択肢・状態 ===== */
   const ENTRY_BASIS_OPTS = [
@@ -628,11 +606,6 @@ export default function TradeDiaryPage() {
   const [intraEmotion, setIntraEmotion] = useState<string[]>([]);
   const [preRules, setPreRules] = useState<string[]>([]);
   const [ruleExec, setRuleExec] = useState("");
-  const [intraMemo, setIntraMemo] = useState("");
-
-  const [entryBeforeOpen, setEntryBeforeOpen] = useState(false);
-  const [positionHoldOpen, setPositionHoldOpen] = useState(false);
-  const [exitOpen, setExitOpen] = useState(false);
 
   const [aiSide, setAiSide] = useState("");
   const [aiFollow, setAiFollow] = useState("選択しない");
@@ -698,72 +671,25 @@ export default function TradeDiaryPage() {
         </div>
       </div>
 
-      {/* トレード概要（全幅） */}
-      <section className="td-card" style={{ marginTop: 16 }}>
-        <div className="td-section-title">
-          <h2>トレード概要</h2>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px 16px" }}>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>通貨ペア</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.item}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>方向</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.side === "BUY" ? "買い" : "売り"}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>サイズ</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.size.toFixed(2)} lot</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>逆指値（SL）</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.sl ?? "—"}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>エントリー価格</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.openPrice}</div>
-            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{row.openTime.toLocaleString()}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>決済価格</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.closePrice}</div>
-            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{row.closeTime.toLocaleString()}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>手数料</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: row.commission < 0 ? "var(--danger)" : "inherit" }}>{row.commission.toLocaleString("ja-JP")}円</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>スワップ</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: row.swap < 0 ? "var(--danger)" : "var(--accent-2)" }}>{row.swap.toLocaleString("ja-JP")}円</div>
-          </div>
-        </div>
-      </section>
-
-      {/* パフォーマンス分析（3列） */}
-      <section className="td-card" style={{ marginTop: 16 }}>
-        <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
-          <div className="chart-card">
-            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.cumulativeProfit}（時間）<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>決済順の累計</span></h4>
-            <div className="chart-box"><canvas ref={equityRef} /></div>
-          </div>
-          <div className="chart-card">
-            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.profitHistogram}</h4>
-            <div className="chart-box"><canvas ref={histRef} /></div>
-          </div>
-          <div className="chart-card">
-            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>曜日×時間ヒートマップ<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>勝率（%）</span></h4>
-            <div className="chart-box"><canvas ref={heatRef} /></div>
-          </div>
-        </div>
-      </section>
-
       {/* 2列グリッド */}
       <div className="grid-main" style={{ marginTop: 16 }}>
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* エントリー/エグジット */}
+          <section className="td-card compact td-entry-exit td-match-height" id="entryCard">
+            <div className="td-section-title">
+              <h2>エントリー / エグジット</h2><span className="pill">実績</span>
+            </div>
+            <div className="kv">
+              <div>通貨ペア</div><div>{row.item}</div>
+              <div>エントリー</div><div><strong>{row.openPrice}</strong>　<small>{row.openTime.toLocaleString()}</small></div>
+              <div>決済</div><div><strong>{row.closePrice}</strong>　<small>{row.closeTime.toLocaleString()}</small></div>
+              <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
+              <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
+              <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
+              <div>手数料 / スワップ</div><div>{row.commission.toLocaleString("ja-JP")}円 / {row.swap.toLocaleString("ja-JP")}円</div>
+            </div>
+          </section>
 
           {/* トレード日記 */}
           <div className="td-diary-heading" style={{ marginTop: 0 }}>
@@ -772,50 +698,145 @@ export default function TradeDiaryPage() {
 
           {/* エントリー前・直後 */}
           <section className="td-card td-entry-before" id="entryBeforeCard">
-            <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setEntryBeforeOpen(!entryBeforeOpen)}>
-              <h2>エントリー前・直後 {!entryBeforeOpen && <span style={{ fontSize: 12, fontWeight: 400, color: "var(--muted)", marginLeft: 8 }}>— 詳細を入力</span>} <span style={{ fontSize: 14, marginLeft: 8 }}>{entryBeforeOpen ? "▲" : "▼"}</span></h2>
+            <div className="td-section-title">
+              <h2>エントリー前・直後</h2>
             </div>
 
-            {entryBeforeOpen && (
-              <>
-                <label>
-                  <select className="select" value={entryEmotion} onChange={(e) => setEntryEmotion(e.target.value)}>
-                    <option value="">エントリー時の感情</option>
-                    <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
-                    <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
-                  </select>
-                </label>
-                <MultiSelect label="エントリー根拠（最大2つ）" value={entryBasis} onChange={setEntryBasis}
-                  options={ENTRY_BASIS_OPTS} triggerId="msEntryBasisBtn" menuId="msEntryBasisMenu" />
-                <MultiSelect label="テクニカル条件（最大2つ）" value={techSet} onChange={setTechSet}
-                  options={TECH_OPTS} triggerId="msTechBtn" menuId="msTechMenu" />
-                <MultiSelect label="マーケット環境（最大2つ）" value={marketSet} onChange={setMarketSet}
-                  options={MARKET_OPTS} triggerId="msMarketBtn" menuId="msMarketMenu" />
-                <MultiSelect label="ファンダメンタルズ（最大2つ）" value={fundSet} onChange={setFundSet}
-                  options={FUND_OPTS} triggerId="msFundBtn" menuId="msFundMenu" />
+            <label>
+              <select className="select" value={entryEmotion} onChange={(e) => setEntryEmotion(e.target.value)}>
+                <option value="">エントリー時の感情</option>
+                <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
+                <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
+              </select>
+            </label>
+            <MultiSelect label="エントリー根拠（最大2つ）" value={entryBasis} onChange={setEntryBasis}
+              options={ENTRY_BASIS_OPTS} triggerId="msEntryBasisBtn" menuId="msEntryBasisMenu" />
+            <MultiSelect label="テクニカル条件（最大2つ）" value={techSet} onChange={setTechSet}
+              options={TECH_OPTS} triggerId="msTechBtn" menuId="msTechMenu" />
+            <MultiSelect label="マーケット環境（最大2つ）" value={marketSet} onChange={setMarketSet}
+              options={MARKET_OPTS} triggerId="msMarketBtn" menuId="msMarketMenu" />
+            <MultiSelect label="ファンダメンタルズ（最大2つ）" value={fundSet} onChange={setFundSet}
+              options={FUND_OPTS} triggerId="msFundBtn" menuId="msFundMenu" />
 
-                <div className="hr" />
+            <div className="hr" />
 
-                <h3 style={{ margin: "12px 0 8px 0", fontSize: 13, color: "var(--muted)" }}>AIの予想</h3>
-                <label>
-                  <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-                    <option value="">AIの方向感</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
-                  </select>
-                </label>
-                <label>
-                  <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
-                    <option value="">トレードの判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
-                  </select>
-                </label>
+            <h3 style={{ margin: "12px 0 8px 0", fontSize: 13, color: "var(--muted)" }}>AIの予想</h3>
+            <label>
+              <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
+                <option value="">AIの方向感</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
+              </select>
+            </label>
+            <label>
+              <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
+                <option value="">トレードの判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
+              </select>
+            </label>
 
-                <div className="hr" />
-              </>
-            )}
+            <div className="hr" />
 
             <label>
               <div className="muted small">自由メモ</div>
               <textarea className="note" rows={1} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
                 placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたのでロングを検討。" />
+            </label>
+          </section>
+
+          {/* ポジション決済後 */}
+          <section className="td-card td-exit" id="exitCard">
+            <div className="td-section-title">
+              <h2>ポジション決済後</h2>
+            </div>
+
+            <MultiSelect label="決済のきっかけ（最大2つ）" value={exitTriggers} onChange={setExitTriggers}
+              options={EXIT_TRIG_OPTS} triggerId="msExitTriggerBtn" menuId="msExitTriggerMenu" />
+            <label>
+              <select className="select" value={exitEmotion} onChange={(e) => setExitEmotion(e.target.value)}>
+                <option value="">決済時の感情</option><option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
+                <option>怖くなった</option><option>安堵した</option><option>悔しい</option><option>反省している</option>
+              </select>
+            </label>
+            <label>
+              <select className="select" value={aiHit} onChange={(e) => setAiHit(e.target.value)}>
+                <option value="">当たり外れ（AI）</option><option>当たり</option><option>惜しい</option><option>外れ</option>
+              </select>
+            </label>
+            <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
+              options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
+
+            <div className="note-vertical" style={{ marginTop: 8 }}>
+              <label><div className="muted small">うまくいった点</div><textarea className="note" rows={1} value={noteRight} onChange={(e) => setNoteRight(e.target.value)} placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。" /></label>
+              <label><div className="muted small">改善点</div><textarea className="note" rows={1} value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} placeholder="例）利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。" /></label>
+              <label><div className="muted small">次回の約束</div><textarea className="note" rows={1} value={noteNext} onChange={(e) => setNoteNext(e.target.value)} placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。" /></label>
+              <label><div className="muted small">自由メモ</div><textarea className="note" rows={1} value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="例）今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。" /></label>
+            </div>
+
+            <div style={{ marginTop: 12 }}>
+              <div className="muted small">タグ</div>
+              <div className="chips-wrap">
+                <div className="chips" id="tagArea">
+                  {tags.map((t) => (
+                    <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
+                  ))}
+                </div>
+              </div>
+              <div className="tag-actions">
+                <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
+              </div>
+            </div>
+
+            <div className="actions" style={{ marginTop: 16 }}>
+              <button className="td-btn" onClick={savePayload}>保存</button>
+            </div>
+          </section>
+        </div>
+
+        {/* 右列 */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* 損益内訳 */}
+          <section className="td-card td-match-height" id="pnlCard">
+            <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
+            <div className="pnl-two-cols">
+              <table role="grid">
+                <tbody>
+                  <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{fmtJPY(kpi.net)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num" style={{ color: kpi.gross >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.gross)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.cost}（手数料）</td><td className="num" style={{ color: 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.cost)}</td></tr>
+                  <tr className="row"><td>手数料</td><td className="num" style={{ color: row.commission < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>{fmtJPY(row.commission)}</td></tr>
+                </tbody>
+              </table>
+              <table role="grid">
+                <tbody>
+                  <tr className="row"><td>スワップ</td><td className="num" style={{ color: row.swap < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #22c55e)' }}>{fmtJPY(row.swap)}</td></tr>
+                  <tr className="row"><td>獲得pips</td><td className="num" style={{ color: row.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
+                  <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
+                  <tr className="row"><td>リスクリワード</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* スペーサー（左列の「トレード日記」見出しと高さを揃える） */}
+          <div className="td-diary-heading" style={{ marginTop: 0 }}>
+            <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700, opacity: 0, pointerEvents: "none" }}>スペーサー</h2>
+          </div>
+
+          {/* ポジション保有中 */}
+          <section className="td-card td-position-hold" id="positionHoldCard">
+            <div className="td-section-title">
+              <h2>ポジション保有中</h2>
+            </div>
+            <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+              options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+            <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+              options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+            <label>
+              <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+                <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+              </select>
+            </label>
+            <label>
+              <div className="muted small">自由メモ</div>
+              <textarea className="note" rows={1} placeholder="保有中の気づきや感想をメモ" />
             </label>
           </section>
 
@@ -875,86 +896,24 @@ export default function TradeDiaryPage() {
             </div>
           </section>
 
-          {/* ポジション保有中 */}
-          <section className="td-card td-position-hold" id="positionHoldCard">
-            <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setPositionHoldOpen(!positionHoldOpen)}>
-              <h2>ポジション保有中 {!positionHoldOpen && <span style={{ fontSize: 12, fontWeight: 400, color: "var(--muted)", marginLeft: 8 }}>— 詳細を入力</span>} <span style={{ fontSize: 14, marginLeft: 8 }}>{positionHoldOpen ? "▲" : "▼"}</span></h2>
-            </div>
-            {positionHoldOpen && (
-              <>
-                <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-                  options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-                <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-                  options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-                <label>
-                  <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-                    <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-                  </select>
-                </label>
-              </>
-            )}
-            <label>
-              <div className="muted small">自由メモ</div>
-              <textarea className="note" rows={1} value={intraMemo} onChange={(e) => setIntraMemo(e.target.value)} placeholder="保有中の気づきや感想をメモ" />
-            </label>
-          </section>
-
-          {/* ポジション決済後 */}
-          <section className="td-card td-exit" id="exitCard">
-            <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setExitOpen(!exitOpen)}>
-              <h2>ポジション決済後 {!exitOpen && <span style={{ fontSize: 12, fontWeight: 400, color: "var(--muted)", marginLeft: 8 }}>— 詳細を入力</span>} <span style={{ fontSize: 14, marginLeft: 8 }}>{exitOpen ? "▲" : "▼"}</span></h2>
-            </div>
-
-            {exitOpen && (
-              <>
-                <MultiSelect label="決済のきっかけ（最大2つ）" value={exitTriggers} onChange={setExitTriggers}
-                  options={EXIT_TRIG_OPTS} triggerId="msExitTriggerBtn" menuId="msExitTriggerMenu" />
-                <label>
-                  <select className="select" value={exitEmotion} onChange={(e) => setExitEmotion(e.target.value)}>
-                    <option value="">決済時の感情</option><option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
-                    <option>怖くなった</option><option>安堵した</option><option>悔しい</option><option>反省している</option>
-                  </select>
-                </label>
-                <label>
-                  <select className="select" value={aiHit} onChange={(e) => setAiHit(e.target.value)}>
-                    <option value="">当たり外れ（AI）</option><option>当たり</option><option>惜しい</option><option>外れ</option>
-                  </select>
-                </label>
-                <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
-                  options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
-
-                <div className="note-vertical" style={{ marginTop: 8 }}>
-                  <label><div className="muted small">うまくいった点</div><textarea className="note" rows={1} value={noteRight} onChange={(e) => setNoteRight(e.target.value)} placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。" /></label>
-                  <label><div className="muted small">改善点</div><textarea className="note" rows={1} value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} placeholder="例）利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。" /></label>
-                  <label><div className="muted small">次回の約束</div><textarea className="note" rows={1} value={noteNext} onChange={(e) => setNoteNext(e.target.value)} placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。" /></label>
-                </div>
-              </>
-            )}
-
-            <label><div className="muted small">自由メモ</div><textarea className="note" rows={1} value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="例）今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。" /></label>
-
-            <div style={{ marginTop: 12 }}>
-              <div className="muted small">タグ</div>
-              <div className="chips-wrap">
-                <div className="chips" id="tagArea">
-                  {tags.map((t) => (
-                    <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
-                  ))}
-                </div>
+          {/* 可視化（3枚） */}
+          <section className="td-card td-viz" id="vizCard">
+            <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
+            <div className="charts-vertical">
+              <div className="chart-card">
+                <h4>{UI_TEXT.cumulativeProfit}（時間）<span className="legend">決済順の累計</span></h4>
+                <div className="chart-box"><canvas ref={equityRef} /></div>
               </div>
-              <div className="tag-actions">
-                <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
+              <div className="chart-card">
+                <h4>{UI_TEXT.profitHistogram}</h4>
+                <div className="chart-box"><canvas ref={histRef} /></div>
+              </div>
+              <div className="chart-card">
+                <h4>曜日×時間ヒートマップ<span className="legend">勝率（%）</span></h4>
+                <div className="chart-box"><canvas ref={heatRef} /></div>
               </div>
             </div>
-
-            <div className="actions" style={{ marginTop: 16 }}>
-              <button className="td-btn" onClick={savePayload}>保存</button>
-            </div>
           </section>
-        </div>
-
-        {/* 右列（空） */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         </div>
       </div>
 
@@ -966,23 +925,29 @@ export default function TradeDiaryPage() {
       )}
 
       {/* リンク済みメモ */}
-      {loadQuick().filter(m => m.linkedTo).length > 0 && (
-        <section className="td-card td-card-full">
-          <div className="td-section-title">
-            <h2>リンク済みメモ</h2>
-          </div>
-          <div className="linked-memos-table">
-            <table>
-              <thead>
+      <section className="td-card td-card-full">
+        <div className="td-section-title">
+          <h2>リンク済みメモ</h2>
+        </div>
+        <div className="linked-memos-table">
+          <table>
+            <thead>
+              <tr>
+                <th>タイトル</th>
+                <th>種類</th>
+                <th>更新</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loadQuick().filter(m => m.linkedTo).length === 0 ? (
                 <tr>
-                  <th>タイトル</th>
-                  <th>種類</th>
-                  <th>更新</th>
-                  <th>操作</th>
+                  <td colSpan={4} style={{ textAlign: 'center' }} className="muted small">
+                    リンク済みメモはありません
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {loadQuick().filter(m => m.linkedTo).map((m) => {
+              ) : (
+                loadQuick().filter(m => m.linkedTo).map((m) => {
                   const linkedTrade = trades.find(t => t.ticket === m.linkedTo);
                   const title = linkedTrade
                     ? `${linkedTrade.item} | ${m.linkedTo === row.ticket ? '取引' : ''}ノート (${new Date(m.entry.time).toLocaleDateString('ja-JP')})`
@@ -1021,22 +986,22 @@ export default function TradeDiaryPage() {
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* 未リンクメモ（簡易表示） */}
-      {pending.length > 0 && (
-        <section className="td-card td-card-full">
-          <div className="td-section-title">
-            <h2>保留メモ（未リンク）</h2>
-            <span className="pill">{pending.length}件</span>
-          </div>
-          <div className="pending-list">
-            {pending.map((m) => (
+      <section className="td-card td-card-full">
+        <div className="td-section-title">
+          <h2>保留メモ（未リンク）</h2>
+          <span className="pill">{pending.length}件</span>
+        </div>
+        <div className="pending-list">
+          {pending.length === 0 && <div className="muted small">未リンクの仮メモはありません。</div>}
+          {pending.map((m) => (
             <div key={m.tempId} className="pending-card">
               <div>
                 <div><strong>{m.symbol}</strong> {m.side} <span className="muted small">tempId: {m.tempId}</span></div>
@@ -1085,9 +1050,8 @@ export default function TradeDiaryPage() {
               </div>
             </div>
           ))}
-          </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* タグ候補モーダル */}
       {tagModalOpen && (

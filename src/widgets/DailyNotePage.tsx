@@ -1,8 +1,11 @@
 import React from "react";
-import DayTradesTable from "../components/daily/DayTradesTable";
-import LinkedNotesTable from "../components/daily/LinkedNotesTable";
-import AiAdviceBlock from "../components/daily/AiAdviceBlock";
-import type { DailyNotePageProps } from "../components/daily/types";
+import { TopBar } from "./daily/TopBar";
+import { KpiGrid } from "./daily/KpiGrid";
+import { DayJournalCard } from "./daily/DayJournalCard";
+import { DayTradesTable } from "./daily/DayTradesTable";
+import { LinkedNotesTable } from "./daily/LinkedNotesTable";
+import { AiAdviceBlock } from "./daily/AiAdviceBlock";
+import type { DailyNotePageProps } from "./daily/types";
 import "./dailyNote.css";
 
 const DUMMY_DATA: DailyNotePageProps = {
@@ -67,25 +70,16 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
   return (
     <div className="daily-note-page">
-      <div style={{ padding: "16px", background: "var(--bg-secondary)", marginBottom: "16px", borderRadius: "8px" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-          <button onClick={mergedProps.onPrevDay || handlePrevDay}>← 前日</button>
-          <h2>{mergedProps.kpi.dateJst} ({mergedProps.kpi.weekdayJp})</h2>
-          <button onClick={mergedProps.onNextDay || handleNextDay}>翌日 →</button>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
-          <div><strong>勝率:</strong> {mergedProps.kpi.winRate}%</div>
-          <div><strong>トレード数:</strong> {mergedProps.kpi.tradeCount}</div>
-          <div><strong>平均損益:</strong> {mergedProps.kpi.avgPnLPerTradeYen}円</div>
-          <div><strong>合計損益:</strong> {mergedProps.kpi.dayTotalYen}円</div>
-        </div>
-      </div>
+      <TopBar
+        kpi={mergedProps.kpi}
+        onPrevDay={mergedProps.onPrevDay || handlePrevDay}
+        onNextDay={mergedProps.onNextDay || handleNextDay}
+      />
+
+      <KpiGrid kpi={mergedProps.kpi} />
 
       <div className="two-col-layout">
-        <div style={{ padding: "16px", background: "var(--bg-card)", borderRadius: "8px" }}>
-          <h3>日誌カード</h3>
-          <button onClick={() => (mergedProps.onSave || handleSave)({})}>保存</button>
-        </div>
+        <DayJournalCard onSave={mergedProps.onSave || handleSave} />
 
         <div className="right-panel">
           <div className="panel-card">
