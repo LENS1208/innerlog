@@ -680,27 +680,19 @@ export default function TradeDiaryPage() {
       <div className="grid-main" style={{ marginTop: 16 }}>
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* トレード情報 */}
+          {/* エントリー/エグジット */}
           <section className="td-card compact td-entry-exit td-match-height" id="entryCard">
             <div className="td-section-title">
-              <h2>トレード情報</h2><span className="pill">実績</span>
+              <h2>エントリー / エグジット</h2><span className="pill">実績</span>
             </div>
             <div className="kv">
-              <div>通貨ペア</div><div><strong>{row.item}</strong></div>
-              <div>方向</div><div><strong>{row.side === "BUY" ? "買い" : "売り"}</strong></div>
+              <div>通貨ペア</div><div>{row.item}</div>
+              <div>エントリー</div><div><strong>{row.openPrice}</strong>　<small>{row.openTime.toLocaleString()}</small></div>
+              <div>決済</div><div><strong>{row.closePrice}</strong>　<small>{row.closeTime.toLocaleString()}</small></div>
+              <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
               <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
-              <div>エントリー価格</div><div>{row.openPrice}</div>
-              <div>決済価格</div><div>{row.closePrice}</div>
-              <div>獲得pips</div><div style={{ color: row.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 600 }}>{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</div>
-              <div>損益</div><div style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 600 }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div>
-              <div>逆指値（SL）</div><div>{row.sl ?? "—"}</div>
-              <div>指値（TP）</div><div>{row.tp ?? "—"}</div>
-              <div>エントリー時刻</div><div>{row.openTime.toLocaleString()}</div>
-              <div>決済時刻</div><div>{row.closeTime.toLocaleString()}</div>
-              <div>保有時間</div><div>{fmtHoldJP(kpi.hold)}</div>
-              <div>手数料</div><div style={{ color: row.commission < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>{row.commission.toLocaleString("ja-JP")}円</div>
-              <div>スワップ</div><div style={{ color: row.swap < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #22c55e)' }}>{row.swap.toLocaleString("ja-JP")}円</div>
-              <div>リスクリワード</div><div>{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div>
+              <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
+              <div>手数料 / スワップ</div><div>{row.commission.toLocaleString("ja-JP")}円 / {row.swap.toLocaleString("ja-JP")}円</div>
             </div>
           </section>
 
@@ -833,6 +825,29 @@ export default function TradeDiaryPage() {
 
         {/* 右列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* 損益内訳 */}
+          <section className="td-card td-match-height" id="pnlCard">
+            <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
+            <div className="pnl-two-cols">
+              <table role="grid">
+                <tbody>
+                  <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{fmtJPY(kpi.net)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num" style={{ color: kpi.gross >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.gross)}</td></tr>
+                  <tr className="row"><td>{UI_TEXT.cost}（手数料）</td><td className="num" style={{ color: 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.cost)}</td></tr>
+                  <tr className="row"><td>手数料</td><td className="num" style={{ color: row.commission < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>{fmtJPY(row.commission)}</td></tr>
+                </tbody>
+              </table>
+              <table role="grid">
+                <tbody>
+                  <tr className="row"><td>スワップ</td><td className="num" style={{ color: row.swap < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #22c55e)' }}>{fmtJPY(row.swap)}</td></tr>
+                  <tr className="row"><td>獲得pips</td><td className="num" style={{ color: row.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
+                  <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
+                  <tr className="row"><td>リスクリワード</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
           {/* スペーサー（左列の「トレード日記」見出しと高さを揃える） */}
           <div className="td-diary-heading" style={{ marginTop: 0 }}>
             <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700, opacity: 0, pointerEvents: "none" }}>スペーサー</h2>
