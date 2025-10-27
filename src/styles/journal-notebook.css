@@ -92,10 +92,10 @@
 .note {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 8px 12px;
+  gap: 4px;
+  padding: 6px 10px;
   border: 1px solid var(--line, #e5e7eb);
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   background: var(--surface, #ffffff);
   transition: background-color 0.15s;
@@ -114,8 +114,9 @@
 
 .note .title {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   flex: 1;
+  line-height: 1.4;
 }
 
 .note .actions {
@@ -126,11 +127,12 @@
 }
 
 .note .meta-line {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--muted, #6b7280);
   display: flex;
   justify-content: space-between;
-  min-height: 18px;
+  min-height: 16px;
+  line-height: 1.4;
 }
 
 .note .meta {
@@ -259,7 +261,7 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
 }
 
 .seg {
