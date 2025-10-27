@@ -244,7 +244,7 @@ export default function ReportsRisk() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gridTemplateColumns: "repeat(4, 1fr)",
           gap: 12,
           marginBottom: 16,
         }}
