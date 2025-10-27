@@ -13,8 +13,7 @@
 .td-btn.td-accent:hover{ background:var(--accent); opacity:0.9; }
 
 /* カード・共通 */
-.td-card{ background: var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.02); transition:all 0.2s ease; }
-.td-card:hover{ box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+.td-card{ background: var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.02); }
 .td-card-full{ margin-top:16px; }
 .td-section-title{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
 .td-section-title h2{ margin:0; font-size:16px; font-weight:700; letter-spacing:0.2px; }
@@ -119,8 +118,7 @@ td.num{ text-align:right; font-weight:600; }
 /* チャート */
 .charts{ display:grid; gap:16px; grid-template-columns:repeat(3,1fr); }
 @media (max-width:1080px){ .charts{ grid-template-columns:1fr; } }
-.chart-card{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(0,0,0,0.02); transition:all 0.2s ease; }
-.chart-card:hover{ box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+.chart-card{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; box-shadow:0 1px 3px rgba(0,0,0,0.02); }
 .chart-card h4{ margin:0 0 10px 0; font-size:14px; font-weight:700; display:flex; justify-content:space-between; align-items:center; }
 .legend{ font-size:12px; color:var(--muted); font-weight:500; }
 
