@@ -698,25 +698,72 @@ export default function TradeDiaryPage() {
         </div>
       </div>
 
+      {/* トレード概要（全幅） */}
+      <section className="td-card" style={{ marginTop: 16 }}>
+        <div className="td-section-title">
+          <h2>トレード概要</h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px 16px" }}>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>通貨ペア</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.item}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>方向</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.side === "BUY" ? "買い" : "売り"}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>サイズ</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.size.toFixed(2)} lot</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>逆指値（SL）</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.sl ?? "—"}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>エントリー価格</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.openPrice}</div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{row.openTime.toLocaleString()}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>決済価格</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.closePrice}</div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{row.closeTime.toLocaleString()}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>手数料</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: row.commission < 0 ? "var(--danger)" : "inherit" }}>{row.commission.toLocaleString("ja-JP")}円</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>スワップ</div>
+            <div style={{ fontSize: 16, fontWeight: 600, color: row.swap < 0 ? "var(--danger)" : "var(--accent-2)" }}>{row.swap.toLocaleString("ja-JP")}円</div>
+          </div>
+        </div>
+      </section>
+
+      {/* パフォーマンス分析（3列） */}
+      <section className="td-card" style={{ marginTop: 16 }}>
+        <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
+          <div className="chart-card">
+            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.cumulativeProfit}（時間）<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>決済順の累計</span></h4>
+            <div className="chart-box"><canvas ref={equityRef} /></div>
+          </div>
+          <div className="chart-card">
+            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.profitHistogram}</h4>
+            <div className="chart-box"><canvas ref={histRef} /></div>
+          </div>
+          <div className="chart-card">
+            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>曜日×時間ヒートマップ<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>勝率（%）</span></h4>
+            <div className="chart-box"><canvas ref={heatRef} /></div>
+          </div>
+        </div>
+      </section>
+
       {/* 2列グリッド */}
       <div className="grid-main" style={{ marginTop: 16 }}>
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* エントリー/エグジット */}
-          <section className="td-card compact td-entry-exit td-match-height" id="entryCard">
-            <div className="td-section-title">
-              <h2>エントリー / エグジット</h2><span className="pill">実績</span>
-            </div>
-            <div className="kv">
-              <div>通貨ペア</div><div>{row.item}</div>
-              <div>エントリー</div><div><strong>{row.openPrice}</strong>　<small>{row.openTime.toLocaleString()}</small></div>
-              <div>決済</div><div><strong>{row.closePrice}</strong>　<small>{row.closeTime.toLocaleString()}</small></div>
-              <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
-              <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
-              <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
-              <div>手数料 / スワップ</div><div>{row.commission.toLocaleString("ja-JP")}円 / {row.swap.toLocaleString("ja-JP")}円</div>
-            </div>
-          </section>
 
           {/* トレード日記 */}
           <div className="td-diary-heading" style={{ marginTop: 0 }}>
@@ -906,49 +953,8 @@ export default function TradeDiaryPage() {
           </section>
         </div>
 
-        {/* 右列 */}
+        {/* 右列（空） */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* 損益内訳 */}
-          <section className="td-card td-match-height" id="pnlCard">
-            <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
-            <div className="pnl-two-cols">
-              <table role="grid">
-                <tbody>
-                  <tr className="row"><td>{UI_TEXT.netProfit}</td><td className="num" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{fmtJPY(kpi.net)}</td></tr>
-                  <tr className="row"><td>{UI_TEXT.grossProfit}</td><td className="num" style={{ color: kpi.gross >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.gross)}</td></tr>
-                  <tr className="row"><td>{UI_TEXT.cost}（手数料）</td><td className="num" style={{ color: 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.cost)}</td></tr>
-                  <tr className="row"><td>手数料</td><td className="num" style={{ color: row.commission < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>{fmtJPY(row.commission)}</td></tr>
-                </tbody>
-              </table>
-              <table role="grid">
-                <tbody>
-                  <tr className="row"><td>スワップ</td><td className="num" style={{ color: row.swap < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #22c55e)' }}>{fmtJPY(row.swap)}</td></tr>
-                  <tr className="row"><td>獲得pips</td><td className="num" style={{ color: row.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)', fontWeight: 700 }}>{(row.pips >= 0 ? "+" : "") + row.pips.toFixed(1)}</td></tr>
-                  <tr className="row"><td>保有時間</td><td className="num">{fmtHoldJP(kpi.hold)}</td></tr>
-                  <tr className="row"><td>リスクリワード</td><td className="num">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          {/* 可視化（3枚） */}
-          <section className="td-card td-viz" id="vizCard">
-            <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
-            <div className="charts-vertical">
-              <div className="chart-card">
-                <h4>{UI_TEXT.cumulativeProfit}（時間）<span className="legend">決済順の累計</span></h4>
-                <div className="chart-box"><canvas ref={equityRef} /></div>
-              </div>
-              <div className="chart-card">
-                <h4>{UI_TEXT.profitHistogram}</h4>
-                <div className="chart-box"><canvas ref={histRef} /></div>
-              </div>
-              <div className="chart-card">
-                <h4>曜日×時間ヒートマップ<span className="legend">勝率（%）</span></h4>
-                <div className="chart-box"><canvas ref={heatRef} /></div>
-              </div>
-            </div>
-          </section>
         </div>
       </div>
 
