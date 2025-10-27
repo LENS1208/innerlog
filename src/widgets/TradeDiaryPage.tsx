@@ -681,42 +681,26 @@ export default function TradeDiaryPage() {
         <div className="td-section-title">
           <h2>トレード情報</h2><span className="pill">実績</span>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>通貨ペア</div>
-              <div style={{ fontWeight: 500 }}>{row.item}</div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>方向</div>
-              <div style={{ fontWeight: 500 }}>{row.side === "BUY" ? "買い" : "売り"}</div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>サイズ</div>
-              <div style={{ fontWeight: 500 }}>{row.size.toFixed(2)} lot</div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>指値/逆指値</div>
-              <div style={{ fontWeight: 500 }}>— / {row.sl ?? "—"}</div>
-            </div>
+        <div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 16, marginBottom: 12 }}>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>通貨ペア</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>方向</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>サイズ</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>指値/逆指値</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>エントリー時刻</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>エントリー価格</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>決済時刻</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500 }}>決済価格</div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>エントリー時刻</div>
-              <div style={{ fontWeight: 500 }}>{row.openTime.toLocaleString()}</div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>エントリー価格</div>
-              <div style={{ fontWeight: 500 }}><strong>{row.openPrice}</strong></div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>決済時刻</div>
-              <div style={{ fontWeight: 500 }}>{row.closeTime.toLocaleString()}</div>
-            </div>
-            <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>決済価格</div>
-              <div style={{ fontWeight: 500 }}><strong>{row.closePrice}</strong></div>
-            </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 16 }}>
+            <div style={{ fontWeight: 500 }}>{row.item}</div>
+            <div style={{ fontWeight: 500 }}>{row.side === "BUY" ? "買い" : "売り"}</div>
+            <div style={{ fontWeight: 500 }}>{row.size.toFixed(2)} lot</div>
+            <div style={{ fontWeight: 500 }}>— / {row.sl ?? "—"}</div>
+            <div style={{ fontWeight: 500 }}>{row.openTime.toLocaleString()}</div>
+            <div style={{ fontWeight: 500 }}><strong>{row.openPrice}</strong></div>
+            <div style={{ fontWeight: 500 }}>{row.closeTime.toLocaleString()}</div>
+            <div style={{ fontWeight: 500 }}><strong>{row.closePrice}</strong></div>
           </div>
         </div>
       </section>
