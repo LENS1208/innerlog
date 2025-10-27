@@ -125,7 +125,13 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 .kpi-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .kpi-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
 }
 
 .kpi-card {
@@ -137,7 +143,7 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  min-height: 92px; /* 高さのばらつき抑制 */
+  min-height: 92px;
 }
 
 .kpi-title {
@@ -155,6 +161,15 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
   display: flex;
   align-items: baseline;
 }
+
+.kpi-value.good {
+  color: var(--gain, #16a34a);
+}
+
+.kpi-value.bad {
+  color: var(--loss, #ef4444);
+}
+
 .kpi-unit { font-size: 14px; margin-left: 4px; color:#6b7280; }
 
 .kpi-desc {
