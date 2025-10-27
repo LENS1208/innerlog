@@ -1,29 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import DailyNotePanel from '../components/daily/DailyNotePanel';
 import type { DailyNotePanelProps } from '../components/daily/DailyNotePanel';
+import type { FolderKind, NoteListItem } from './journal-notes.types';
 import '../styles/journal-notebook.css';
 
-type NoteItem = {
-  title: string;
-  updated: string;
-  date: string;
-};
-
-const demoNotes: NoteItem[] = [
+const demoNotesData: NoteListItem[] = [
   {
+    id: 'note-1',
     title: '2025/10/09（木）｜日次ノート',
-    updated: '2025-10-11T18:02:00+09:00',
-    date: '2025-10-09',
+    kind: '日次',
+    updatedAt: '2025-10-11T18:02:00+09:00',
+    dateKey: '2025-10-09',
+    linked: true,
   },
   {
+    id: 'note-2',
     title: '2025/10/10（金）｜取引ノート｜USD/JPY',
-    updated: '2025-10-10T10:31:00+09:00',
-    date: '2025-10-10',
+    kind: '取引',
+    updatedAt: '2025-10-10T10:31:00+09:00',
+    dateKey: '2025-10-10',
+    linked: true,
+    pnlYen: 3200,
   },
   {
+    id: 'note-3',
     title: '2025/10/03（金）｜自由メモ',
-    updated: '2025-10-03T09:00:00+09:00',
-    date: '2025-10-03',
+    kind: '自由',
+    updatedAt: '2025-10-03T09:00:00+09:00',
+    dateKey: '2025-10-03',
+    linked: true,
+    memoPreview: '今日は調子が良かった。エントリーポイントを見極められた。',
+  },
+  {
+    id: 'note-4',
+    title: '2025/10/12（土）｜取引ノート｜EUR/USD',
+    kind: '取引',
+    updatedAt: '2025-10-12T14:20:00+09:00',
+    dateKey: '2025-10-12',
+    linked: false,
+    pnlYen: -1800,
+  },
+  {
+    id: 'note-5',
+    title: '2025/10/13（日）｜自由メモ｜週末振り返り',
+    kind: '自由',
+    updatedAt: '2025-10-13T20:00:00+09:00',
+    dateKey: '2025-10-13',
+    linked: false,
+    memoPreview: '',
+  },
+  {
+    id: 'note-6',
+    title: '2025/10/11（金）｜取引ノート｜GBP/JPY',
+    kind: '取引',
+    updatedAt: '2025-10-11T09:15:00+09:00',
+    dateKey: '2025-10-11',
+    linked: false,
+    pnlYen: 2400,
   },
 ];
 
@@ -59,18 +92,52 @@ const demoDailyProps: DailyNotePanelProps = {
   values: { good: '', improve: '', nextPromise: '', free: '' },
 };
 
+const formatPnl = (pnlYen: number): string => {
+  const sign = pnlYen >= 0 ? '+' : '';
+  return `${sign}¥${Math.abs(pnlYen).toLocaleString('ja-JP')}円`;
+};
+
 export default function JournalNotesPage() {
   const [sortBy, setSortBy] = useState<'updated' | 'date'>('updated');
-  const [notes, setNotes] = useState(demoNotes);
+  const [selectedFolder, setSelectedFolder] = useState<FolderKind>('all');
+  const [notes] = useState(demoNotesData);
+
+  const filteredNotes = useMemo(() => {
+    let filtered = notes;
+
+    if (selectedFolder === 'daily') {
+      filtered = notes.filter((n) => n.kind === '日次');
+    } else if (selectedFolder === 'trade') {
+      filtered = notes.filter((n) => n.kind === '取引');
+    } else if (selectedFolder === 'free') {
+      filtered = notes.filter((n) => n.kind === '自由');
+    } else if (selectedFolder === 'unlinked') {
+      filtered = notes.filter((n) => !n.linked);
+    }
+
+    const sorted = [...filtered].sort((a, b) => {
+      const aVal = sortBy === 'updated' ? a.updatedAt : a.dateKey;
+      const bVal = sortBy === 'updated' ? b.updatedAt : b.dateKey;
+      return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+    });
+
+    return sorted;
+  }, [notes, selectedFolder, sortBy]);
 
   const handleSort = (type: 'updated' | 'date') => {
     setSortBy(type);
-    const sorted = [...notes].sort((a, b) => {
-      const aVal = type === 'updated' ? a.updated : a.date;
-      const bVal = type === 'updated' ? b.updated : b.date;
-      return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
-    });
-    setNotes(sorted);
+  };
+
+  const handleSelectFolder = (folder: FolderKind) => {
+    setSelectedFolder(folder);
+  };
+
+  const handleLink = (noteId: string) => {
+    console.log('取引にリンク:', noteId);
+  };
+
+  const handleOpenNote = (noteId: string) => {
+    console.log('ノートを開く:', noteId);
   };
 
   const handlePrevDay = () => console.log('前日へ');
@@ -83,6 +150,8 @@ export default function JournalNotesPage() {
   const handleChangeValues = (values: any) => console.log('値変更:', values);
   const handleSave = () => console.log('保存');
 
+  const unlinkedCount = notes.filter((n) => !n.linked).length;
+
   return (
     <div className="shell">
       <aside className="pane">
@@ -90,17 +159,62 @@ export default function JournalNotesPage() {
           <h3>フォルダ / 種別</h3>
         </div>
         <div className="body list">
-          <div className="note" style={{ cursor: 'default' }}>
+          <div
+            className="note"
+            style={{
+              cursor: 'pointer',
+              background: selectedFolder === 'all' ? 'var(--chip)' : 'var(--surface)',
+            }}
+            onClick={() => handleSelectFolder('all')}
+          >
             <div className="title">すべてのノート</div>
           </div>
-          <div className="note" style={{ cursor: 'default' }}>
+          <div
+            className="note"
+            style={{
+              cursor: 'pointer',
+              background: selectedFolder === 'daily' ? 'var(--chip)' : 'var(--surface)',
+            }}
+            onClick={() => handleSelectFolder('daily')}
+          >
             <div className="title">日次ノート</div>
           </div>
-          <div className="note" style={{ cursor: 'default' }}>
+          <div
+            className="note"
+            style={{
+              cursor: 'pointer',
+              background: selectedFolder === 'trade' ? 'var(--chip)' : 'var(--surface)',
+            }}
+            onClick={() => handleSelectFolder('trade')}
+          >
             <div className="title">取引ノート</div>
           </div>
-          <div className="note" style={{ cursor: 'default' }}>
+          <div
+            className="note"
+            style={{
+              cursor: 'pointer',
+              background: selectedFolder === 'free' ? 'var(--chip)' : 'var(--surface)',
+            }}
+            onClick={() => handleSelectFolder('free')}
+          >
             <div className="title">自由メモ</div>
+          </div>
+          <div
+            className="note"
+            style={{
+              cursor: 'pointer',
+              background: selectedFolder === 'unlinked' ? 'var(--chip)' : 'var(--surface)',
+            }}
+            onClick={() => handleSelectFolder('unlinked')}
+          >
+            <div className="row">
+              <div className="title">未リンクノート</div>
+              {unlinkedCount > 0 && (
+                <span className="tag" style={{ marginLeft: 'auto' }}>
+                  {unlinkedCount}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </aside>
@@ -127,9 +241,36 @@ export default function JournalNotesPage() {
           </div>
         </div>
         <div className="body list">
-          {notes.map((note, idx) => (
-            <div key={idx} className="note">
-              <div className="title">{note.title}</div>
+          {filteredNotes.map((note) => (
+            <div key={note.id} className="note" onClick={() => handleOpenNote(note.id)}>
+              <div className="row">
+                <div className="title">{note.title}</div>
+                <div className="actions">
+                  {!note.linked && <span className="badge-status">未リンク</span>}
+                  {!note.linked && (
+                    <button
+                      className="link-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLink(note.id);
+                      }}
+                    >
+                      取引にリンク…
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="meta-line">
+                {note.kind === '取引' && note.pnlYen !== undefined ? (
+                  <span className={note.pnlYen >= 0 ? 'good' : 'bad'}>
+                    損益　{formatPnl(note.pnlYen)}
+                  </span>
+                ) : note.kind === '自由' ? (
+                  <span>メモ：{note.memoPreview || '—'}</span>
+                ) : (
+                  <span>&nbsp;</span>
+                )}
+              </div>
             </div>
           ))}
         </div>

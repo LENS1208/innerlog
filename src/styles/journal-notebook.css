@@ -92,7 +92,7 @@
 .note {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   padding: 12px;
   border: 1px solid var(--line, #e5e7eb);
   border-radius: 8px;
@@ -105,9 +105,32 @@
   background: var(--chip, #f3f4f6);
 }
 
+.note .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .note .title {
   font-weight: 600;
   font-size: 14px;
+  flex: 1;
+}
+
+.note .actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.note .meta-line {
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+  display: flex;
+  justify-content: space-between;
+  min-height: 18px;
 }
 
 .note .meta {
@@ -115,6 +138,51 @@
   color: var(--muted, #6b7280);
   display: flex;
   gap: 8px;
+}
+
+/* 未リンクバッジ（ステータス表示） */
+.badge-status {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--chip, #f3f4f6);
+  border: 1px dashed var(--line, #e5e7eb);
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+/* リンクボタン（ホバー時表示） */
+.note .link-btn {
+  opacity: 0;
+  transition: opacity 0.15s;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--line, #e5e7eb);
+  background: var(--surface, #ffffff);
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.note:hover .link-btn {
+  opacity: 1;
+}
+
+.note .link-btn:hover {
+  background: var(--accent, #3b82f6);
+  color: #ffffff;
+  border-color: var(--accent, #3b82f6);
+}
+
+@media (max-width: 1023px) {
+  .note .link-btn {
+    opacity: 1;
+  }
 }
 
 /* 編集ペイン */
