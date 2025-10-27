@@ -226,30 +226,15 @@ td.num{ text-align:right; }
 
 /* トレード日記詳細ページのレイアウト調整 */
 
-/* エントリー/エグジットと損益内訳の高さを揃える */
-.td-entry-exit, #pnlCard {
-  height: 280px;
-}
-
-/* エントリー前・直後の高さ */
-.td-entry-before {
-  height: 800px;
-  padding-bottom: 0;
-}
-
-/* ポジション保有中＋画像の合計高さをエントリー前・直後と揃える */
-.td-position-hold {
-  height: 360px;
-}
-
-#imageCard {
-  height: 424px;
-}
-
-/* ポジション決済後とパフォーマンス分析の高さを揃える */
-.td-exit, .td-viz {
-  height: 1400px;
-  padding-bottom: 0;
+/* カードは内容に応じて自動調整 */
+.td-entry-exit,
+#pnlCard,
+.td-entry-before,
+.td-position-hold,
+#imageCard,
+.td-exit,
+.td-viz {
+  height: auto;
 }
 
 /* 縦並びレイアウト */
