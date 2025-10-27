@@ -681,15 +681,19 @@ export default function TradeDiaryPage() {
         <div className="td-section-title">
           <h2>トレード情報</h2><span className="pill">実績</span>
         </div>
-        <div className="kv">
-          <div>通貨ペア</div><div>{row.item}</div>
-          <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
-          <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
-          <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
-          <div>エントリー時刻</div><div>{row.openTime.toLocaleString()}</div>
-          <div>エントリー価格</div><div><strong>{row.openPrice}</strong></div>
-          <div>決済時刻</div><div>{row.closeTime.toLocaleString()}</div>
-          <div>決済価格</div><div><strong>{row.closePrice}</strong></div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div className="kv" style={{ gridTemplateColumns: 'repeat(4, auto 1fr)', columnGap: 24 }}>
+            <div>通貨ペア</div><div>{row.item}</div>
+            <div>方向</div><div>{row.side === "BUY" ? "買い" : "売り"}</div>
+            <div>サイズ</div><div>{row.size.toFixed(2)} lot</div>
+            <div>指値/逆指値</div><div>— / {row.sl ?? "—"}</div>
+          </div>
+          <div className="kv" style={{ gridTemplateColumns: 'repeat(4, auto 1fr)', columnGap: 24 }}>
+            <div>エントリー時刻</div><div>{row.openTime.toLocaleString()}</div>
+            <div>エントリー価格</div><div><strong>{row.openPrice}</strong></div>
+            <div>決済時刻</div><div>{row.closeTime.toLocaleString()}</div>
+            <div>決済価格</div><div><strong>{row.closePrice}</strong></div>
+          </div>
         </div>
       </section>
 
