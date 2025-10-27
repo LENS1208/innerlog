@@ -777,6 +777,7 @@ export default function TradeDiaryPage() {
   const [expandEntry, setExpandEntry] = useState(false);
   const [expandHold, setExpandHold] = useState(false);
   const [expandExit, setExpandExit] = useState(false);
+  const [expandAnalysis, setExpandAnalysis] = useState(false);
 
   /* ===== タグモーダル ===== */
   const [tagModalOpen, setTagModalOpen] = useState(false);
@@ -1088,20 +1089,32 @@ export default function TradeDiaryPage() {
           {/* 可視化（3枚） */}
           <section className="td-card td-viz" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
-            <div className="charts-vertical">
-              <div className="chart-card">
-                <h4>{UI_TEXT.cumulativeProfit}（時間）<span className="legend">決済順の累計</span></h4>
-                <div className="chart-box"><canvas ref={equityRef} /></div>
+
+            <button
+              type="button"
+              className="td-btn"
+              style={{ marginTop: 8, width: "100%" }}
+              onClick={() => setExpandAnalysis(!expandAnalysis)}
+            >
+              {expandAnalysis ? "分析結果を閉じる" : "分析結果を見る"}
+            </button>
+
+            {expandAnalysis && (
+              <div className="charts-vertical" style={{ marginTop: 12 }}>
+                <div className="chart-card">
+                  <h4>{UI_TEXT.cumulativeProfit}（時間）<span className="legend">決済順の累計</span></h4>
+                  <div className="chart-box"><canvas ref={equityRef} /></div>
+                </div>
+                <div className="chart-card">
+                  <h4>{UI_TEXT.profitHistogram}</h4>
+                  <div className="chart-box"><canvas ref={histRef} /></div>
+                </div>
+                <div className="chart-card">
+                  <h4>曜日×時間ヒートマップ<span className="legend">勝率（%）</span></h4>
+                  <div className="chart-box"><canvas ref={heatRef} /></div>
+                </div>
               </div>
-              <div className="chart-card">
-                <h4>{UI_TEXT.profitHistogram}</h4>
-                <div className="chart-box"><canvas ref={histRef} /></div>
-              </div>
-              <div className="chart-card">
-                <h4>曜日×時間ヒートマップ<span className="legend">勝率（%）</span></h4>
-                <div className="chart-box"><canvas ref={heatRef} /></div>
-              </div>
-            </div>
+            )}
           </section>
 
           {/* AIアドバイス */}
