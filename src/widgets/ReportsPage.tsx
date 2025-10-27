@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useDataset } from "../lib/dataset.context";
 
-const ReportsTimeAxis = () => <div style={{ padding: "20px" }}><h3>時間軸レポート</h3><p>実装予定</p></div>;
-const ReportsMarket = () => <div style={{ padding: "20px" }}><h3>市場レポート</h3><p>実装予定</p></div>;
-const ReportsStrategy = () => <div style={{ padding: "20px" }}><h3>戦略レポート</h3><p>実装予定</p></div>;
-const ReportsRisk = () => <div style={{ padding: "20px" }}><h3>リスクレポート</h3><p>実装予定</p></div>;
+const ReportsTimeAxis = () => (
+  <div style={{ width: "100%", height: "calc(100vh - 160px)", overflow: "auto" }}>
+    <iframe
+      src="/reports/time/analysis_time_v_0.html"
+      style={{
+        width: "100%",
+        height: "100%",
+        border: "none",
+        backgroundColor: "var(--bg)"
+      }}
+      title="時間軸レポート"
+    />
+  </div>
+);
+const ReportsMarket = () => <div style={{ padding: "20px" }}><h3>市場レポート</h3><p>準備中</p></div>;
+const ReportsStrategy = () => <div style={{ padding: "20px" }}><h3>戦略レポート</h3><p>準備中</p></div>;
+const ReportsRisk = () => <div style={{ padding: "20px" }}><h3>リスクレポート</h3><p>準備中</p></div>;
 
 type TabKey = "time" | "market" | "strategy" | "risk";
 
