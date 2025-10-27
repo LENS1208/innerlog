@@ -621,6 +621,11 @@ export default function TradeDiaryPage() {
   const [noteNext, setNoteNext] = useState("");
   const [noteFree, setNoteFree] = useState("");
 
+  /* ===== 折りたたみ状態 ===== */
+  const [expandEntry, setExpandEntry] = useState(false);
+  const [expandHold, setExpandHold] = useState(false);
+  const [expandExit, setExpandExit] = useState(false);
+
   /* ===== タグモーダル ===== */
   const [tagModalOpen, setTagModalOpen] = useState(false);
   const openTagModal = () => setTagModalOpen(true);
@@ -703,42 +708,53 @@ export default function TradeDiaryPage() {
             </div>
 
             <label>
-              <select className="select" value={entryEmotion} onChange={(e) => setEntryEmotion(e.target.value)}>
-                <option value="">エントリー時の感情</option>
-                <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
-                <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
-              </select>
-            </label>
-            <MultiSelect label="エントリー根拠（最大2つ）" value={entryBasis} onChange={setEntryBasis}
-              options={ENTRY_BASIS_OPTS} triggerId="msEntryBasisBtn" menuId="msEntryBasisMenu" />
-            <MultiSelect label="テクニカル条件（最大2つ）" value={techSet} onChange={setTechSet}
-              options={TECH_OPTS} triggerId="msTechBtn" menuId="msTechMenu" />
-            <MultiSelect label="マーケット環境（最大2つ）" value={marketSet} onChange={setMarketSet}
-              options={MARKET_OPTS} triggerId="msMarketBtn" menuId="msMarketMenu" />
-            <MultiSelect label="ファンダメンタルズ（最大2つ）" value={fundSet} onChange={setFundSet}
-              options={FUND_OPTS} triggerId="msFundBtn" menuId="msFundMenu" />
-
-            <div className="hr" />
-
-            <h3 style={{ margin: "12px 0 8px 0", fontSize: 13, color: "var(--muted)" }}>AIの予想</h3>
-            <label>
-              <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-                <option value="">AIの方向感</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
-              </select>
-            </label>
-            <label>
-              <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
-                <option value="">トレードの判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
-              </select>
-            </label>
-
-            <div className="hr" />
-
-            <label>
               <div className="muted small">自由メモ</div>
               <textarea className="note" rows={1} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
                 placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたのでロングを検討。" />
             </label>
+
+            <button
+              type="button"
+              className="td-btn"
+              style={{ marginTop: 8, width: "100%" }}
+              onClick={() => setExpandEntry(!expandEntry)}
+            >
+              {expandEntry ? "詳細を閉じる" : "詳細を開く"}
+            </button>
+
+            {expandEntry && (
+              <div style={{ marginTop: 12 }}>
+                <label>
+                  <select className="select" value={entryEmotion} onChange={(e) => setEntryEmotion(e.target.value)}>
+                    <option value="">エントリー時の感情</option>
+                    <option>落ち着いていた</option><option>自信あり</option><option>少し焦っていた</option>
+                    <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
+                  </select>
+                </label>
+                <MultiSelect label="エントリー根拠（最大2つ）" value={entryBasis} onChange={setEntryBasis}
+                  options={ENTRY_BASIS_OPTS} triggerId="msEntryBasisBtn" menuId="msEntryBasisMenu" />
+                <MultiSelect label="テクニカル条件（最大2つ）" value={techSet} onChange={setTechSet}
+                  options={TECH_OPTS} triggerId="msTechBtn" menuId="msTechMenu" />
+                <MultiSelect label="マーケット環境（最大2つ）" value={marketSet} onChange={setMarketSet}
+                  options={MARKET_OPTS} triggerId="msMarketBtn" menuId="msMarketMenu" />
+                <MultiSelect label="ファンダメンタルズ（最大2つ）" value={fundSet} onChange={setFundSet}
+                  options={FUND_OPTS} triggerId="msFundBtn" menuId="msFundMenu" />
+
+                <div className="hr" />
+
+                <h3 style={{ margin: "12px 0 8px 0", fontSize: 13, color: "var(--muted)" }}>AIの予想</h3>
+                <label>
+                  <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
+                    <option value="">AIの方向感</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
+                  </select>
+                </label>
+                <label>
+                  <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
+                    <option value="">トレードの判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
+                  </select>
+                </label>
+              </div>
+            )}
           </section>
 
           {/* ポジション決済後 */}
@@ -747,28 +763,41 @@ export default function TradeDiaryPage() {
               <h2>ポジション決済後</h2>
             </div>
 
-            <MultiSelect label="決済のきっかけ（最大2つ）" value={exitTriggers} onChange={setExitTriggers}
-              options={EXIT_TRIG_OPTS} triggerId="msExitTriggerBtn" menuId="msExitTriggerMenu" />
-            <label>
-              <select className="select" value={exitEmotion} onChange={(e) => setExitEmotion(e.target.value)}>
-                <option value="">決済時の感情</option><option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
-                <option>怖くなった</option><option>安堵した</option><option>悔しい</option><option>反省している</option>
-              </select>
-            </label>
-            <label>
-              <select className="select" value={aiHit} onChange={(e) => setAiHit(e.target.value)}>
-                <option value="">当たり外れ（AI）</option><option>当たり</option><option>惜しい</option><option>外れ</option>
-              </select>
-            </label>
-            <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
-              options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
-
-            <div className="note-vertical" style={{ marginTop: 8 }}>
+            <div className="note-vertical">
               <label><div className="muted small">うまくいった点</div><textarea className="note" rows={1} value={noteRight} onChange={(e) => setNoteRight(e.target.value)} placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。" /></label>
               <label><div className="muted small">改善点</div><textarea className="note" rows={1} value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} placeholder="例）利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。" /></label>
               <label><div className="muted small">次回の約束</div><textarea className="note" rows={1} value={noteNext} onChange={(e) => setNoteNext(e.target.value)} placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。" /></label>
               <label><div className="muted small">自由メモ</div><textarea className="note" rows={1} value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="例）今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。" /></label>
             </div>
+
+            <button
+              type="button"
+              className="td-btn"
+              style={{ marginTop: 8, width: "100%" }}
+              onClick={() => setExpandExit(!expandExit)}
+            >
+              {expandExit ? "詳細を閉じる" : "詳細を開く"}
+            </button>
+
+            {expandExit && (
+              <div style={{ marginTop: 12 }}>
+                <MultiSelect label="決済のきっかけ（最大2つ）" value={exitTriggers} onChange={setExitTriggers}
+                  options={EXIT_TRIG_OPTS} triggerId="msExitTriggerBtn" menuId="msExitTriggerMenu" />
+                <label>
+                  <select className="select" value={exitEmotion} onChange={(e) => setExitEmotion(e.target.value)}>
+                    <option value="">決済時の感情</option><option>予定通りで満足</option><option>早く手放したい</option><option>もっと引っ張れた</option>
+                    <option>怖くなった</option><option>安堵した</option><option>悔しい</option><option>反省している</option>
+                  </select>
+                </label>
+                <label>
+                  <select className="select" value={aiHit} onChange={(e) => setAiHit(e.target.value)}>
+                    <option value="">当たり外れ（AI）</option><option>当たり</option><option>惜しい</option><option>外れ</option>
+                  </select>
+                </label>
+                <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
+                  options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
+              </div>
+            )}
 
             <div style={{ marginTop: 12 }}>
               <div className="muted small">タグ</div>
@@ -825,19 +854,34 @@ export default function TradeDiaryPage() {
             <div className="td-section-title">
               <h2>ポジション保有中</h2>
             </div>
-            <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-              options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-            <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-              options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-            <label>
-              <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-                <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-              </select>
-            </label>
+
             <label>
               <div className="muted small">自由メモ</div>
               <textarea className="note" rows={1} placeholder="保有中の気づきや感想をメモ" />
             </label>
+
+            <button
+              type="button"
+              className="td-btn"
+              style={{ marginTop: 8, width: "100%" }}
+              onClick={() => setExpandHold(!expandHold)}
+            >
+              {expandHold ? "詳細を閉じる" : "詳細を開く"}
+            </button>
+
+            {expandHold && (
+              <div style={{ marginTop: 12 }}>
+                <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+                  options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+                <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+                  options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+                <label>
+                  <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+                    <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+                  </select>
+                </label>
+              </div>
+            )}
           </section>
 
           {/* 画像アップロード */}
