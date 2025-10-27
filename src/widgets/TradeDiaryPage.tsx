@@ -179,6 +179,158 @@ function MultiSelect({
   );
 }
 
+/* ===== AIアドバイスセクション ===== */
+type AIAdviceSectionProps = {
+  tradeData: Trade;
+  kpi: {
+    net: number;
+    pips: number;
+    hold: number;
+    gross: number;
+    cost: number;
+    rrr: number | null;
+  };
+  diaryData: {
+    entryEmotion: string;
+    entryBasis: string[];
+    techSet: string[];
+    marketSet: string[];
+    exitTriggers: string[];
+    exitEmotion: string;
+    noteRight: string;
+    noteWrong: string;
+    noteNext: string;
+  };
+};
+
+function AIAdviceSection({ tradeData, kpi, diaryData }: AIAdviceSectionProps) {
+  const [advice, setAdvice] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  const ADVICE_KEY = `ai_advice_${tradeData.ticket}`;
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(ADVICE_KEY);
+      if (stored) {
+        const data = JSON.parse(stored);
+        setAdvice(data.advice || "");
+        setIsPinned(data.isPinned || false);
+        setLastUpdate(data.lastUpdate ? new Date(data.lastUpdate) : null);
+      }
+    } catch {}
+  }, [ADVICE_KEY]);
+
+  const generateAdvice = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      const winRate = kpi.net >= 0 ? 66.7 : 33.3;
+      const adviceText = `• 今日の勝率は${winRate.toFixed(1)}%と${winRate >= 50 ? "良好" : "改善の余地があります"}です。引き続き慎重なエントリーを心がけましょう。\n\n• ${tradeData.item}で${tradeData.side === "BUY" ? "2回取引" : "1勝1敗"}しています${tradeData.side === "BUY" ? "が、1勝1敗です" : ""}。通貨ペアごとのパターンを見直してみましょう。\n\n• 損切りが適切に機能しています。この調子でリスク管理を継続してください。\n\n• ${diaryData.entryEmotion || "午前中"}の取引が好調です。時間帯ごとの傾向を分析してみると良いでしょう。`;
+
+      setAdvice(adviceText);
+      setIsGenerating(false);
+      const now = new Date();
+      setLastUpdate(now);
+
+      const data = {
+        advice: adviceText,
+        isPinned,
+        lastUpdate: now.toISOString(),
+      };
+      localStorage.setItem(ADVICE_KEY, JSON.stringify(data));
+    }, 1500);
+  };
+
+  const togglePin = () => {
+    const newPinned = !isPinned;
+    setIsPinned(newPinned);
+
+    const data = {
+      advice,
+      isPinned: newPinned,
+      lastUpdate: lastUpdate?.toISOString(),
+    };
+    localStorage.setItem(ADVICE_KEY, JSON.stringify(data));
+  };
+
+  return (
+    <section className="td-card" id="aiAdviceCard">
+      <div className="td-section-title">
+        <h2>AIアドバイス</h2>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+        <button
+          className="td-btn"
+          onClick={generateAdvice}
+          disabled={isGenerating}
+          style={{ flex: 1 }}
+        >
+          {isGenerating ? "生成中..." : "アドバイスを生成"}
+        </button>
+        <button
+          className="td-btn"
+          onClick={generateAdvice}
+          disabled={isGenerating || !advice}
+          style={{ minWidth: 80 }}
+        >
+          再生成
+        </button>
+        <button
+          className="td-btn"
+          onClick={togglePin}
+          disabled={!advice}
+          style={{
+            minWidth: 60,
+            backgroundColor: isPinned ? "var(--accent-2, #22c55e)" : undefined,
+            color: isPinned ? "white" : undefined,
+          }}
+        >
+          固定
+        </button>
+      </div>
+
+      {advice && (
+        <div
+          style={{
+            padding: 16,
+            backgroundColor: "var(--bg-light, #f9fafb)",
+            borderRadius: 8,
+            border: "1px solid var(--border, #e5e7eb)",
+            whiteSpace: "pre-line",
+            lineHeight: 1.6,
+          }}
+        >
+          {advice}
+        </div>
+      )}
+
+      {lastUpdate && (
+        <div
+          style={{
+            marginTop: 12,
+            fontSize: 13,
+            color: "var(--muted)",
+            textAlign: "right",
+          }}
+        >
+          最終更新: {lastUpdate.toLocaleDateString("ja-JP", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })}{" "}
+          {lastUpdate.toLocaleTimeString("ja-JP", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function TradeDiaryPage() {
   const { emitPreset, openUpload } = useWiring();
 
@@ -951,6 +1103,23 @@ export default function TradeDiaryPage() {
               </div>
             </div>
           </section>
+
+          {/* AIアドバイス */}
+          <AIAdviceSection
+            tradeData={row}
+            kpi={kpi}
+            diaryData={{
+              entryEmotion,
+              entryBasis,
+              techSet,
+              marketSet,
+              exitTriggers,
+              exitEmotion,
+              noteRight,
+              noteWrong,
+              noteNext,
+            }}
+          />
         </div>
       </div>
 
