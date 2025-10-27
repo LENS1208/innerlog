@@ -633,6 +633,7 @@ export default function TradeDiaryPage() {
   const [entryBeforeOpen, setEntryBeforeOpen] = useState(false);
   const [positionHoldOpen, setPositionHoldOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
+  const [performanceOpen, setPerformanceOpen] = useState(false);
 
   const [aiSide, setAiSide] = useState("");
   const [aiFollow, setAiFollow] = useState("選択しない");
@@ -743,21 +744,25 @@ export default function TradeDiaryPage() {
 
       {/* パフォーマンス分析（3列） */}
       <section className="td-card" style={{ marginTop: 16 }}>
-        <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
-          <div className="chart-card">
-            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.cumulativeProfit}（時間）<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>決済順の累計</span></h4>
-            <div className="chart-box"><canvas ref={equityRef} /></div>
-          </div>
-          <div className="chart-card">
-            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.profitHistogram}</h4>
-            <div className="chart-box"><canvas ref={histRef} /></div>
-          </div>
-          <div className="chart-card">
-            <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>曜日×時間ヒートマップ<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>勝率（%）</span></h4>
-            <div className="chart-box"><canvas ref={heatRef} /></div>
-          </div>
+        <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setPerformanceOpen(!performanceOpen)}>
+          <h2>パフォーマンス分析 {!performanceOpen && <span style={{ fontSize: 12, fontWeight: 400, color: "var(--muted)", marginLeft: 8 }}>— 見る</span>} <span style={{ fontSize: 14, marginLeft: 8 }}>{performanceOpen ? "▲" : "▼"}</span></h2>
         </div>
+        {performanceOpen && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
+            <div className="chart-card">
+              <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.cumulativeProfit}（時間）<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>決済順の累計</span></h4>
+              <div className="chart-box"><canvas ref={equityRef} /></div>
+            </div>
+            <div className="chart-card">
+              <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>{UI_TEXT.profitHistogram}</h4>
+              <div className="chart-box"><canvas ref={histRef} /></div>
+            </div>
+            <div className="chart-card">
+              <h4 style={{ fontSize: 13, marginBottom: 8, fontWeight: 600 }}>曜日×時間ヒートマップ<span className="legend" style={{ fontSize: 11, marginLeft: 8, color: "var(--muted)", fontWeight: 400 }}>勝率（%）</span></h4>
+              <div className="chart-box"><canvas ref={heatRef} /></div>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* 2列グリッド */}
@@ -898,7 +903,10 @@ export default function TradeDiaryPage() {
               <textarea className="note" rows={1} value={intraMemo} onChange={(e) => setIntraMemo(e.target.value)} placeholder="保有中の気づきや感想をメモ" />
             </label>
           </section>
+        </div>
 
+        {/* 右列 */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* ポジション決済後 */}
           <section className="td-card td-exit" id="exitCard">
             <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setExitOpen(!exitOpen)}>
@@ -951,10 +959,6 @@ export default function TradeDiaryPage() {
               <button className="td-btn" onClick={savePayload}>保存</button>
             </div>
           </section>
-        </div>
-
-        {/* 右列（空） */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         </div>
       </div>
 
