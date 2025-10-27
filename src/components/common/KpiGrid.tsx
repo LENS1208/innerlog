@@ -4,6 +4,7 @@ export type KpiItem = {
   label: string;
   value: string;
   positive?: boolean;
+  sub?: string;
 };
 
 type KpiGridProps = {
@@ -19,6 +20,7 @@ export default function KpiGrid({ items }: KpiGridProps) {
           <div className={`value ${item.positive ? 'good' : ''}`.trim()}>
             {item.value}
           </div>
+          {item.sub && <div className="sub">{item.sub}</div>}
         </div>
       ))}
     </div>

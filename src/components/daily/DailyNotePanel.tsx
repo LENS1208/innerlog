@@ -51,7 +51,8 @@ export default function DailyNotePanel({
     { label: '勝率', value: `${kpi.winRate.toFixed(1)}%` },
     {
       label: '取引件数',
-      value: `${kpi.trades}件（勝ち：${kpi.wins}｜負け：${kpi.losses}）`,
+      value: `${kpi.trades}件`,
+      sub: `勝ち：${kpi.wins}｜負け：${kpi.losses}`,
     },
     {
       label: '平均損益（1取引あたり）',

@@ -1,17 +1,5 @@
 /* Journal Notebook CSS - copied from Canvas HTML (do not modify class names or tokens) */
 
-:root {
-  --bg: #f6f7fb;
-  --panel: #ffffff;
-  --panel-2: #ffffff;
-  --text: #0b1020;
-  --muted: #5b637a;
-  --accent: #0ea5e9;
-  --good: #22c55e;
-  --bad: #ef4444;
-  --border: #e6e8ef;
-  --chip: #f1f3f8;
-}
 
 /* 3ペインレイアウト */
 .shell {
@@ -56,27 +44,28 @@
 }
 
 .pane {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   min-height: 70vh;
+  box-shadow: none;
 }
 
 .pane h3 {
   margin: 0 0 8px 0;
   font-size: 13px;
-  color: var(--muted);
+  color: var(--muted, #6b7280);
 }
 
 .pane .head {
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line, #e5e7eb);
 }
 
 .pane .body {
-  padding: 12px;
+  padding: 20px;
   overflow: auto;
 }
 
@@ -90,12 +79,13 @@
   display: inline-flex;
   gap: 6px;
   align-items: center;
-  padding: 2px 8px;
+  padding: 4px 8px;
   border-radius: 999px;
-  background: var(--chip);
-  border: 1px solid var(--border);
+  background: var(--chip, #f3f4f6);
+  border: 1px solid var(--line, #e5e7eb);
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted, #6b7280);
+  font-weight: 600;
 }
 
 /* ノートカード */
@@ -103,24 +93,26 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
   cursor: pointer;
-  background: var(--panel-2);
+  background: var(--surface, #ffffff);
+  transition: background-color 0.15s;
 }
 
 .note:hover {
-  background: var(--chip);
+  background: var(--chip, #f3f4f6);
 }
 
 .note .title {
   font-weight: 600;
+  font-size: 14px;
 }
 
 .note .meta {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted, #6b7280);
   display: flex;
   gap: 8px;
 }
@@ -129,36 +121,52 @@
 .kpi {
   display: grid;
   gap: 8px;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
 @media (min-width: 1280px) {
   .kpi {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .kpi {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .kpi .card {
-  border: 1px solid var(--border);
+  border: 1px solid var(--line, #e5e7eb);
   border-radius: 12px;
-  padding: 8px;
+  padding: 16px;
+  background: var(--surface, #ffffff);
+  box-shadow: none;
 }
 
 .kpi .label {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted, #6b7280);
+  margin-bottom: 4px;
 }
 
 .kpi .value {
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 20px;
+  margin-bottom: 2px;
 }
 
 .kpi .value.good {
-  color: var(--good);
+  color: var(--gain, #16a34a);
 }
 
 .kpi .value.bad {
-  color: var(--bad);
+  color: var(--loss, #ef4444);
+}
+
+.kpi .sub {
+  font-size: 11px;
+  color: var(--muted, #6b7280);
 }
 
 .toolbar {
@@ -212,47 +220,50 @@
 
 /* カード（汎用） */
 .card {
-  border: 1px solid var(--border);
+  border: 1px solid var(--line, #e5e7eb);
   border-radius: 12px;
-  padding: 12px;
-  background: var(--panel);
+  padding: 20px;
+  background: var(--surface, #ffffff);
+  box-shadow: none;
 }
 
 /* 色分け */
 .good {
-  color: var(--good);
+  color: var(--gain, #16a34a);
 }
 
 .bad {
-  color: var(--bad);
+  color: var(--loss, #ef4444);
 }
 
 .sub {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted, #6b7280);
 }
 
 /* ボタン */
 .btn {
-  height: 32px;
-  padding: 0 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--chip);
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  border: 1px solid var(--line, #e5e7eb);
+  background: var(--surface, #ffffff);
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.15s;
 }
 
 .btn:hover {
-  background: var(--border);
+  background: var(--chip, #f3f4f6);
 }
 
 /* 入力 */
 .input {
   width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--panel);
+  padding: 12px;
+  border: 1px solid var(--line, #e5e7eb);
+  border-radius: 8px;
+  background: var(--surface, #ffffff);
   font-family: inherit;
   font-size: 14px;
 }
@@ -261,4 +272,5 @@ textarea.input {
   resize: vertical;
   font-family: inherit;
   line-height: 1.6;
+  min-height: 100px;
 }
