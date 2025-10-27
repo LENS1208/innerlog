@@ -66,13 +66,12 @@ export default function App() {
   else if (route === "/trades") Page = <TradeListPage />;
   else if (route.startsWith("/reports")) Page = <ReportsPage />;
   else if (route === "/forecast") Page = <ForecastHybrid />;
-  else if (route === "/notebook") Page = <DiaryIndexPage />;
+  else if (route === "/notebook") Page = <JournalNotesPage />;
   else if (route.startsWith("/notebook/")) {
     const entryId = route.split("/")[2] ?? "";
     Page = <TradeDiaryPage entryId={entryId as any} />;
   }
   else if (route === "/settings") Page = <div style={{padding: 40, textAlign: "center"}}>設定（準備中）</div>;
-  else if (route === "/journal-v0") Page = <JournalNotesPage />;
   else {
     Page = <EquityCurvePage />;
   }

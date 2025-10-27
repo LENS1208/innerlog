@@ -74,92 +74,58 @@ export default function JournalNotesPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
-      <header
-        style={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          height: '56px',
-          padding: '0 16px',
-          background: 'var(--panel)',
-          borderBottom: '1px solid var(--border)',
-        }}
-      >
-        <div style={{ fontWeight: 700 }}>ノート一覧</div>
-        <div className="row" style={{ marginLeft: 'auto' }}>
-          <input
-            className="input"
-            style={{ width: '260px', height: '32px' }}
-            placeholder="ノートを検索"
-          />
-          <button className="btn" title="フィルタ">
-            フィルタ
-          </button>
-          <button className="btn" title="新規ノート">
-            ＋ 新規
-          </button>
+    <div className="shell">
+      <aside className="pane">
+        <div className="head">
+          <h3>フォルダ / 種別</h3>
         </div>
-      </header>
-
-      <main className="container" style={{ padding: '16px' }}>
-        <div className="shell">
-          <aside className="pane">
-            <div className="head">
-              <h3>フォルダ / 種別</h3>
-            </div>
-            <div className="body list">
-              <div className="note" style={{ cursor: 'default' }}>
-                <div className="title">すべてのノート</div>
-              </div>
-              <div className="note" style={{ cursor: 'default' }}>
-                <div className="title">日次ノート</div>
-              </div>
-              <div className="note" style={{ cursor: 'default' }}>
-                <div className="title">取引ノート</div>
-              </div>
-              <div className="note" style={{ cursor: 'default' }}>
-                <div className="title">自由メモ</div>
-              </div>
-            </div>
-          </aside>
-
-          <section className="pane">
-            <div
-              className="head"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-            >
-              <h3>ノート一覧</h3>
-              <div className="row">
-                <span className="tag">並び替え</span>
-                <div className="seg" role="group" aria-label="並び替え">
-                  <button
-                    aria-pressed={sortBy === 'updated'}
-                    onClick={() => handleSort('updated')}
-                  >
-                    更新順
-                  </button>
-                  <button aria-pressed={sortBy === 'date'} onClick={() => handleSort('date')}>
-                    日付順
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="body list">
-              {notes.map((note, idx) => (
-                <div key={idx} className="note">
-                  <div className="title">{note.title}</div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          <DailyNotePanel {...demoDailyProps} />
+        <div className="body list">
+          <div className="note" style={{ cursor: 'default' }}>
+            <div className="title">すべてのノート</div>
+          </div>
+          <div className="note" style={{ cursor: 'default' }}>
+            <div className="title">日次ノート</div>
+          </div>
+          <div className="note" style={{ cursor: 'default' }}>
+            <div className="title">取引ノート</div>
+          </div>
+          <div className="note" style={{ cursor: 'default' }}>
+            <div className="title">自由メモ</div>
+          </div>
         </div>
-      </main>
+      </aside>
+
+      <section className="pane">
+        <div
+          className="head"
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+        >
+          <h3>ノート一覧</h3>
+          <div className="row">
+            <span className="tag">並び替え</span>
+            <div className="seg" role="group" aria-label="並び替え">
+              <button
+                aria-pressed={sortBy === 'updated'}
+                onClick={() => handleSort('updated')}
+              >
+                更新順
+              </button>
+              <button aria-pressed={sortBy === 'date'} onClick={() => handleSort('date')}>
+                日付順
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="body list">
+          {notes.map((note, idx) => (
+            <div key={idx} className="note">
+              <div className="title">{note.title}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <DailyNotePanel {...demoDailyProps} />
     </div>
   );
 }
