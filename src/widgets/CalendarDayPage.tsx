@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend } from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
 type Trade = {
   ticket: string;
@@ -297,29 +297,42 @@ export default function CalendarDayPage() {
       {dayTrades.length > 0 && (
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)", marginBottom: "var(--space-3)" }}>
           <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: "var(--space-2)" }}>当日の推移</h2>
-          <div style={{ height: 220 }}>
+          <div style={{ height: 300 }}>
             <Line
               data={{
-                labels: equityCurve.map((d) => d.x),
+                labels: equityCurve.map((d) => `${d.x}`),
                 datasets: [
                   {
                     label: "累積損益",
                     data: equityCurve.map((d) => d.y),
-                    borderColor: "#3b82f6",
+                    borderColor: (context) => {
+                      if (!context.chart.data.datasets[0].data) return '#3b82f6';
+                      const dataIndex = context.dataIndex;
+                      if (dataIndex === undefined) return '#3b82f6';
+                      const value = context.chart.data.datasets[0].data[dataIndex] as number;
+                      return value >= 0 ? '#16a34a' : '#ef4444';
+                    },
                     backgroundColor: (context) => {
                       const chart = context.chart;
                       const {ctx, chartArea} = chart;
-                      if (!chartArea) return;
+                      if (!chartArea) return 'rgba(59, 130, 246, 0.1)';
                       const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                      gradient.addColorStop(0, 'rgba(239, 68, 68, 0.3)');
-                      gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
-                      gradient.addColorStop(1, 'rgba(22, 163, 74, 0.3)');
+                      gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+                      gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
+                      gradient.addColorStop(1, 'rgba(22, 163, 74, 0.4)');
                       return gradient;
                     },
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 0,
+                    fill: 'origin',
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: (context) => {
+                      const value = context.parsed.y;
+                      return value >= 0 ? '#16a34a' : '#ef4444';
+                    },
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
                     pointHoverRadius: 6,
+                    borderWidth: 2.5,
                     segment: {
                       borderColor: (ctx) => {
                         return ctx.p1.parsed.y >= 0 ? '#16a34a' : '#ef4444';
@@ -331,15 +344,36 @@ export default function CalendarDayPage() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                  mode: 'index',
+                  intersect: false,
+                },
                 plugins: {
                   legend: {
                     display: false,
                   },
                   tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleColor: '#fff',
+                    titleFont: {
+                      size: 13,
+                      weight: 'bold',
+                    },
+                    bodyColor: '#fff',
+                    bodyFont: {
+                      size: 14,
+                    },
+                    displayColors: false,
                     callbacks: {
+                      title: function(context) {
+                        const index = context[0].dataIndex;
+                        if (index === 0) return '開始';
+                        return `取引 ${index}`;
+                      },
                       label: function(context) {
                         const value = context.parsed.y;
-                        return `損益: ${value >= 0 ? '+' : ''}${Math.round(value).toLocaleString('ja-JP')}円`;
+                        return `累積損益: ${value >= 0 ? '+' : ''}¥${Math.round(value).toLocaleString('ja-JP')}`;
                       }
                     }
                   }
@@ -348,24 +382,38 @@ export default function CalendarDayPage() {
                   y: {
                     beginAtZero: true,
                     grid: {
-                      color: "rgba(0,0,0,0.05)",
+                      color: 'rgba(0,0,0,0.06)',
+                      drawBorder: false,
+                    },
+                    border: {
+                      display: false,
                     },
                     ticks: {
+                      font: {
+                        size: 11,
+                      },
+                      color: '#666',
                       callback: function(value) {
-                        return '¥' + value.toLocaleString('ja-JP');
-                      }
+                        return '¥' + (value as number).toLocaleString('ja-JP');
+                      },
+                      padding: 8,
                     }
                   },
                   x: {
-                    title: {
-                      display: true,
-                      text: '取引番号',
-                      font: {
-                        size: 11
-                      }
-                    },
                     grid: {
                       display: false,
+                    },
+                    border: {
+                      display: false,
+                    },
+                    ticks: {
+                      font: {
+                        size: 11,
+                      },
+                      color: '#666',
+                      maxRotation: 0,
+                      autoSkip: true,
+                      maxTicksLimit: 10,
                     },
                   },
                 },
