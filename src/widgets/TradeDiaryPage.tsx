@@ -507,8 +507,30 @@ export default function TradeDiaryPage() {
   const [pending, setPending] = useState<QuickMemo[]>([]);
 
   useEffect(() => {
-    setPending(loadQuick().filter((m) => !m.linkedTo));
-  }, []);
+    const memos = loadQuick();
+    // ダミーデータがない場合はサンプルを1件挿入
+    if (memos.length === 0) {
+      const sample: QuickMemo = {
+        tempId: 'demo_pending_001',
+        symbol: 'USDJPY',
+        side: 'BUY',
+        entry: { planned: 148.5, actual: 148.52, size: 0.5, time: new Date().toISOString() },
+        note: 'ドル円の押し目を狙ったエントリー。まだポジション保有中。',
+        linkedTo: undefined
+      };
+      const linkedSample: QuickMemo = {
+        tempId: 'demo_linked_001',
+        symbol: 'EURUSD',
+        side: 'SELL',
+        entry: { planned: 1.062, actual: 1.0618, size: 1.0, time: new Date(Date.now() - 86400000).toISOString() },
+        note: 'ユーロドルのブレイクアウト。すでに決済済み。',
+        linkedTo: row.ticket
+      };
+      memos.push(sample, linkedSample);
+      saveQuick(memos);
+    }
+    setPending(memos.filter((m) => !m.linkedTo));
+  }, [row.ticket]);
 
   /* ===== トレード日記：選択肢・状態 ===== */
   const ENTRY_BASIS_OPTS = [
@@ -703,8 +725,8 @@ export default function TradeDiaryPage() {
 
           {/* エントリー前・直後 */}
           <section className="td-card td-entry-before" id="entryBeforeCard">
-            <div className="td-section-title" style={{ cursor: "pointer" }} onClick={() => setEntryBeforeOpen(!entryBeforeOpen)}>
-              <h2>エントリー前・直後 <span style={{ fontSize: 14, marginLeft: 8 }}>{entryBeforeOpen ? "▲" : "▼"}</span></h2>
+            <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setEntryBeforeOpen(!entryBeforeOpen)}>
+              <h2>エントリー前・直後 {!entryBeforeOpen && <span style={{ fontSize: 12, fontWeight: 400, color: "var(--muted)", marginLeft: 8 }}>— 詳細を入力</span>} <span style={{ fontSize: 14, marginLeft: 8 }}>{entryBeforeOpen ? "▲" : "▼"}</span></h2>
             </div>
 
             {entryBeforeOpen && (
@@ -750,10 +772,90 @@ export default function TradeDiaryPage() {
             </label>
           </section>
 
+          {/* 画像アップロード */}
+          <section className="td-card" id="imageCard">
+            <div className="td-section-title"><h2>画像</h2></div>
+            <div className="upanel">
+              <div className="uactions">
+                <label className="td-btn" htmlFor="imgFile">画像を選択</label>
+                <span className="small muted">.jpg/.jpeg/.gif/.png、上限 <strong>3ファイル・3MB</strong></span>
+                <button
+                  className="td-btn"
+                  style={{ marginLeft: "auto" }}
+                  onClick={() => {
+                    captureCanvas(equityRef.current);
+                    captureCanvas(histRef.current);
+                    captureCanvas(heatRef.current);
+                    alert("3つのチャートを保存しました");
+                  }}
+                >
+                  画像を保存
+                </button>
+              </div>
+              <input
+                id="imgFile"
+                type="file"
+                accept=".jpg,.jpeg,.gif,.png,image/jpeg,image/png,image/gif"
+                multiple
+                style={{ display: "none" }}
+                onChange={(e) => onFiles(e.target.files)}
+              />
+              <div className="thumbs">
+                {images.length === 0 && <div className="muted small">まだ画像はありません。</div>}
+                {images.map((img) => (
+                  <div
+                    key={img.id}
+                    className="thumb"
+                    onClick={() => setImgPreview(img.url)}
+                  >
+                    <img src={img.url} alt="chart" />
+                    <button
+                      className="del"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (confirm("削除しますか？")) {
+                          const next = images.filter((x) => x.id !== img.id);
+                          setImages(next);
+                          localStorage.setItem(IMG_KEY, JSON.stringify(next));
+                        }
+                      }}
+                    >
+                      削除
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* ポジション保有中 */}
+          <section className="td-card td-position-hold" id="positionHoldCard">
+            <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setPositionHoldOpen(!positionHoldOpen)}>
+              <h2>ポジション保有中 {!positionHoldOpen && <span style={{ fontSize: 12, fontWeight: 400, color: "var(--muted)", marginLeft: 8 }}>— 詳細を入力</span>} <span style={{ fontSize: 14, marginLeft: 8 }}>{positionHoldOpen ? "▲" : "▼"}</span></h2>
+            </div>
+            {positionHoldOpen && (
+              <>
+                <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
+                  options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
+                <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
+                  options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
+                <label>
+                  <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
+                    <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
+                  </select>
+                </label>
+              </>
+            )}
+            <label>
+              <div className="muted small">自由メモ</div>
+              <textarea className="note" rows={1} value={intraMemo} onChange={(e) => setIntraMemo(e.target.value)} placeholder="保有中の気づきや感想をメモ" />
+            </label>
+          </section>
+
           {/* ポジション決済後 */}
           <section className="td-card td-exit" id="exitCard">
-            <div className="td-section-title" style={{ cursor: "pointer" }} onClick={() => setExitOpen(!exitOpen)}>
-              <h2>ポジション決済後 <span style={{ fontSize: 14, marginLeft: 8 }}>{exitOpen ? "▲" : "▼"}</span></h2>
+            <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setExitOpen(!exitOpen)}>
+              <h2>ポジション決済後 {!exitOpen && <span style={{ fontSize: 12, fontWeight: 400, color: "var(--muted)", marginLeft: 8 }}>— 詳細を入力</span>} <span style={{ fontSize: 14, marginLeft: 8 }}>{exitOpen ? "▲" : "▼"}</span></h2>
             </div>
 
             {exitOpen && (
@@ -829,91 +931,6 @@ export default function TradeDiaryPage() {
             </div>
           </section>
 
-          {/* スペーサー（左列の「トレード日記」見出しと高さを揃える） */}
-          <div className="td-diary-heading" style={{ marginTop: 0 }}>
-            <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700, opacity: 0, pointerEvents: "none" }}>スペーサー</h2>
-          </div>
-
-          {/* ポジション保有中 */}
-          <section className="td-card td-position-hold" id="positionHoldCard">
-            <div className="td-section-title" style={{ cursor: "pointer" }} onClick={() => setPositionHoldOpen(!positionHoldOpen)}>
-              <h2>ポジション保有中 <span style={{ fontSize: 14, marginLeft: 8 }}>{positionHoldOpen ? "▲" : "▼"}</span></h2>
-            </div>
-            {positionHoldOpen && (
-              <>
-                <MultiSelect label="保有中の感情（最大2つ）" value={intraEmotion} onChange={setIntraEmotion}
-                  options={INTRA_EMO_OPTS} triggerId="msInTradeEmotionBtn" menuId="msInTradeEmotionMenu" />
-                <MultiSelect label="事前ルール（最大2つ）" value={preRules} onChange={setPreRules}
-                  options={PRERULE_OPTS} triggerId="msPreRulesBtn" menuId="msPreRulesMenu" />
-                <label>
-                  <select className="select" value={ruleExec} onChange={(e) => setRuleExec(e.target.value)}>
-                    <option value="">ルールの守り具合</option><option>しっかり守れた</option><option>一部守れなかった</option><option>守れなかった</option>
-                  </select>
-                </label>
-              </>
-            )}
-            <label>
-              <div className="muted small">自由メモ</div>
-              <textarea className="note" rows={1} value={intraMemo} onChange={(e) => setIntraMemo(e.target.value)} placeholder="保有中の気づきや感想をメモ" />
-            </label>
-          </section>
-
-          {/* 画像アップロード */}
-          <section className="td-card" id="imageCard">
-            <div className="td-section-title"><h2>画像</h2></div>
-            <div className="upanel">
-              <div className="uactions">
-                <label className="td-btn" htmlFor="imgFile">画像を選択</label>
-                <span className="small muted">.jpg/.jpeg/.gif/.png、上限 <strong>3ファイル・3MB</strong></span>
-                <button
-                  className="td-btn"
-                  style={{ marginLeft: "auto" }}
-                  onClick={() => {
-                    captureCanvas(equityRef.current);
-                    captureCanvas(histRef.current);
-                    captureCanvas(heatRef.current);
-                    alert("3つのチャートを保存しました");
-                  }}
-                >
-                  画像を保存
-                </button>
-              </div>
-              <input
-                id="imgFile"
-                type="file"
-                accept=".jpg,.jpeg,.gif,.png,image/jpeg,image/png,image/gif"
-                multiple
-                style={{ display: "none" }}
-                onChange={(e) => onFiles(e.target.files)}
-              />
-              <div className="thumbs">
-                {images.length === 0 && <div className="muted small">まだ画像はありません。</div>}
-                {images.map((img) => (
-                  <div
-                    key={img.id}
-                    className="thumb"
-                    onClick={() => setImgPreview(img.url)}
-                  >
-                    <img src={img.url} alt="chart" />
-                    <button
-                      className="del"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (confirm("削除しますか？")) {
-                          const next = images.filter((x) => x.id !== img.id);
-                          setImages(next);
-                          localStorage.setItem(IMG_KEY, JSON.stringify(next));
-                        }
-                      }}
-                    >
-                      削除
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
           {/* 可視化（3枚） */}
           <section className="td-card td-viz" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
@@ -943,29 +960,23 @@ export default function TradeDiaryPage() {
       )}
 
       {/* リンク済みメモ */}
-      <section className="td-card td-card-full">
-        <div className="td-section-title">
-          <h2>リンク済みメモ</h2>
-        </div>
-        <div className="linked-memos-table">
-          <table>
-            <thead>
-              <tr>
-                <th>タイトル</th>
-                <th>種類</th>
-                <th>更新</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loadQuick().filter(m => m.linkedTo).length === 0 ? (
+      {loadQuick().filter(m => m.linkedTo).length > 0 && (
+        <section className="td-card td-card-full">
+          <div className="td-section-title">
+            <h2>リンク済みメモ</h2>
+          </div>
+          <div className="linked-memos-table">
+            <table>
+              <thead>
                 <tr>
-                  <td colSpan={4} style={{ textAlign: 'center' }} className="muted small">
-                    リンク済みメモはありません
-                  </td>
+                  <th>タイトル</th>
+                  <th>種類</th>
+                  <th>更新</th>
+                  <th>操作</th>
                 </tr>
-              ) : (
-                loadQuick().filter(m => m.linkedTo).map((m) => {
+              </thead>
+              <tbody>
+                {loadQuick().filter(m => m.linkedTo).map((m) => {
                   const linkedTrade = trades.find(t => t.ticket === m.linkedTo);
                   const title = linkedTrade
                     ? `${linkedTrade.item} | ${m.linkedTo === row.ticket ? '取引' : ''}ノート (${new Date(m.entry.time).toLocaleDateString('ja-JP')})`
@@ -1004,22 +1015,22 @@ export default function TradeDiaryPage() {
                       </td>
                     </tr>
                   );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
+                })}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       {/* 未リンクメモ（簡易表示） */}
-      <section className="td-card td-card-full">
-        <div className="td-section-title">
-          <h2>保留メモ（未リンク）</h2>
-          <span className="pill">{pending.length}件</span>
-        </div>
-        <div className="pending-list">
-          {pending.length === 0 && <div className="muted small">未リンクの仮メモはありません。</div>}
-          {pending.map((m) => (
+      {pending.length > 0 && (
+        <section className="td-card td-card-full">
+          <div className="td-section-title">
+            <h2>保留メモ（未リンク）</h2>
+            <span className="pill">{pending.length}件</span>
+          </div>
+          <div className="pending-list">
+            {pending.map((m) => (
             <div key={m.tempId} className="pending-card">
               <div>
                 <div><strong>{m.symbol}</strong> {m.side} <span className="muted small">tempId: {m.tempId}</span></div>
@@ -1068,8 +1079,9 @@ export default function TradeDiaryPage() {
               </div>
             </div>
           ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* タグ候補モーダル */}
       {tagModalOpen && (
