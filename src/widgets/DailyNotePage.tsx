@@ -22,12 +22,12 @@ const DUMMY_DATA: DailyNotePageProps = {
     weekdayJp: "土",
   },
   trades: [
-    { time: "08:12", symbol: "USDJPY", sideJp: "買い", pnlYen: 3200 },
-    { time: "10:45", symbol: "EURUSD", sideJp: "売り", pnlYen: -1800 },
-    { time: "13:30", symbol: "GBPJPY", sideJp: "買い", pnlYen: 2400 },
-    { time: "15:20", symbol: "USDJPY", sideJp: "売り", pnlYen: 1900 },
-    { time: "17:05", symbol: "AUDUSD", sideJp: "買い", pnlYen: -950 },
-    { time: "19:40", symbol: "EURUSD", sideJp: "買い", pnlYen: 2750 },
+    { time: "08:12", symbol: "USDJPY", sideJp: "買い", pnlYen: 3200, ticket: "100123" },
+    { time: "10:45", symbol: "EURUSD", sideJp: "売り", pnlYen: -1800, ticket: "100124" },
+    { time: "13:30", symbol: "GBPJPY", sideJp: "買い", pnlYen: 2400, ticket: "100125" },
+    { time: "15:20", symbol: "USDJPY", sideJp: "売り", pnlYen: 1900, ticket: "100126" },
+    { time: "17:05", symbol: "AUDUSD", sideJp: "買い", pnlYen: -950, ticket: "100127" },
+    { time: "19:40", symbol: "EURUSD", sideJp: "買い", pnlYen: 2750, ticket: "100128" },
   ],
   linkedNotes: [
     {

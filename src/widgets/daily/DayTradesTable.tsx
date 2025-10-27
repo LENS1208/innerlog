@@ -33,7 +33,25 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
               const pnlClass = trade.pnlYen >= 0 ? "good" : "bad";
               const pnlLabel = trade.pnlYen >= 0 ? "+" : "";
               return (
-                <tr key={idx}>
+                <tr
+                  key={idx}
+                  style={{ cursor: trade.ticket ? "pointer" : "default" }}
+                  onClick={() => {
+                    if (trade.ticket) {
+                      location.hash = `/notebook/${trade.ticket}`;
+                    }
+                  }}
+                  onMouseEnter={(e) => {
+                    if (trade.ticket) {
+                      e.currentTarget.style.backgroundColor = "var(--chip)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (trade.ticket) {
+                      e.currentTarget.style.backgroundColor = "";
+                    }
+                  }}
+                >
                   <td>{trade.time}</td>
                   <td>{trade.symbol}</td>
                   <td>{trade.sideJp}</td>

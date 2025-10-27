@@ -19,6 +19,7 @@ export type DayTradeRow = {
   symbol: string;
   sideJp: "買い" | "売り";
   pnlYen: Yen;
+  ticket?: string;
 };
 
 export type LinkedNoteRow = {
