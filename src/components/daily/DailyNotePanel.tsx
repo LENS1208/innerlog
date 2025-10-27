@@ -38,6 +38,7 @@ export default function DailyNotePanel({
   values,
   onPrevDay,
   onNextDay,
+  onOpenTradesList,
   onOpenLinkedNote,
   onGenerateAdvice,
   onRegenerateAdvice,
