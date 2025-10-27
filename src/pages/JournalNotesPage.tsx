@@ -73,6 +73,16 @@ export default function JournalNotesPage() {
     setNotes(sorted);
   };
 
+  const handlePrevDay = () => console.log('前日へ');
+  const handleNextDay = () => console.log('翌日へ');
+  const handleOpenTradesList = () => console.log('取引一覧を開く');
+  const handleOpenLinkedNote = (title: string) => console.log('ノートを開く:', title);
+  const handleGenerateAdvice = () => console.log('アドバイスを生成');
+  const handleRegenerateAdvice = () => console.log('再生成');
+  const handlePinAdvice = () => console.log('固定');
+  const handleChangeValues = (values: any) => console.log('値変更:', values);
+  const handleSave = () => console.log('保存');
+
   return (
     <div className="shell">
       <aside className="pane">
@@ -125,7 +135,18 @@ export default function JournalNotesPage() {
         </div>
       </section>
 
-      <DailyNotePanel {...demoDailyProps} />
+      <DailyNotePanel
+        {...demoDailyProps}
+        onPrevDay={handlePrevDay}
+        onNextDay={handleNextDay}
+        onOpenTradesList={handleOpenTradesList}
+        onOpenLinkedNote={handleOpenLinkedNote}
+        onGenerateAdvice={handleGenerateAdvice}
+        onRegenerateAdvice={handleRegenerateAdvice}
+        onPinAdvice={handlePinAdvice}
+        onChangeValues={handleChangeValues}
+        onSave={handleSave}
+      />
     </div>
   );
 }
