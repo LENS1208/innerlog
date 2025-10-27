@@ -666,31 +666,32 @@ export default function TradeDiaryPage() {
       {/* 既存配線トリガ（上部） */}
 
       {/* KPI */}
-      <div className="td-card">
-        <div className="kpi">
-          <div className="i"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
-          <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
-          <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
-          <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
-        </div>
+      <div className="kpi-top">
+        <div className="kpi-card"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
+        <div className="kpi-card"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
+        <div className="kpi-card"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
+        <div className="kpi-card"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
       </div>
 
       {/* トレード情報 - 全幅 */}
-      <section className="td-card compact td-trade-info" id="tradeInfoCard" style={{ marginTop: 16 }}>
-        <div className="td-section-title">
-          <h2>トレード情報</h2><span className="pill">実績</span>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px 16px' }}>
+      <div className="trade-info-cards" style={{ marginTop: 16 }}>
+        <div className="trade-info-card">
           <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>通貨ペア</div><div style={{ fontWeight: 500 }}>{row.item}</div></div>
           <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>方向</div><div style={{ fontWeight: 500 }}>{row.side === "BUY" ? "買い" : "売り"}</div></div>
-          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>サイズ</div><div style={{ fontWeight: 500 }}>{row.size.toFixed(2)} lot</div></div>
-          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>指値/逆指値</div><div style={{ fontWeight: 500 }}>— / {row.sl ?? "—"}</div></div>
-          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>エントリー時刻</div><div style={{ fontWeight: 500 }}>{row.openTime.toLocaleString()}</div></div>
+        </div>
+        <div className="trade-info-card">
+          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>エントリー時刻</div><div style={{ fontWeight: 500, fontSize: '13px' }}>{row.openTime.toLocaleString()}</div></div>
           <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>エントリー価格</div><div style={{ fontWeight: 700 }}>{row.openPrice}</div></div>
-          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>決済時刻</div><div style={{ fontWeight: 500 }}>{row.closeTime.toLocaleString()}</div></div>
+        </div>
+        <div className="trade-info-card">
+          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>決済時刻</div><div style={{ fontWeight: 500, fontSize: '13px' }}>{row.closeTime.toLocaleString()}</div></div>
           <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>決済価格</div><div style={{ fontWeight: 700 }}>{row.closePrice}</div></div>
         </div>
-      </section>
+        <div className="trade-info-card">
+          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>サイズ</div><div style={{ fontWeight: 500 }}>{row.size.toFixed(2)} lot</div></div>
+          <div><div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>指値/逆指値</div><div style={{ fontWeight: 500 }}>— / {row.sl ?? "—"}</div></div>
+        </div>
+      </div>
 
       {/* 2列グリッド */}
       <div className="grid-main" style={{ marginTop: 16 }}>
