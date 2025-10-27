@@ -717,11 +717,6 @@ export default function TradeDiaryPage() {
               options={MARKET_OPTS} triggerId="msMarketBtn" menuId="msMarketMenu" />
             <MultiSelect label="ファンダメンタルズ（最大2つ）" value={fundSet} onChange={setFundSet}
               options={FUND_OPTS} triggerId="msFundBtn" menuId="msFundMenu" />
-            <label>
-              <div className="muted small">自由メモ</div>
-              <textarea className="note" rows={3} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
-                placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたのでロングを検討。" />
-            </label>
 
             <div className="hr" />
 
@@ -735,6 +730,14 @@ export default function TradeDiaryPage() {
               <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
                 <option value="">トレードの判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
               </select>
+            </label>
+
+            <div className="hr" />
+
+            <label>
+              <div className="muted small">自由メモ</div>
+              <textarea className="note" rows={3} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
+                placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたのでロングを検討。" />
             </label>
           </section>
 
