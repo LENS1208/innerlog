@@ -11,47 +11,65 @@ export default function TextareaGroup({ values, onChange }: TextareaGroupProps) 
     onChange?.({ ...values, [field]: value });
   };
 
+  const labelStyle = {
+    display: 'block',
+    fontSize: 12,
+    color: 'var(--muted)',
+    marginBottom: 6,
+  };
+
+  const textareaStyle = {
+    width: '100%',
+    minHeight: 80,
+    padding: 10,
+    border: '1px solid var(--line)',
+    borderRadius: 8,
+    fontSize: 13,
+    fontFamily: 'inherit',
+    resize: 'vertical' as const,
+  };
+
   return (
-    <>
-      <label className="tag" style={{ width: 'max-content' }}>
-        うまくいった点
-      </label>
-      <textarea
-        className="input"
-        style={{ height: '72px' }}
-        value={values.good}
-        onChange={(e) => handleChange('good', e.target.value)}
-      />
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+      <div>
+        <label style={labelStyle}>うまくいった点</label>
+        <textarea
+          style={textareaStyle}
+          value={values.good}
+          onChange={(e) => handleChange('good', e.target.value)}
+          placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインに事前に決めていたので迷わずにした。"
+        />
+      </div>
 
-      <label className="tag" style={{ width: 'max-content' }}>
-        改善点
-      </label>
-      <textarea
-        className="input"
-        style={{ height: '72px' }}
-        value={values.improve}
-        onChange={(e) => handleChange('improve', e.target.value)}
-      />
+      <div>
+        <label style={labelStyle}>改善点</label>
+        <textarea
+          style={textareaStyle}
+          value={values.improve}
+          onChange={(e) => handleChange('improve', e.target.value)}
+          placeholder="例）利確が早い傾向がある。もう少し引き寄せるべきだった。感情で決めてしまった。"
+        />
+      </div>
 
-      <label className="tag" style={{ width: 'max-content' }}>
-        次回の約束
-      </label>
-      <textarea
-        className="input"
-        style={{ height: '72px' }}
-        value={values.nextPromise}
-        onChange={(e) => handleChange('nextPromise', e.target.value)}
-      />
+      <div>
+        <label style={labelStyle}>次回の約束</label>
+        <textarea
+          style={textareaStyle}
+          value={values.nextPromise}
+          onChange={(e) => handleChange('nextPromise', e.target.value)}
+          placeholder="例）利確ポイントを2段階にわけて、半分だけ早めに取るようにする。チャートに目標地点を引いておく。"
+        />
+      </div>
 
-      <label className="tag" style={{ width: 'max-content' }}>
-        自由メモ
-      </label>
-      <textarea
-        className="input"
-        style={{ height: '72px' }}
-        value={values.free}
-        onChange={(e) => handleChange('free', e.target.value)}
-      />
-    </>
+      <div>
+        <label style={labelStyle}>自由メモ</label>
+        <textarea
+          style={textareaStyle}
+          value={values.free}
+          onChange={(e) => handleChange('free', e.target.value)}
+          placeholder="例）今日は集中力があった。前のニュースで目線が上がったのでロングに絞った。"
+        />
+      </div>
+    </div>
   );
 }

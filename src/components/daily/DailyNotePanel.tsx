@@ -118,8 +118,25 @@ export default function DailyNotePanel({
         </div>
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 'var(--space-3)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
-            <h2 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>当日の推移</h2>
+          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 'var(--space-2)' }}>当日の推移</h2>
+          <div
+            style={{
+              height: '180px',
+              border: '1px dashed var(--line)',
+              borderRadius: '8px',
+              marginBottom: 'var(--space-3)',
+              background: 'var(--chip, #f3f4f6)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--muted)',
+              fontSize: 13,
+            }}
+          >
+            チャートプレースホルダー
+          </div>
+          <TextareaGroup values={values} onChange={onChangeValues} />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'var(--space-3)' }}>
             <button
               onClick={onSave}
               style={{
@@ -128,7 +145,7 @@ export default function DailyNotePanel({
                 borderRadius: 8,
                 padding: '8px 16px',
                 cursor: 'pointer',
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: 600,
                 color: '#fff',
               }}
@@ -136,19 +153,25 @@ export default function DailyNotePanel({
               保存
             </button>
           </div>
-          <div
-            style={{
-              height: '180px',
-              border: '1px dashed var(--line)',
-              borderRadius: '8px',
-              marginBottom: 'var(--space-3)',
-            }}
-          />
-          <TextareaGroup values={values} onChange={onChangeValues} />
         </div>
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 'var(--space-3)' }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 'var(--space-2)' }}>この日の取引</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
+            <h2 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>この日の取引</h2>
+            <button
+              onClick={onOpenTradesList}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--accent)',
+                cursor: 'pointer',
+                fontSize: 13,
+                textDecoration: 'underline',
+              }}
+            >
+              取引一覧を開く
+            </button>
+          </div>
           <DayTradesTable trades={trades} />
         </div>
 
