@@ -666,13 +666,11 @@ export default function TradeDiaryPage() {
       {/* 既存配線トリガ（上部） */}
 
       {/* KPI */}
-      <div className="td-card">
-        <div className="kpi">
-          <div className="i"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
-          <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
-          <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
-          <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
-        </div>
+      <div className="kpi">
+        <div className="i"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
+        <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
+        <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
+        <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
       </div>
 
       {/* トレード情報 */}

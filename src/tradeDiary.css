@@ -29,8 +29,8 @@
 .hr{ height:1px; background: var(--line); margin:12px 0; }
 
 /* KPI */
-.kpi{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
-.kpi .i{ border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface); }
+.kpi{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+.kpi .i{ border:1px solid var(--line); border-radius:12px; padding:16px; background:var(--surface); }
 .kpi .lab{ font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; }
 .kpi .val{ font-weight:700; font-size:20px; line-height:1.2; }
 
