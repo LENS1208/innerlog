@@ -247,7 +247,6 @@ export default function ReportsRisk() {
           gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: 12,
           marginBottom: 16,
-          maxWidth: "calc(4 * 200px + 3 * 12px)",
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
