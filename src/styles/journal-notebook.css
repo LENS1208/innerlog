@@ -1,0 +1,264 @@
+/* Journal Notebook CSS - copied from Canvas HTML (do not modify class names or tokens) */
+
+:root {
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --panel-2: #ffffff;
+  --text: #0b1020;
+  --muted: #5b637a;
+  --accent: #0ea5e9;
+  --good: #22c55e;
+  --bad: #ef4444;
+  --border: #e6e8ef;
+  --chip: #f1f3f8;
+}
+
+/* 3ペインレイアウト */
+.shell {
+  display: grid;
+  grid-template-columns: 280px 360px 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 1280px) {
+  .shell {
+    grid-template-columns: 280px 420px 1fr;
+  }
+}
+
+@media (max-width: 1023px) {
+  .shell {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .container {
+    padding: 12px;
+  }
+  .pane {
+    min-height: auto !important;
+    height: auto !important;
+    display: block;
+  }
+  .pane .head {
+    padding: 8px 12px;
+  }
+  .pane .body {
+    padding: 8px 12px;
+    overflow: visible;
+    max-height: none;
+  }
+  .list {
+    gap: 8px;
+  }
+}
+
+.pane {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 70vh;
+}
+
+.pane h3 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.pane .head {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.pane .body {
+  padding: 12px;
+  overflow: auto;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tag {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--chip);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ノートカード */
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--panel-2);
+}
+
+.note:hover {
+  background: var(--chip);
+}
+
+.note .title {
+  font-weight: 600;
+}
+
+.note .meta {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  gap: 8px;
+}
+
+/* 編集ペイン */
+.kpi {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 1280px) {
+  .kpi {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.kpi .card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.kpi .label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.kpi .value {
+  font-weight: 700;
+}
+
+.kpi .value.good {
+  color: var(--good);
+}
+
+.kpi .value.bad {
+  color: var(--bad);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px;
+  background: var(--chip);
+}
+
+.area {
+  min-height: 360px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--panel);
+  line-height: 1.6;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.seg button {
+  height: 28px;
+  padding: 0 10px;
+  background: var(--panel-2);
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.seg button + button {
+  border-left: 1px solid var(--border);
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--chip);
+}
+
+/* カード（汎用） */
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--panel);
+}
+
+/* 色分け */
+.good {
+  color: var(--good);
+}
+
+.bad {
+  color: var(--bad);
+}
+
+.sub {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ボタン */
+.btn {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--chip);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--border);
+}
+
+/* 入力 */
+.input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel);
+  font-family: inherit;
+  font-size: 14px;
+}
+
+textarea.input {
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.6;
+}

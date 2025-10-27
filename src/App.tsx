@@ -12,8 +12,9 @@ import MonthlyCalendar from "./widgets/MonthlyCalendar";
 import ReportsPage from "./widgets/ReportsPage";
 import CalendarDayPage from "./widgets/CalendarDayPage";
 import DailyNotePage from "./widgets/DailyNotePage";
+import JournalNotesPage from "./pages/JournalNotesPage";
 
-type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/forecast" | "/notebook" | `/notebook/${string}` | "/settings";
+type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/forecast" | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0";
 
 function parseHashToNewRoute(): NewRoute {
   const h = location.hash.replace(/^#/, "");
@@ -41,6 +42,7 @@ function parseHashToNewRoute(): NewRoute {
   if (h.startsWith("/forecast")) return "/forecast";
   if (h === "/notebook" || h.startsWith("/notebook/")) return h as NewRoute;
   if (h.startsWith("/settings")) return "/settings";
+  if (h === "/journal-v0") return "/journal-v0";
 
   return "/dashboard";
 }
@@ -70,6 +72,7 @@ export default function App() {
     Page = <TradeDiaryPage entryId={entryId as any} />;
   }
   else if (route === "/settings") Page = <div style={{padding: 40, textAlign: "center"}}>設定（準備中）</div>;
+  else if (route === "/journal-v0") Page = <JournalNotesPage />;
   else {
     Page = <EquityCurvePage />;
   }
