@@ -28,20 +28,8 @@
 .danger{ color: var(--danger, #ef4444); }
 .hr{ height:1px; background: var(--line); margin:12px 0; }
 
-/* KPI - Top Cards */
-.kpi-top{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
-.kpi-card{ border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface); }
-.kpi-card .lab{ font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; }
-.kpi-card .val{ font-weight:700; font-size:20px; line-height:1.2; }
-
-/* Trade Info Cards - Full Width */
-.trade-info-cards{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
-@media (max-width:1080px){ .trade-info-cards{ grid-template-columns:repeat(2,1fr); } }
-@media (max-width:640px){ .trade-info-cards{ grid-template-columns:1fr; } }
-.trade-info-card{ border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface); display:flex; flex-direction:column; gap:10px; }
-
-/* Legacy KPI (keep for compatibility) */
-.kpi{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
+/* KPI */
+.kpi{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
 .kpi .i{ border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface); }
 .kpi .lab{ font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; }
 .kpi .val{ font-weight:700; font-size:20px; line-height:1.2; }
