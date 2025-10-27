@@ -35,6 +35,26 @@
 .kpi .lab{ font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; }
 .kpi .val{ font-weight:700; font-size:20px; line-height:1.2; }
 
+/* トレード損益表示（右上） */
+.trade-profit-display{
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.trade-profit-label{
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.trade-profit-value{
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
 /* 2列グリッド - 新レイアウト */
 .grid-main{ display:grid; gap:16px; grid-template-columns:1fr 1fr; }
 @media (max-width:1080px){ .grid-main{ grid-template-columns:1fr; } }

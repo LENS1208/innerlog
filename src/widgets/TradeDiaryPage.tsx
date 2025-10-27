@@ -689,22 +689,22 @@ export default function TradeDiaryPage() {
       {/* 既存配線トリガ（上部） */}
 
       {/* KPI */}
-      <div className="td-card">
-        <div className="kpi">
-          <div className="i"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
-          <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
-          <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
-          <div className="i"><div className="lab">総損益（Gross）/ コスト</div><div className="val small"><span style={{ color: kpi.gross >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.gross)}</span> / <span style={{ color: 'var(--danger, #ef4444)' }}>{fmtJPY(kpi.cost)}</span></div></div>
-          <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
+      <div className="td-card" style={{ position: 'relative' }}>
+        <div className="trade-profit-display">
+          <span className="trade-profit-label">トレード損益：</span>
+          <span className="trade-profit-value" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>
+            {(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円
+          </span>
         </div>
       </div>
 
-      {/* トレード概要（全幅） */}
+      {/* トレード概要（2行レイアウト） */}
       <section className="td-card" style={{ marginTop: 16 }}>
         <div className="td-section-title">
           <h2>トレード概要</h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px 16px" }}>
+        {/* 1行目 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "16px", marginBottom: "16px" }}>
           <div>
             <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>通貨ペア</div>
             <div style={{ fontSize: 16, fontWeight: 600 }}>{row.item}</div>
@@ -718,22 +718,25 @@ export default function TradeDiaryPage() {
             <div style={{ fontSize: 16, fontWeight: 600 }}>{row.size.toFixed(2)} lot</div>
           </div>
           <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>逆指値（SL）</div>
-            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.sl ?? "—"}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>エントリー価格</div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>エントリー価格・時刻</div>
             <div style={{ fontSize: 16, fontWeight: 600 }}>{row.openPrice}</div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{row.openTime.toLocaleString()}</div>
           </div>
           <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>決済価格</div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>決済価格・時刻</div>
             <div style={{ fontSize: 16, fontWeight: 600 }}>{row.closePrice}</div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 2 }}>{row.closeTime.toLocaleString()}</div>
           </div>
+        </div>
+        {/* 2行目 */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
           <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>手数料</div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: row.commission < 0 ? "var(--danger)" : "inherit" }}>{row.commission.toLocaleString("ja-JP")}円</div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>逆指値（SL）</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{row.sl ?? "—"}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>保有時間</div>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>{fmtHoldJP(kpi.hold)}</div>
           </div>
           <div>
             <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>スワップ</div>
