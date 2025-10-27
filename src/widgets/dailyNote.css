@@ -265,7 +265,7 @@
   transition: background-color 0.15s ease;
 }
 
-.data-table tbody tr[style*="cursor: pointer"]:hover {
+.data-table tbody tr.clickable:hover {
   background: var(--chip, #f3f4f6);
 }
 

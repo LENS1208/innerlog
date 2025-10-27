@@ -35,6 +35,7 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
               return (
                 <tr
                   key={idx}
+                  className={trade.ticket ? "clickable" : ""}
                   style={{ cursor: trade.ticket ? "pointer" : "default" }}
                   onClick={() => {
                     if (trade.ticket) {
