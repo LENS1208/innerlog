@@ -907,6 +907,9 @@ export default function TradeDiaryPage() {
 
         {/* 右列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* スペーサー（トレード日記見出し分の高さ） */}
+          <div style={{ height: "calc(20px + 16px)" }}></div>
+
           {/* ポジション決済後 */}
           <section className="td-card td-exit" id="exitCard">
             <div className="td-section-title" style={{ cursor: "pointer", userSelect: "none" }} onClick={() => setExitOpen(!exitOpen)}>
