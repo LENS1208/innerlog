@@ -7,7 +7,7 @@ import '../styles/journal-notebook.css';
 const demoNotesData: NoteListItem[] = [
   {
     id: 'note-1',
-    title: '2025/10/09（木）｜日次ノート',
+    title: '2025/10/09（木）日次ノート',
     kind: '日次',
     updatedAt: '2025-10-11T18:02:00+09:00',
     dateKey: '2025-10-09',
@@ -93,8 +93,8 @@ const demoDailyProps: DailyNotePanelProps = {
 };
 
 const formatPnl = (pnlYen: number): string => {
-  const sign = pnlYen >= 0 ? '+' : '';
-  return `${sign}¥${Math.abs(pnlYen).toLocaleString('ja-JP')}円`;
+  const sign = pnlYen >= 0 ? '+' : '-';
+  return `${sign}${Math.abs(pnlYen).toLocaleString('ja-JP')}円`;
 };
 
 export default function JournalNotesPage() {
@@ -156,7 +156,7 @@ export default function JournalNotesPage() {
     <div className="shell">
       <aside className="pane">
         <div className="head">
-          <h3>フォルダ / 種別</h3>
+          <h3>フォルダ</h3>
         </div>
         <div className="body list">
           <div
@@ -262,8 +262,11 @@ export default function JournalNotesPage() {
               </div>
               <div className="meta-line">
                 {note.kind === '取引' && note.pnlYen !== undefined ? (
-                  <span className={note.pnlYen >= 0 ? 'good' : 'bad'}>
-                    損益　{formatPnl(note.pnlYen)}
+                  <span>
+                    <span style={{ color: 'var(--muted, #6b7280)' }}>損益　</span>
+                    <span className={note.pnlYen >= 0 ? 'good' : 'bad'}>
+                      {formatPnl(note.pnlYen)}
+                    </span>
                   </span>
                 ) : note.kind === '自由' ? (
                   <span>メモ：{note.memoPreview || '—'}</span>
