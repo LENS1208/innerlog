@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDataset } from "../lib/dataset.context";
-import ReportsTimeAxis from "./reports/ReportsTimeAxis";
-import ReportsMarket from "./reports/ReportsMarket";
-import ReportsStrategy from "./reports/ReportsStrategy";
-import ReportsRisk from "./reports/ReportsRisk";
 
 type TabKey = "time" | "market" | "strategy" | "risk";
 
@@ -68,10 +64,10 @@ export default function ReportsPage() {
 
       {/* コンテンツ */}
       <div>
-        {activeTab === "time" && <ReportsTimeAxis />}
-        {activeTab === "market" && <ReportsMarket />}
-        {activeTab === "strategy" && <ReportsStrategy />}
-        {activeTab === "risk" && <ReportsRisk />}
+        {activeTab === "time" && <div style={{ padding: 20 }}>時間軸レポート（準備中）</div>}
+        {activeTab === "market" && <div style={{ padding: 20 }}>市場・銘柄レポート（準備中）</div>}
+        {activeTab === "strategy" && <div style={{ padding: 20 }}>戦略・行動レポート（準備中）</div>}
+        {activeTab === "risk" && <div style={{ padding: 20 }}>リスクレポート（準備中）</div>}
       </div>
     </div>
   );

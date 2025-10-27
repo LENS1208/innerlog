@@ -1,10 +1,4 @@
 import React from "react";
-import { TopBar } from "./daily/TopBar";
-import { KpiGrid } from "./daily/KpiGrid";
-import { DayJournalCard } from "./daily/DayJournalCard";
-import { DayTradesTable } from "./daily/DayTradesTable";
-import { LinkedNotesTable } from "./daily/LinkedNotesTable";
-import { AiAdviceBlock } from "./daily/AiAdviceBlock";
 import type { DailyNotePageProps } from "./daily/types";
 import "./dailyNote.css";
 
@@ -70,38 +64,7 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
   return (
     <div className="daily-note-page">
-      <TopBar
-        kpi={mergedProps.kpi}
-        onPrevDay={mergedProps.onPrevDay || handlePrevDay}
-        onNextDay={mergedProps.onNextDay || handleNextDay}
-      />
-
-      <KpiGrid kpi={mergedProps.kpi} />
-
-      <div className="two-col-layout">
-        <DayJournalCard onSave={mergedProps.onSave || handleSave} />
-
-        <div className="right-panel">
-          <div className="panel-card">
-            <DayTradesTable
-              trades={mergedProps.trades}
-              onOpenTradesList={mergedProps.onOpenTradesList || handleOpenTradesList}
-            />
-
-            <LinkedNotesTable
-              notes={mergedProps.linkedNotes}
-              onOpenNote={mergedProps.onOpenNote || handleOpenNote}
-            />
-
-            <AiAdviceBlock
-              advice={mergedProps.advice}
-              onGenerateAdvice={mergedProps.onGenerateAdvice || handleGenerateAdvice}
-              onRegenerateAdvice={mergedProps.onRegenerateAdvice || handleRegenerateAdvice}
-              onPinAdvice={mergedProps.onPinAdvice || handlePinAdvice}
-            />
-          </div>
-        </div>
-      </div>
+      <div style={{ padding: 20 }}>デイリーノート（準備中）</div>
     </div>
   );
 }
