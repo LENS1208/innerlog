@@ -675,7 +675,7 @@ export default function TradeDiaryPage() {
 
       {/* トレード情報 */}
       <section className="td-card compact td-trade-info" id="tradeInfoCard" style={{ marginTop: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '120px 100px 120px 140px 1fr 1fr', gap: 16 }}>
           <div>
             <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>通貨ペア</div>
             <div style={{ fontWeight: 500 }}>{row.item}</div>
