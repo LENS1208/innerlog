@@ -237,6 +237,16 @@ td.num{ text-align:right; }
   height: auto;
 }
 
+/* エントリー/エグジットと損益内訳の高さを揃える */
+.td-match-height {
+  min-height: 280px;
+}
+
+/* トレード日記見出しの高さ統一 */
+.td-diary-heading {
+  height: 52px;
+}
+
 /* 縦並びレイアウト */
 .note-vertical {
   display: flex;

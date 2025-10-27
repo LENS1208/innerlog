@@ -676,7 +676,7 @@ export default function TradeDiaryPage() {
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* エントリー/エグジット */}
-          <section className="td-card compact td-entry-exit" id="entryCard">
+          <section className="td-card compact td-entry-exit td-match-height" id="entryCard">
             <div className="td-section-title">
               <h2>エントリー / エグジット</h2><span className="pill">実績</span>
             </div>
@@ -692,7 +692,7 @@ export default function TradeDiaryPage() {
           </section>
 
           {/* トレード日記 */}
-          <div style={{ marginTop: 0 }}>
+          <div className="td-diary-heading" style={{ marginTop: 0 }}>
             <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
           </div>
 
@@ -793,7 +793,7 @@ export default function TradeDiaryPage() {
         {/* 右列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {/* 損益内訳 */}
-          <section className="td-card" id="pnlCard">
+          <section className="td-card td-match-height" id="pnlCard">
             <div className="td-section-title"><h2>{UI_TEXT.profitBreakdown}</h2></div>
             <div className="pnl-two-cols">
               <table role="grid">
@@ -814,6 +814,11 @@ export default function TradeDiaryPage() {
               </table>
             </div>
           </section>
+
+          {/* スペーサー（左列の「トレード日記」見出しと高さを揃える） */}
+          <div className="td-diary-heading" style={{ marginTop: 0 }}>
+            <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700, opacity: 0, pointerEvents: "none" }}>スペーサー</h2>
+          </div>
 
           {/* ポジション保有中 */}
           <section className="td-card td-position-hold" id="positionHoldCard">
