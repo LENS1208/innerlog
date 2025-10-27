@@ -763,12 +763,10 @@ export default function TradeDiaryPage() {
               <h2>ポジション決済後</h2>
             </div>
 
-            <div className="note-vertical">
-              <label><div className="muted small">うまくいった点</div><textarea className="note" rows={1} value={noteRight} onChange={(e) => setNoteRight(e.target.value)} placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。" /></label>
-              <label><div className="muted small">改善点</div><textarea className="note" rows={1} value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} placeholder="例）利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。" /></label>
-              <label><div className="muted small">次回の約束</div><textarea className="note" rows={1} value={noteNext} onChange={(e) => setNoteNext(e.target.value)} placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。" /></label>
-              <label><div className="muted small">自由メモ</div><textarea className="note" rows={1} value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="例）今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。" /></label>
-            </div>
+            <label>
+              <div className="muted small">自由メモ</div>
+              <textarea className="note" rows={1} value={noteFree} onChange={(e) => setNoteFree(e.target.value)} placeholder="例）今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。" />
+            </label>
 
             <button
               type="button"
@@ -796,6 +794,12 @@ export default function TradeDiaryPage() {
                 </label>
                 <MultiSelect label="AI予想が良かった点（最大2つ）" value={aiPros} onChange={setAiPros}
                   options={AI_PROS_OPTS} triggerId="msAiProsBtn" menuId="msAiProsMenu" />
+
+                <div className="note-vertical" style={{ marginTop: 12 }}>
+                  <label><div className="muted small">うまくいった点</div><textarea className="note" rows={1} value={noteRight} onChange={(e) => setNoteRight(e.target.value)} placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。" /></label>
+                  <label><div className="muted small">改善点</div><textarea className="note" rows={1} value={noteWrong} onChange={(e) => setNoteWrong(e.target.value)} placeholder="例）利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。" /></label>
+                  <label><div className="muted small">次回の約束</div><textarea className="note" rows={1} value={noteNext} onChange={(e) => setNoteNext(e.target.value)} placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。" /></label>
+                </div>
               </div>
             )}
 
