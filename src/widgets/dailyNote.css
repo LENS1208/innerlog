@@ -112,7 +112,7 @@
 
 .two-col-layout {
   display: grid;
-  grid-template-columns: minmax(320px, 0.6fr) 1fr;
+  grid-template-columns: minmax(170px, 0.6fr) 1fr;
   gap: 20px;
 }
 
