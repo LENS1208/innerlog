@@ -292,14 +292,14 @@ export default function JournalNotesPage() {
             }}
             onClick={() => handleSelectFolder('unlinked')}
           >
-            <div className="row">
-              <div className="title">未リンクノート</div>
-              {unlinkedCount > 0 && (
-                <span className="tag" style={{ marginLeft: 'auto' }}>
+            <div className="title">未リンクノート</div>
+            {unlinkedCount > 0 && (
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
+                <span className="tag">
                   {unlinkedCount}
                 </span>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </aside>
@@ -310,19 +310,16 @@ export default function JournalNotesPage() {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
         >
           <h3>ノート一覧</h3>
-          <div className="row">
-            <span className="tag">並び替え</span>
-            <div className="seg" role="group" aria-label="並び替え">
-              <button
-                aria-pressed={sortBy === 'updated'}
-                onClick={() => handleSort('updated')}
-              >
-                更新順
-              </button>
-              <button aria-pressed={sortBy === 'date'} onClick={() => handleSort('date')}>
-                日付順
-              </button>
-            </div>
+          <div className="seg" role="group" aria-label="並び替え">
+            <button
+              aria-pressed={sortBy === 'updated'}
+              onClick={() => handleSort('updated')}
+            >
+              更新順
+            </button>
+            <button aria-pressed={sortBy === 'date'} onClick={() => handleSort('date')}>
+              日付順
+            </button>
           </div>
         </div>
         <div className="body list">
