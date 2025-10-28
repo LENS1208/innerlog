@@ -5,7 +5,7 @@ import TradeDetailPanel from '../components/trade/TradeDetailPanel';
 import type { TradeDetailPanelProps } from '../components/trade/TradeDetailPanel';
 import FreeMemoPanel from '../components/free/FreeMemoPanel';
 import type { FolderKind, NoteListItem } from './journal-notes.types';
-import { getAllDailyNotes, getAllTradeNotes, getAllFreeMemos } from '../lib/db.service';
+import { getAllDailyNotes, getAllTradeNotes, getAllFreeMemos, getAllTrades } from '../lib/db.service';
 import '../styles/journal-notebook.css';
 
 type TradeData = {
@@ -294,15 +294,40 @@ export default function JournalNotesPage() {
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'daily' | 'trade' | 'free' | null>(null);
   const [loading, setLoading] = useState(true);
+  const [tradesData, setTradesData] = useState<Record<string, TradeData>>({});
 
   const loadNotes = async () => {
     try {
       setLoading(true);
-      const [dailyNotes, tradeNotes, freeMemos] = await Promise.all([
+      const [dailyNotes, tradeNotes, freeMemos, allTrades] = await Promise.all([
         getAllDailyNotes(),
         getAllTradeNotes(),
         getAllFreeMemos(),
+        getAllTrades(),
       ]);
+
+      const tradesMap = new Map(allTrades.map(t => [t.ticket, t]));
+
+      const tradesDataMap: Record<string, TradeData> = {};
+      allTrades.forEach(t => {
+        tradesDataMap[t.ticket] = {
+          ticket: t.ticket,
+          item: t.item,
+          side: t.side as 'BUY' | 'SELL',
+          size: t.size,
+          openTime: new Date(t.open_time),
+          openPrice: t.open_price,
+          closeTime: new Date(t.close_time),
+          closePrice: t.close_price,
+          commission: t.commission,
+          swap: t.swap,
+          profit: t.profit,
+          pips: t.pips,
+          sl: t.sl,
+          tp: t.tp,
+        };
+      });
+      setTradesData(tradesDataMap);
 
       const allNotes: NoteListItem[] = [
         ...dailyNotes.map(note => ({
@@ -313,15 +338,18 @@ export default function JournalNotesPage() {
           dateKey: note.date_key,
           linked: true,
         })),
-        ...tradeNotes.map(note => ({
-          id: note.id,
-          title: `${note.ticket}｜取引ノート｜${note.ticket}`,
-          kind: '取引' as const,
-          updatedAt: note.updated_at,
-          dateKey: note.ticket,
-          linked: true,
-          pnlYen: 0,
-        })),
+        ...tradeNotes.map(note => {
+          const trade = tradesMap.get(note.ticket);
+          return {
+            id: note.ticket,
+            title: `${formatTradeDate(trade?.close_time)}（${getDayOfWeek(trade?.close_time || '')}）｜取引ノート｜${trade?.item || note.ticket}`,
+            kind: '取引' as const,
+            updatedAt: note.updated_at,
+            dateKey: note.ticket,
+            linked: true,
+            pnlYen: trade?.profit || 0,
+          };
+        }),
         ...freeMemos.map(memo => ({
           id: memo.id,
           title: memo.title,
@@ -345,6 +373,15 @@ export default function JournalNotesPage() {
     const days = ['日', '月', '火', '水', '木', '金', '土'];
     const date = new Date(dateKey);
     return days[date.getDay()];
+  };
+
+  const formatTradeDate = (dateTime: string | undefined): string => {
+    if (!dateTime) return '';
+    const date = new Date(dateTime);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
   };
 
   useEffect(() => {
@@ -585,18 +622,18 @@ export default function JournalNotesPage() {
         />
       )}
 
-      {viewMode === 'trade' && selectedNoteId && demoTradesData[selectedNoteId] && (
+      {viewMode === 'trade' && selectedNoteId && tradesData[selectedNoteId] && (
         <TradeDetailPanel
-          trade={demoTradesData[selectedNoteId]}
+          trade={tradesData[selectedNoteId]}
           kpi={{
-            net: demoTradesData[selectedNoteId].profit,
-            pips: demoTradesData[selectedNoteId].pips,
-            hold: demoTradesData[selectedNoteId].closeTime.getTime() - demoTradesData[selectedNoteId].openTime.getTime(),
-            gross: demoTradesData[selectedNoteId].profit - demoTradesData[selectedNoteId].commission,
-            cost: demoTradesData[selectedNoteId].commission + demoTradesData[selectedNoteId].swap,
-            rrr: demoTradesData[selectedNoteId].sl
-              ? Math.abs(demoTradesData[selectedNoteId].pips) /
-                Math.abs((demoTradesData[selectedNoteId].openPrice - demoTradesData[selectedNoteId].sl!) * (/JPY$/.test(demoTradesData[selectedNoteId].item) ? 100 : 10000))
+            net: tradesData[selectedNoteId].profit,
+            pips: tradesData[selectedNoteId].pips,
+            hold: tradesData[selectedNoteId].closeTime.getTime() - tradesData[selectedNoteId].openTime.getTime(),
+            gross: tradesData[selectedNoteId].profit - tradesData[selectedNoteId].commission,
+            cost: tradesData[selectedNoteId].commission + tradesData[selectedNoteId].swap,
+            rrr: tradesData[selectedNoteId].sl
+              ? Math.abs(tradesData[selectedNoteId].pips) /
+                Math.abs((tradesData[selectedNoteId].openPrice - tradesData[selectedNoteId].sl!) * (/JPY$/.test(tradesData[selectedNoteId].item) ? 100 : 10000))
               : null,
           }}
           noteId={selectedNoteId}
