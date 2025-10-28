@@ -341,9 +341,15 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
   /* ===== データ準備 ===== */
   const trades = useMemo(() => makeDummyTrades(), []);
-  const row = trades[trades.length - 1];
+  const row = useMemo(() => {
+    if (entryId) {
+      const found = trades.find(t => t.ticket === entryId);
+      if (found) return found;
+    }
+    return trades[trades.length - 1];
+  }, [trades, entryId]);
 
-  const [kpi] = useState(() => ({
+  const kpi = useMemo(() => ({
     net: row.profit,
     pips: row.pips,
     hold: holdMs(row.openTime, row.closeTime),
@@ -353,7 +359,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
       ? Math.abs(row.pips) /
         Math.abs((row.openPrice - row.sl) * pipFactor(row.item))
       : null,
-  }));
+  }), [row]);
   const [last10, setLast10] = useState<Trade[]>([]);
 
   /* ===== タグ ===== */

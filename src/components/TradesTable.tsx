@@ -21,7 +21,7 @@ export default function TradesTable({rows}:{rows:Row[]}){
             <tr
               key={i}
               className="trade-row"
-              onClick={() => { location.hash = `/notebook/${i}`; }}
+              onClick={() => { location.hash = `/notebook/${r.ticket || i}`; }}
               style={{cursor:"pointer"}}
             >
               {cfg.columns.map(c=>{
