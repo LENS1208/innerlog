@@ -36,9 +36,18 @@ export default function ReportsRisk() {
             volume: Number(t.size),
             profitYen: Number(t.profit),
             pips: Number(t.pips),
+            openTime: t.open_time,
+            openPrice: Number(t.open_price),
+            closePrice: Number(t.close_price),
+            stopPrice: t.sl ? Number(t.sl) : undefined,
+            targetPrice: t.tp ? Number(t.tp) : undefined,
+            commission: Number(t.commission),
+            swap: Number(t.swap),
             symbol: t.item,
             action: t.side as any,
             profit: Number(t.profit),
+            comment: '',
+            memo: '',
           }));
           setTrades(mapped);
         } else {

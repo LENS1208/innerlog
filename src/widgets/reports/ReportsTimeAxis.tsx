@@ -49,6 +49,8 @@ export default function ReportsTimeAxis() {
             symbol: t.item,
             action: t.side as any,
             profit: Number(t.profit),
+            comment: '',
+            memo: '',
           }));
           setTrades(mapped);
         } else {
