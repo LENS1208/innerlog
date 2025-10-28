@@ -340,12 +340,13 @@ export default function JournalNotesPage() {
         })),
         ...tradeNotes.map(note => {
           const trade = tradesMap.get(note.ticket);
+          const closeDateKey = trade?.close_time ? trade.close_time.split('T')[0] : note.ticket;
           return {
             id: note.ticket,
             title: `${formatTradeDate(trade?.close_time)}（${getDayOfWeek(trade?.close_time || '')}）｜取引ノート｜${trade?.item || note.ticket}`,
             kind: '取引' as const,
             updatedAt: note.updated_at,
-            dateKey: note.ticket,
+            dateKey: closeDateKey,
             linked: true,
             pnlYen: trade?.profit || 0,
           };
@@ -402,9 +403,13 @@ export default function JournalNotesPage() {
     }
 
     const sorted = [...filtered].sort((a, b) => {
-      const aVal = sortBy === 'updated' ? a.updatedAt : a.dateKey;
-      const bVal = sortBy === 'updated' ? b.updatedAt : b.dateKey;
-      return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+      if (sortBy === 'updated') {
+        const aVal = new Date(a.updatedAt).getTime();
+        const bVal = new Date(b.updatedAt).getTime();
+        return bVal - aVal;
+      } else {
+        return b.dateKey.localeCompare(a.dateKey);
+      }
     });
 
     return sorted;
