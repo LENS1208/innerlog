@@ -62,7 +62,10 @@ export default function App() {
   let Page: JSX.Element;
   if (route === "/dashboard") Page = <EquityCurvePage />;
   else if (route === "/calendar") Page = <MonthlyCalendar />;
-  else if (route.startsWith("/calendar/day/")) Page = <DailyNotePage />;
+  else if (route.startsWith("/calendar/day/")) {
+    const dateKey = route.split("/")[3] ?? "";
+    Page = <DailyNotePage kpi={{ ...({} as any), dateJst: dateKey }} />;
+  }
   else if (route === "/trades") Page = <TradeListPage />;
   else if (route.startsWith("/reports")) Page = <ReportsPage />;
   else if (route === "/forecast") Page = <ForecastHybrid />;
