@@ -9,6 +9,7 @@ import CsvUpload from "../components/CsvUpload";
 
 function mapToRow(t: Trade) {
   return {
+    ticket: t.id,
     datetime: t.datetime,
     symbol: t.pair,
     side: t.side,

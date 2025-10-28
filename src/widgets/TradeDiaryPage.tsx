@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { UI_TEXT } from "../lib/i18n";
 import { supabase } from "../lib/supabase";
+import { getTradeByTicket, type DbTrade } from "../lib/db.service";
 
 import "../tradeDiary.css";
 
@@ -340,14 +341,53 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const { emitPreset, openUpload } = useWiring();
 
   /* ===== データ準備 ===== */
+  const [dbTrade, setDbTrade] = useState<DbTrade | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadTrade = async () => {
+      if (!entryId) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const trade = await getTradeByTicket(entryId);
+        setDbTrade(trade);
+      } catch (error) {
+        console.error('Error loading trade:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadTrade();
+  }, [entryId]);
+
   const trades = useMemo(() => makeDummyTrades(), []);
   const row = useMemo(() => {
+    if (dbTrade) {
+      return {
+        ticket: dbTrade.ticket,
+        item: dbTrade.item,
+        side: dbTrade.side as "BUY" | "SELL",
+        size: dbTrade.size,
+        openTime: new Date(dbTrade.open_time),
+        openPrice: dbTrade.open_price,
+        closeTime: new Date(dbTrade.close_time),
+        closePrice: dbTrade.close_price,
+        commission: dbTrade.commission,
+        swap: dbTrade.swap,
+        profit: dbTrade.profit,
+        sl: dbTrade.sl,
+        tp: dbTrade.tp,
+        pips: dbTrade.pips,
+      };
+    }
     if (entryId) {
       const found = trades.find(t => t.ticket === entryId);
       if (found) return found;
     }
     return trades[trades.length - 1];
-  }, [trades, entryId]);
+  }, [dbTrade, trades, entryId]);
 
   const kpi = useMemo(() => ({
     net: row.profit,
@@ -881,6 +921,22 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   };
 
   /* ===== JSX ===== */
+  if (loading) {
+    return (
+      <section className="td-root">
+        <div style={{ padding: 40, textAlign: 'center' }}>読み込み中...</div>
+      </section>
+    );
+  }
+
+  if (entryId && !dbTrade) {
+    return (
+      <section className="td-root">
+        <div style={{ padding: 40, textAlign: 'center' }}>取引データが見つかりません</div>
+      </section>
+    );
+  }
+
   return (
     <section className="td-root">
       {/* 戻るボタンとタイトル */}
