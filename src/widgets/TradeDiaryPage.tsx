@@ -7,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { UI_TEXT } from "../lib/i18n";
+import { supabase } from "../lib/supabase";
 
 import "../tradeDiary.css";
 
@@ -391,19 +392,15 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
       const reader = new FileReader();
       reader.onload = () => {
         const url = String(reader.result);
-        setImages((prev) => {
-          const next = [
-            {
-              id: `img_${Date.now()}_${Math.random()
-                .toString(16)
-                .slice(2)}`,
-              url,
-            },
-            ...prev,
-          ];
-          localStorage.setItem(IMG_KEY, JSON.stringify(next));
-          return next;
-        });
+        setImages((prev) => [
+          {
+            id: `img_${Date.now()}_${Math.random()
+              .toString(16)
+              .slice(2)}`,
+            url,
+          },
+          ...prev,
+        ]);
       };
       reader.readAsDataURL(f);
     });
@@ -412,29 +409,22 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     try {
       if (!canvas) return;
       const url = canvas.toDataURL("image/png");
-      setImages((prev) => {
-        const next = [
-          {
-            id: `img_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-            url,
-          },
-          ...prev,
-        ];
-        localStorage.setItem(IMG_KEY, JSON.stringify(next));
-        return next;
-      });
+      setImages((prev) => [
+        {
+          id: `img_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+          url,
+        },
+        ...prev,
+      ]);
     } catch (e) {
       console.warn("canvas capture failed", e);
     }
   };
 
-  /* ===== 直近10件／画像復元 ===== */
+  /* ===== 直近10件 ===== */
   useEffect(() => {
     setLast10(trades.slice(-10).reverse());
-    try {
-      setImages(JSON.parse(localStorage.getItem(IMG_KEY) || "[]"));
-    } catch {}
-  }, [trades, IMG_KEY]);
+  }, [trades]);
 
   /* ===== グラフ ===== */
   const equityRef = useRef<HTMLCanvasElement | null>(null);
@@ -764,6 +754,44 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const [ruleExec, setRuleExec] = useState("");
   const [holdNote, setHoldNote] = useState("");
 
+  useEffect(() => {
+    const loadTradeNote = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('trade_notes')
+          .select('*')
+          .eq('ticket', row.ticket)
+          .maybeSingle();
+
+        if (error) {
+          console.error('Error loading trade note:', error);
+          return;
+        }
+
+        if (data) {
+          setEntryEmotion(data.entry_emotion || '');
+          setEntryBasis(Array.isArray(data.entry_basis) ? data.entry_basis : []);
+          setTechSet(Array.isArray(data.tech_set) ? data.tech_set : []);
+          setMarketSet(Array.isArray(data.market_set) ? data.market_set : []);
+          setFundSet(Array.isArray(data.fund_set) ? data.fund_set : []);
+          setFundNote(data.fund_note || '');
+          setExitTriggers(Array.isArray(data.exit_triggers) ? data.exit_triggers : []);
+          setExitEmotion(data.exit_emotion || '');
+          setNoteRight(data.note_right || '');
+          setNoteWrong(data.note_wrong || '');
+          setNoteNext(data.note_next || '');
+          setNoteFree(data.note_free || '');
+          setTags(Array.isArray(data.tags) ? data.tags : []);
+          setImages(Array.isArray(data.images) ? data.images : []);
+        }
+      } catch (e) {
+        console.error('Exception loading trade note:', e);
+      }
+    };
+
+    loadTradeNote();
+  }, [row.ticket]);
+
   const [aiSide, setAiSide] = useState("");
   const [aiFollow, setAiFollow] = useState("選択しない");
   const [aiHit, setAiHit] = useState("未評価");
@@ -794,29 +822,56 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   };
 
   /* ===== 保存 ===== */
-  const savePayload = () => {
-    const payload = {
-      tradeNo: row.ticket,
-      kpi: { ...kpi },
-      diary: {
-        entryEmotion,
-        entryBasis,
-        techSet,
-        marketSet,
-        fundSet,
-        fundNote,
-        inTradeEmotion: intraEmotion,
-        preRules,
-        ruleExec,
-        holdNote,
-        ai: { side: aiSide, follow: aiFollow, hit: aiHit, pros: aiPros, note: aiNote },
-        exit: { triggers: exitTriggers, emotion: exitEmotion },
-        notes: { right: noteRight, wrong: noteWrong, next: noteNext, free: noteFree },
-        tags,
-      },
-    };
-    localStorage.setItem(`trade_detail_demo_${row.ticket}`, JSON.stringify(payload));
-    alert("保存しました");
+  const savePayload = async () => {
+    try {
+      const { data: existing } = await supabase
+        .from('trade_notes')
+        .select('id')
+        .eq('ticket', row.ticket)
+        .maybeSingle();
+
+      const noteData = {
+        ticket: row.ticket,
+        entry_emotion: entryEmotion,
+        entry_basis: entryBasis,
+        tech_set: techSet,
+        market_set: marketSet,
+        fund_set: fundSet,
+        fund_note: fundNote,
+        exit_triggers: exitTriggers,
+        exit_emotion: exitEmotion,
+        note_right: noteRight,
+        note_wrong: noteWrong,
+        note_next: noteNext,
+        note_free: noteFree,
+        tags: tags,
+        images: images,
+        ai_advice: '',
+        ai_advice_pinned: false,
+      };
+
+      let error;
+      if (existing) {
+        ({ error } = await supabase
+          .from('trade_notes')
+          .update(noteData)
+          .eq('ticket', row.ticket));
+      } else {
+        ({ error } = await supabase
+          .from('trade_notes')
+          .insert(noteData));
+      }
+
+      if (error) {
+        console.error('Error saving trade note:', error);
+        alert('保存に失敗しました: ' + error.message);
+      } else {
+        alert('保存しました');
+      }
+    } catch (e) {
+      console.error('Exception saving trade note:', e);
+      alert('保存中にエラーが発生しました');
+    }
   };
 
   /* ===== JSX ===== */
@@ -1077,9 +1132,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                       onClick={(e) => {
                         e.stopPropagation();
                         if (confirm("削除しますか？")) {
-                          const next = images.filter((x) => x.id !== img.id);
-                          setImages(next);
-                          localStorage.setItem(IMG_KEY, JSON.stringify(next));
+                          setImages(images.filter((x) => x.id !== img.id));
                         }
                       }}
                     >
