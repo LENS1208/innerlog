@@ -3,6 +3,7 @@ import type { Trade } from "../lib/types";
 import { parseCsvText } from "../lib/csv";
 import { useDataset } from "../lib/dataset.context";
 import { UI_TEXT } from "../lib/i18n";
+import { supabase } from "../lib/supabase";
 
 type DayData = {
   date: string;
@@ -64,25 +65,77 @@ function parseDateSafe(dateStr: string): Date {
 }
 
 export default function MonthlyCalendar() {
-  const { dataset } = useDataset();
+  const { dataset, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadData(dataset).then((data) => {
-      setTrades(data);
+    const loadTrades = async () => {
+      setLoading(true);
+      try {
+        if (useDatabase) {
+          const { data, error } = await supabase
+            .from('trades')
+            .select('*')
+            .order('close_time', { ascending: true });
 
-      if (data.length > 0) {
-        const latestTrade = data.reduce((latest, trade) => {
-          const tradeDate = parseDateSafe(trade.datetime);
-          const latestDate = parseDateSafe(latest.datetime);
-          return tradeDate > latestDate ? trade : latest;
-        });
-        const latestDate = parseDateSafe(latestTrade.datetime);
-        setCurrentDate(new Date(latestDate.getFullYear(), latestDate.getMonth(), 1));
+          if (error) {
+            console.error('Error loading trades from database:', error);
+            setTrades([]);
+          } else {
+            const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+              datetime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
+              ticket: t.ticket,
+              item: t.item,
+              side: t.side,
+              size: t.size,
+              openTime: new Date(t.open_time).toISOString().replace('T', ' ').substring(0, 19),
+              openPrice: t.open_price,
+              closeTime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
+              closePrice: t.close_price,
+              commission: t.commission,
+              swap: t.swap,
+              profitYen: t.profit,
+              sl: t.sl,
+              tp: t.tp,
+              pips: t.pips,
+            }));
+            setTrades(mappedTrades);
+
+            if (mappedTrades.length > 0) {
+              const latestTrade = mappedTrades.reduce((latest, trade) => {
+                const tradeDate = parseDateSafe(trade.datetime);
+                const latestDate = parseDateSafe(latest.datetime);
+                return tradeDate > latestDate ? trade : latest;
+              });
+              const latestDate = parseDateSafe(latestTrade.datetime);
+              setCurrentDate(new Date(latestDate.getFullYear(), latestDate.getMonth(), 1));
+            }
+          }
+        } else {
+          const data = await loadData(dataset);
+          setTrades(data);
+
+          if (data.length > 0) {
+            const latestTrade = data.reduce((latest, trade) => {
+              const tradeDate = parseDateSafe(trade.datetime);
+              const latestDate = parseDateSafe(latest.datetime);
+              return tradeDate > latestDate ? trade : latest;
+            });
+            const latestDate = parseDateSafe(latestTrade.datetime);
+            setCurrentDate(new Date(latestDate.getFullYear(), latestDate.getMonth(), 1));
+          }
+        }
+      } catch (e) {
+        console.error('Exception loading trades:', e);
+        setTrades([]);
+      } finally {
+        setLoading(false);
       }
-    });
-  }, [dataset]);
+    };
+    loadTrades();
+  }, [dataset, useDatabase]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();

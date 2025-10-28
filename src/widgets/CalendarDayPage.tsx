@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
+import { useDataset } from "../lib/dataset.context";
+import { supabase } from "../lib/supabase";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
@@ -109,10 +111,11 @@ function loadData(ds: "A" | "B" | "C"): Promise<Trade[]> {
 }
 
 export default function CalendarDayPage() {
-  const [dataset, setDataset] = useState<"A" | "B" | "C">("A");
+  const { dataset, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [dailyMemo, setDailyMemo] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const hash = location.hash;
@@ -123,19 +126,46 @@ export default function CalendarDayPage() {
   }, []);
 
   useEffect(() => {
-    loadData(dataset).then((data) => {
-      setTrades(data);
-    });
-  }, [dataset]);
+    const loadTrades = async () => {
+      setLoading(true);
+      try {
+        if (useDatabase) {
+          const { data, error } = await supabase
+            .from('trades')
+            .select('*')
+            .order('close_time', { ascending: true });
 
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("fxtool:v1:currentId");
-      if (stored === "A" || stored === "B" || stored === "C") {
-        setDataset(stored);
+          if (error) {
+            console.error('Error loading trades from database:', error);
+            setTrades([]);
+          } else {
+            const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+              ticket: t.ticket,
+              symbol: t.item,
+              type: t.side,
+              time: new Date(t.close_time).getTime(),
+              profitJPY: t.profit,
+              entryPrice: t.open_price,
+              exitPrice: t.close_price,
+              size: t.size,
+              openTimeMs: new Date(t.open_time).getTime(),
+            }));
+            setTrades(mappedTrades);
+          }
+        } else {
+          const data = await loadData(dataset);
+          setTrades(data);
+        }
+      } catch (e) {
+        console.error('Exception loading trades:', e);
+        setTrades([]);
+      } finally {
+        setLoading(false);
       }
-    } catch {}
-  }, []);
+    };
+    loadTrades();
+  }, [dataset, useDatabase]);
+
 
   const dayTrades = useMemo(() => {
     return trades.filter((t) => {
