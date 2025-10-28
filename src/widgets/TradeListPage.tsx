@@ -62,10 +62,9 @@ export default function TradeListPage() {
   const [srcRows, setSrcRows] = useState<Trade[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [useDatabase, setUseDatabase] = useState(true);
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const { filters, dataset } = useDataset();
+  const { filters, dataset, useDatabase } = useDataset();
 
   // データ読み込み
   useEffect(() => {
@@ -180,41 +179,6 @@ export default function TradeListPage() {
   return (
     <div style={{ display: "grid", gap: 16 }}>
       <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onPick} style={{ display: "none" }} />
-
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '12px 16px',
-        background: '#FFF8E1',
-        borderRadius: 12,
-        border: '1px solid #FFE082',
-      }}>
-        <span style={{ fontSize: 14, color: '#666' }}>
-          データ操作　サンプル切替やアップロードはこちら。
-        </span>
-        <label style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          cursor: 'pointer',
-          padding: '6px 12px',
-          background: '#fff',
-          borderRadius: 8,
-          border: '1px solid #ddd',
-        }}>
-          <input
-            type="checkbox"
-            checked={useDatabase}
-            onChange={(e) => setUseDatabase(e.target.checked)}
-            style={{ width: 18, height: 18, cursor: 'pointer', accentColor: 'var(--accent)' }}
-          />
-          <span style={{ fontSize: 14, fontWeight: 500 }}>データベースから読み込む</span>
-          <span style={{ fontSize: 13, color: 'var(--muted)' }}>
-            {loading ? '読み込み中...' : `${srcRows.length}件`}
-          </span>
-        </label>
-      </div>
 
       <TradesTable rows={paginatedRows as any[]} />
 

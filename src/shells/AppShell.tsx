@@ -252,7 +252,7 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
 
 // 常時バナー（右カラム上：ヘッダーの下）
 function Banner() {
-  const { dataset, setDataset } = useDataset();
+  const { dataset, setDataset, useDatabase, setUseDatabase } = useDataset();
   return (
     <section
       style={{
@@ -273,7 +273,25 @@ function Banner() {
     >
       <strong>データ操作</strong>
       <span>サンプル切替やアップロードはこちら。</span>
-      <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
+      <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <label style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          cursor: 'pointer',
+          padding: '6px 12px',
+          background: '#fff',
+          borderRadius: 8,
+          border: '1px solid var(--line)',
+        }}>
+          <input
+            type="checkbox"
+            checked={useDatabase}
+            onChange={(e) => setUseDatabase(e.target.checked)}
+            style={{ width: 18, height: 18, cursor: 'pointer', accentColor: 'var(--accent)' }}
+          />
+          <span style={{ fontSize: 14, fontWeight: 500, color: '#111827' }}>データベースから読み込む</span>
+        </label>
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("fx:openUpload"))}
           style={{
