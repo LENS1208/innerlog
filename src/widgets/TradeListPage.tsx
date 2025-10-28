@@ -182,30 +182,12 @@ export default function TradeListPage() {
     <div style={{ display: "grid", gap: 16 }}>
       <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onPick} style={{ display: "none" }} />
 
-      <div style={{
-        display: 'flex',
-        gap: 16,
-        alignItems: 'center',
-        padding: '12px 16px',
-        background: 'var(--surface)',
-        borderRadius: 12,
-        border: '1px solid var(--line)',
-      }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-          <input
-            type="checkbox"
-            checked={useDatabase}
-            onChange={(e) => setUseDatabase(e.target.checked)}
-            style={{ width: 18, height: 18, cursor: 'pointer' }}
-          />
-          <span style={{ fontSize: 14, fontWeight: 500 }}>データベースから読み込む</span>
-        </label>
-        <span style={{ fontSize: 13, color: 'var(--muted)' }}>
-          {loading ? '読み込み中...' : `${srcRows.length}件の取引データ`}
-        </span>
-      </div>
-
-      <CsvUpload />
+      <CsvUpload
+        useDatabase={useDatabase}
+        onToggleDatabase={(value) => setUseDatabase(value)}
+        loading={loading}
+        dataCount={srcRows.length}
+      />
 
       <TradesTable rows={paginatedRows as any[]} />
 

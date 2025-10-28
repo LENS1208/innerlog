@@ -2,7 +2,14 @@ import React, { useState } from 'react';
 import { parseCsvText } from '../lib/csv';
 import { insertTrades, tradeToDb } from '../lib/db.service';
 
-export default function CsvUpload() {
+type CsvUploadProps = {
+  useDatabase: boolean;
+  onToggleDatabase: (value: boolean) => void;
+  loading: boolean;
+  dataCount: number;
+};
+
+export default function CsvUpload({ useDatabase, onToggleDatabase, loading, dataCount }: CsvUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -44,32 +51,58 @@ export default function CsvUpload() {
       padding: 'var(--space-3)',
     }}>
       <h3 style={{ margin: '0 0 var(--space-2) 0', fontSize: 16, fontWeight: 700 }}>
-        CSVアップロード
+        データ操作
       </h3>
       <p style={{ margin: '0 0 var(--space-3) 0', fontSize: 13, color: 'var(--muted)' }}>
         取引データのCSVファイルをアップロードしてデータベースに保存します
       </p>
 
-      <label style={{
-        display: 'inline-block',
-        background: 'var(--accent)',
-        color: '#fff',
-        padding: '10px 20px',
-        borderRadius: 8,
-        cursor: uploading ? 'not-allowed' : 'pointer',
-        fontSize: 14,
-        fontWeight: 600,
-        opacity: uploading ? 0.6 : 1,
-      }}>
-        {uploading ? 'アップロード中...' : 'CSVファイルを選択'}
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileSelect}
-          disabled={uploading}
-          style={{ display: 'none' }}
-        />
-      </label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+        <label style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          cursor: 'pointer',
+          padding: '8px 12px',
+          background: 'var(--muted-bg)',
+          borderRadius: 8,
+          border: '1px solid var(--line)',
+          width: 'fit-content',
+        }}>
+          <input
+            type="checkbox"
+            checked={useDatabase}
+            onChange={(e) => onToggleDatabase(e.target.checked)}
+            style={{ width: 18, height: 18, cursor: 'pointer' }}
+          />
+          <span style={{ fontSize: 14, fontWeight: 500 }}>データベースから読み込む</span>
+          <span style={{ fontSize: 13, color: 'var(--muted)', marginLeft: 8 }}>
+            {loading ? '読み込み中...' : `${dataCount}件`}
+          </span>
+        </label>
+
+        <label style={{
+          display: 'inline-block',
+          background: 'var(--accent)',
+          color: '#fff',
+          padding: '10px 20px',
+          borderRadius: 8,
+          cursor: uploading ? 'not-allowed' : 'pointer',
+          fontSize: 14,
+          fontWeight: 600,
+          opacity: uploading ? 0.6 : 1,
+          width: 'fit-content',
+        }}>
+          {uploading ? 'アップロード中...' : 'CSVファイルを選択'}
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileSelect}
+            disabled={uploading}
+            style={{ display: 'none' }}
+          />
+        </label>
+      </div>
 
       {message && (
         <div style={{
