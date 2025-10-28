@@ -293,13 +293,6 @@ export default function JournalNotesPage() {
             onClick={() => handleSelectFolder('unlinked')}
           >
             <div className="title">未リンクノート</div>
-            {unlinkedCount > 0 && (
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '4px' }}>
-                <span className="tag">
-                  {unlinkedCount}
-                </span>
-              </div>
-            )}
           </div>
         </div>
       </aside>
@@ -323,41 +316,55 @@ export default function JournalNotesPage() {
           </div>
         </div>
         <div className="body list">
-          {filteredNotes.map((note) => (
-            <div key={note.id} className="note" onClick={() => handleOpenNote(note.id)}>
-              <div className="row">
-                <div className="title">{note.title}</div>
-              </div>
-              <div className="meta-line">
-                {note.kind === '取引' && note.pnlYen !== undefined ? (
-                  <span>
-                    <span style={{ color: 'var(--muted, #6b7280)' }}>損益　</span>
-                    <span className={note.pnlYen >= 0 ? 'good' : 'bad'}>
-                      {formatPnl(note.pnlYen)}
+          {filteredNotes.map((note) => {
+            const titleParts = note.title.split('｜');
+            const firstLine = titleParts.slice(0, -1).join('｜');
+            const secondLine = titleParts[titleParts.length - 1];
+
+            return (
+              <div key={note.id} className="note" onClick={() => handleOpenNote(note.id)}>
+                <div className="title">
+                  {titleParts.length > 1 ? (
+                    <>
+                      {firstLine}｜
+                      <br />
+                      {secondLine}
+                    </>
+                  ) : (
+                    note.title
+                  )}
+                </div>
+                <div className="meta-line">
+                  {note.kind === '取引' && note.pnlYen !== undefined ? (
+                    <span>
+                      <span style={{ color: 'var(--muted, #6b7280)' }}>損益　</span>
+                      <span className={note.pnlYen >= 0 ? 'good' : 'bad'}>
+                        {formatPnl(note.pnlYen)}
+                      </span>
                     </span>
-                  </span>
-                ) : note.kind === '自由' ? (
-                  <span>メモ：{note.memoPreview || '—'}</span>
-                ) : (
-                  <span>&nbsp;</span>
+                  ) : note.kind === '自由' ? (
+                    <span>メモ：{note.memoPreview || '—'}</span>
+                  ) : (
+                    <span>&nbsp;</span>
+                  )}
+                </div>
+                {!note.linked && (
+                  <div className="bottom-line">
+                    <span className="badge-status">未リンク</span>
+                    <button
+                      className="link-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLink(note.id);
+                      }}
+                    >
+                      取引にリンク…
+                    </button>
+                  </div>
                 )}
               </div>
-              {!note.linked && (
-                <div className="bottom-line">
-                  <span className="badge-status">未リンク</span>
-                  <button
-                    className="link-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleLink(note.id);
-                    }}
-                  >
-                    取引にリンク…
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
