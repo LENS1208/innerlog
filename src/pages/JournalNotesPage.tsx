@@ -249,6 +249,7 @@ export default function JournalNotesPage() {
             style={{
               cursor: 'pointer',
               background: selectedFolder === 'all' ? 'var(--chip)' : 'var(--surface)',
+              padding: '4px 12px',
             }}
             onClick={() => handleSelectFolder('all')}
           >
@@ -259,6 +260,7 @@ export default function JournalNotesPage() {
             style={{
               cursor: 'pointer',
               background: selectedFolder === 'daily' ? 'var(--chip)' : 'var(--surface)',
+              padding: '4px 12px',
             }}
             onClick={() => handleSelectFolder('daily')}
           >
@@ -269,6 +271,7 @@ export default function JournalNotesPage() {
             style={{
               cursor: 'pointer',
               background: selectedFolder === 'trade' ? 'var(--chip)' : 'var(--surface)',
+              padding: '4px 12px',
             }}
             onClick={() => handleSelectFolder('trade')}
           >
@@ -279,6 +282,7 @@ export default function JournalNotesPage() {
             style={{
               cursor: 'pointer',
               background: selectedFolder === 'free' ? 'var(--chip)' : 'var(--surface)',
+              padding: '4px 12px',
             }}
             onClick={() => handleSelectFolder('free')}
           >
@@ -289,6 +293,7 @@ export default function JournalNotesPage() {
             style={{
               cursor: 'pointer',
               background: selectedFolder === 'unlinked' ? 'var(--chip)' : 'var(--surface)',
+              padding: '4px 12px',
             }}
             onClick={() => handleSelectFolder('unlinked')}
           >
