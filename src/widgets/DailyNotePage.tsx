@@ -79,7 +79,10 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
       <KpiGrid kpi={mergedProps.kpi} />
 
       <div className="two-col-layout">
-        <DayJournalCard onSave={mergedProps.onSave || handleSave} />
+        <DayJournalCard
+          dateKey={mergedProps.kpi.dateJst}
+          onSave={mergedProps.onSave || handleSave}
+        />
 
         <div className="right-panel">
           <div className="panel-card">

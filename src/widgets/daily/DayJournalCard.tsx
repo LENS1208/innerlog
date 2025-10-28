@@ -1,19 +1,55 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import type { JournalPayload } from "./types";
+import { getDailyNote, saveDailyNote } from "../../lib/db.service";
 
 type DayJournalCardProps = {
+  dateKey: string;
   onSave?: (payload: JournalPayload) => void;
 };
 
-export function DayJournalCard({ onSave }: DayJournalCardProps) {
+export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
   const [good, setGood] = useState("");
   const [improve, setImprove] = useState("");
   const [nextPromise, setNextPromise] = useState("");
   const [free, setFree] = useState("");
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    if (onSave) {
-      onSave({ good, improve, nextPromise, free });
+  useEffect(() => {
+    (async () => {
+      try {
+        const note = await getDailyNote(dateKey);
+        if (note) {
+          setGood(note.good || "");
+          setImprove(note.improve || "");
+          setNextPromise(note.next_promise || "");
+          setFree(note.free || "");
+        }
+      } catch (err) {
+        console.error('Failed to load daily note:', err);
+      }
+    })();
+  }, [dateKey]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await saveDailyNote({
+        date_key: dateKey,
+        title: `${dateKey}の日次ノート`,
+        good,
+        improve,
+        next_promise: nextPromise,
+        free,
+      });
+      if (onSave) {
+        onSave({ good, improve, nextPromise, free });
+      }
+      alert('保存しました');
+    } catch (err) {
+      console.error('Failed to save daily note:', err);
+      alert('保存に失敗しました: ' + (err as Error).message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -21,8 +57,8 @@ export function DayJournalCard({ onSave }: DayJournalCardProps) {
     <div className="panel-card">
       <div className="panel-header">
         <h2 className="panel-title">当日の推移</h2>
-        <button className="save-btn" onClick={handleSave}>
-          保存
+        <button className="save-btn" onClick={handleSave} disabled={saving}>
+          {saving ? '保存中...' : '保存'}
         </button>
       </div>
 
