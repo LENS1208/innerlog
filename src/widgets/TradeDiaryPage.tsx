@@ -331,7 +331,11 @@ function AIAdviceSection({ tradeData, kpi, diaryData }: AIAdviceSectionProps) {
   );
 }
 
-export default function TradeDiaryPage() {
+type TradeDiaryPageProps = {
+  entryId?: string;
+};
+
+export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const { emitPreset, openUpload } = useWiring();
 
   /* ===== データ準備 ===== */
@@ -816,6 +820,22 @@ export default function TradeDiaryPage() {
   /* ===== JSX ===== */
   return (
     <section className="td-root">
+      {/* 戻るボタンとタイトル */}
+      {entryId && (
+        <div style={{ marginBottom: 16 }}>
+          <button
+            className="td-btn"
+            onClick={() => window.location.hash = '/notebook'}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}
+          >
+            ← ノート一覧に戻る
+          </button>
+          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>
+            取引ノート｜{row.item}｜{row.side === "BUY" ? "買い" : "売り"}｜Ticket: {row.ticket}
+          </h1>
+        </div>
+      )}
+
       {/* 既存配線トリガ（上部） */}
 
       {/* KPI */}

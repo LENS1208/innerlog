@@ -137,7 +137,14 @@ export default function JournalNotesPage() {
   };
 
   const handleOpenNote = (noteId: string) => {
-    console.log('ノートを開く:', noteId);
+    const note = notes.find(n => n.id === noteId);
+    if (!note) return;
+
+    if (note.kind === '取引') {
+      window.location.hash = `/notebook/${noteId}`;
+    } else {
+      console.log('ノートを開く:', noteId);
+    }
   };
 
   const handlePrevDay = () => console.log('前日へ');
