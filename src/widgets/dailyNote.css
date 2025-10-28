@@ -193,9 +193,7 @@
   font-size: 14px;
   resize: vertical;
   font-family: inherit;
-  position: relative;
-  z-index: 1000;
-  pointer-events: auto;
+  pointer-events: auto !important;
   user-select: text !important;
   -webkit-user-select: text !important;
 }
