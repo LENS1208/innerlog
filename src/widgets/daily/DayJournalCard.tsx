@@ -17,6 +17,8 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
 
   useEffect(() => {
     console.log('DayJournalCard dateKey:', dateKey);
+    let timeoutId: NodeJS.Timeout;
+
     (async () => {
       try {
         setLoading(true);
@@ -34,6 +36,15 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
         setLoading(false);
       }
     })();
+
+    // 3秒後に強制的にloadingを解除（タイムアウト対策）
+    timeoutId = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [dateKey]);
 
   const handleSave = async () => {
