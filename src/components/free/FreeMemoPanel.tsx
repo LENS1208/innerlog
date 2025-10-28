@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getFreeMemo, saveFreeMemo, deleteFreeMemo } from '../../lib/db.service';
 
 export type FreeMemoPanelProps = {
   noteId: string;
@@ -7,6 +8,7 @@ export type FreeMemoPanelProps = {
   memoContent?: string;
   tags?: string[];
   onSave?: (content: string) => void;
+  onDelete?: () => void;
 };
 
 export default function FreeMemoPanel({
@@ -16,12 +18,30 @@ export default function FreeMemoPanel({
   memoContent = '',
   tags = [],
   onSave,
+  onDelete,
 }: FreeMemoPanelProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
   const [content, setContent] = useState(memoContent);
   const [localTags, setLocalTags] = useState(tags);
   const [tagModalOpen, setTagModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const memo = await getFreeMemo(noteId);
+        if (memo) {
+          setContent(memo.content);
+          setLocalTags(memo.tags);
+        }
+      } catch (err) {
+        console.error('Failed to load free memo:', err);
+        setLoadError((err as Error).message);
+      }
+    })();
+  }, [noteId]);
 
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -33,18 +53,40 @@ export default function FreeMemoPanel({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSave = () => {
-    if (onSave) {
-      onSave(content);
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+      await saveFreeMemo({
+        id: noteId,
+        title,
+        content,
+        date_key: dateKey,
+        tags: localTags,
+      });
+      if (onSave) {
+        onSave(content);
+      }
+      alert('保存しました');
+    } catch (err) {
+      console.error('Failed to save free memo:', err);
+      alert('保存に失敗しました: ' + (err as Error).message);
+    } finally {
+      setSaving(false);
     }
-    console.log('自由メモを保存:', { noteId, content, tags: localTags });
-    alert('保存しました');
   };
 
-  const handleDeleteNote = () => {
+  const handleDeleteNote = async () => {
     if (confirm('この自由メモを削除しますか?')) {
-      console.log('自由メモを削除:', noteId);
-      alert('自由メモを削除しました');
+      try {
+        await deleteFreeMemo(noteId);
+        alert('自由メモを削除しました');
+        if (onDelete) {
+          onDelete();
+        }
+      } catch (err) {
+        console.error('Failed to delete free memo:', err);
+        alert('削除に失敗しました: ' + (err as Error).message);
+      }
     }
   };
 
@@ -227,18 +269,19 @@ export default function FreeMemoPanel({
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'var(--space-3)' }}>
             <button
               onClick={handleSave}
+              disabled={saving}
               style={{
-                background: 'var(--accent)',
-                border: '1px solid var(--accent)',
+                background: saving ? 'var(--muted)' : 'var(--accent)',
+                border: saving ? '1px solid var(--muted)' : '1px solid var(--accent)',
                 borderRadius: 8,
                 padding: '10px 20px',
-                cursor: 'pointer',
+                cursor: saving ? 'not-allowed' : 'pointer',
                 fontSize: 14,
                 fontWeight: 600,
                 color: '#fff',
               }}
             >
-              保存
+              {saving ? '保存中...' : '保存'}
             </button>
           </div>
         </div>

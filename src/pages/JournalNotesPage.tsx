@@ -149,13 +149,13 @@ const demoNotesData: NoteListItem[] = [
     linked: true,
   },
   {
-    id: 'note-3',
-    title: '2025/10/03（金）｜自由メモ',
+    id: '2e7af441-a385-4332-97f1-f5c81a785afa',
+    title: '2025/10/17（木）｜自由メモ',
     kind: '自由',
-    updatedAt: '2025-10-03T09:00:00+09:00',
-    dateKey: '2025-10-03',
-    linked: true,
-    memoPreview: '今日は調子が良かった。エントリーポイントを見極められた。',
+    updatedAt: '2025-10-17T09:00:00+09:00',
+    dateKey: '2025-10-17',
+    linked: false,
+    memoPreview: 'メンタル管理の重要性を再認識。損切りラインを守ることが大切。',
   },
   {
     id: 'T100007',
@@ -221,13 +221,31 @@ const demoNotesData: NoteListItem[] = [
     pnlYen: 3200,
   },
   {
-    id: 'note-5',
+    id: '774e4c9d-7e09-4445-a516-0e8c07b3dfb9',
     title: '2025/10/13（日）｜自由メモ｜週末振り返り',
     kind: '自由',
     updatedAt: '2025-10-13T20:00:00+09:00',
     dateKey: '2025-10-13',
     linked: false,
     memoPreview: '',
+  },
+  {
+    id: '47d21e50-efc6-4b6f-bc38-d69b618cd63a',
+    title: '2025/10/08（火）｜自由メモ｜トレード戦略',
+    kind: '自由',
+    updatedAt: '2025-10-08T09:00:00+09:00',
+    dateKey: '2025-10-08',
+    linked: false,
+    memoPreview: 'RSIとボリンジャーバンドの組み合わせが効果的だった。',
+  },
+  {
+    id: 'acddeb4a-a5f3-474d-b91e-2708ee87c0d6',
+    title: '2025/10/03（金）｜自由メモ',
+    kind: '自由',
+    updatedAt: '2025-10-03T09:00:00+09:00',
+    dateKey: '2025-10-03',
+    linked: true,
+    memoPreview: '今日は調子が良かった。エントリーポイントを見極められた。',
   },
 ];
 
@@ -514,9 +532,6 @@ export default function JournalNotesPage() {
           noteId={selectedNoteId}
           title={notes.find(n => n.id === selectedNoteId)?.title || ''}
           dateKey={notes.find(n => n.id === selectedNoteId)?.dateKey || ''}
-          memoContent={notes.find(n => n.id === selectedNoteId)?.memoPreview || ''}
-          tags={['重要', 'アイデア']}
-          onSave={(content) => console.log('保存:', content)}
         />
       )}
 
