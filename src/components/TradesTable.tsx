@@ -5,7 +5,7 @@ import { fmt } from "../lib/formatters";
 type Row = Record<string, any>;
 export default function TradesTable({rows}:{rows:Row[]}){
   return (
-    <div style={{height:"70vh",overflow:"auto",border:"1px solid var(--line)",borderRadius:12,background:"var(--surface)"}}>
+    <div style={{maxHeight:"70vh",overflow:"auto",border:"1px solid var(--line)",borderRadius:12,background:"var(--surface)"}}>
       <table style={{width:"100%",borderCollapse:"separate",borderSpacing:0}}>
         <thead>
           <tr>

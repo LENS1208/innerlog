@@ -187,7 +187,7 @@ export default function TradeListPage() {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: "16px 0",
+        padding: "16px",
         background: "var(--surface)",
         borderRadius: 12,
       }}>
@@ -257,7 +257,7 @@ export default function TradeListPage() {
 
         {/* Records per page selector */}
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 14, color: "var(--muted)" }}>Show Records:</span>
+          <span style={{ fontSize: 14, color: "var(--muted)" }}>表示件数:</span>
           <select
             value={rowsPerPage}
             onChange={(e) => setRowsPerPage(Number(e.target.value))}
