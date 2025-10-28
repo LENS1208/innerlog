@@ -48,9 +48,16 @@ export default function FreeMemoPanel({
     }
   };
 
-  const handleToggleLink = () => {
-    console.log('リンク状態を切り替え:', noteId);
-    alert('リンク状態を切り替えました');
+  const handleLinkToTrade = () => {
+    console.log('取引にリンク:', noteId);
+    alert('取引選択画面を表示します');
+    setMenuOpen(false);
+  };
+
+  const handleLinkToDate = () => {
+    console.log('日付にリンク:', noteId);
+    alert('日付選択画面を表示します');
+    setMenuOpen(false);
   };
 
   const removeTag = (t: string) => {
@@ -99,10 +106,7 @@ export default function FreeMemoPanel({
                 }}
               >
                 <button
-                  onClick={() => {
-                    handleToggleLink();
-                    setMenuOpen(false);
-                  }}
+                  onClick={handleLinkToTrade}
                   style={{
                     display: 'block',
                     width: '100%',
@@ -114,8 +118,24 @@ export default function FreeMemoPanel({
                     fontSize: 13,
                   }}
                 >
-                  リンクを管理
+                  取引にリンク
                 </button>
+                <button
+                  onClick={handleLinkToDate}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'transparent',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  日付にリンク
+                </button>
+                <div style={{ borderTop: '1px solid var(--line)', margin: '4px 0' }} />
                 <button
                   onClick={() => {
                     handleDeleteNote();

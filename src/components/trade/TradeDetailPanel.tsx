@@ -328,9 +328,16 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
     }
   };
 
-  const handleToggleLink = () => {
-    console.log('リンク状態を切り替え:', noteId);
-    alert('リンク状態を切り替えました');
+  const handleLinkToDailyNote = () => {
+    console.log('日次ノートにリンク:', noteId);
+    alert('日次ノート選択画面を表示します');
+    setMenuOpen(false);
+  };
+
+  const handleShowRelatedMemos = () => {
+    console.log('関連メモを表示:', noteId);
+    alert('この取引に関連するメモ一覧を表示します');
+    setMenuOpen(false);
   };
 
   return (
@@ -385,10 +392,7 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
                 }}
               >
                 <button
-                  onClick={() => {
-                    handleToggleLink();
-                    setMenuOpen(false);
-                  }}
+                  onClick={handleLinkToDailyNote}
                   style={{
                     display: 'block',
                     width: '100%',
@@ -400,8 +404,24 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
                     fontSize: 13,
                   }}
                 >
-                  リンクを管理
+                  日次ノートにリンク
                 </button>
+                <button
+                  onClick={handleShowRelatedMemos}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'transparent',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  関連メモを表示
+                </button>
+                <div style={{ borderTop: '1px solid var(--line)', margin: '4px 0' }} />
                 <button
                   onClick={() => {
                     handleDeleteNote();

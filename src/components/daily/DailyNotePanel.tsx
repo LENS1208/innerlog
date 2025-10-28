@@ -68,9 +68,16 @@ export default function DailyNotePanel({
     }
   };
 
-  const handleToggleLink = () => {
-    console.log('リンク状態を切り替え:', dateJst);
-    alert('リンク状態を切り替えました');
+  const handleAddTrade = () => {
+    console.log('取引を追加:', dateJst);
+    alert('取引選択画面を表示します');
+    setMenuOpen(false);
+  };
+
+  const handleLinkMemo = () => {
+    console.log('メモをリンク:', dateJst);
+    alert('メモ選択画面を表示します');
+    setMenuOpen(false);
   };
 
   return (
@@ -136,10 +143,7 @@ export default function DailyNotePanel({
                 }}
               >
                 <button
-                  onClick={() => {
-                    handleToggleLink();
-                    setMenuOpen(false);
-                  }}
+                  onClick={handleAddTrade}
                   style={{
                     display: 'block',
                     width: '100%',
@@ -151,8 +155,24 @@ export default function DailyNotePanel({
                     fontSize: 13,
                   }}
                 >
-                  リンクを管理
+                  取引を追加
                 </button>
+                <button
+                  onClick={handleLinkMemo}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'transparent',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  メモをリンク
+                </button>
+                <div style={{ borderTop: '1px solid var(--line)', margin: '4px 0' }} />
                 <button
                   onClick={() => {
                     handleDeleteNote();
