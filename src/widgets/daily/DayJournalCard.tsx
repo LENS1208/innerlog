@@ -98,6 +98,7 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
             value={improve}
             onChange={(e) => setImprove(e.target.value)}
             placeholder="例）利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。"
+            disabled={loading}
           />
         </label>
 
@@ -108,6 +109,7 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
             value={nextPromise}
             onChange={(e) => setNextPromise(e.target.value)}
             placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。"
+            disabled={loading}
           />
         </label>
 
@@ -118,6 +120,7 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
             value={free}
             onChange={(e) => setFree(e.target.value)}
             placeholder="例）今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。"
+            disabled={loading}
           />
         </label>
       </div>
