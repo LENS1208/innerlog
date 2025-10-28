@@ -56,6 +56,14 @@ const DUMMY_DATA: DailyNotePageProps = {
 export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
   const mergedProps = { ...DUMMY_DATA, ...props };
 
+  // kpi が部分的な場合、dateJst だけマージする
+  if (props?.kpi?.dateJst && props.kpi.dateJst !== DUMMY_DATA.kpi.dateJst) {
+    mergedProps.kpi = {
+      ...DUMMY_DATA.kpi,
+      dateJst: props.kpi.dateJst,
+    };
+  }
+
   const handlePrevDay = () => console.log("前日へ");
   const handleNextDay = () => console.log("翌日へ");
   const handleSave = (payload: any) => {

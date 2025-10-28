@@ -64,7 +64,7 @@ export default function App() {
   else if (route === "/calendar") Page = <MonthlyCalendar />;
   else if (route.startsWith("/calendar/day/")) {
     const dateKey = route.split("/")[3] ?? "";
-    Page = <DailyNotePage kpi={{ ...({} as any), dateJst: dateKey }} />;
+    Page = <DailyNotePage kpi={{ dateJst: dateKey } as any} />;
   }
   else if (route === "/trades") Page = <TradeListPage />;
   else if (route.startsWith("/reports")) Page = <ReportsPage />;
