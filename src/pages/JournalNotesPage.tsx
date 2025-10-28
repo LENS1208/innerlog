@@ -393,7 +393,7 @@ export default function JournalNotesPage() {
                 Math.abs((demoTradesData[selectedNoteId].openPrice - demoTradesData[selectedNoteId].sl!) * (/JPY$/.test(demoTradesData[selectedNoteId].item) ? 100 : 10000))
               : null,
           }}
-          onClose={handleClosePanel}
+          noteId={selectedNoteId}
         />
       )}
 
