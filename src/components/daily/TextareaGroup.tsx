@@ -27,6 +27,11 @@ export default function TextareaGroup({ values, onChange }: TextareaGroupProps) 
     fontSize: 13,
     fontFamily: 'inherit',
     resize: 'vertical' as const,
+    position: 'relative' as const,
+    zIndex: 1000,
+    pointerEvents: 'auto' as const,
+    userSelect: 'text' as const,
+    WebkitUserSelect: 'text' as const,
   };
 
   return (
