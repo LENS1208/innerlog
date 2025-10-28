@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import '../../tradeDiary.css';
+import { getTradeNote, saveTradeNote } from '../../lib/db.service';
 
 type TradeData = {
   ticket: string;
@@ -246,6 +247,35 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
   const [tagModalOpen, setTagModalOpen] = useState(false);
   const openTagModal = () => setTagModalOpen(true);
   const closeTagModal = () => setTagModalOpen(false);
+  const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const note = await getTradeNote(trade.ticket);
+        if (note) {
+          setEntryEmotion(note.entry_emotion || '');
+          setEntryBasis(note.entry_basis || []);
+          setTechSet(note.tech_set || []);
+          setMarketSet(note.market_set || []);
+          setFundSet(note.fund_set || []);
+          setFundNote(note.fund_note || '');
+          setExitTriggers(note.exit_triggers || []);
+          setExitEmotion(note.exit_emotion || '');
+          setNoteRight(note.note_right || '');
+          setNoteWrong(note.note_wrong || '');
+          setNoteNext(note.note_next || '');
+          setNoteFree(note.note_free || '');
+          setTags(note.tags || []);
+          setImages((note.images || []).map((url: string, idx: number) => ({ id: `img_${idx}`, url })));
+        }
+      } catch (err) {
+        console.error('Failed to load trade note:', err);
+        setLoadError((err as Error).message);
+      }
+    })();
+  }, [trade.ticket]);
 
   const removeTag = (t: string) => {
     setTags((prev) => prev.filter((x) => x !== t));
@@ -256,36 +286,35 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
     setTags((prev) => (prev.includes(t) ? prev : [...prev, t.trim()]));
   };
 
-  const savePayload = () => {
-    const payload = {
-      tradeNo: trade.ticket,
-      kpi: { ...kpi },
-      entryEmotion,
-      entryBasis,
-      techSet,
-      marketSet,
-      fundSet,
-      fundNote,
-      intraNote,
-      intraEmotion,
-      preRules,
-      ruleExec,
-      aiSide,
-      aiFollow,
-      aiHit,
-      aiPros,
-      exitTriggers,
-      exitEmotion,
-      noteRight,
-      noteWrong,
-      noteNext,
-      noteFree,
-      tags,
-      images,
-    };
-    console.log('保存するデータ:', payload);
-    localStorage.setItem(`diary_${trade.ticket}`, JSON.stringify(payload));
-    alert('保存しました');
+  const savePayload = async () => {
+    setSaving(true);
+    try {
+      await saveTradeNote({
+        ticket: trade.ticket,
+        entry_emotion: entryEmotion,
+        entry_basis: entryBasis,
+        tech_set: techSet,
+        market_set: marketSet,
+        fund_set: fundSet,
+        fund_note: fundNote,
+        exit_triggers: exitTriggers,
+        exit_emotion: exitEmotion,
+        note_right: noteRight,
+        note_wrong: noteWrong,
+        note_next: noteNext,
+        note_free: noteFree,
+        tags,
+        images: images.map((i) => i.url),
+        ai_advice: '',
+        ai_advice_pinned: false,
+      });
+      alert('保存しました');
+    } catch (err) {
+      console.error('Failed to save trade note:', err);
+      alert('保存に失敗しました: ' + (err as Error).message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const onFiles = (files: FileList | null) => {

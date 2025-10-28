@@ -4,6 +4,8 @@ import type { Trade } from "../lib/types";
 import TradesTable from "../components/TradesTable";
 import { parseCsvText } from "../lib/csv";
 import { useDataset, Filters } from "../lib/dataset.context";
+import { getAllTrades, dbToTrade } from "../lib/db.service";
+import CsvUpload from "../components/CsvUpload";
 
 function mapToRow(t: Trade) {
   return {
@@ -60,43 +62,59 @@ export default function TradeListPage() {
   const [srcRows, setSrcRows] = useState<Trade[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [useDatabase, setUseDatabase] = useState(true);
+  const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const { filters, dataset } = useDataset();
 
-  // CSV読み込み（dataset変更時に再読み込み）
+  // データ読み込み
   useEffect(() => {
-    console.log("📥 TradeListPage: Loading dataset", dataset);
+    console.log("📥 TradeListPage: Loading data", { useDatabase, dataset });
+    setLoading(true);
     (async () => {
-      const candidates = [
-        `/demo/${dataset}.csv`,
-        `/demo/sample/${dataset}.csv`,
-        `/demo/demo_${dataset}.csv`,
-      ];
-      for (const url of candidates) {
+      if (useDatabase) {
         try {
-          console.log("🔍 Trying:", url);
-          const cacheBuster = `?t=${Date.now()}`;
-          const res = await fetch(url + cacheBuster, { cache: "no-store" });
-          if (!res.ok) {
-            console.log("❌ Failed:", url, res.status);
-            continue;
-          }
-          const text = await res.text();
-          const trades = parseCsvText(text);
-          console.log("✅ Parsed trades:", trades.length, "from", url);
-          if (Array.isArray(trades) && trades.length) {
-            setSrcRows(trades);
-            return;
-          }
+          const dbTrades = await getAllTrades();
+          const trades = dbTrades.map(dbToTrade);
+          console.log("✅ Loaded from database:", trades.length);
+          setSrcRows(trades);
         } catch (err) {
-          console.error("❌ Error loading", url, err);
+          console.error("❌ Error loading from database:", err);
+          setSrcRows([]);
         }
+      } else {
+        const candidates = [
+          `/demo/${dataset}.csv`,
+          `/demo/sample/${dataset}.csv`,
+          `/demo/demo_${dataset}.csv`,
+        ];
+        for (const url of candidates) {
+          try {
+            console.log("🔍 Trying:", url);
+            const cacheBuster = `?t=${Date.now()}`;
+            const res = await fetch(url + cacheBuster, { cache: "no-store" });
+            if (!res.ok) {
+              console.log("❌ Failed:", url, res.status);
+              continue;
+            }
+            const text = await res.text();
+            const trades = parseCsvText(text);
+            console.log("✅ Parsed trades:", trades.length, "from", url);
+            if (Array.isArray(trades) && trades.length) {
+              setSrcRows(trades);
+              setLoading(false);
+              return;
+            }
+          } catch (err) {
+            console.error("❌ Error loading", url, err);
+          }
+        }
+        console.log("⚠️ No data loaded, setting empty array");
+        setSrcRows([]);
       }
-      // どれも無ければ空
-      console.log("⚠️ No data loaded, setting empty array");
-      setSrcRows([]);
+      setLoading(false);
     })();
-  }, [dataset]);
+  }, [dataset, useDatabase]);
 
   // バナーのボタン（fx:openUpload / fx:preset）と連携
   useEffect(() => {
@@ -162,6 +180,31 @@ export default function TradeListPage() {
   return (
     <div style={{ display: "grid", gap: 16 }}>
       <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onPick} style={{ display: "none" }} />
+
+      <div style={{
+        display: 'flex',
+        gap: 16,
+        alignItems: 'center',
+        padding: '12px 16px',
+        background: 'var(--surface)',
+        borderRadius: 12,
+        border: '1px solid var(--line)',
+      }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={useDatabase}
+            onChange={(e) => setUseDatabase(e.target.checked)}
+            style={{ width: 18, height: 18, cursor: 'pointer' }}
+          />
+          <span style={{ fontSize: 14, fontWeight: 500 }}>データベースから読み込む</span>
+        </label>
+        <span style={{ fontSize: 13, color: 'var(--muted)' }}>
+          {loading ? '読み込み中...' : `${srcRows.length}件の取引データ`}
+        </span>
+      </div>
+
+      <CsvUpload />
 
       <TradesTable rows={paginatedRows as any[]} />
 
