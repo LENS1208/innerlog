@@ -862,13 +862,13 @@ export default function TradeDiaryPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
           {/* トレード日記 */}
-          <div className="td-diary-heading" style={{ marginTop: 0, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+          <div className="td-diary-heading" style={{ marginTop: 0, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
             <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
             <button className="td-btn" onClick={savePayload}>保存</button>
           </div>
 
           {/* エントリー前・直後 */}
-          <section className="td-card td-entry-before" id="entryBeforeCard">
+          <section className="td-card td-entry-before" id="entryBeforeCard" style={{ marginTop: 0 }}>
             <div className="td-section-title">
               <h2>エントリー前・直後</h2>
             </div>
