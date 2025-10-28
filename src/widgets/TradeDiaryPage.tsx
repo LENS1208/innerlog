@@ -352,7 +352,7 @@ export default function TradeDiaryPage() {
   const [last10, setLast10] = useState<Trade[]>([]);
 
   /* ===== タグ ===== */
-  const [tags, setTags] = useState<string[]>(["ハイレバ", "東京時間"]);
+  const [tags, setTags] = useState<string[]>([]);
   const addTag = (t: string) =>
     setTags((prev) => (prev.includes(t) ? prev : [...prev, t]));
   const removeTag = (t: string) =>
@@ -862,8 +862,9 @@ export default function TradeDiaryPage() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
           {/* トレード日記 */}
-          <div className="td-diary-heading" style={{ marginTop: 0 }}>
-            <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
+          <div className="td-diary-heading" style={{ marginTop: 0, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
+            <button className="td-btn" onClick={savePayload}>保存</button>
           </div>
 
           {/* エントリー前・直後 */}
@@ -1003,10 +1004,6 @@ export default function TradeDiaryPage() {
               </div>
             )}
           </section>
-
-          <div className="actions" style={{ marginTop: 16 }}>
-            <button className="td-btn" onClick={savePayload}>保存</button>
-          </div>
         </div>
 
         {/* 右列 */}
