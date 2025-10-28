@@ -747,6 +747,19 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
           </div>
         )}
 
+        <button
+          className="td-btn"
+          onClick={savePayload}
+          style={{
+            width: '100%',
+            padding: '12px 20px',
+            fontSize: 15,
+            fontWeight: 600,
+          }}
+        >
+          保存
+        </button>
+
         <div
           style={{
             padding: 'var(--space-3)',
