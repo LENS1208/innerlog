@@ -941,17 +941,31 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     <section className="td-root">
       {/* 戻るボタンとタイトル */}
       {entryId && (
-        <div style={{ marginBottom: 16 }}>
-          <button
-            className="td-btn"
-            onClick={() => window.location.hash = '/notebook'}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}
-          >
-            ← ノート一覧に戻る
-          </button>
-          <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>
-            取引ノート｜{row.item}｜{row.side === "BUY" ? "買い" : "売り"}｜Ticket: {row.ticket}
-          </h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4, 20px)', minHeight: 56 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+            <div style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
+              {row.item}｜{fmtJPY(row.openPrice)}｜{row.side === "BUY" ? "BUY" : "SELL"}｜<span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 400 }}>Ticket:{row.ticket}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--space-2)' }}>
+              <div style={{ fontSize: 13, color: 'var(--muted)' }}>損益</div>
+              <div style={{
+                fontSize: 24,
+                fontWeight: 700,
+                color: kpi.net >= 0 ? 'var(--gain)' : 'var(--loss)'
+              }}>
+                {(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円
+              </div>
+            </div>
+            <button
+              className="nav-btn"
+              onClick={() => window.location.hash = '/notebook'}
+              style={{ fontSize: 14 }}
+            >
+              ノート一覧
+            </button>
+          </div>
         </div>
       )}
 
@@ -959,7 +973,6 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
       {/* KPI */}
       <div className="kpi">
-        <div className="i"><div className="lab">損益（円）</div><div className="val" style={{ color: kpi.net >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.net >= 0 ? "+" : "") + Math.round(kpi.net).toLocaleString("ja-JP")}円</div></div>
         <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #22c55e)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
         <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
         <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
