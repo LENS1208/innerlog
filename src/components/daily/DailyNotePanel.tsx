@@ -53,7 +53,7 @@ export default function DailyNotePanel({
     <section className="pane">
       <div className="head">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>日次ノート（表示）</h3>
+          <h3 style={{ margin: 0 }}>日次ノート（表示）</h3>
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={onPrevDay}
