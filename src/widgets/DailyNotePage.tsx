@@ -156,6 +156,10 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     const newDate = currentDate.toISOString().slice(0, 10);
     location.hash = `/daily/${newDate}`;
   };
+  const handleToday = () => {
+    const today = new Date().toISOString().slice(0, 10);
+    location.hash = `/daily/${today}`;
+  };
   const handleSave = (payload: any) => {
     console.log("保存:", payload);
     if (mergedProps.onSave) mergedProps.onSave(payload);
@@ -172,6 +176,7 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
         kpi={mergedProps.kpi}
         onPrevDay={mergedProps.onPrevDay || handlePrevDay}
         onNextDay={mergedProps.onNextDay || handleNextDay}
+        onToday={handleToday}
       />
 
       <KpiGrid kpi={mergedProps.kpi} />

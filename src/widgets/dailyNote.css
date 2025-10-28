@@ -10,14 +10,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 16px 0;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--line, #e5e7eb);
+  padding: var(--space-3, 16px) 0;
+  margin-bottom: var(--space-4, 20px);
 }
 
 .topbar-date {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
+  margin: 0;
 }
 
 .topbar-total {
@@ -51,12 +51,12 @@
 }
 
 .nav-btn {
-  padding: 8px 16px;
+  padding: 8px 12px;
   border: 1px solid var(--line, #e5e7eb);
   border-radius: 8px;
   background: var(--surface, #ffffff);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 18px;
   transition: background-color 0.15s;
 }
 
