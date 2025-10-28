@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import DailyNotePanel from '../components/daily/DailyNotePanel';
 import type { DailyNotePanelProps } from '../components/daily/DailyNotePanel';
 import TradeDetailPanel from '../components/trade/TradeDetailPanel';
 import type { TradeDetailPanelProps } from '../components/trade/TradeDetailPanel';
 import FreeMemoPanel from '../components/free/FreeMemoPanel';
 import type { FolderKind, NoteListItem } from './journal-notes.types';
+import { getAllDailyNotes, getAllTradeNotes, getAllFreeMemos } from '../lib/db.service';
 import '../styles/journal-notebook.css';
 
 type TradeData = {
@@ -289,9 +290,66 @@ const formatPnl = (pnlYen: number): string => {
 export default function JournalNotesPage() {
   const [sortBy, setSortBy] = useState<'updated' | 'date'>('updated');
   const [selectedFolder, setSelectedFolder] = useState<FolderKind>('all');
-  const [notes] = useState(demoNotesData);
+  const [notes, setNotes] = useState<NoteListItem[]>([]);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'daily' | 'trade' | 'free' | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadNotes = async () => {
+    try {
+      setLoading(true);
+      const [dailyNotes, tradeNotes, freeMemos] = await Promise.all([
+        getAllDailyNotes(),
+        getAllTradeNotes(),
+        getAllFreeMemos(),
+      ]);
+
+      const allNotes: NoteListItem[] = [
+        ...dailyNotes.map(note => ({
+          id: note.id,
+          title: `${note.date_key}（${getDayOfWeek(note.date_key)}）日次ノート`,
+          kind: '日次' as const,
+          updatedAt: note.updated_at,
+          dateKey: note.date_key,
+          linked: true,
+        })),
+        ...tradeNotes.map(note => ({
+          id: note.id,
+          title: `${note.ticket}｜取引ノート｜${note.ticket}`,
+          kind: '取引' as const,
+          updatedAt: note.updated_at,
+          dateKey: note.ticket,
+          linked: true,
+          pnlYen: 0,
+        })),
+        ...freeMemos.map(memo => ({
+          id: memo.id,
+          title: memo.title,
+          kind: '自由' as const,
+          updatedAt: memo.updated_at,
+          dateKey: memo.date_key,
+          linked: false,
+          memoPreview: memo.content.substring(0, 50),
+        })),
+      ];
+
+      setNotes(allNotes);
+    } catch (error) {
+      console.error('Failed to load notes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getDayOfWeek = (dateKey: string): string => {
+    const days = ['日', '月', '火', '水', '木', '金', '土'];
+    const date = new Date(dateKey);
+    return days[date.getDay()];
+  };
+
+  useEffect(() => {
+    loadNotes();
+  }, []);
 
   const filteredNotes = useMemo(() => {
     let filtered = notes;
@@ -354,7 +412,9 @@ export default function JournalNotesPage() {
   const handleRegenerateAdvice = () => console.log('再生成');
   const handlePinAdvice = () => console.log('固定');
   const handleChangeValues = (values: any) => console.log('値変更:', values);
-  const handleSave = () => console.log('保存');
+  const handleSave = async () => {
+    await loadNotes();
+  };
 
   const unlinkedCount = notes.filter((n) => !n.linked).length;
 
@@ -442,7 +502,16 @@ export default function JournalNotesPage() {
           </div>
         </div>
         <div className="body list">
-          {filteredNotes.map((note) => {
+          {loading ? (
+            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)' }}>
+              読み込み中...
+            </div>
+          ) : filteredNotes.length === 0 ? (
+            <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)' }}>
+              ノートがありません
+            </div>
+          ) : (
+            filteredNotes.map((note) => {
             const titleParts = note.title.split('｜');
             const firstLine = titleParts.slice(0, -1).join('｜');
             const secondLine = titleParts[titleParts.length - 1];
@@ -497,7 +566,7 @@ export default function JournalNotesPage() {
                 )}
               </div>
             );
-          })}
+          }))}
         </div>
       </section>
 
@@ -539,6 +608,11 @@ export default function JournalNotesPage() {
           noteId={selectedNoteId}
           title={notes.find(n => n.id === selectedNoteId)?.title || ''}
           dateKey={notes.find(n => n.id === selectedNoteId)?.dateKey || ''}
+          onSave={handleSave}
+          onDelete={() => {
+            handleClosePanel();
+            loadNotes();
+          }}
         />
       )}
 

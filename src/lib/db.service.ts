@@ -103,6 +103,16 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at'>[])
   if (error) throw error;
 }
 
+export async function getAllDailyNotes(): Promise<DbDailyNote[]> {
+  const { data, error } = await supabase
+    .from('daily_notes')
+    .select('*')
+    .order('updated_at', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+}
+
 export async function getDailyNote(dateKey: string): Promise<DbDailyNote | null> {
   const { data, error } = await supabase
     .from('daily_notes')
@@ -123,6 +133,16 @@ export async function saveDailyNote(note: Omit<DbDailyNote, 'id' | 'created_at' 
     }, { onConflict: 'date_key' });
 
   if (error) throw error;
+}
+
+export async function getAllTradeNotes(): Promise<DbTradeNote[]> {
+  const { data, error } = await supabase
+    .from('trade_notes')
+    .select('*')
+    .order('updated_at', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
 }
 
 export async function getTradeNote(ticket: string): Promise<DbTradeNote | null> {
