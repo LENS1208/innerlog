@@ -1,8 +1,78 @@
 import React, { useState, useMemo } from 'react';
 import DailyNotePanel from '../components/daily/DailyNotePanel';
 import type { DailyNotePanelProps } from '../components/daily/DailyNotePanel';
+import TradeDetailPanel from '../components/trade/TradeDetailPanel';
+import type { TradeDetailPanelProps } from '../components/trade/TradeDetailPanel';
 import type { FolderKind, NoteListItem } from './journal-notes.types';
 import '../styles/journal-notebook.css';
+
+type TradeData = {
+  ticket: string;
+  item: string;
+  side: 'BUY' | 'SELL';
+  size: number;
+  openTime: Date;
+  openPrice: number;
+  closeTime: Date;
+  closePrice: number;
+  commission: number;
+  swap: number;
+  profit: number;
+  pips: number;
+  sl: number | null;
+  tp: number | null;
+};
+
+const demoTradesData: Record<string, TradeData> = {
+  'note-2': {
+    ticket: 'T100001',
+    item: 'USDJPY',
+    side: 'BUY',
+    size: 0.5,
+    openTime: new Date('2025-10-10T08:12:00+09:00'),
+    openPrice: 1.452,
+    closeTime: new Date('2025-10-10T10:31:00+09:00'),
+    closePrice: 1.458,
+    commission: -200,
+    swap: 0,
+    profit: 3200,
+    pips: 6.0,
+    sl: 1.442,
+    tp: null,
+  },
+  'note-4': {
+    ticket: 'T100002',
+    item: 'EURUSD',
+    side: 'SELL',
+    size: 0.3,
+    openTime: new Date('2025-10-12T13:20:00+09:00'),
+    openPrice: 1.062,
+    closeTime: new Date('2025-10-12T14:20:00+09:00'),
+    closePrice: 1.064,
+    commission: -150,
+    swap: 0,
+    profit: -1800,
+    pips: -2.0,
+    sl: 1.067,
+    tp: null,
+  },
+  'note-6': {
+    ticket: 'T100003',
+    item: 'GBPJPY',
+    side: 'BUY',
+    size: 0.2,
+    openTime: new Date('2025-10-11T08:15:00+09:00'),
+    openPrice: 1.892,
+    closeTime: new Date('2025-10-11T09:15:00+09:00'),
+    closePrice: 1.904,
+    commission: -100,
+    swap: 0,
+    profit: 2400,
+    pips: 12.0,
+    sl: 1.882,
+    tp: null,
+  },
+};
 
 const demoNotesData: NoteListItem[] = [
   {
@@ -101,6 +171,8 @@ export default function JournalNotesPage() {
   const [sortBy, setSortBy] = useState<'updated' | 'date'>('updated');
   const [selectedFolder, setSelectedFolder] = useState<FolderKind>('all');
   const [notes] = useState(demoNotesData);
+  const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'daily' | 'trade' | null>(null);
 
   const filteredNotes = useMemo(() => {
     let filtered = notes;
@@ -140,11 +212,17 @@ export default function JournalNotesPage() {
     const note = notes.find(n => n.id === noteId);
     if (!note) return;
 
+    setSelectedNoteId(noteId);
     if (note.kind === '取引') {
-      window.location.hash = `/notebook/${noteId}`;
-    } else {
-      console.log('ノートを開く:', noteId);
+      setViewMode('trade');
+    } else if (note.kind === '日次') {
+      setViewMode('daily');
     }
+  };
+
+  const handleClosePanel = () => {
+    setSelectedNoteId(null);
+    setViewMode(null);
   };
 
   const handlePrevDay = () => console.log('前日へ');
@@ -286,18 +364,49 @@ export default function JournalNotesPage() {
         </div>
       </section>
 
-      <DailyNotePanel
-        {...demoDailyProps}
-        onPrevDay={handlePrevDay}
-        onNextDay={handleNextDay}
-        onOpenTradesList={handleOpenTradesList}
-        onOpenLinkedNote={handleOpenLinkedNote}
-        onGenerateAdvice={handleGenerateAdvice}
-        onRegenerateAdvice={handleRegenerateAdvice}
-        onPinAdvice={handlePinAdvice}
-        onChangeValues={handleChangeValues}
-        onSave={handleSave}
-      />
+      {viewMode === 'daily' && selectedNoteId && (
+        <DailyNotePanel
+          {...demoDailyProps}
+          onPrevDay={handlePrevDay}
+          onNextDay={handleNextDay}
+          onOpenTradesList={handleOpenTradesList}
+          onOpenLinkedNote={handleOpenLinkedNote}
+          onGenerateAdvice={handleGenerateAdvice}
+          onRegenerateAdvice={handleRegenerateAdvice}
+          onPinAdvice={handlePinAdvice}
+          onChangeValues={handleChangeValues}
+          onSave={handleSave}
+        />
+      )}
+
+      {viewMode === 'trade' && selectedNoteId && demoTradesData[selectedNoteId] && (
+        <TradeDetailPanel
+          trade={demoTradesData[selectedNoteId]}
+          kpi={{
+            net: demoTradesData[selectedNoteId].profit,
+            pips: demoTradesData[selectedNoteId].pips,
+            hold: demoTradesData[selectedNoteId].closeTime.getTime() - demoTradesData[selectedNoteId].openTime.getTime(),
+            gross: demoTradesData[selectedNoteId].profit - demoTradesData[selectedNoteId].commission,
+            cost: demoTradesData[selectedNoteId].commission + demoTradesData[selectedNoteId].swap,
+            rrr: demoTradesData[selectedNoteId].sl
+              ? Math.abs(demoTradesData[selectedNoteId].pips) /
+                Math.abs((demoTradesData[selectedNoteId].openPrice - demoTradesData[selectedNoteId].sl!) * (/JPY$/.test(demoTradesData[selectedNoteId].item) ? 100 : 10000))
+              : null,
+          }}
+          onClose={handleClosePanel}
+        />
+      )}
+
+      {!viewMode && (
+        <section className="pane">
+          <div className="head">
+            <h3>ノートを選択してください</h3>
+          </div>
+          <div className="body" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400, color: 'var(--muted)' }}>
+            左のリストからノートを選択すると、詳細が表示されます
+          </div>
+        </section>
+      )}
     </div>
   );
 }
