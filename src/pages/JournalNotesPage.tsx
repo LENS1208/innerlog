@@ -25,23 +25,7 @@ type TradeData = {
 };
 
 const demoTradesData: Record<string, TradeData> = {
-  'note-2': {
-    ticket: 'T100001',
-    item: 'USDJPY',
-    side: 'BUY',
-    size: 0.5,
-    openTime: new Date('2025-10-10T08:12:00+09:00'),
-    openPrice: 1.452,
-    closeTime: new Date('2025-10-10T10:31:00+09:00'),
-    closePrice: 1.458,
-    commission: -200,
-    swap: 0,
-    profit: 3200,
-    pips: 6.0,
-    sl: 1.442,
-    tp: null,
-  },
-  'note-4': {
+  'T100002': {
     ticket: 'T100002',
     item: 'EURUSD',
     side: 'SELL',
@@ -57,7 +41,7 @@ const demoTradesData: Record<string, TradeData> = {
     sl: 1.067,
     tp: null,
   },
-  'note-6': {
+  'T100003': {
     ticket: 'T100003',
     item: 'GBPJPY',
     side: 'BUY',
@@ -85,15 +69,6 @@ const demoNotesData: NoteListItem[] = [
     linked: true,
   },
   {
-    id: 'note-2',
-    title: '2025/10/10（金）｜取引ノート｜USD/JPY',
-    kind: '取引',
-    updatedAt: '2025-10-10T10:31:00+09:00',
-    dateKey: '2025-10-10',
-    linked: true,
-    pnlYen: 3200,
-  },
-  {
     id: 'note-3',
     title: '2025/10/03（金）｜自由メモ',
     kind: '自由',
@@ -103,7 +78,7 @@ const demoNotesData: NoteListItem[] = [
     memoPreview: '今日は調子が良かった。エントリーポイントを見極められた。',
   },
   {
-    id: 'note-4',
+    id: 'T100002',
     title: '2025/10/12（土）｜取引ノート｜EUR/USD',
     kind: '取引',
     updatedAt: '2025-10-12T14:20:00+09:00',
@@ -121,7 +96,7 @@ const demoNotesData: NoteListItem[] = [
     memoPreview: '',
   },
   {
-    id: 'note-6',
+    id: 'T100003',
     title: '2025/10/11（金）｜取引ノート｜GBP/JPY',
     kind: '取引',
     updatedAt: '2025-10-11T09:15:00+09:00',
