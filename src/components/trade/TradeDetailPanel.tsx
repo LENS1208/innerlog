@@ -114,6 +114,17 @@ function MultiSelect({
 }
 
 export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPanelProps) {
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   const ENTRY_BASIS_OPTS = [
     '押し目・戻り',
     'ブレイク',
@@ -303,8 +314,23 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
     });
   };
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const handleOpenDetail = () => {
     window.location.hash = `/notebook/${noteId}`;
+  };
+
+  const handleDeleteNote = () => {
+    if (confirm('このノートを削除しますか？')) {
+      console.log('ノートを削除:', noteId);
+      localStorage.removeItem(`diary_${trade.ticket}`);
+      alert('ノートを削除しました');
+    }
+  };
+
+  const handleToggleLink = () => {
+    console.log('リンク状態を切り替え:', noteId);
+    alert('リンク状態を切り替えました');
   };
 
   return (
@@ -312,21 +338,92 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
       <div className="head">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>取引ノート</h3>
-          <button
-            onClick={handleOpenDetail}
-            style={{
-              background: 'var(--accent)',
-              border: '1px solid var(--accent)',
-              borderRadius: 8,
-              padding: '8px 14px',
-              cursor: 'pointer',
-              fontSize: 13,
-              fontWeight: 600,
-              color: '#fff',
-            }}
-          >
-            詳細ページへ →
-          </button>
+          <div ref={menuRef} style={{ display: 'flex', gap: '8px', position: 'relative' }}>
+            <button
+              onClick={handleOpenDetail}
+              style={{
+                background: 'var(--accent)',
+                border: '1px solid var(--accent)',
+                borderRadius: 8,
+                padding: '8px 14px',
+                cursor: 'pointer',
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#fff',
+              }}
+            >
+              詳細ページへ →
+            </button>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderRadius: 8,
+                padding: '8px 12px',
+                cursor: 'pointer',
+                fontSize: 18,
+                fontWeight: 600,
+                lineHeight: 1,
+              }}
+            >
+              ⋮
+            </button>
+            {menuOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: 4,
+                  background: 'var(--surface)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 8,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  minWidth: 180,
+                  zIndex: 100,
+                }}
+              >
+                <button
+                  onClick={() => {
+                    handleToggleLink();
+                    setMenuOpen(false);
+                  }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'transparent',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  リンクを管理
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeleteNote();
+                    setMenuOpen(false);
+                  }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'transparent',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: 13,
+                    color: '#dc2626',
+                  }}
+                >
+                  ノートを削除
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -3,6 +3,7 @@ import DailyNotePanel from '../components/daily/DailyNotePanel';
 import type { DailyNotePanelProps } from '../components/daily/DailyNotePanel';
 import TradeDetailPanel from '../components/trade/TradeDetailPanel';
 import type { TradeDetailPanelProps } from '../components/trade/TradeDetailPanel';
+import FreeMemoPanel from '../components/free/FreeMemoPanel';
 import type { FolderKind, NoteListItem } from './journal-notes.types';
 import '../styles/journal-notebook.css';
 
@@ -172,7 +173,7 @@ export default function JournalNotesPage() {
   const [selectedFolder, setSelectedFolder] = useState<FolderKind>('all');
   const [notes] = useState(demoNotesData);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<'daily' | 'trade' | null>(null);
+  const [viewMode, setViewMode] = useState<'daily' | 'trade' | 'free' | null>(null);
 
   const filteredNotes = useMemo(() => {
     let filtered = notes;
@@ -217,6 +218,8 @@ export default function JournalNotesPage() {
       setViewMode('trade');
     } else if (note.kind === '日次') {
       setViewMode('daily');
+    } else if (note.kind === '自由') {
+      setViewMode('free');
     }
   };
 
@@ -403,6 +406,17 @@ export default function JournalNotesPage() {
               : null,
           }}
           noteId={selectedNoteId}
+        />
+      )}
+
+      {viewMode === 'free' && selectedNoteId && (
+        <FreeMemoPanel
+          noteId={selectedNoteId}
+          title={notes.find(n => n.id === selectedNoteId)?.title || ''}
+          dateKey={notes.find(n => n.id === selectedNoteId)?.dateKey || ''}
+          memoContent={notes.find(n => n.id === selectedNoteId)?.memoPreview || ''}
+          tags={['重要', 'アイデア']}
+          onSave={(content) => console.log('保存:', content)}
         />
       )}
 

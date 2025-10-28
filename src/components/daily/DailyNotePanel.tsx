@@ -46,15 +46,39 @@ export default function DailyNotePanel({
   onChangeValues,
   onSave,
 }: DailyNotePanelProps) {
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const menuRef = React.useRef<HTMLDivElement>(null);
   const avgYenClass = kpi.avgYenPerTrade >= 0 ? 'good' : 'bad';
   const totalPipsClass = kpi.totalPips >= 0 ? 'good' : 'bad';
+
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleDeleteNote = () => {
+    if (confirm('この日次ノートを削除しますか？')) {
+      console.log('日次ノートを削除:', dateJst);
+      alert('日次ノートを削除しました');
+    }
+  };
+
+  const handleToggleLink = () => {
+    console.log('リンク状態を切り替え:', dateJst);
+    alert('リンク状態を切り替えました');
+  };
 
   return (
     <section className="pane">
       <div className="head">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
           <h3 style={{ margin: 0 }}>日次ノート（表示）</h3>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div ref={menuRef} style={{ display: 'flex', gap: '8px', position: 'relative' }}>
             <button
               onClick={onPrevDay}
               style={{
@@ -81,6 +105,75 @@ export default function DailyNotePanel({
             >
               翌日 →
             </button>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderRadius: 8,
+                padding: '8px 12px',
+                cursor: 'pointer',
+                fontSize: 18,
+                fontWeight: 600,
+                lineHeight: 1,
+              }}
+            >
+              ⋮
+            </button>
+            {menuOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: 4,
+                  background: 'var(--surface)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 8,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  minWidth: 180,
+                  zIndex: 100,
+                }}
+              >
+                <button
+                  onClick={() => {
+                    handleToggleLink();
+                    setMenuOpen(false);
+                  }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'transparent',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: 13,
+                  }}
+                >
+                  リンクを管理
+                </button>
+                <button
+                  onClick={() => {
+                    handleDeleteNote();
+                    setMenuOpen(false);
+                  }}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '10px 16px',
+                    border: 'none',
+                    background: 'transparent',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: 13,
+                    color: '#dc2626',
+                  }}
+                >
+                  ノートを削除
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
