@@ -13,11 +13,15 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
   const [nextPromise, setNextPromise] = useState("");
   const [free, setFree] = useState("");
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('DayJournalCard dateKey:', dateKey);
     (async () => {
       try {
+        setLoading(true);
         const note = await getDailyNote(dateKey);
+        console.log('Loaded daily note:', note);
         if (note) {
           setGood(note.good || "");
           setImprove(note.improve || "");
@@ -26,6 +30,8 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
         }
       } catch (err) {
         console.error('Failed to load daily note:', err);
+      } finally {
+        setLoading(false);
       }
     })();
   }, [dateKey]);
@@ -81,6 +87,7 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
             value={good}
             onChange={(e) => setGood(e.target.value)}
             placeholder="例）エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。"
+            disabled={loading}
           />
         </label>
 
