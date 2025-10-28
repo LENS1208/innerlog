@@ -4,6 +4,7 @@ import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
 import type { Trade } from "../../lib/types";
 import { filterTrades, getTradeProfit, getTradeTime } from "../../lib/filterTrades";
+import { supabase } from "../../lib/supabase";
 
 type DayOfWeek = "日" | "月" | "火" | "水" | "木" | "金" | "土";
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
@@ -11,23 +12,57 @@ type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 const dayNames: DayOfWeek[] = ["日", "月", "火", "水", "木", "金", "土"];
 
 export default function ReportsTimeAxis() {
-  const { dataset, filters } = useDataset();
+  const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
   const metric: MetricType = "profit";
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: "no-store" });
-        if (!res.ok) return;
-        const text = await res.text();
-        const parsed = parseCsvText(text);
-        setTrades(parsed);
+        if (useDatabase) {
+          const { data, error } = await supabase
+            .from('trades')
+            .select('*')
+            .order('close_time', { ascending: true });
+
+          if (error) {
+            console.error('Error loading trades from database:', error);
+            setTrades([]);
+            return;
+          }
+
+          const mapped: Trade[] = (data || []).map((t: any) => ({
+            id: t.ticket,
+            datetime: t.close_time,
+            pair: t.item,
+            side: t.side as any,
+            volume: Number(t.size),
+            profitYen: Number(t.profit),
+            pips: Number(t.pips),
+            openTime: t.open_time,
+            openPrice: Number(t.open_price),
+            closePrice: Number(t.close_price),
+            stopPrice: t.sl ? Number(t.sl) : undefined,
+            targetPrice: t.tp ? Number(t.tp) : undefined,
+            commission: Number(t.commission),
+            swap: Number(t.swap),
+            symbol: t.item,
+            action: t.side as any,
+            profit: Number(t.profit),
+          }));
+          setTrades(mapped);
+        } else {
+          const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: "no-store" });
+          if (!res.ok) return;
+          const text = await res.text();
+          const parsed = parseCsvText(text);
+          setTrades(parsed);
+        }
       } catch (err) {
         console.error("Failed to load trades:", err);
       }
     })();
-  }, [dataset]);
+  }, [dataset, useDatabase]);
 
   const filteredTrades = useMemo(() => {
     return filterTrades(trades, filters);

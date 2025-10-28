@@ -5,6 +5,8 @@ import "chartjs-adapter-date-fns";
 import { ja } from "date-fns/locale";
 import { Line } from "react-chartjs-2";
 import { UI_TEXT } from "../lib/i18n";
+import { useDataset } from "../lib/dataset.context";
+import { supabase } from "../lib/supabase";
 
 // ← ここがポイント：本ファイルが src 直下にあるので widgets への相対パスは './widgets/...'
 import DashboardKPI from "./DashboardKPI";
@@ -333,9 +335,48 @@ const EquityCurvePage: React.FC = () => {
     setOutcome("ALL");
   };
 
+  const { useDatabase } = useDataset();
+
   // ① 起動時に前回状態を復元、またはデモデータAを読み込み
   useEffect(() => {
     console.log("📂 EquityCurvePage - restoring from localStorage");
+
+    if (useDatabase) {
+      // データベースから読み込む
+      (async () => {
+        try {
+          const { data, error } = await supabase
+            .from('trades')
+            .select('*')
+            .order('close_time', { ascending: true });
+
+          if (error) {
+            console.error('Error loading trades from database:', error);
+            return;
+          }
+
+          const dbTrades: Trade[] = (data || []).map((t: any) => ({
+            ticket: t.ticket,
+            symbol: t.item,
+            type: t.side,
+            time: new Date(t.close_time).getTime(),
+            profitJPY: Number(t.profit),
+            entryPrice: Number(t.open_price),
+            exitPrice: Number(t.close_price),
+            size: Number(t.size),
+            openTimeMs: new Date(t.open_time).getTime(),
+          }));
+
+          setDatasets([{ id: 'db', name: 'データベース', trades: dbTrades }]);
+          setCurrentId('db');
+        } catch (e) {
+          console.error('Exception loading trades from database:', e);
+        }
+      })();
+      return;
+    }
+
+    // CSVモード
     try {
       const raw = localStorage.getItem("fxtool:v1:datasets");
       const cur = localStorage.getItem("fxtool:v1:currentId");
@@ -358,7 +399,7 @@ const EquityCurvePage: React.FC = () => {
         await importCsvTextAsDataset("A.csv", text, [], setDatasets, setCurrentId);
       })();
     } catch {}
-  }, []);
+  }, [useDatabase]);
 
   // ヘッダーの青ボタン／A/B/C を受け取る
   useEffect(() => {

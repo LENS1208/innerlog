@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { TopBar } from "./daily/TopBar";
 import { KpiGrid } from "./daily/KpiGrid";
 import { DayJournalCard } from "./daily/DayJournalCard";
@@ -6,6 +6,8 @@ import { DayTradesTable } from "./daily/DayTradesTable";
 import { LinkedNotesTable } from "./daily/LinkedNotesTable";
 import { AiAdviceBlock } from "./daily/AiAdviceBlock";
 import type { DailyNotePageProps } from "./daily/types";
+import { supabase } from "../lib/supabase";
+import { useDataset } from "../lib/dataset.context";
 import "./dailyNote.css";
 
 const DUMMY_DATA: DailyNotePageProps = {
@@ -54,18 +56,106 @@ const DUMMY_DATA: DailyNotePageProps = {
 };
 
 export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
-  const mergedProps = { ...DUMMY_DATA, ...props };
+  const { useDatabase } = useDataset();
+  const [loading, setLoading] = useState(false);
+  const [realKpi, setRealKpi] = useState(DUMMY_DATA.kpi);
+  const [realTrades, setRealTrades] = useState(DUMMY_DATA.trades);
 
-  // kpi が部分的な場合、dateJst だけマージする
-  if (props?.kpi?.dateJst && props.kpi.dateJst !== DUMMY_DATA.kpi.dateJst) {
-    mergedProps.kpi = {
-      ...DUMMY_DATA.kpi,
-      dateJst: props.kpi.dateJst,
+  const dateJst = props?.kpi?.dateJst || DUMMY_DATA.kpi.dateJst;
+
+  useEffect(() => {
+    if (!useDatabase) {
+      setRealKpi(DUMMY_DATA.kpi);
+      setRealTrades(DUMMY_DATA.trades);
+      return;
+    }
+
+    const loadDayData = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from('trades')
+          .select('*')
+          .gte('close_time', `${dateJst}T00:00:00Z`)
+          .lt('close_time', `${dateJst}T23:59:59Z`)
+          .order('close_time', { ascending: true });
+
+        if (error) {
+          console.error('Error loading trades:', error);
+          setRealKpi(DUMMY_DATA.kpi);
+          setRealTrades(DUMMY_DATA.trades);
+          return;
+        }
+
+        const dayTrades = data || [];
+        const tradeCount = dayTrades.length;
+        const winTrades = dayTrades.filter(t => t.profit > 0);
+        const lossTrades = dayTrades.filter(t => t.profit < 0);
+        const winCount = winTrades.length;
+        const lossCount = lossTrades.length;
+        const winRate = tradeCount > 0 ? (winCount / tradeCount) * 100 : 0;
+        const dayTotalYen = dayTrades.reduce((sum, t) => sum + Number(t.profit), 0);
+        const avgPnLPerTradeYen = tradeCount > 0 ? dayTotalYen / tradeCount : 0;
+        const grossProfit = winTrades.reduce((sum, t) => sum + Number(t.profit), 0);
+        const grossLoss = Math.abs(lossTrades.reduce((sum, t) => sum + Number(t.profit), 0));
+        const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? 999 : 0);
+        const totalPips = dayTrades.reduce((sum, t) => sum + Number(t.pips), 0);
+
+        const dayOfWeek = new Date(dateJst).toLocaleDateString('ja-JP', { weekday: 'short' });
+
+        setRealKpi({
+          winRate,
+          tradeCount,
+          winCount,
+          lossCount,
+          avgPnLPerTradeYen,
+          profitFactor,
+          totalPips,
+          dayTotalYen,
+          dateJst,
+          weekdayJp: dayOfWeek,
+        });
+
+        setRealTrades(
+          dayTrades.map(t => ({
+            time: new Date(t.close_time).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
+            symbol: t.item,
+            sideJp: t.side === 'BUY' ? '買い' : '売り',
+            pnlYen: Number(t.profit),
+            ticket: t.ticket,
+          }))
+        );
+      } catch (e) {
+        console.error('Exception loading day data:', e);
+        setRealKpi(DUMMY_DATA.kpi);
+        setRealTrades(DUMMY_DATA.trades);
+      } finally {
+        setLoading(false);
+      }
     };
-  }
 
-  const handlePrevDay = () => console.log("前日へ");
-  const handleNextDay = () => console.log("翌日へ");
+    loadDayData();
+  }, [useDatabase, dateJst]);
+
+  const mergedProps = {
+    ...DUMMY_DATA,
+    ...props,
+    kpi: realKpi,
+    trades: realTrades,
+  };
+
+  const handlePrevDay = () => {
+    const currentDate = new Date(dateJst);
+    currentDate.setDate(currentDate.getDate() - 1);
+    const newDate = currentDate.toISOString().slice(0, 10);
+    location.hash = `/daily/${newDate}`;
+  };
+  const handleNextDay = () => {
+    const currentDate = new Date(dateJst);
+    currentDate.setDate(currentDate.getDate() + 1);
+    const newDate = currentDate.toISOString().slice(0, 10);
+    location.hash = `/daily/${newDate}`;
+  };
   const handleSave = (payload: any) => {
     console.log("保存:", payload);
     if (mergedProps.onSave) mergedProps.onSave(payload);
