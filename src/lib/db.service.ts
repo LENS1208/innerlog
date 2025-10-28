@@ -190,7 +190,7 @@ export async function getAllFreeMemos(): Promise<DbFreeMemo[]> {
   const { data, error } = await supabase
     .from('free_memos')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('updated_at', { ascending: false });
 
   if (error) throw error;
   return data || [];
@@ -216,6 +216,7 @@ export async function saveFreeMemo(memo: Omit<DbFreeMemo, 'id' | 'created_at' | 
         content: memo.content,
         date_key: memo.date_key,
         tags: memo.tags,
+        updated_at: new Date().toISOString(),
       })
       .select('id')
       .single();

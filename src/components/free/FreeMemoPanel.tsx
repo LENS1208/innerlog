@@ -7,7 +7,7 @@ export type FreeMemoPanelProps = {
   dateKey: string;
   memoContent?: string;
   tags?: string[];
-  onSave?: (content: string) => void;
+  onSave?: (content: string) => void | Promise<void>;
   onDelete?: () => void;
 };
 
@@ -64,7 +64,7 @@ export default function FreeMemoPanel({
         tags: localTags,
       });
       if (onSave) {
-        onSave(content);
+        await onSave(content);
       }
       alert('保存しました');
     } catch (err) {
