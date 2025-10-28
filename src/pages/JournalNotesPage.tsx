@@ -460,6 +460,12 @@ export default function JournalNotesPage() {
 
   const unlinkedCount = notes.filter((n) => !n.linked).length;
 
+  useEffect(() => {
+    if (!loading && filteredNotes.length > 0 && !selectedNoteId) {
+      handleOpenNote(filteredNotes[0].id);
+    }
+  }, [loading, filteredNotes]);
+
   return (
     <div className="shell">
       <aside className="pane">
