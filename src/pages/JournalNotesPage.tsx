@@ -393,7 +393,59 @@ export default function JournalNotesPage() {
                 Math.abs((demoTradesData[selectedNoteId].openPrice - demoTradesData[selectedNoteId].sl!) * (/JPY$/.test(demoTradesData[selectedNoteId].item) ? 100 : 10000))
               : null,
           }}
+          diary={{
+            entryEmotion: '冷静',
+            fundNote: '朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたのでロングを検討。',
+            entryBasis: ['テクニカル分析', 'ファンダメンタルズ'],
+            intraNote: '保有中の気づきや感想をメモ',
+            intraEmotion: ['不安', '期待'],
+            preRules: ['損切りライン設定', '利確目標設定'],
+            ruleExec: 'しっかり守れた',
+            exitTriggers: ['目標価格到達'],
+            exitEmotion: '予定通りで満足',
+            aiHit: '当たり',
+            aiPros: ['トレンド分析が的確', 'サポートライン認識が正確'],
+            noteRight: 'エントリー前にしっかり水平線を引いて待てた。損切りラインも事前に決めていたので迷わず実行できた。',
+            noteWrong: '利確が早すぎた。もう少し引っ張れば目標価格に到達していた。感情で決済してしまった。',
+            noteNext: '利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。',
+            noteFree: '今日は集中力が高かった。朝のニュースで日銀の発言があったので、円高に動くと予想。次回も経済指標の前後は注意深く観察する。',
+            tags: ['デイトレ', '順張り', '成功'],
+            images: [],
+          }}
           noteId={selectedNoteId}
+          linkedMemos={[
+            {
+              tempId: 'memo-1',
+              title: 'AUDUSD | 取引ノート (2025/10/26)',
+              type: '取引',
+              updated: '2025/10/26 21:26',
+            }
+          ]}
+          pendingMemos={[
+            {
+              tempId: 'demo_pending_001',
+              symbol: 'USDJPY',
+              side: 'BUY',
+              note: 'ドル円の押し目を狙ったエントリー。まだポジション保有中。',
+              entry: {
+                planned: 148.5,
+                actual: 148.52,
+                size: 0.6,
+                time: '2025/10/27 21:26:19',
+              },
+            }
+          ]}
+          aiAdvice={{
+            advice: [
+              '• 今日の勝率は66.7%と良好です。引き続き慎重なエントリーを心がけましょう。',
+              '• AUDUSDでの回転売引いていますが、1勝1敗です。通貨ペアごとのパターンを見直しましょう。',
+              '• 損切りが適切に機能しています。この水準を維持してください。',
+              '• 午前中の取引が好調です。時間帯ごとの傾向を分析してみると良いでしょう。',
+            ],
+            timestamp: '2025/10/28 07:48',
+          }}
+          onGenerateAdvice={() => alert('AIアドバイスを生成します')}
+          onRegenerateAdvice={() => alert('AIアドバイスを再生成します')}
         />
       )}
 
