@@ -448,7 +448,14 @@ export default function JournalNotesPage() {
             const secondLine = titleParts[titleParts.length - 1];
 
             return (
-              <div key={note.id} className="note" onClick={() => handleOpenNote(note.id)}>
+              <div
+                key={note.id}
+                className="note"
+                onClick={() => handleOpenNote(note.id)}
+                style={{
+                  background: selectedNoteId === note.id ? 'var(--chip)' : 'var(--surface)',
+                }}
+              >
                 <div className="title">
                   {titleParts.length > 1 ? (
                     <>
