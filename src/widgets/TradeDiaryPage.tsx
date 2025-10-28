@@ -1002,25 +1002,11 @@ export default function TradeDiaryPage() {
                 </div>
               </div>
             )}
-
-            <div style={{ marginTop: 12 }}>
-              <div className="muted small">タグ</div>
-              <div className="chips-wrap">
-                <div className="chips" id="tagArea">
-                  {tags.map((t) => (
-                    <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
-                  ))}
-                </div>
-              </div>
-              <div className="tag-actions">
-                <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
-              </div>
-            </div>
-
-            <div className="actions" style={{ marginTop: 16 }}>
-              <button className="td-btn" onClick={savePayload}>保存</button>
-            </div>
           </section>
+
+          <div className="actions" style={{ marginTop: 16 }}>
+            <button className="td-btn" onClick={savePayload}>保存</button>
+          </div>
         </div>
 
         {/* 右列 */}
@@ -1086,6 +1072,38 @@ export default function TradeDiaryPage() {
             </div>
           </section>
 
+          {/* タグ */}
+          <section className="td-card" id="tagCard">
+            <div className="td-section-title"><h2>タグ</h2></div>
+            <div className="chips-wrap">
+              <div className="chips" id="tagArea">
+                {tags.map((t) => (
+                  <span key={t} className="chip" title="クリックで削除" onClick={() => removeTag(t)}>{t}</span>
+                ))}
+              </div>
+            </div>
+            <div className="tag-actions" style={{ marginTop: 12 }}>
+              <button className="td-btn" type="button" onClick={openTagModal}>＋タグを追加</button>
+            </div>
+          </section>
+
+          {/* AIアドバイス */}
+          <AIAdviceSection
+            tradeData={row}
+            kpi={kpi}
+            diaryData={{
+              entryEmotion,
+              entryBasis,
+              techSet,
+              marketSet,
+              exitTriggers,
+              exitEmotion,
+              noteRight,
+              noteWrong,
+              noteNext,
+            }}
+          />
+
           {/* 可視化（3枚） */}
           <section className="td-card td-viz" id="vizCard">
             <div className="td-section-title"><h2>パフォーマンス分析</h2></div>
@@ -1116,23 +1134,6 @@ export default function TradeDiaryPage() {
               </div>
             )}
           </section>
-
-          {/* AIアドバイス */}
-          <AIAdviceSection
-            tradeData={row}
-            kpi={kpi}
-            diaryData={{
-              entryEmotion,
-              entryBasis,
-              techSet,
-              marketSet,
-              exitTriggers,
-              exitEmotion,
-              noteRight,
-              noteWrong,
-              noteNext,
-            }}
-          />
         </div>
       </div>
 
