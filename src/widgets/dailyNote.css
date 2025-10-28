@@ -194,8 +194,10 @@
   resize: vertical;
   font-family: inherit;
   position: relative;
-  z-index: 1;
+  z-index: 1000;
   pointer-events: auto;
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
 .journal-textarea::placeholder {
