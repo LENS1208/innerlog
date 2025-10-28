@@ -516,9 +516,25 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                   label: "累積損益（円）",
                   data: eqData,
                   parsing: false,
-                  tension: 0.25,
-                  borderWidth: 2,
+                  tension: 0.4,
+                  borderWidth: 2.5,
                   pointRadius: 0,
+                  fill: 'origin',
+                  backgroundColor: (context: any) => {
+                    const chart = context.chart;
+                    const {ctx, chartArea} = chart;
+                    if (!chartArea) return 'rgba(59, 130, 246, 0.1)';
+                    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                    gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+                    gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
+                    gradient.addColorStop(1, 'rgba(22, 163, 74, 0.4)');
+                    return gradient;
+                  },
+                  segment: {
+                    borderColor: (ctx: any) => {
+                      return ctx.p1.parsed.y >= 0 ? '#16a34a' : '#ef4444';
+                    }
+                  }
                 },
               ],
             },

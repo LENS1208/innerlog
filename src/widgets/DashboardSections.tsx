@@ -57,11 +57,32 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '累積損益（円）',
       data: equity,
-      borderWidth: 2,
-      borderColor: '#1976d2',
+      borderWidth: 2.5,
+      borderColor: (context: any) => {
+        if (!context.chart.data.datasets[0].data) return '#3b82f6';
+        const dataIndex = context.dataIndex;
+        if (dataIndex === undefined) return '#3b82f6';
+        const value = context.chart.data.datasets[0].data[dataIndex] as number;
+        return value >= 0 ? '#16a34a' : '#ef4444';
+      },
+      backgroundColor: (context: any) => {
+        const chart = context.chart;
+        const {ctx, chartArea} = chart;
+        if (!chartArea) return 'rgba(59, 130, 246, 0.1)';
+        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+        gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+        gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
+        gradient.addColorStop(1, 'rgba(22, 163, 74, 0.4)');
+        return gradient;
+      },
       pointRadius: 0,
-      fill: false,
-      tension: 0.2,
+      fill: 'origin',
+      tension: 0.4,
+      segment: {
+        borderColor: (ctx: any) => {
+          return ctx.p1.parsed.y >= 0 ? '#16a34a' : '#ef4444';
+        }
+      }
     }]
   }
 
