@@ -762,6 +762,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const [intraEmotion, setIntraEmotion] = useState<string[]>([]);
   const [preRules, setPreRules] = useState<string[]>([]);
   const [ruleExec, setRuleExec] = useState("");
+  const [holdNote, setHoldNote] = useState("");
 
   const [aiSide, setAiSide] = useState("");
   const [aiFollow, setAiFollow] = useState("選択しない");
@@ -807,6 +808,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
         inTradeEmotion: intraEmotion,
         preRules,
         ruleExec,
+        holdNote,
         ai: { side: aiSide, follow: aiFollow, hit: aiHit, pros: aiPros, note: aiNote },
         exit: { triggers: exitTriggers, emotion: exitEmotion },
         notes: { right: noteRight, wrong: noteWrong, next: noteNext, free: noteFree },
@@ -951,7 +953,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
             <label>
               <div className="muted small">自由メモ</div>
-              <textarea className="note" rows={1} placeholder="保有中の気づきや感想をメモ" />
+              <textarea className="note" rows={1} value={holdNote} onChange={(e) => setHoldNote(e.target.value)} placeholder="保有中の気づきや感想をメモ" />
             </label>
 
             <button
