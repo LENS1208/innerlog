@@ -10,8 +10,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: var(--space-3, 16px) 0;
   margin-bottom: var(--space-4, 20px);
+  min-height: 56px;
 }
 
 .topbar-date {

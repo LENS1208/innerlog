@@ -271,7 +271,7 @@ export default function MonthlyCalendar() {
         }
       `}</style>
 
-      <div className="calendar-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-4)" }}>
+      <div className="calendar-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-4)", minHeight: 56 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
           <button
             onClick={goToPrevMonth}
