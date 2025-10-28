@@ -330,20 +330,6 @@ export default function JournalNotesPage() {
             <div key={note.id} className="note" onClick={() => handleOpenNote(note.id)}>
               <div className="row">
                 <div className="title">{note.title}</div>
-                <div className="actions">
-                  {!note.linked && <span className="badge-status">未リンク</span>}
-                  {!note.linked && (
-                    <button
-                      className="link-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleLink(note.id);
-                      }}
-                    >
-                      取引にリンク…
-                    </button>
-                  )}
-                </div>
               </div>
               <div className="meta-line">
                 {note.kind === '取引' && note.pnlYen !== undefined ? (
@@ -359,6 +345,20 @@ export default function JournalNotesPage() {
                   <span>&nbsp;</span>
                 )}
               </div>
+              {!note.linked && (
+                <div className="bottom-line">
+                  <span className="badge-status">未リンク</span>
+                  <button
+                    className="link-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLink(note.id);
+                    }}
+                  >
+                    取引にリンク…
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -153,6 +153,14 @@
   font-weight: 500;
 }
 
+/* 未リンク行 */
+.bottom-line {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 2px;
+}
+
 /* リンクボタン（ホバー時表示） */
 .note .link-btn {
   opacity: 0;
