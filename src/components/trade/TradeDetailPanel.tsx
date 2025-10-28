@@ -289,6 +289,23 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
   const savePayload = async () => {
     setSaving(true);
     try {
+      const tradeDbData = {
+        ticket: trade.ticket,
+        item: trade.item,
+        side: trade.side,
+        size: trade.size,
+        open_time: trade.openTime.toISOString(),
+        open_price: trade.openPrice,
+        close_time: trade.closeTime.toISOString(),
+        close_price: trade.closePrice,
+        commission: trade.commission,
+        swap: trade.swap,
+        profit: trade.profit,
+        pips: trade.pips,
+        sl: trade.sl,
+        tp: trade.tp,
+      };
+
       await saveTradeNote({
         ticket: trade.ticket,
         entry_emotion: entryEmotion,
@@ -307,7 +324,7 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
         images: images.map((i) => i.url),
         ai_advice: '',
         ai_advice_pinned: false,
-      });
+      }, tradeDbData);
       alert('保存しました');
     } catch (err) {
       console.error('Failed to save trade note:', err);

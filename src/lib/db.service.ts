@@ -136,7 +136,15 @@ export async function getTradeNote(ticket: string): Promise<DbTradeNote | null> 
   return data;
 }
 
-export async function saveTradeNote(note: Omit<DbTradeNote, 'id' | 'created_at' | 'updated_at'>): Promise<void> {
+export async function saveTradeNote(note: Omit<DbTradeNote, 'id' | 'created_at' | 'updated_at'>, tradeData?: Omit<DbTrade, 'id' | 'created_at'>): Promise<void> {
+  if (tradeData) {
+    const { error: tradeError } = await supabase
+      .from('trades')
+      .upsert(tradeData, { onConflict: 'ticket' });
+
+    if (tradeError) throw tradeError;
+  }
+
   const { error } = await supabase
     .from('trade_notes')
     .upsert({
