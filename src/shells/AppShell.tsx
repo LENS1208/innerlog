@@ -9,7 +9,7 @@ type Props = { children: React.ReactNode };
 
 // ヘッダー（右カラムの上部）
 function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
-  const { resetFilters } = useDataset();
+  const { applyFilters, resetFilters } = useDataset();
   return (
     <>
       <div
@@ -74,6 +74,20 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
             <div className="header-oneline" style={{ marginLeft: "auto", display: "none", gap: 8, alignItems: "center" }}>
               <FiltersBar />
               <button
+                onClick={applyFilters}
+                style={{
+                  height: 36,
+                  padding: "8px 12px",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  border: 0,
+                  borderRadius: 12,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                適用
+              </button>
+              <button
                 onClick={resetFilters}
                 title="リセット"
                 style={{
@@ -120,6 +134,20 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0, marginLeft: "auto" }}>
                 <button
+                onClick={applyFilters}
+                style={{
+                  height: 36,
+                  padding: "8px 12px",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  border: 0,
+                  borderRadius: 12,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                適用
+              </button>
+              <button
                 onClick={resetFilters}
                 title="リセット"
                 style={{
@@ -165,11 +193,26 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
           <FiltersBar />
           <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
             <button
-              onClick={resetFilters}
-              title="リセット"
+              onClick={applyFilters}
               style={{
                 flex: 1,
                 height: 40,
+                padding: "8px 12px",
+                background: "var(--accent)",
+                color: "#fff",
+                border: 0,
+                borderRadius: 12,
+                fontWeight: 600,
+              }}
+            >
+              適用
+            </button>
+            <button
+              onClick={resetFilters}
+              title="リセット"
+              style={{
+                height: 40,
+                width: 40,
                 display: "grid",
                 placeItems: "center",
                 border: "1px solid var(--line)",
@@ -332,7 +375,6 @@ function AppShellContent({ children }: Props) {
   const [activeKey, setActiveKey] = useState<string>("dashboard");
   const drawerRef = useRef<HTMLDivElement>(null);
   const [quickOpen, setQuickOpen] = useState(false);
-  const { resetFiltersOnPageChange } = useDataset();
 
   useEffect(() => {
     (async () => {
@@ -362,14 +404,11 @@ function AppShellContent({ children }: Props) {
   }, []);
 
   useEffect(() => {
-    const sync = () => {
-      setActiveKey(location.hash.replace(/^#\//, "") || "dashboard");
-      resetFiltersOnPageChange();
-    };
+    const sync = () => setActiveKey(location.hash.replace(/^#\//, "") || "dashboard");
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
-  }, [resetFiltersOnPageChange]);
+  }, []);
 
   useEffect(() => {
     const handler = (e: Event) => setQuickOpen((e as CustomEvent).detail ?? true);

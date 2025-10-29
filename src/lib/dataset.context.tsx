@@ -15,7 +15,6 @@ type Ctx = {
   setUiFilters: (p:Partial<Filters>)=>void;
   applyFilters: ()=>void;
   resetFilters: ()=>void;
-  resetFiltersOnPageChange: ()=>void;
   setUseDatabase: (value: boolean)=>void;
 };
 
@@ -31,22 +30,9 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>({});
   const [useDatabase, setUseDatabase] = React.useState<boolean>(true);
-  const setUiFilters = (p:Partial<Filters>)=> {
-    console.log('🔍 setUiFilters called with:', p);
-    setUiFiltersState(prev=>{
-      const next = {...prev,...p};
-      console.log('🔍 Applying filters:', next);
-      setFilters(next);
-      return next;
-    });
-  };
+  const setUiFilters = (p:Partial<Filters>)=> setUiFiltersState(prev=>({...prev,...p}));
   const applyFilters = ()=> setFilters(uiFilters);
-  const resetFiltersOnPageChange = ()=> {
-    console.log('🔄 Resetting filters on page change');
-    setUiFiltersState({});
-    setFilters({});
-  };
   const resetFilters = ()=> { setUiFiltersState({}); setFilters({}); };
-  const v:Ctx = {dataset, filters, uiFilters, useDatabase, setDataset, setUiFilters, applyFilters, resetFilters, resetFiltersOnPageChange, setUseDatabase};
+  const v:Ctx = {dataset, filters, uiFilters, useDatabase, setDataset, setUiFilters, applyFilters, resetFilters, setUseDatabase};
   return <C.Provider value={v}>{children}</C.Provider>;
 }
