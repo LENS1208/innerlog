@@ -626,7 +626,8 @@
   display:flex;
   align-items:center;
   gap:6px;
-  font-size:14px;
+  font-size:15px;
+  font-weight:normal;
   color:var(--muted);
   margin-bottom:4px;
 }
