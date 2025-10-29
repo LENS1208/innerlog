@@ -490,14 +490,14 @@ export default function CalendarDayPage() {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid var(--line)" }}>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>決済日時</th>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>銘柄</th>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>方向</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>損益 (円)</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>pips</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>ロット数</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>建値</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>決済</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>決済日時</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>銘柄</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>方向</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>損益 (円)</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>pips</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>ロット数</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>建値</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>決済</th>
                 <th style={{ textAlign: "center", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>ノート</th>
               </tr>
             </thead>

@@ -337,8 +337,8 @@ export default function MonthlyCalendar() {
               className="day-header"
               style={{
                 textAlign: "center",
-                fontWeight: 600,
-                fontSize: 12,
+                fontWeight: "bold",
+                fontSize: 15,
                 color: "var(--muted)",
                 padding: "var(--space-1)",
                 height: 32,

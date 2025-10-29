@@ -198,7 +198,7 @@ export default function ReportsStrategy() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>セットアップ Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topSetup.setup}：{formatValue(topSetup.profit, "profit")}
           </div>
@@ -207,7 +207,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>セットアップ Bottom</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomSetup.setup}：{formatValue(bottomSetup.profit, "profit")}
           </div>
@@ -216,7 +216,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>方向比較</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向比較</h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
             <span style={{ color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
               買い：{formatValue(sideData.long.profit, "profit")}
@@ -231,7 +231,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
             <span style={{ color: "var(--gain)" }}>勝ち：{formatValue(avgWinLoss.avgWin, "profit")}</span>
             {" / "}
@@ -250,7 +250,7 @@ export default function ReportsStrategy() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>セットアップ別（上位6）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別（上位6）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -279,7 +279,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>方向別（買い・売り）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向別（買い・売り）</h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
@@ -302,7 +302,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>セットアップ別 平均保有時間</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別 平均保有時間</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -339,7 +339,7 @@ export default function ReportsStrategy() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>セットアップ別 勝率</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別 勝率</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -367,7 +367,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>セットアップ別 PF</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別 PF</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -396,7 +396,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>方向×セットアップ（クロス）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向×セットアップ（クロス）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -432,18 +432,18 @@ export default function ReportsStrategy() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "normal", color: "var(--muted)" }}>戦略・行動 明細</h3>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>戦略・行動 明細</h3>
         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 12 }}>セグメント</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 12 }}>バケット</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 12 }}>取引</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 12 }}>Net損益</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 12 }}>勝率</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 12 }}>PF</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 12 }}>平均損益</th>
+                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セグメント</th>
+                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>バケット</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>PF</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
               </tr>
             </thead>
             <tbody>

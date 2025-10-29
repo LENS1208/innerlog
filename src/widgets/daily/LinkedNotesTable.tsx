@@ -17,10 +17,10 @@ export function LinkedNotesTable({ notes, onOpenNote }: LinkedNotesTableProps) {
         <table className="data-table">
           <thead>
             <tr>
-              <th>タイトル</th>
-              <th>種類</th>
-              <th>更新</th>
-              <th>操作</th>
+              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>タイトル</th>
+              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>種類</th>
+              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>更新</th>
+              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>操作</th>
             </tr>
           </thead>
           <tbody>

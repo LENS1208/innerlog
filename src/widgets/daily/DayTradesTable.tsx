@@ -22,10 +22,10 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
         <table className="data-table">
           <thead>
             <tr>
-              <th>決済時間</th>
-              <th>銘柄</th>
-              <th>方向</th>
-              <th className="text-right">損益</th>
+              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>決済時間</th>
+              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>銘柄</th>
+              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向</th>
+              <th className="text-right" style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>損益</th>
             </tr>
           </thead>
           <tbody>
