@@ -368,7 +368,7 @@ function SideNav({ menu, activeKey }: { menu: MenuItem[]; activeKey: string }) {
   );
 }
 
-function AppShellContent({ children }: Props) {
+export default function AppShell({ children }: Props) {
   console.log("🔄 AppShell render");
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuItem[]>([]);
@@ -417,6 +417,7 @@ function AppShellContent({ children }: Props) {
   }, []);
 
   return (
+    <DatasetProvider>
       <div style={{ display: "flex", minHeight: "100vh", width: "100%", position: "relative" }}>
         {/* 左メニュー：デスクトップは固定、モバイルはドロワー */}
         <div
@@ -548,13 +549,6 @@ function AppShellContent({ children }: Props) {
           </div>
         )}
       </div>
-  );
-}
-
-export default function AppShell({ children }: Props) {
-  return (
-    <DatasetProvider>
-      <AppShellContent>{children}</AppShellContent>
     </DatasetProvider>
   );
 }
