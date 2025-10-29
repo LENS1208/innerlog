@@ -9,7 +9,7 @@ type Props = { children: React.ReactNode };
 
 // ヘッダー（右カラムの上部）
 function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
-  const { applyFilters, resetFilters } = useDataset();
+  const { resetFilters } = useDataset();
   return (
     <>
       <div
@@ -74,20 +74,6 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
             <div className="header-oneline" style={{ marginLeft: "auto", display: "none", gap: 8, alignItems: "center" }}>
               <FiltersBar />
               <button
-                onClick={applyFilters}
-                style={{
-                  height: 36,
-                  padding: "8px 12px",
-                  background: "var(--accent)",
-                  color: "#fff",
-                  border: 0,
-                  borderRadius: 12,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                適用
-              </button>
-              <button
                 onClick={resetFilters}
                 title="リセット"
                 style={{
@@ -134,20 +120,6 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0, marginLeft: "auto" }}>
                 <button
-                onClick={applyFilters}
-                style={{
-                  height: 36,
-                  padding: "8px 12px",
-                  background: "var(--accent)",
-                  color: "#fff",
-                  border: 0,
-                  borderRadius: 12,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                適用
-              </button>
-              <button
                 onClick={resetFilters}
                 title="リセット"
                 style={{
@@ -193,26 +165,11 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
           <FiltersBar />
           <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
             <button
-              onClick={applyFilters}
-              style={{
-                flex: 1,
-                height: 40,
-                padding: "8px 12px",
-                background: "var(--accent)",
-                color: "#fff",
-                border: 0,
-                borderRadius: 12,
-                fontWeight: 600,
-              }}
-            >
-              適用
-            </button>
-            <button
               onClick={resetFilters}
               title="リセット"
               style={{
+                flex: 1,
                 height: 40,
-                width: 40,
                 display: "grid",
                 placeItems: "center",
                 border: "1px solid var(--line)",
@@ -368,13 +325,14 @@ function SideNav({ menu, activeKey }: { menu: MenuItem[]; activeKey: string }) {
   );
 }
 
-export default function AppShell({ children }: Props) {
+function AppShellContent({ children }: Props) {
   console.log("🔄 AppShell render");
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>("dashboard");
   const drawerRef = useRef<HTMLDivElement>(null);
   const [quickOpen, setQuickOpen] = useState(false);
+  const { resetFiltersOnPageChange } = useDataset();
 
   useEffect(() => {
     (async () => {
@@ -404,11 +362,14 @@ export default function AppShell({ children }: Props) {
   }, []);
 
   useEffect(() => {
-    const sync = () => setActiveKey(location.hash.replace(/^#\//, "") || "dashboard");
+    const sync = () => {
+      setActiveKey(location.hash.replace(/^#\//, "") || "dashboard");
+      resetFiltersOnPageChange();
+    };
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
-  }, []);
+  }, [resetFiltersOnPageChange]);
 
   useEffect(() => {
     const handler = (e: Event) => setQuickOpen((e as CustomEvent).detail ?? true);
@@ -417,7 +378,6 @@ export default function AppShell({ children }: Props) {
   }, []);
 
   return (
-    <DatasetProvider>
       <div style={{ display: "flex", minHeight: "100vh", width: "100%", position: "relative" }}>
         {/* 左メニュー：デスクトップは固定、モバイルはドロワー */}
         <div
@@ -549,6 +509,13 @@ export default function AppShell({ children }: Props) {
           </div>
         )}
       </div>
+  );
+}
+
+export default function AppShell({ children }: Props) {
+  return (
+    <DatasetProvider>
+      <AppShellContent>{children}</AppShellContent>
     </DatasetProvider>
   );
 }
