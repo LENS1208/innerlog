@@ -153,7 +153,7 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
   font-size: 15px;
   font-weight: normal;
   color: #6b7280;
-  margin-bottom: 4px;
+  margin: 0 0 8px;
 }
 
 .kpi-value {
