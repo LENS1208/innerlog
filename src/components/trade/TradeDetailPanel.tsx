@@ -388,9 +388,8 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
 
   return (
     <section className="pane">
-      <div className="head">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted, #6b7280)' }}>取引ノート</h3>
+      <div className="head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <h3>取引ノート</h3>
           <div ref={menuRef} style={{ display: 'flex', gap: '8px', position: 'relative' }}>
             <button
               onClick={handleOpenDetail}
@@ -490,7 +489,6 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
               </div>
             )}
           </div>
-        </div>
       </div>
 
       <div className="body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>

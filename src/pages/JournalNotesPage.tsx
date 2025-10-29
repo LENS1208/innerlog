@@ -469,7 +469,7 @@ export default function JournalNotesPage() {
   return (
     <div className="shell">
       <aside className="pane">
-        <div className="head">
+        <div className="head" style={{ display: 'flex', alignItems: 'center' }}>
           <h3>カテゴリー</h3>
         </div>
         <div className="body list">

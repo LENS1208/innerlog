@@ -82,9 +82,8 @@ export default function DailyNotePanel({
 
   return (
     <section className="pane">
-      <div className="head">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted, #6b7280)' }}>日次ノート（表示）</h3>
+      <div className="head" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <h3>日次ノート（表示）</h3>
           <div ref={menuRef} style={{ display: 'flex', gap: '8px', position: 'relative' }}>
             <button
               onClick={onPrevDay}
@@ -195,7 +194,6 @@ export default function DailyNotePanel({
               </div>
             )}
           </div>
-        </div>
       </div>
       <div className="body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
         <div className="kpi-grid">
