@@ -198,7 +198,7 @@ export default function ReportsMarket() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>通貨ペア Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>通貨ペア Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSymbol.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topSymbol.symbol}：{formatValue(topSymbol.profit, "profit")}
           </div>
@@ -207,7 +207,7 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>通貨ペア Bottom</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>通貨ペア Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSymbol.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomSymbol.symbol}：{formatValue(bottomSymbol.profit, "profit")}
           </div>
@@ -216,7 +216,7 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>価格帯 Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>価格帯 Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topPipsRange.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topPipsRange.label}：{formatValue(topPipsRange.profit, "profit")}
           </div>
@@ -225,7 +225,7 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>主要通貨 vs クロス</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>主要通貨 vs クロス</h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
             <span style={{ color: majorVsCrossData.major.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
               主要：{formatValue(majorVsCrossData.major.profit, "profit")}
@@ -250,7 +250,7 @@ export default function ReportsMarket() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>通貨ペア別（上位6）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>通貨ペア別（上位6）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -279,7 +279,7 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>価格帯（pipsビン）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>価格帯（pipsビン）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -308,7 +308,7 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>通貨（ベース/クオート別）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>通貨（ベース/クオート別）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -347,7 +347,7 @@ export default function ReportsMarket() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>主要通貨 vs クロス</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>主要通貨 vs クロス</h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
@@ -370,7 +370,7 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>相場状態（β）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>相場状態（β）</h3>
           <div
             style={{
               height: 180,
@@ -387,7 +387,7 @@ export default function ReportsMarket() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>市場・銘柄 明細</h3>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, color: "var(--muted)" }}>市場・銘柄 明細</h3>
         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>

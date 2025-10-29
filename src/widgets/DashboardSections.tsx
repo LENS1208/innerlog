@@ -573,15 +573,15 @@ export function SegmentCharts({ trades }: { trades: TradeWithProfit[] }) {
   return (
     <div className="dash-row-3">
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>曜日別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>曜日別</h3>
         <WeekdayChart trades={trades} />
       </div>
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>時間帯別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>時間帯別</h3>
         <TimeOfDayChart trades={trades} />
       </div>
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>通貨ペア別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>通貨ペア別</h3>
         <CurrencyPairChart trades={trades} />
       </div>
     </div>
@@ -591,7 +591,7 @@ export function SegmentCharts({ trades }: { trades: TradeWithProfit[] }) {
 export function SetupChart() {
   return (
     <div className="dash-card">
-      <h3 style={{ margin: '0 0 8px', fontSize: 13, color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
+      <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
       <div className="chart-placeholder chart-sm">セットアップ別チャート（実装予定）</div>
     </div>
   )
