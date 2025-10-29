@@ -719,11 +719,11 @@ const EquityCurvePage: React.FC = () => {
             {/* 累積損益とドローダウン */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>累積損益（Equity）</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'normal', color: 'var(--muted)' }}>累積損益（Equity）</h3>
                 <EquityChart trades={filteredTrades as any} />
               </div>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>ドローダウン</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'normal', color: 'var(--muted)' }}>ドローダウン</h3>
                 <DrawdownChart trades={filteredTrades as any} />
               </div>
             </section>
@@ -731,18 +731,18 @@ const EquityCurvePage: React.FC = () => {
             {/* 日次損益と直近取引 */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>日次損益</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'normal', color: 'var(--muted)' }}>日次損益</h3>
                 <DailyProfitChart trades={filteredTrades as any} />
               </div>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>直近の取引（上位/下位）</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'normal', color: 'var(--muted)' }}>直近の取引（上位/下位）</h3>
                 <RecentTradesTable trades={filteredTrades as any} />
               </div>
             </section>
 
             {/* 今週のトレード */}
             <section className="dash-card" style={{ marginBottom: 16 }}>
-              <h3 style={{ margin: '0 0 8px', fontSize: 15, color: 'var(--muted)' }}>今週のトレード</h3>
+              <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'normal', color: 'var(--muted)' }}>今週のトレード</h3>
               <WeekCalendar trades={filteredTrades as any} />
             </section>
 
