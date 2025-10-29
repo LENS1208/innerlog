@@ -182,7 +182,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
   return (
     <div className="kpi-grid" style={{ marginBottom: 12 }}>
       <div className="kpi-card">
-        <div className="kpi-title">総損益</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>総損益</div>
         <div className="kpi-value" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
           {Math.round(dash.gross).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
@@ -190,7 +190,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">総獲得pips</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>総獲得pips</div>
         <div className="kpi-value">
           {Math.round(dash.totalPips).toLocaleString('ja-JP')} <span className="kpi-unit">pips</span>
         </div>
@@ -198,7 +198,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">平均損益</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>平均損益</div>
         <div>
           <div className="kpi-value" style={{ color: dash.avg < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
             {Math.round(dash.avg).toLocaleString('ja-JP')} <span className="kpi-unit">円/件</span>
@@ -209,7 +209,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">勝率</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>勝率</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
           <div>
             <div className="kpi-value">
@@ -221,7 +221,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">プロフィットファクター</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>プロフィットファクター</div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div>
             <div className="kpi-value">
@@ -246,7 +246,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">最大ドローダウン</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>最大ドローダウン</div>
         <div className="kpi-value" style={{ color: 'var(--danger, #ef4444)' }}>
           {Math.round(dash.maxDD).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
@@ -254,7 +254,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">期待値（円）</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>期待値（円）</div>
         <div className="kpi-value" style={{ color: dash.expectancyJPY < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
           {Math.round(dash.expectancyJPY).toLocaleString('ja-JP')} <span className="kpi-unit">円/件</span>
         </div>
@@ -262,7 +262,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">期待値（pips）</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>期待値（pips）</div>
         <div className="kpi-value">
           {dash.avgPips.toFixed(1)} <span className="kpi-unit">pips/件</span>
         </div>
@@ -270,7 +270,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title">平均保有時間</div>
+        <div className="kpi-title" style={{ fontSize: 15, fontWeight: 'normal', color: 'var(--muted)', margin: '0 0 8px' }}>平均保有時間</div>
         <div className="kpi-value">{formatMinutesJP(dash.avgHoldMin)}</div>
         <div className="kpi-desc">Open→Close の平均</div>
       </div>
