@@ -66,13 +66,14 @@
 }
 
 .pane .head {
-  padding: 16px 20px;
+  padding: 12px 20px;
   border-bottom: 1px solid var(--line, #e5e7eb);
   flex-shrink: 0;
+  min-height: 47px;
 }
 
 .pane .body {
-  padding: 20px;
+  padding: 16px;
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1;
