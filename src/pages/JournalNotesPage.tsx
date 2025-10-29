@@ -470,7 +470,7 @@ export default function JournalNotesPage() {
     <div className="shell">
       <aside className="pane">
         <div className="head">
-          <h3>フォルダ</h3>
+          <h3>カテゴリー</h3>
         </div>
         <div className="body list">
           <div
@@ -536,7 +536,7 @@ export default function JournalNotesPage() {
           className="head"
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
         >
-          <h3>ノート一覧</h3>
+          <h3>ノート</h3>
           <div className="seg" role="group" aria-label="並び替え">
             <button
               aria-pressed={sortBy === 'updated'}

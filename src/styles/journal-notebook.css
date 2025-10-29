@@ -59,8 +59,9 @@
 }
 
 .pane h3 {
-  margin: 0 0 8px 0;
-  font-size: 13px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: bold;
   color: var(--muted, #6b7280);
 }
 

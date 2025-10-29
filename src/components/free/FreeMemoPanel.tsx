@@ -115,7 +115,7 @@ export default function FreeMemoPanel({
     <section className="pane">
       <div className="head">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700 }}>自由メモ</h3>
+          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted, #6b7280)' }}>自由メモ</h3>
           <div ref={menuRef} style={{ display: 'flex', gap: '8px', position: 'relative' }}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
