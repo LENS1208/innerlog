@@ -267,6 +267,47 @@ export default function ReportsRisk() {
     }
   };
 
+  // ロット分析
+  const lotAnalysis = useMemo(() => {
+    const lots = filteredTrades.map(t => t.volume).filter(v => v > 0).sort((a, b) => a - b);
+    if (lots.length === 0) return { q1: 0, q2: 0, q3: 0, q4: 0, min: 0, max: 0 };
+
+    const q1 = lots[Math.floor(lots.length * 0.25)];
+    const q2 = lots[Math.floor(lots.length * 0.5)];
+    const q3 = lots[Math.floor(lots.length * 0.75)];
+    const q4 = lots[lots.length - 1];
+    const min = lots[0];
+    const max = lots[lots.length - 1];
+
+    return { q1, q2, q3, q4, min, max };
+  }, [filteredTrades]);
+
+  // リスクリワード比（設計）
+  const designedRR = useMemo(() => {
+    const tradesWithRR = filteredTrades.filter(t => t.stopPrice && t.targetPrice && t.openPrice);
+    if (tradesWithRR.length === 0) return 0;
+
+    const rrValues = tradesWithRR.map(t => {
+      const risk = Math.abs(t.openPrice! - t.stopPrice!);
+      const reward = Math.abs(t.targetPrice! - t.openPrice!);
+      return risk > 0 ? reward / risk : 0;
+    });
+
+    return rrValues.reduce((sum, rr) => sum + rr, 0) / rrValues.length;
+  }, [filteredTrades]);
+
+  // シャープレシオ（簡易版）
+  const sharpeRatio = useMemo(() => {
+    const profits = filteredTrades.map(t => getTradeProfit(t));
+    if (profits.length < 2) return 0;
+
+    const avgProfit = profits.reduce((sum, p) => sum + p, 0) / profits.length;
+    const variance = profits.reduce((sum, p) => sum + Math.pow(p - avgProfit, 2), 0) / (profits.length - 1);
+    const stdDev = Math.sqrt(variance);
+
+    return stdDev > 0 ? avgProfit / stdDev : 0;
+  }, [filteredTrades]);
+
   if (filteredTrades.length === 0) {
     return (
       <div style={{ width: "100%", padding: 40, textAlign: "center" }}>
@@ -277,6 +318,81 @@ export default function ReportsRisk() {
 
   return (
     <div style={{ width: "100%" }}>
+
+      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
+        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>ロット設計とリスク指標</h3>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 12,
+            marginBottom: 16,
+          }}
+        >
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>リスクリワード比（設計）</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
+              {designedRR.toFixed(2)}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>SL/TP設定から算出</div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>シャープレシオ</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: sharpeRatio >= 1 ? "var(--gain)" : "var(--loss)" }}>
+              {sharpeRatio.toFixed(2)}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>リターン/リスク比率</div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>連続最大負け数</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
+              {streakData.maxLossStreak}回
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>メンタル負荷指標</div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>最大損失額</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
+              {Math.round(riskMetrics.maxLoss).toLocaleString()}円
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>1トレード最悪損失</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 style={{ margin: "0 0 12px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>ロット分布（四分位点）</h4>
+          <div style={{ display: "flex", gap: 16, alignItems: "center", justifyContent: "space-around", padding: "16px 0" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Min</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.min.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Q1 (25%)</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.q1.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Q2 (50%)</div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: "var(--accent)" }}>{lotAnalysis.q2.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Q3 (75%)</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.q3.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Max</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.max.toFixed(2)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div
         style={{

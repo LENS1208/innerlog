@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut, Scatter } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
 import type { Trade } from "../../lib/types";
-import { filterTrades, getTradeProfit, getTradeSide } from "../../lib/filterTrades";
+import { filterTrades, getTradeProfit, getTradeSide, getTradePair } from "../../lib/filterTrades";
 import { supabase } from "../../lib/supabase";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
@@ -185,6 +185,84 @@ export default function ReportsStrategy() {
     const mins = Math.round(minutes % 60);
     return mins > 0 ? `${hours}h${mins}m` : `${hours}h`;
   };
+
+  // Exit効率分析
+  const exitEfficiencyData = useMemo(() => {
+    const tradesWithPotential = filteredTrades.filter(t => t.pips !== undefined && t.openPrice && t.closePrice);
+
+    const efficiencies = tradesWithPotential.map(t => {
+      const pips = Math.abs(t.pips || 0);
+      const profit = getTradeProfit(t);
+
+      // 最大可能利益を推定（実際のpips移動量の2倍と仮定）
+      const maxPotentialPips = pips * 2;
+      const maxPotentialProfit = profit > 0 ? profit * 2 : Math.abs(profit);
+
+      // Exit効率 = 実現利益 / 最大可能利益
+      const efficiency = maxPotentialProfit > 0 ? (profit / maxPotentialProfit) * 100 : 0;
+
+      return {
+        trade: t,
+        efficiency: Math.max(-100, Math.min(100, efficiency)),
+        profit,
+        pips,
+        maxPotential: maxPotentialProfit,
+      };
+    });
+
+    const avgEfficiency = efficiencies.length > 0
+      ? efficiencies.reduce((sum, e) => sum + e.efficiency, 0) / efficiencies.length
+      : 0;
+
+    const earlyExits = efficiencies.filter(e => e.profit > 0 && e.efficiency < 30).length;
+    const holdRatio = efficiencies.filter(e => e.efficiency > 50).length / efficiencies.length * 100;
+
+    // Exit効率分布
+    const ranges = [
+      { label: "-100~-50%", min: -100, max: -50 },
+      { label: "-50~0%", min: -50, max: 0 },
+      { label: "0~25%", min: 0, max: 25 },
+      { label: "25~50%", min: 25, max: 50 },
+      { label: "50~75%", min: 50, max: 75 },
+      { label: "75~100%", min: 75, max: 100 },
+    ];
+
+    const distribution = ranges.map(range => ({
+      label: range.label,
+      count: efficiencies.filter(e => e.efficiency >= range.min && e.efficiency < range.max).length,
+    }));
+
+    // Exit戦略ランキング（最も損失が大きいパターン）
+    const setupExitMap = new Map<string, { totalLoss: number; count: number; avgEfficiency: number }>();
+    efficiencies.filter(e => e.profit < 0).forEach(e => {
+      const setup = extractSetup(e.trade);
+      const current = setupExitMap.get(setup) || { totalLoss: 0, count: 0, avgEfficiency: 0 };
+      setupExitMap.set(setup, {
+        totalLoss: current.totalLoss + Math.abs(e.profit),
+        count: current.count + 1,
+        avgEfficiency: current.avgEfficiency + e.efficiency,
+      });
+    });
+
+    const exitRanking = Array.from(setupExitMap.entries())
+      .map(([setup, data]) => ({
+        setup,
+        totalLoss: data.totalLoss,
+        count: data.count,
+        avgEfficiency: data.avgEfficiency / data.count,
+      }))
+      .sort((a, b) => b.totalLoss - a.totalLoss)
+      .slice(0, 10);
+
+    return {
+      avgEfficiency,
+      earlyExits,
+      holdRatio,
+      distribution,
+      efficiencies,
+      exitRanking,
+    };
+  }, [filteredTrades]);
 
   return (
     <div style={{ width: "100%" }}>
@@ -427,6 +505,109 @@ export default function ReportsStrategy() {
                 },
               }}
             />
+          </div>
+        </div>
+      </div>
+
+      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
+        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>Exit効率分析</h3>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 12,
+            marginBottom: 16,
+          }}
+        >
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>平均Exit効率</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
+              {exitEfficiencyData.avgEfficiency.toFixed(1)}%
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>実現利益/最大可能利益</div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>早期Exit回数</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
+              {exitEfficiencyData.earlyExits}件
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>効率30%未満の勝ちトレード</div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>保有率実績</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--gain)" }}>
+              {exitEfficiencyData.holdRatio.toFixed(1)}%
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>効率50%以上の割合</div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: 16,
+            marginBottom: 16,
+          }}
+        >
+          <div>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>Exit効率分布</h4>
+            <div style={{ height: 180 }}>
+              <Bar
+                data={{
+                  labels: exitEfficiencyData.distribution.map(d => d.label),
+                  datasets: [
+                    {
+                      data: exitEfficiencyData.distribution.map(d => d.count),
+                      backgroundColor: exitEfficiencyData.distribution.map((d, idx) =>
+                        idx < 2 ? "rgba(239, 68, 68, 0.8)" :
+                        idx < 4 ? "rgba(251, 191, 36, 0.8)" :
+                        "rgba(34, 197, 94, 0.8)"
+                      ),
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                  },
+                }}
+              />
+            </div>
+          </div>
+
+          <div>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>Exit戦略ランキング（損失大）</h4>
+            <div style={{ maxHeight: 180, overflowY: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
+                <thead>
+                  <tr style={{ borderBottom: "1px solid var(--line)" }}>
+                    <th style={{ padding: "6px 8px", textAlign: "left", fontSize: 11, color: "var(--muted)" }}>順位</th>
+                    <th style={{ padding: "6px 8px", textAlign: "left", fontSize: 11, color: "var(--muted)" }}>セットアップ</th>
+                    <th style={{ padding: "6px 8px", textAlign: "right", fontSize: 11, color: "var(--muted)" }}>損失額</th>
+                    <th style={{ padding: "6px 8px", textAlign: "right", fontSize: 11, color: "var(--muted)" }}>回数</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {exitEfficiencyData.exitRanking.map((item, idx) => (
+                    <tr key={idx} style={{ borderBottom: "1px solid var(--line)" }}>
+                      <td style={{ padding: "6px 8px" }}>{idx + 1}</td>
+                      <td style={{ padding: "6px 8px" }}>{item.setup}</td>
+                      <td style={{ padding: "6px 8px", textAlign: "right", color: "var(--loss)" }}>
+                        {Math.round(item.totalLoss).toLocaleString()}円
+                      </td>
+                      <td style={{ padding: "6px 8px", textAlign: "right" }}>{item.count}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

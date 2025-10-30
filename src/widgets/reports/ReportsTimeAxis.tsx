@@ -250,8 +250,169 @@ export default function ReportsTimeAxis() {
     }
   };
 
+  const formatHoldTime = (minutes: number) => {
+    if (minutes < 60) return `${Math.round(minutes)}分`;
+    if (minutes < 1440) {
+      const hours = Math.floor(minutes / 60);
+      const mins = Math.round(minutes % 60);
+      return mins > 0 ? `${hours}時間${mins}分` : `${hours}時間`;
+    }
+    const days = Math.floor(minutes / 1440);
+    const hours = Math.floor((minutes % 1440) / 60);
+    return hours > 0 ? `${days}日${hours}時間` : `${days}日`;
+  };
+
+  // トレードスタイル別統計
+  const tradeStyleData = useMemo(() => {
+    const styles = [
+      { label: "スキャルピング", min: 0, max: 30 },
+      { label: "デイトレード", min: 30, max: 480 },
+      { label: "スイング", min: 480, max: 10080 },
+      { label: "ポジション", min: 10080, max: Infinity },
+    ];
+
+    return styles.map((style) => {
+      const styleTrades = filteredTrades.filter((t) => {
+        const mins = t.holdTimeMin || 0;
+        return mins >= style.min && mins < style.max;
+      });
+
+      const profit = styleTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
+      const wins = styleTrades.filter((t) => getTradeProfit(t) > 0).length;
+      const winRate = styleTrades.length > 0 ? (wins / styleTrades.length) * 100 : 0;
+      const ev = styleTrades.length > 0 ? profit / styleTrades.length : 0;
+      const avgHoldTime = styleTrades.length > 0
+        ? styleTrades.reduce((sum, t) => sum + (t.holdTimeMin || 0), 0) / styleTrades.length
+        : 0;
+
+      return {
+        label: style.label,
+        count: styleTrades.length,
+        profit,
+        winRate,
+        ev,
+        avgHoldTime,
+      };
+    });
+  }, [filteredTrades]);
+
+  // 保有時間統計
+  const holdTimeStats = useMemo(() => {
+    const winTrades = filteredTrades.filter((t) => getTradeProfit(t) > 0);
+    const lossTrades = filteredTrades.filter((t) => getTradeProfit(t) < 0);
+
+    const avgWinHoldTime = winTrades.length > 0
+      ? winTrades.reduce((sum, t) => sum + (t.holdTimeMin || 0), 0) / winTrades.length
+      : 0;
+
+    const avgLossHoldTime = lossTrades.length > 0
+      ? lossTrades.reduce((sum, t) => sum + (t.holdTimeMin || 0), 0) / lossTrades.length
+      : 0;
+
+    const maxHoldTime = filteredTrades.reduce((max, t) => Math.max(max, t.holdTimeMin || 0), 0);
+    const minHoldTime = filteredTrades.reduce((min, t) => {
+      const time = t.holdTimeMin || 0;
+      return time > 0 ? Math.min(min, time) : min;
+    }, Infinity);
+
+    const maxLossHoldTime = lossTrades.reduce((max, t) => Math.max(max, t.holdTimeMin || 0), 0);
+    const minLossHoldTime = lossTrades.reduce((min, t) => {
+      const time = t.holdTimeMin || 0;
+      return time > 0 ? Math.min(min, time) : min;
+    }, Infinity);
+
+    return {
+      avgWinHoldTime,
+      avgLossHoldTime,
+      maxHoldTime,
+      minHoldTime: minHoldTime === Infinity ? 0 : minHoldTime,
+      maxLossHoldTime,
+      minLossHoldTime: minLossHoldTime === Infinity ? 0 : minLossHoldTime,
+    };
+  }, [filteredTrades]);
+
   return (
     <div style={{ width: "100%" }}>
+
+      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
+        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>トレードスタイル別統計</h3>
+
+        <div style={{ maxHeight: "60vh", overflowY: "auto", marginBottom: 16 }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid var(--line)" }}>
+                <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>スタイル</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>取引数</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>期待値(EV)</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>平均保有時間</th>
+                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tradeStyleData.map((style) => (
+                <tr
+                  key={style.label}
+                  style={{
+                    borderBottom: "1px solid var(--line)",
+                    height: 44,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                >
+                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{style.label}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.count}件</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.winRate.toFixed(1)}%</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.ev >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                    {Math.round(style.ev).toLocaleString()}円
+                  </td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{formatHoldTime(style.avgHoldTime)}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                    {Math.round(style.profit).toLocaleString()}円
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 12,
+          }}
+        >
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝利トレード平均保有時間</h4>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
+              {formatHoldTime(holdTimeStats.avgWinHoldTime)}
+            </div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>負けトレード平均保有時間</h4>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
+              {formatHoldTime(holdTimeStats.avgLossHoldTime)}
+            </div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>最長保有時間</h4>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--accent)" }}>
+              {formatHoldTime(holdTimeStats.maxHoldTime)}
+            </div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>最短保有時間</h4>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--accent)" }}>
+              {formatHoldTime(holdTimeStats.minHoldTime)}
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div
         style={{
