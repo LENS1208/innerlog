@@ -816,7 +816,7 @@ export default function ReportsTimeAxis() {
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
         <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セグメント別明細</h3>
-        <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+        <div>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--line)" }}>
