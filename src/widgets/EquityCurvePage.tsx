@@ -750,7 +750,7 @@ const EquityCurvePage: React.FC = () => {
             <section style={{ marginBottom: 16 }}>
               <SegmentCharts trades={filteredTrades as any} />
             </section>
-            <SetupChart />
+            <SetupChart trades={filteredTrades as any} />
           </div>
         </div>
       </div>

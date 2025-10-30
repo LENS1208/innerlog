@@ -588,11 +588,116 @@ export function SegmentCharts({ trades }: { trades: TradeWithProfit[] }) {
   )
 }
 
-export function SetupChart() {
+export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
+  const setupData = useMemo(() => {
+    if (!trades || trades.length === 0) return []
+
+    // comment/memoからセットアップを抽出
+    const extractSetup = (t: any): string => {
+      const text = ((t.comment || t.memo || '') as string).toLowerCase()
+      if (text.includes('breakout') || text.includes('ブレイクアウト')) return 'Breakout'
+      if (text.includes('pullback') || text.includes('プルバック')) return 'Pullback'
+      if (text.includes('reversal') || text.includes('反転')) return 'Reversal'
+      if (text.includes('trend') || text.includes('トレンド')) return 'Trend'
+      if (text.includes('range') || text.includes('レンジ')) return 'Range'
+      if (text.includes('scalp') || text.includes('スキャルプ')) return 'Scalp'
+      return 'Other'
+    }
+
+    const map = new Map<string, { profit: number; count: number; wins: number }>()
+    trades.forEach(t => {
+      const setup = extractSetup(t)
+      const profit = getProfit(t)
+      const current = map.get(setup) || { profit: 0, count: 0, wins: 0 }
+      map.set(setup, {
+        profit: current.profit + profit,
+        count: current.count + 1,
+        wins: current.wins + (profit > 0 ? 1 : 0),
+      })
+    })
+
+    return Array.from(map.entries())
+      .map(([setup, data]) => ({
+        setup,
+        ...data,
+        winRate: data.count > 0 ? (data.wins / data.count) * 100 : 0,
+      }))
+      .sort((a, b) => b.profit - a.profit)
+      .slice(0, 6)
+  }, [trades])
+
+  if (!trades || trades.length === 0) {
+    return (
+      <div className="dash-card">
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
+          データがありません
+        </div>
+      </div>
+    )
+  }
+
+  if (setupData.length === 0) {
+    return (
+      <div className="dash-card">
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
+          セットアップタグが見つかりません<br/>
+          <span style={{ fontSize: 12 }}>メモに「ブレイクアウト」「トレンド」などを記載してください</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="dash-card">
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
-      <div className="chart-placeholder chart-sm">セットアップ別チャート（実装予定）</div>
+      <div style={{ height: 240 }}>
+        <Bar
+          data={{
+            labels: setupData.map(s => s.setup),
+            datasets: [
+              {
+                label: '損益',
+                data: setupData.map(s => s.profit),
+                backgroundColor: setupData.map(s =>
+                  s.profit >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'
+                ),
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const item = setupData[context.dataIndex]
+                    return [
+                      `損益: ${formatJPY(item.profit)}円`,
+                      `取引: ${item.count}件`,
+                      `勝率: ${item.winRate.toFixed(1)}%`,
+                    ]
+                  },
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: (value) => `${formatJPY(value as number)}円`,
+                },
+              },
+            },
+          }}
+        />
+      </div>
+      <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)' }}>
+        取引メモから「ブレイクアウト」「トレンド」「レンジ」などのキーワードで分類
+      </div>
     </div>
   )
 }
