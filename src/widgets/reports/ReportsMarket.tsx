@@ -6,6 +6,7 @@ import type { Trade } from "../../lib/types";
 import { filterTrades, getTradeProfit, getTradePair, getTradeSide } from "../../lib/filterTrades";
 import SummaryCard from "../../components/SummaryCard";
 import { supabase } from "../../lib/supabase";
+import { analyzeMarketConditions } from "../../lib/marketCondition";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 
@@ -162,6 +163,10 @@ export default function ReportsMarket() {
       major: { count: majorTrades.length, profit: majorProfit, winRate: majorTrades.length > 0 ? (majorTrades.filter((t) => getTradeProfit(t) > 0).length / majorTrades.length) * 100 : 0 },
       cross: { count: crossTrades.length, profit: crossProfit, winRate: crossTrades.length > 0 ? (crossTrades.filter((t) => getTradeProfit(t) > 0).length / crossTrades.length) * 100 : 0 },
     };
+  }, [filteredTrades]);
+
+  const marketConditionData = useMemo(() => {
+    return analyzeMarketConditions(filteredTrades);
   }, [filteredTrades]);
 
   const topSymbol = symbolData[0] || { symbol: "-", profit: 0, winRate: 0, count: 0 };
@@ -378,17 +383,31 @@ export default function ReportsMarket() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>相場状態（β）</h3>
-          <div
-            style={{
-              height: 180,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--muted)",
-              fontSize: 12,
-            }}
-          >
-            開発中
+          <div style={{ height: 180 }}>
+            <Bar
+              data={{
+                labels: marketConditionData.map((m) => m.condition),
+                datasets: [
+                  {
+                    data: marketConditionData.map((m) => m.profit),
+                    backgroundColor: marketConditionData.map((m) =>
+                      m.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                    ),
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: { callback: (value) => `${(value as number).toLocaleString()}円` },
+                  },
+                },
+              }}
+            />
           </div>
         </div>
       </div>
@@ -468,6 +487,37 @@ export default function ReportsMarket() {
                   <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{r.pf.toFixed(2)}</td>
                   <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
                     {Math.round(r.avgProfit).toLocaleString("ja-JP")}円
+                  </td>
+                </tr>
+              ))}
+              {marketConditionData.map((m) => (
+                <tr
+                  key={m.condition}
+                  style={{
+                    borderBottom: "1px solid var(--line)",
+                    height: 44,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                >
+                  <td style={{ padding: 10, fontSize: 13 }}>相場状態（β）</td>
+                  <td style={{ padding: 10, fontSize: 13 }}>{m.condition}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.count}</td>
+                  <td
+                    style={{
+                      padding: 10,
+                      textAlign: "right",
+                      fontSize: 13,
+                      color: m.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                    }}
+                  >
+                    {Math.round(m.profit).toLocaleString("ja-JP")}円
+                  </td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.winRate.toFixed(0)}%</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.pf.toFixed(2)}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
+                    {Math.round(m.avgProfit).toLocaleString("ja-JP")}円
                   </td>
                 </tr>
               ))}
