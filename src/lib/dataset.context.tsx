@@ -29,7 +29,7 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [dataset, setDataset] = React.useState<DS>("A");
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>({});
-  const [useDatabase, setUseDatabase] = React.useState<boolean>(true);
+  const [useDatabase, setUseDatabase] = React.useState<boolean>(false);
   const setUiFilters = (p:Partial<Filters>)=> setUiFiltersState(prev=>({...prev,...p}));
   const applyFilters = ()=> setFilters(uiFilters);
   const resetFilters = ()=> { setUiFiltersState({}); setFilters({}); };
