@@ -356,15 +356,20 @@ const EquityCurvePage: React.FC = () => {
           }
 
           const dbTrades: Trade[] = (data || []).map((t: any) => ({
-            ticket: t.ticket,
-            symbol: t.item,
-            type: t.side,
-            time: new Date(t.close_time).getTime(),
-            profitJPY: Number(t.profit),
-            entryPrice: Number(t.open_price),
-            exitPrice: Number(t.close_price),
-            size: Number(t.size),
-            openTimeMs: new Date(t.open_time).getTime(),
+            id: String(t.ticket || t.id),
+            datetime: t.close_time,
+            openTime: t.open_time,
+            pair: t.item || t.symbol || 'UNKNOWN',
+            symbol: t.item || t.symbol,
+            side: (t.side || 'LONG') as 'LONG' | 'SHORT',
+            volume: Number(t.size) || 0,
+            profitYen: Number(t.profit),
+            profit: Number(t.profit),
+            pips: 0,
+            openPrice: Number(t.open_price),
+            closePrice: Number(t.close_price),
+            memo: t.memo || '',
+            comment: t.comment || '',
           }));
 
           setDatasets([{ id: 'db', name: 'データベース', trades: dbTrades }]);

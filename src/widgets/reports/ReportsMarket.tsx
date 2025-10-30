@@ -29,26 +29,33 @@ export default function ReportsMarket() {
             return;
           }
 
+          const normalizeSide = (side: string): 'LONG' | 'SHORT' => {
+            const s = side?.toUpperCase();
+            if (s === 'BUY' || s === 'LONG') return 'LONG';
+            if (s === 'SELL' || s === 'SHORT') return 'SHORT';
+            return 'LONG';
+          };
+
           const mapped: Trade[] = (data || []).map((t: any) => ({
             id: t.ticket,
             datetime: t.close_time,
             pair: t.item,
-            side: t.side as any,
+            side: normalizeSide(t.side),
             volume: Number(t.size),
             profitYen: Number(t.profit),
-            pips: Number(t.pips),
+            pips: Number(t.pips || 0),
             openTime: t.open_time,
             openPrice: Number(t.open_price),
             closePrice: Number(t.close_price),
             stopPrice: t.sl ? Number(t.sl) : undefined,
             targetPrice: t.tp ? Number(t.tp) : undefined,
-            commission: Number(t.commission),
-            swap: Number(t.swap),
+            commission: Number(t.commission || 0),
+            swap: Number(t.swap || 0),
             symbol: t.item,
-            action: t.side as any,
+            action: normalizeSide(t.side),
             profit: Number(t.profit),
-            comment: '',
-            memo: '',
+            comment: t.comment || '',
+            memo: t.memo || '',
           }));
           setTrades(mapped);
         } else {
