@@ -803,18 +803,7 @@ export default function ReportsTimeAxis() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>連敗ヒート（時間帯）</h3>
-          <div
-            style={{
-              height: 180,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--muted)",
-              fontSize: 12,
-            }}
-          >
-            開発中
-          </div>
+          <LossStreakHeatmap trades={filteredTrades} />
         </div>
       </div>
 
@@ -914,6 +903,117 @@ export default function ReportsTimeAxis() {
           >
             曜日・時間帯別の詳細統計
           </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LossStreakHeatmap({ trades }: { trades: Trade[] }) {
+  const heatmapData = useMemo(() => {
+    if (trades.length === 0) return [];
+
+    const hourBuckets: Map<number, number[]> = new Map();
+    for (let h = 0; h < 24; h++) {
+      hourBuckets.set(h, []);
+    }
+
+    const sortedTrades = [...trades].sort((a, b) => getTradeTime(a) - getTradeTime(b));
+
+    let currentStreak = 0;
+    sortedTrades.forEach((trade) => {
+      const profit = getTradeProfit(trade);
+      const time = getTradeTime(trade);
+      const date = new Date(time);
+      const hour = date.getHours();
+
+      if (profit < 0) {
+        currentStreak++;
+      } else {
+        if (currentStreak > 0) {
+          hourBuckets.get(hour)?.push(currentStreak);
+        }
+        currentStreak = 0;
+      }
+    });
+
+    const result = [];
+    for (let h = 0; h < 24; h++) {
+      const streaks = hourBuckets.get(h) || [];
+      const maxStreak = streaks.length > 0 ? Math.max(...streaks) : 0;
+      const avgStreak = streaks.length > 0 ? streaks.reduce((a, b) => a + b, 0) / streaks.length : 0;
+      result.push({ hour: h, maxStreak, avgStreak, count: streaks.length });
+    }
+
+    return result;
+  }, [trades]);
+
+  const maxValue = Math.max(...heatmapData.map((d) => d.maxStreak), 1);
+
+  const getColor = (value: number) => {
+    if (value === 0) return "rgba(200, 200, 200, 0.2)";
+    const intensity = Math.min(value / maxValue, 1);
+    return `rgba(239, 68, 68, ${0.2 + intensity * 0.6})`;
+  };
+
+  if (trades.length === 0) {
+    return (
+      <div
+        style={{
+          height: 180,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "var(--muted)",
+          fontSize: 12,
+        }}
+      >
+        データがありません
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "8px 0" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          gap: 4,
+          marginBottom: 8,
+        }}
+      >
+        {heatmapData.map((item) => (
+          <div
+            key={item.hour}
+            style={{
+              background: getColor(item.maxStreak),
+              border: "1px solid var(--line)",
+              borderRadius: 4,
+              padding: "8px 4px",
+              textAlign: "center",
+              fontSize: 11,
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+            title={`${item.hour}時: 最大連敗${item.maxStreak}回, 平均${item.avgStreak.toFixed(1)}回 (${item.count}回発生)`}
+          >
+            <div style={{ fontWeight: "bold", marginBottom: 2 }}>{item.hour}時</div>
+            <div style={{ fontSize: 10, color: "var(--muted)" }}>
+              {item.maxStreak > 0 ? `${item.maxStreak}連敗` : "-"}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 11, color: "var(--muted)" }}>
+        <span>色の濃さ = 連敗の深刻度</span>
+        <div style={{ display: "flex", gap: 2, marginLeft: "auto" }}>
+          <div style={{ width: 12, height: 12, background: "rgba(200, 200, 200, 0.2)", border: "1px solid var(--line)" }}></div>
+          <span style={{ fontSize: 10 }}>なし</span>
+          <div style={{ width: 12, height: 12, background: "rgba(239, 68, 68, 0.4)", border: "1px solid var(--line)", marginLeft: 4 }}></div>
+          <span style={{ fontSize: 10 }}>中</span>
+          <div style={{ width: 12, height: 12, background: "rgba(239, 68, 68, 0.8)", border: "1px solid var(--line)", marginLeft: 4 }}></div>
+          <span style={{ fontSize: 10 }}>高</span>
         </div>
       </div>
     </div>
