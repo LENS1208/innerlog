@@ -10,8 +10,11 @@ type TradeWithProfit = {
   datetime?: string
   time?: number
   pair?: string
+  symbol?: string
   side?: 'LONG' | 'SHORT'
   id?: string
+  comment?: string
+  memo?: string
 }
 
 function getProfit(t: TradeWithProfit): number {
@@ -506,8 +509,8 @@ export function CurrencyPairChart({ trades }: { trades: TradeWithProfit[] }) {
     const pairMap = new Map<string, { profit: number; count: number }>()
 
     trades.forEach(t => {
-      if (!t.pair) return
-      const pair = t.pair
+      const pair = t.pair || t.symbol
+      if (!pair) return
       if (!pairMap.has(pair)) {
         pairMap.set(pair, { profit: 0, count: 0 })
       }

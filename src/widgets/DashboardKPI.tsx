@@ -8,12 +8,15 @@ export type DashTrade = {
   profitJPY?: number
   profitYen?: number
   pair?: string
+  symbol?: string
   side?: string
   pips?: number
   openPrice?: number
   closePrice?: number
   openTime?: string
   datetime?: string
+  comment?: string
+  memo?: string
 }
 
 function getProfit(t: DashTrade): number {
