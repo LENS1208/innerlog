@@ -388,7 +388,7 @@ export default function ReportsTimeAxis() {
             </table>
           </div>
 
-          <div style={{ flex: "1 1 400px", minWidth: 0, height: 180 }}>
+          <div style={{ flex: "1 1 400px", minWidth: 0, height: 220 }}>
             <Bar
               data={{
                 labels: tradeStyleData.map((s) => s.label),
