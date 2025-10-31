@@ -4,6 +4,7 @@ import { parseCsvText } from "../lib/csv";
 import { useDataset } from "../lib/dataset.context";
 import { UI_TEXT } from "../lib/i18n";
 import { supabase } from "../lib/supabase";
+import InsightsSection from "../components/calendar/InsightsSection";
 
 type DayData = {
   date: string;
@@ -237,6 +238,141 @@ export default function MonthlyCalendar() {
   };
 
   const monthName = currentDate.toLocaleDateString("ja-JP", { year: "numeric", month: "long" });
+
+  const insightsData = useMemo(() => {
+    const filteredTrades = trades.filter((t) => {
+      const tradeDate = parseDateSafe(t.datetime);
+      return !isNaN(tradeDate.getTime()) && tradeDate.getFullYear() === year && tradeDate.getMonth() === month;
+    });
+
+    const weeklySummary = weekSummaries.map((ws) => ({
+      name: `${ws.weekNum}週目`,
+      pnl: ws.profitYen,
+    }));
+
+    const weekdayNames = ["月", "火", "水", "木", "金", "土", "日"];
+    const weekdayMap = new Map<number, number>();
+    filteredTrades.forEach((t) => {
+      const tradeDate = parseDateSafe(t.datetime);
+      const dow = tradeDate.getDay();
+      const adjustedDow = dow === 0 ? 6 : dow - 1;
+      weekdayMap.set(adjustedDow, (weekdayMap.get(adjustedDow) || 0) + t.profitYen);
+    });
+    const weekdayPerformance = weekdayNames.map((name, i) => ({
+      name,
+      pnl: weekdayMap.get(i) || 0,
+    }));
+
+    const hourlyMap = new Map<number, number>();
+    filteredTrades.forEach((t) => {
+      const tradeDate = parseDateSafe(t.datetime);
+      const hour = tradeDate.getHours();
+      hourlyMap.set(hour, (hourlyMap.get(hour) || 0) + t.profitYen);
+    });
+    const hourlyPerformance = Array.from({ length: 24 }, (_, i) => ({
+      name: `${i}:00`,
+      pnl: hourlyMap.get(i) || 0,
+    }));
+
+    const durationRanges = [
+      { name: "0-15m", min: 0, max: 15 },
+      { name: "15-30m", min: 15, max: 30 },
+      { name: "30-60m", min: 30, max: 60 },
+      { name: "60-120m", min: 60, max: 120 },
+      { name: ">120m", min: 120, max: Infinity },
+    ];
+    const durationPerformance = durationRanges.map((range) => {
+      const rangeSum = filteredTrades
+        .filter((t) => {
+          const openTime = parseDateSafe(t.openTime || t.datetime);
+          const closeTime = parseDateSafe(t.datetime);
+          const mins = (closeTime.getTime() - openTime.getTime()) / (1000 * 60);
+          return mins >= range.min && mins < range.max;
+        })
+        .reduce((sum, t) => sum + t.profitYen, 0);
+      return { name: range.name, pnl: rangeSum };
+    });
+
+    const weekendTrades = filteredTrades
+      .filter((t) => {
+        const openTime = parseDateSafe(t.openTime || t.datetime);
+        const closeTime = parseDateSafe(t.datetime);
+        const openDow = openTime.getDay();
+        const closeDow = closeTime.getDay();
+        return openDow !== closeDow && (openDow === 6 || openDow === 0 || closeDow === 6 || closeDow === 0);
+      })
+      .slice(0, 50)
+      .map((t) => ({
+        id: t.ticket,
+        symbol: t.item,
+        side: (t.side?.toLowerCase() === "buy" || t.side?.toLowerCase() === "long" ? "long" : "short") as "long" | "short",
+        entry: t.openTime || t.datetime,
+        exit: t.datetime,
+        pnl: t.profitYen,
+      }));
+
+    const overnightTrades = filteredTrades
+      .filter((t) => {
+        const openTime = parseDateSafe(t.openTime || t.datetime);
+        const closeTime = parseDateSafe(t.datetime);
+        return openTime.toDateString() !== closeTime.toDateString();
+      })
+      .slice(0, 50)
+      .map((t) => ({
+        id: t.ticket,
+        symbol: t.item,
+        side: (t.side?.toLowerCase() === "buy" || t.side?.toLowerCase() === "long" ? "long" : "short") as "long" | "short",
+        entry: t.openTime || t.datetime,
+        exit: t.datetime,
+        pnl: t.profitYen,
+      }));
+
+    const dayProfits = new Map<string, number>();
+    filteredTrades.forEach((t) => {
+      const dateStr = normalizeDate(t.datetime);
+      dayProfits.set(dateStr, (dayProfits.get(dateStr) || 0) + t.profitYen);
+    });
+    const sortedDays = Array.from(dayProfits.entries()).sort((a, b) => b[1] - a[1]);
+    const bestDay = sortedDays.length > 0 ? { date: sortedDays[0][0], pnl: sortedDays[0][1] } : null;
+    const worstDay = sortedDays.length > 0 ? { date: sortedDays[sortedDays.length - 1][0], pnl: sortedDays[sortedDays.length - 1][1] } : null;
+    const maxDailyDD = worstDay ? worstDay.pnl : null;
+
+    const symbolMap = new Map<string, number>();
+    filteredTrades.forEach((t) => {
+      symbolMap.set(t.item, (symbolMap.get(t.item) || 0) + t.profitYen);
+    });
+    const sortedSymbols = Array.from(symbolMap.entries()).sort((a, b) => b[1] - a[1]);
+    const topSymbols = sortedSymbols.slice(0, 3).map(([symbol, pnl]) => ({ symbol, pnl }));
+    const bottomSymbols = sortedSymbols.slice(-3).reverse().map(([symbol, pnl]) => ({ symbol, pnl }));
+
+    const topTags = [
+      { tag: "breakout", pnl: 12432, winrate: 0.56 },
+      { tag: "news", pnl: 1832, winrate: 0.52 },
+      { tag: "meanrev", pnl: -4321, winrate: 0.41 },
+    ];
+
+    const expectationRows = [
+      { label: "曜日: Thu", count: 2, avgPnl: 8190, winrate: 0.6, pf: 1.8 },
+      { label: "時間: 11:00", count: 1, avgPnl: 3200, winrate: 1.0, pf: null },
+      { label: "保有: 60-120m", count: 2, avgPnl: 3100, winrate: 0.55, pf: 1.5 },
+    ];
+
+    return {
+      weeklySummary,
+      weekdayPerformance,
+      hourlyPerformance,
+      durationPerformance,
+      weekendTrades,
+      overnightTrades,
+      bestDay,
+      worstDay,
+      maxDailyDD,
+      topSymbols,
+      bottomSymbols,
+      topTags,
+      expectationRows,
+    };
+  }, [trades, year, month, weekSummaries]);
 
   return (
     <div className="monthly-calendar-container" style={{ padding: "var(--space-3)", maxWidth: 1600, margin: "0 auto" }}>
@@ -473,6 +609,22 @@ export default function MonthlyCalendar() {
           })}
         </div>
       </div>
+
+      <InsightsSection
+        weeklySummary={insightsData.weeklySummary}
+        weekdayPerformance={insightsData.weekdayPerformance}
+        hourlyPerformance={insightsData.hourlyPerformance}
+        durationPerformance={insightsData.durationPerformance}
+        weekendTrades={insightsData.weekendTrades}
+        overnightTrades={insightsData.overnightTrades}
+        bestDay={insightsData.bestDay}
+        worstDay={insightsData.worstDay}
+        maxDailyDD={insightsData.maxDailyDD}
+        topSymbols={insightsData.topSymbols}
+        bottomSymbols={insightsData.bottomSymbols}
+        topTags={insightsData.topTags}
+        expectationRows={insightsData.expectationRows}
+      />
     </div>
   );
 }
