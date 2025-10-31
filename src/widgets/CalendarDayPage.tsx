@@ -510,6 +510,8 @@ export default function CalendarDayPage() {
                     className="trade-row"
                     style={{ borderBottom: "1px solid #f3f4f6" }}
                     onClick={() => {
+                      console.log('Calendar trade clicked:', t);
+                      console.log('Ticket:', t.ticket);
                       location.hash = `/notebook/${t.ticket}`;
                     }}
                   >
