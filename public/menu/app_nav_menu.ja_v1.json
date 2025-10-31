@@ -1,9 +1,9 @@
 [
   { "key": "dashboard",  "label": "ダッシュボード",     "active": true },
-  { "key": "calendar",   "label": "カレンダー" },
-  { "key": "trades",     "label": "取引一覧" },
   { "key": "reports",    "label": "レポート/分析" },
-  { "key": "forecast",   "label": "相場予想" },
+  { "key": "calendar",   "label": "カレンダー" },
   { "key": "notebook",   "label": "トレード日記" },
+  { "key": "forecast",   "label": "相場予想" },
+  { "key": "trades",     "label": "取引一覧" },
   { "key": "settings",   "label": "設定" }
 ]

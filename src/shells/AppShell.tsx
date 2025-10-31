@@ -389,12 +389,12 @@ export default function AppShell({ children }: Props) {
       } catch (err) {
         console.error("❌ メニュー読み込み失敗:", err);
         setMenu([
-          { key: "dashboard", label: "損益推移", active: true },
-          { key: "calendar", label: "カレンダー" },
-          { key: "trades", label: "取引一覧" },
+          { key: "dashboard", label: "ダッシュボード", active: true },
           { key: "reports", label: "レポート/分析" },
-          { key: "forecast", label: "相場予想" },
+          { key: "calendar", label: "カレンダー" },
           { key: "notebook", label: "トレード日記" },
+          { key: "forecast", label: "相場予想" },
+          { key: "trades", label: "取引一覧" },
           { key: "settings", label: "設定" },
         ]);
         const fromHash = (location.hash.replace(/^#\//, "") || "").trim();
