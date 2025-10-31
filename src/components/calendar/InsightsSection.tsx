@@ -126,17 +126,41 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
   return (
     <section style={{ padding: "16px 0", marginTop: 24 }}>
+      <style>{`
+        .insights-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+        }
+
+        @media (max-width: 1400px) {
+          .insights-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .insights-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .insights-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .insights-grid-full-width {
+          grid-column: 1 / -1;
+        }
+      `}</style>
+
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <h2 style={{ fontSize: 18, fontWeight: 600, margin: 0 }}>今月のインサイト</h2>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-          gap: 16,
-        }}
-      >
+      <div className="insights-grid">
         {/* 1) 週別サマリー */}
         <div
           style={{
@@ -201,12 +225,12 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         {/* 5) ポジション一覧（週跨ぎ / 日跨ぎ） full width */}
         <div
+          className="insights-grid-full-width"
           style={{
             background: "var(--surface)",
             border: "1px solid var(--line)",
             borderRadius: 16,
             padding: 16,
-            gridColumn: "1 / -1",
           }}
         >
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
