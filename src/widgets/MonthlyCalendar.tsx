@@ -375,7 +375,7 @@ export default function MonthlyCalendar() {
   }, [trades, year, month, weekSummaries]);
 
   return (
-    <div className="monthly-calendar-container" style={{ padding: "var(--space-3)", maxWidth: 1600, margin: "0 auto" }}>
+    <div className="monthly-calendar-container" style={{ padding: "var(--space-3)" }}>
       <style>{`
         @media (max-width: 1023px) {
           .monthly-calendar-container .calendar-header h1 {
