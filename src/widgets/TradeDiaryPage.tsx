@@ -949,7 +949,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     );
   }
 
-  if (entryId && !dbTrade) {
+  if (entryId && !dbTrade && !trades.find(t => t.ticket === entryId)) {
     return (
       <section className="td-root">
         <div style={{ padding: 40, textAlign: 'center' }}>取引データが見つかりません</div>
