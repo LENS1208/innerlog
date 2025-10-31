@@ -506,8 +506,12 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             .map((t) => ({ x: t.closeTime, y: (cum += t.profit) }));
         })();
 
+        if (!equityRef.current || !histRef.current || !heatRef.current) {
+          return;
+        }
+
         chartsRef.current.eq = new Chart(
-          equityRef.current!.getContext("2d"),
+          equityRef.current.getContext("2d")!,
           {
             type: "line",
             data: {
@@ -578,7 +582,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
           (b) => b.y
         );
         chartsRef.current.hist = new Chart(
-          histRef.current!.getContext("2d"),
+          histRef.current.getContext("2d")!,
           {
             type: "bar",
             data: {
@@ -621,7 +625,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             v: g.total ? Math.round((100 * g.win) / g.total) : 0,
           }));
         chartsRef.current.heat = new Chart(
-          heatRef.current!.getContext("2d"),
+          heatRef.current.getContext("2d")!,
           {
             type: "matrix",
             data: {
