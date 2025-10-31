@@ -388,7 +388,7 @@ export default function ReportsTimeAxis() {
             </table>
           </div>
 
-          <div style={{ flex: "1 1 400px", minWidth: 0, height: 220 }}>
+          <div style={{ flex: "1 1 400px", minWidth: 0, height: 180 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)", textAlign: "center" }}>
               トレードスタイル別パフォーマンス分析
             </h4>
@@ -474,7 +474,7 @@ export default function ReportsTimeAxis() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: 12,
-            marginTop: 16,
+            marginTop: 8,
           }}
         >
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
