@@ -286,6 +286,7 @@ export default function ReportsTimeAxis() {
 
       const profit = styleTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
       const wins = styleTrades.filter((t) => getTradeProfit(t) > 0).length;
+      const losses = styleTrades.filter((t) => getTradeProfit(t) < 0).length;
       const winRate = styleTrades.length > 0 ? (wins / styleTrades.length) * 100 : 0;
       const ev = styleTrades.length > 0 ? profit / styleTrades.length : 0;
       const avgHoldTime = styleTrades.length > 0
@@ -296,6 +297,8 @@ export default function ReportsTimeAxis() {
         label: style.label,
         count: styleTrades.length,
         profit,
+        wins,
+        losses,
         winRate,
         ev,
         avgHoldTime,
@@ -344,44 +347,126 @@ export default function ReportsTimeAxis() {
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
         <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>トレードスタイル別統計</h3>
 
-        <div style={{ maxHeight: "60vh", overflowY: "auto", marginBottom: 16 }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>スタイル</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>取引数</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>期待値(EV)</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>平均保有時間</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tradeStyleData.map((style) => (
-                <tr
-                  key={style.label}
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{style.label}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.count}件</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.winRate.toFixed(1)}%</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.ev >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                    {Math.round(style.ev).toLocaleString()}円
-                  </td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{formatHoldTime(style.avgHoldTime)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                    {Math.round(style.profit).toLocaleString()}円
-                  </td>
+        <div style={{ display: "flex", gap: 16, alignItems: "stretch", flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 400px", minWidth: 0, maxHeight: "60vh", overflowY: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ borderBottom: "2px solid var(--line)" }}>
+                  <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>スタイル</th>
+                  <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>取引数</th>
+                  <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
+                  <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>期待値(EV)</th>
+                  <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>平均保有時間</th>
+                  <th style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tradeStyleData.map((style) => (
+                  <tr
+                    key={style.label}
+                    style={{
+                      borderBottom: "1px solid var(--line)",
+                      height: 44,
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                  >
+                    <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{style.label}</td>
+                    <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.count}件</td>
+                    <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.winRate.toFixed(1)}%</td>
+                    <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.ev >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                      {Math.round(style.ev).toLocaleString()}円
+                    </td>
+                    <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{formatHoldTime(style.avgHoldTime)}</td>
+                    <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                      {Math.round(style.profit).toLocaleString()}円
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div style={{ flex: "1 1 400px", minWidth: 0, height: 300 }}>
+            <h4 style={{ margin: "0 0 12px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", textAlign: "center" }}>
+              トレードスタイル別パフォーマンス分析
+            </h4>
+            <Bar
+              data={{
+                labels: tradeStyleData.map((s) => s.label),
+                datasets: [
+                  {
+                    type: 'bar' as const,
+                    label: '勝ちトレード',
+                    data: tradeStyleData.map((s) => s.wins),
+                    backgroundColor: 'rgba(34, 197, 246, 0.8)',
+                    yAxisID: 'y',
+                    stack: 'stack1',
+                  },
+                  {
+                    type: 'bar' as const,
+                    label: '負けトレード',
+                    data: tradeStyleData.map((s) => s.losses),
+                    backgroundColor: 'rgba(239, 99, 68, 0.8)',
+                    yAxisID: 'y',
+                    stack: 'stack1',
+                  },
+                  {
+                    type: 'line' as const,
+                    label: '勝率(%)',
+                    data: tradeStyleData.map((s) => s.winRate),
+                    borderColor: 'rgba(34, 197, 246, 1)',
+                    backgroundColor: 'rgba(34, 197, 246, 0.1)',
+                    yAxisID: 'y1',
+                    tension: 0.3,
+                    pointRadius: 5,
+                    pointBackgroundColor: 'rgba(34, 197, 246, 1)',
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'bottom' as const,
+                  },
+                },
+                scales: {
+                  y: {
+                    type: 'linear' as const,
+                    display: true,
+                    position: 'left' as const,
+                    beginAtZero: true,
+                    title: {
+                      display: true,
+                      text: '取引回数',
+                    },
+                    stacked: true,
+                  },
+                  y1: {
+                    type: 'linear' as const,
+                    display: true,
+                    position: 'right' as const,
+                    min: 0,
+                    max: 100,
+                    title: {
+                      display: true,
+                      text: '勝率(%)',
+                    },
+                    grid: {
+                      drawOnChartArea: false,
+                    },
+                  },
+                  x: {
+                    stacked: true,
+                  },
+                },
+              }}
+            />
+          </div>
         </div>
 
         <div
@@ -389,6 +474,7 @@ export default function ReportsTimeAxis() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: 12,
+            marginTop: 16,
           }}
         >
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
