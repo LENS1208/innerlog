@@ -389,9 +389,6 @@ export default function ReportsTimeAxis() {
           </div>
 
           <div style={{ flex: "1 1 400px", minWidth: 0, height: 180 }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)", textAlign: "center" }}>
-              トレードスタイル別パフォーマンス分析
-            </h4>
             <Bar
               data={{
                 labels: tradeStyleData.map((s) => s.label),
