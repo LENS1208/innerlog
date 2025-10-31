@@ -347,7 +347,7 @@ export default function ReportsTimeAxis() {
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
         <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>トレードスタイル別統計</h3>
 
-        <div style={{ display: "flex", gap: 16, alignItems: "stretch", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 16, alignItems: "stretch", flexWrap: "wrap", marginBottom: 12 }}>
           <div style={{ flex: "1 1 400px", minWidth: 0, maxHeight: "60vh", overflowY: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
@@ -388,8 +388,8 @@ export default function ReportsTimeAxis() {
             </table>
           </div>
 
-          <div style={{ flex: "1 1 400px", minWidth: 0, height: 300 }}>
-            <h4 style={{ margin: "0 0 12px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", textAlign: "center" }}>
+          <div style={{ flex: "1 1 400px", minWidth: 0, height: 220 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)", textAlign: "center" }}>
               トレードスタイル別パフォーマンス分析
             </h4>
             <Bar
