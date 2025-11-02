@@ -300,20 +300,46 @@ export function RecentTradesTable({ trades }: { trades: TradeWithProfit[] }) {
 }
 
 export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
+  const [currentDate, setCurrentDate] = React.useState<Date>(() => {
+    if (trades.length === 0) return new Date()
+    const latestTrade = trades.reduce((latest, trade) => {
+      const tradeDate = parseDateTime(trade.datetime || trade.time)
+      const latestDate = parseDateTime(latest.datetime || latest.time)
+      return tradeDate > latestDate ? trade : latest
+    })
+    const latestDate = parseDateTime(latestTrade.datetime || latestTrade.time)
+    return new Date(latestDate.getFullYear(), latestDate.getMonth(), 1)
+  })
+
   const monthData = useMemo(() => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
     const today = new Date()
-    const year = today.getFullYear()
-    const month = today.getMonth()
 
     const firstDay = new Date(year, month, 1)
     const lastDay = new Date(year, month + 1, 0)
     const startDay = firstDay.getDay()
     const daysInMonth = lastDay.getDate()
 
+    const prevMonthLastDay = new Date(year, month, 0)
+    const daysInPrevMonth = prevMonthLastDay.getDate()
+
     const days = []
 
-    for (let i = 0; i < startDay; i++) {
-      days.push(null)
+    const adjustedStartDay = startDay === 0 ? 6 : startDay - 1
+
+    for (let i = adjustedStartDay - 1; i >= 0; i--) {
+      const day = daysInPrevMonth - i
+      const date = new Date(year, month - 1, day)
+      const dateStr = date.toISOString().split('T')[0]
+      days.push({
+        date: day,
+        dateStr,
+        profit: 0,
+        count: 0,
+        isCurrentMonth: false,
+        isToday: false
+      })
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -335,36 +361,94 @@ export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
       days.push({
         date: day,
         dateStr,
-        weekday: getWeekdayJP(date),
         profit,
         count: dayTrades.length,
-        isSat: date.getDay() === 6,
-        isSun: date.getDay() === 0,
+        isCurrentMonth: true,
         isToday: date.toDateString() === today.toDateString()
       })
     }
 
-    return { days, year, month: month + 1 }
-  }, [trades])
+    const remainingCells = 35 - days.length
+    for (let day = 1; day <= remainingCells; day++) {
+      const date = new Date(year, month + 1, day)
+      const dateStr = date.toISOString().split('T')[0]
+      days.push({
+        date: day,
+        dateStr,
+        profit: 0,
+        count: 0,
+        isCurrentMonth: false,
+        isToday: false
+      })
+    }
 
-  const weekDays = ['日', '月', '火', '水', '木', '金', '土']
+    return { days, year, month: month + 1 }
+  }, [trades, currentDate])
+
+  const goToPrevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1))
+  }
+
+  const goToNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1))
+  }
+
+  const weekDays = ['月', '火', '水', '木', '金', '土', '日']
 
   return (
     <div>
       <div style={{
-        marginBottom: 12,
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: 'var(--ink)'
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+        marginBottom: 12
       }}>
-        {monthData.year}年 {monthData.month}月
+        <button
+          onClick={goToPrevMonth}
+          style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--line)',
+            borderRadius: 6,
+            padding: '4px 10px',
+            cursor: 'pointer',
+            fontSize: 18,
+            color: 'var(--ink)',
+            fontWeight: 'bold'
+          }}
+        >
+          ‹
+        </button>
+        <div style={{
+          fontSize: 15,
+          fontWeight: 'bold',
+          color: 'var(--ink)',
+          minWidth: 120,
+          textAlign: 'center'
+        }}>
+          {monthData.year}年{monthData.month}月
+        </div>
+        <button
+          onClick={goToNextMonth}
+          style={{
+            background: 'var(--surface)',
+            border: '1px solid var(--line)',
+            borderRadius: 6,
+            padding: '4px 10px',
+            cursor: 'pointer',
+            fontSize: 18,
+            color: 'var(--ink)',
+            fontWeight: 'bold'
+          }}
+        >
+          ›
+        </button>
       </div>
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(7, 1fr)',
-        gap: 4,
-        marginBottom: 8
+        gap: 2,
+        marginBottom: 2
       }}>
         {weekDays.map(day => (
           <div key={day} style={{
@@ -372,7 +456,7 @@ export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
             fontSize: 12,
             fontWeight: 'bold',
             padding: '4px 0',
-            color: day === '日' ? '#ef4444' : day === '土' ? '#3b82f6' : 'var(--muted)'
+            color: 'var(--muted)'
           }}>
             {day}
           </div>
@@ -381,69 +465,99 @@ export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(7, 1fr)',
-        gap: 4
+        gap: 2
       }}>
-        {monthData.days.map((day, i) =>
-          day === null ? (
-            <div key={`empty-${i}`} style={{ minHeight: 80 }} />
-          ) : (
+        {monthData.days.map((day, i) => {
+          const hasTradesValue = day.isCurrentMonth && day.count > 0
+          const bgColor = hasTradesValue
+            ? day.profit >= 0
+              ? 'rgba(22, 163, 74, 0.1)'
+              : 'rgba(239, 68, 68, 0.1)'
+            : day.isCurrentMonth
+            ? 'var(--surface)'
+            : '#f9fafb'
+
+          const borderColor = hasTradesValue
+            ? day.profit >= 0
+              ? 'rgba(22, 163, 74, 0.3)'
+              : 'rgba(239, 68, 68, 0.3)'
+            : 'var(--line)'
+
+          return (
             <div
               key={i}
               style={{
-                border: '1px solid var(--line)',
-                borderRadius: 8,
-                padding: 8,
-                minHeight: 80,
-                backgroundColor: day.isToday ? 'rgba(59, 130, 246, 0.05)' : 'var(--surface)',
-                cursor: day.count > 0 ? 'pointer' : 'default',
-                transition: 'all 0.2s',
-                borderLeft: day.isSun ? '3px solid #ef4444' : day.isSat ? '3px solid #3b82f6' : undefined
+                background: bgColor,
+                border: `1px solid ${borderColor}`,
+                borderRadius: 6,
+                padding: 6,
+                minHeight: 70,
+                cursor: hasTradesValue ? 'pointer' : 'default',
+                opacity: day.isCurrentMonth ? 1 : 0.4,
+                transition: 'all 0.15s ease',
+                display: 'flex',
+                flexDirection: 'column'
               }}
               onClick={() => {
-                if (day.count > 0) {
-                  location.hash = `/calendar/day/${day.dateStr}`;
+                if (hasTradesValue) {
+                  location.hash = `/calendar/day/${day.dateStr}`
                 }
               }}
               onMouseEnter={(e) => {
-                if (day.count > 0) {
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'
+                if (hasTradesValue) {
+                  e.currentTarget.style.transform = 'scale(1.02)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'
                 }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = 'none'
+                if (hasTradesValue) {
+                  e.currentTarget.style.transform = 'scale(1)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }
               }}
             >
               <div style={{
-                fontSize: 14,
-                fontWeight: day.isToday ? 'bold' : 'normal',
+                fontSize: 13,
+                fontWeight: 700,
                 marginBottom: 4,
-                color: day.isSun ? '#ef4444' : day.isSat ? '#3b82f6' : 'var(--ink)'
+                color: day.isCurrentMonth ? 'var(--ink)' : 'var(--muted)',
+                textAlign: 'center'
               }}>
                 {day.date}
               </div>
-              {day.count > 0 && (
+              {hasTradesValue ? (
                 <>
                   <div style={{
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: day.profit >= 0 ? '#22c55e' : '#ef4444',
-                    marginBottom: 2
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: day.profit >= 0 ? 'var(--gain)' : 'var(--loss)',
+                    marginBottom: 2,
+                    textAlign: 'center'
                   }}>
-                    {day.profit >= 0 ? '+' : ''}{formatJPY(day.profit)}
+                    {day.profit >= 0 ? '+' : ''}{formatJPY(day.profit)}円
                   </div>
                   <div style={{
-                    fontSize: 11,
-                    color: 'var(--muted)'
+                    fontSize: 10,
+                    color: 'var(--muted)',
+                    textAlign: 'center'
                   }}>
-                    {day.count}件
+                    取引：{day.count}
                   </div>
                 </>
-              )}
+              ) : day.isCurrentMonth ? (
+                <div style={{
+                  fontSize: 10,
+                  color: '#d1d5db',
+                  textAlign: 'center',
+                  marginTop: 'auto',
+                  marginBottom: 'auto'
+                }}>
+                  取引なし
+                </div>
+              ) : null}
             </div>
           )
-        )}
+        })}
       </div>
     </div>
   )
