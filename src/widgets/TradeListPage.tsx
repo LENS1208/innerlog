@@ -151,10 +151,29 @@ export default function TradeListPage() {
     };
   }, []);
 
-  function onPick(e: React.ChangeEvent<HTMLInputElement>) {
+  async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0];
     if (!f) return;
-    f.text().then((text) => setSrcRows(parseCsvText(text)));
+
+    try {
+      const text = await f.text();
+      const trades = parseCsvText(text);
+
+      if (useDatabase && trades.length > 0) {
+        const dbTrades = trades.map(tradeToDb);
+        await insertTrades(dbTrades);
+        console.log(`✅ Uploaded ${trades.length} trades to database`);
+
+        const dbData = await getAllTrades();
+        setSrcRows(dbData.map(dbToTrade));
+      } else {
+        setSrcRows(trades);
+      }
+    } catch (err) {
+      console.error('❌ Error uploading file:', err);
+      alert('ファイルのアップロードに失敗しました: ' + (err as Error).message);
+    }
+
     if (fileRef.current) fileRef.current.value = "";
   }
 
