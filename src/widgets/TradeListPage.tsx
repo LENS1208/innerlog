@@ -4,7 +4,7 @@ import type { Trade } from "../lib/types";
 import TradesTable from "../components/TradesTable";
 import { parseCsvText } from "../lib/csv";
 import { useDataset, Filters } from "../lib/dataset.context";
-import { getAllTrades, dbToTrade } from "../lib/db.service";
+import { getAllTrades, dbToTrade, tradeToDb, insertTrades } from "../lib/db.service";
 
 function mapToRow(t: Trade) {
   return {
@@ -122,21 +122,12 @@ export default function TradeListPage() {
       fileRef.current?.click();
     };
 
-    const processCsv = async (e: Event) => {
-      const csvText = (e as CustomEvent<string>).detail;
-      if (!csvText) return;
-      console.log('🔄 Processing CSV from AppShell');
-      const trades = parseCsvText(csvText);
-      if (Array.isArray(trades) && trades.length) {
-        if (useDatabase) {
-          const dbTrades = trades.map(tradeToDb);
-          await insertTrades(dbTrades);
-          console.log(`✅ Uploaded ${trades.length} trades to database`);
-          const dbData = await getAllTrades();
-          setSrcRows(dbData.map(dbToTrade));
-        } else {
-          setSrcRows(trades);
-        }
+    const tradesUpdated = async () => {
+      console.log('🔄 Trades updated, reloading from database');
+      if (useDatabase) {
+        const dbData = await getAllTrades();
+        setSrcRows(dbData.map(dbToTrade));
+        console.log(`✅ Reloaded ${dbData.length} trades from database`);
       }
     };
 
@@ -166,11 +157,11 @@ export default function TradeListPage() {
       })();
     };
     (window as any).addEventListener("fx:openUpload", openUpload);
-    (window as any).addEventListener("fx:processCsv", processCsv);
+    (window as any).addEventListener("fx:tradesUpdated", tradesUpdated);
     (window as any).addEventListener("fx:preset", onPreset);
     return () => {
       (window as any).removeEventListener("fx:openUpload", openUpload);
-      (window as any).removeEventListener("fx:processCsv", processCsv);
+      (window as any).removeEventListener("fx:tradesUpdated", tradesUpdated);
       (window as any).removeEventListener("fx:preset", onPreset);
     };
   }, [useDatabase]);

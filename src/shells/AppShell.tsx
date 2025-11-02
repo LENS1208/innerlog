@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { DatasetProvider, useDataset } from "../lib/dataset.context";
 import FiltersBar from "../components/FiltersBar";
 import logoImg from "../assets/inner-log-logo.png";
+import { parseCsvText } from "../lib/csv";
+import { tradeToDb, insertTrades } from "../lib/db.service";
 
 type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
@@ -425,9 +427,25 @@ export default function AppShell({ children }: Props) {
 
     console.log('📄 File:', file.name, 'Size:', file.size, 'bytes');
 
-    // ファイルを読み込んでイベント発火（画面遷移なし）
-    const text = await file.text();
-    window.dispatchEvent(new CustomEvent("fx:processCsv", { detail: text }));
+    try {
+      const text = await file.text();
+      console.log('📝 File content length:', text.length);
+
+      const trades = parseCsvText(text);
+      console.log('📊 Parsed trades:', trades.length);
+
+      if (trades.length > 0) {
+        // データベースに保存
+        const dbTrades = trades.map(tradeToDb);
+        await insertTrades(dbTrades);
+        console.log(`✅ Uploaded ${trades.length} trades to database`);
+
+        // TradeListPageにイベント発火して再読み込みを促す
+        window.dispatchEvent(new CustomEvent("fx:tradesUpdated"));
+      }
+    } catch (error) {
+      console.error('❌ Error processing CSV:', error);
+    }
 
     // input要素をリセット
     e.target.value = '';
