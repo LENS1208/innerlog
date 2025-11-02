@@ -425,17 +425,9 @@ export default function AppShell({ children }: Props) {
 
     console.log('📄 File:', file.name, 'Size:', file.size, 'bytes');
 
-    // TradeListPageに遷移してからイベント発火
-    window.location.hash = '#/trades';
-
-    // ファイルデータを一時保存
+    // ファイルを読み込んでイベント発火（画面遷移なし）
     const text = await file.text();
-    sessionStorage.setItem('pendingCsvData', text);
-
-    // TradeListPageがマウントされてから処理
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent("fx:processCsv", { detail: text }));
-    }, 100);
+    window.dispatchEvent(new CustomEvent("fx:processCsv", { detail: text }));
 
     // input要素をリセット
     e.target.value = '';
