@@ -301,14 +301,20 @@ export async function getLinksToTarget(
 }
 
 export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
+  // ドット区切り形式（例: "2025.02.23 06:40:46"）をハイフン区切りに変換
+  const normalizeDateTime = (dt: string | undefined): string => {
+    if (!dt) return '';
+    return dt.replace(/\./g, '-');
+  };
+
   return {
-    ticket: trade.id,
+    ticket: trade.ticket || trade.id,
     item: trade.pair || trade.symbol || '',
     side: trade.side,
     size: trade.volume,
-    open_time: trade.openTime || trade.datetime,
+    open_time: normalizeDateTime(trade.openTime || trade.datetime),
     open_price: trade.openPrice || 0,
-    close_time: trade.datetime,
+    close_time: normalizeDateTime(trade.datetime),
     close_price: trade.closePrice || 0,
     commission: trade.commission || 0,
     swap: trade.swap || 0,
