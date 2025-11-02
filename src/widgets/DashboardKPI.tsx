@@ -167,17 +167,17 @@ function SemiGauge({ winRate, wins, draws, losses }: { winRate: number; wins: nu
 
   return (
     <div>
-      <div style={{ position: 'relative', width: 120, height: 70 }}>
-        <svg viewBox="0 0 120 70" style={{ width: 120, height: 70 }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: 120, height: 70 }}>
+        <svg viewBox="0 0 120 70" style={{ width: '100%', height: 70 }}>
           <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--line)" strokeWidth="12" pathLength="100" />
           <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--accent-2, #22c55e)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`${winPct} ${100 - winPct}`} />
           <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--danger, #ef4444)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`0 ${winPct} ${lossPct}`} />
         </svg>
       </div>
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 6 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 40, height: 24, padding: '0 8px', borderRadius: 999, fontWeight: 600, border: '1px solid rgba(34,197,94,.35)', background: 'rgba(34,197,94,.12)', color: 'var(--accent-2, #22c55e)' }}>{wins}</span>
-        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 40, height: 24, padding: '0 8px', borderRadius: 999, fontWeight: 600, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--muted)' }}>{draws}</span>
-        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 40, height: 24, padding: '0 8px', borderRadius: 999, fontWeight: 600, border: '1px solid rgba(239,68,68,.35)', background: 'rgba(239,68,68,.12)', color: 'var(--danger, #ef4444)' }}>{losses}</span>
+      <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(34,197,94,.35)', background: 'rgba(34,197,94,.12)', color: 'var(--accent-2, #22c55e)' }}>{wins}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--muted)' }}>{draws}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(239,68,68,.35)', background: 'rgba(239,68,68,.12)', color: 'var(--danger, #ef4444)' }}>{losses}</span>
       </div>
     </div>
   )
@@ -244,13 +244,15 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
 
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>勝率</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
-          <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap' }}>
+          <div style={{ flex: '0 0 auto' }}>
             <div className="kpi-value">
               {(dash.winRate * 100).toFixed(1)} <span className="kpi-unit">%</span>
             </div>
           </div>
-          <SemiGauge winRate={dash.winRate} wins={dash.wins} draws={dash.draws} losses={dash.losses} />
+          <div style={{ flex: '0 0 auto', minWidth: 90 }}>
+            <SemiGauge winRate={dash.winRate} wins={dash.wins} draws={dash.draws} losses={dash.losses} />
+          </div>
         </div>
       </div>
 
