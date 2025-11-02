@@ -121,6 +121,25 @@ export default function TradeListPage() {
       console.log('📤 Upload button clicked from header');
       fileRef.current?.click();
     };
+
+    const processCsv = async (e: Event) => {
+      const csvText = (e as CustomEvent<string>).detail;
+      if (!csvText) return;
+      console.log('🔄 Processing CSV from AppShell');
+      const trades = parseCsvText(csvText);
+      if (Array.isArray(trades) && trades.length) {
+        if (useDatabase) {
+          const dbTrades = trades.map(tradeToDb);
+          await insertTrades(dbTrades);
+          console.log(`✅ Uploaded ${trades.length} trades to database`);
+          const dbData = await getAllTrades();
+          setSrcRows(dbData.map(dbToTrade));
+        } else {
+          setSrcRows(trades);
+        }
+      }
+    };
+
     const onPreset = (e: Event) => {
       const n = (e as CustomEvent<"A" | "B" | "C">).detail;
       if (!n) return;
@@ -147,12 +166,14 @@ export default function TradeListPage() {
       })();
     };
     (window as any).addEventListener("fx:openUpload", openUpload);
+    (window as any).addEventListener("fx:processCsv", processCsv);
     (window as any).addEventListener("fx:preset", onPreset);
     return () => {
       (window as any).removeEventListener("fx:openUpload", openUpload);
+      (window as any).removeEventListener("fx:processCsv", processCsv);
       (window as any).removeEventListener("fx:preset", onPreset);
     };
-  }, []);
+  }, [useDatabase]);
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
     console.log('📂 File selected');

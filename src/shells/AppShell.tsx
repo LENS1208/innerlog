@@ -8,14 +8,18 @@ type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
 
 // ヘッダー（右カラムの上部）
-function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: () => void; onFilterToggle: () => void; showFilters: boolean }) {
+function Header({
+  onMenuToggle,
+  onFilterToggle,
+  showFilters,
+  onUploadClick
+}: {
+  onMenuToggle: () => void;
+  onFilterToggle: () => void;
+  showFilters: boolean;
+  onUploadClick: () => void;
+}) {
   const { applyFilters, resetFilters } = useDataset();
-
-  const handleUploadClick = () => {
-    console.log('📤 Header upload button clicked');
-    // ページ遷移せずにイベントを発火
-    window.dispatchEvent(new CustomEvent("fx:openUpload"));
-  };
   return (
     <>
       <div
@@ -135,7 +139,7 @@ function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: (
                 🗑️
               </button>
               <button
-                onClick={handleUploadClick}
+                onClick={onUploadClick}
                 title="ファイルアップロード"
                 style={{
                   height: 36,
@@ -195,7 +199,7 @@ function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: (
                 🗑️
               </button>
               <button
-                onClick={handleUploadClick}
+                onClick={onUploadClick}
                 title="ファイルアップロード"
                 style={{
                   height: 36,
@@ -256,7 +260,7 @@ function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: (
                 🗑️
               </button>
               <button
-                onClick={handleUploadClick}
+                onClick={onUploadClick}
                 title="ファイルアップロード"
                 style={{
                   height: 40,
@@ -398,6 +402,44 @@ export default function AppShell({ children }: Props) {
   const drawerRef = useRef<HTMLDivElement>(null);
   const [quickOpen, setQuickOpen] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadClick = () => {
+    console.log('📤 Header upload button clicked');
+    // TradeListPageにいる場合はイベントを発火、それ以外はfileInputを開く
+    const currentHash = window.location.hash;
+    if (currentHash === '#/trades') {
+      window.dispatchEvent(new CustomEvent("fx:openUpload"));
+    } else {
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('📂 File selected in AppShell');
+    const file = e.target.files?.[0];
+    if (!file) {
+      console.log('⚠️ No file selected');
+      return;
+    }
+
+    console.log('📄 File:', file.name, 'Size:', file.size, 'bytes');
+
+    // TradeListPageに遷移してからイベント発火
+    window.location.hash = '#/trades';
+
+    // ファイルデータを一時保存
+    const text = await file.text();
+    sessionStorage.setItem('pendingCsvData', text);
+
+    // TradeListPageがマウントされてから処理
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("fx:processCsv", { detail: text }));
+    }, 100);
+
+    // input要素をリセット
+    e.target.value = '';
+  };
 
   useEffect(() => {
     (async () => {
@@ -441,6 +483,13 @@ export default function AppShell({ children }: Props) {
 
   return (
     <DatasetProvider>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv"
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+      />
       <div style={{ display: "flex", minHeight: "100vh", width: "100%", position: "relative" }}>
         {/* 左メニュー：デスクトップは固定、モバイルはドロワー */}
         <div
@@ -531,6 +580,7 @@ export default function AppShell({ children }: Props) {
             onMenuToggle={() => setOpen(true)}
             onFilterToggle={() => setShowFilters(!showFilters)}
             showFilters={showFilters}
+            onUploadClick={handleUploadClick}
           />
           <Banner />
           <main style={{ flex: 1, padding: "var(--px-mobile)", width: "100%" }} className="main-container">{children}</main>
