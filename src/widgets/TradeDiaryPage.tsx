@@ -347,14 +347,17 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   useEffect(() => {
     const loadTrade = async () => {
       if (!entryId) {
+        console.log('TradeDiaryPage: No entryId provided');
         setLoading(false);
         return;
       }
+      console.log('TradeDiaryPage: Loading trade for entryId:', entryId);
       try {
         const trade = await getTradeByTicket(entryId);
+        console.log('TradeDiaryPage: Loaded trade:', trade);
         setDbTrade(trade);
       } catch (error) {
-        console.error('Error loading trade:', error);
+        console.error('TradeDiaryPage: Error loading trade:', error);
       } finally {
         setLoading(false);
       }
