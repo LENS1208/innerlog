@@ -217,6 +217,30 @@ export default function TradeListPage() {
     <div style={{ display: "grid", gap: 16 }}>
       <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onPick} style={{ display: "none" }} />
 
+      {/* テスト用の直接アップロードボタン */}
+      <div style={{ padding: 16, background: "var(--surface)", borderRadius: 12, border: "1px solid var(--line)" }}>
+        <button
+          onClick={() => {
+            console.log('🔘 Direct upload button clicked');
+            fileRef.current?.click();
+          }}
+          style={{
+            padding: "12px 24px",
+            background: "var(--accent)",
+            color: "#fff",
+            border: "none",
+            borderRadius: 8,
+            cursor: "pointer",
+            fontWeight: 600
+          }}
+        >
+          📤 CSVファイルをアップロード（テスト）
+        </button>
+        <span style={{ marginLeft: 16, color: "var(--muted)", fontSize: 14 }}>
+          useDatabase: {useDatabase ? "ON" : "OFF"}
+        </span>
+      </div>
+
       <TradesTable rows={paginatedRows as any[]} />
 
       {/* Pagination Controls */}
