@@ -117,7 +117,10 @@ export default function TradeListPage() {
 
   // バナーのボタン（fx:openUpload / fx:preset）と連携
   useEffect(() => {
-    const openUpload = () => fileRef.current?.click();
+    const openUpload = () => {
+      console.log('📤 Upload button clicked, opening file dialog');
+      fileRef.current?.click();
+    };
     const onPreset = (e: Event) => {
       const n = (e as CustomEvent<"A" | "B" | "C">).detail;
       if (!n) return;
@@ -152,21 +155,36 @@ export default function TradeListPage() {
   }, []);
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log('📂 File selected');
     const f = e.target.files?.[0];
-    if (!f) return;
+    if (!f) {
+      console.log('⚠️ No file selected');
+      return;
+    }
+
+    console.log('📄 File:', f.name, 'Size:', f.size, 'bytes');
+    console.log('🗂️ useDatabase:', useDatabase);
 
     try {
       const text = await f.text();
+      console.log('📝 File content length:', text.length);
+
       const trades = parseCsvText(text);
+      console.log('📊 Parsed trades:', trades.length);
 
       if (useDatabase && trades.length > 0) {
+        console.log('💾 Saving to database...');
         const dbTrades = trades.map(tradeToDb);
+        console.log('🔄 Converted to DB format:', dbTrades.length);
+
         await insertTrades(dbTrades);
         console.log(`✅ Uploaded ${trades.length} trades to database`);
 
         const dbData = await getAllTrades();
+        console.log('📥 Retrieved from database:', dbData.length);
         setSrcRows(dbData.map(dbToTrade));
       } else {
+        console.log('📝 Setting trades in memory (useDatabase=' + useDatabase + ')');
         setSrcRows(trades);
       }
     } catch (err) {
