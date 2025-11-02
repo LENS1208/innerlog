@@ -2,7 +2,14 @@ import React from "react";
 import { useDataset } from "../lib/dataset.context";
 import { UI_TEXT } from "../lib/i18n";
 
-const box: React.CSSProperties = { height: 36, border: "1px solid var(--line)", borderRadius: 12, background: "var(--surface)", padding: "0 10px" };
+const box: React.CSSProperties = {
+  height: 36,
+  border: "1px solid var(--line)",
+  borderRadius: 12,
+  background: "var(--surface)",
+  padding: "0 10px",
+  fontSize: 14,
+};
 
 type DatePreset = "all"|"today"|"yesterday"|"last7"|"last30"|"thisMonth"|"lastMonth"|"last12"|"lastYear"|"ytd"|"custom";
 
@@ -106,7 +113,7 @@ export default function FiltersBar() {
     <>
       <div className="filters-container" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
         {/* 銘柄 */}
-        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 100 }}>
           <option value="">{UI_TEXT.symbol}</option>
           <optgroup label="メジャーペア">
             <option>USD/JPY</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/CHF</option><option>AUD/USD</option><option>NZD/USD</option><option>USD/CAD</option>
@@ -120,21 +127,21 @@ export default function FiltersBar() {
         </select>
 
         {/* ポジション */}
-        <select value={uiFilters.side || ""} onChange={(e) => setUiFilters({ side: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.side || ""} onChange={(e) => setUiFilters({ side: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 100 }}>
           <option value="">{UI_TEXT.position}</option>
           <option value="LONG">{UI_TEXT.long}</option>
           <option value="SHORT">{UI_TEXT.short}</option>
         </select>
 
         {/* 損益 */}
-        <select value={uiFilters.pnl || ""} onChange={(e) => setUiFilters({ pnl: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.pnl || ""} onChange={(e) => setUiFilters({ pnl: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 80 }}>
           <option value="">{UI_TEXT.profit}</option>
           <option value="win">{UI_TEXT.winOnly}</option>
           <option value="loss">{UI_TEXT.lossOnly}</option>
         </select>
 
         {/* 期間プルダウン */}
-        <div style={{ position: "relative", flex: "1 1 auto", minWidth: 120 }}>
+        <div style={{ position: "relative", flex: "1 1 auto", minWidth: 100 }}>
           <button onClick={() => setShowModal(!showModal)} style={{ ...box, width: "100%", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
             <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{getPresetLabel()}</span>
             <span>▼</span>
@@ -240,7 +247,7 @@ export default function FiltersBar() {
         </div>
 
         {/* 曜日 */}
-        <select value={uiFilters.weekday || ""} onChange={(e) => setUiFilters({ weekday: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.weekday || ""} onChange={(e) => setUiFilters({ weekday: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 80 }}>
           <option value="">曜日</option>
           <option value="weekdays">平日のみ</option>
           <option value="weekend">週末のみ</option>
@@ -250,7 +257,7 @@ export default function FiltersBar() {
         </select>
 
         {/* 時間帯 */}
-        <select value={uiFilters.session || ""} onChange={(e) => setUiFilters({ session: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.session || ""} onChange={(e) => setUiFilters({ session: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 80 }}>
           <option value="">時間帯</option>
           <option value="asia">アジア</option>
           <option value="london">ロンドン</option>
