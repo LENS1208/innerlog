@@ -203,6 +203,7 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
 
     trades.forEach(t => {
       const date = parseDateTime(t.datetime || t.time)
+      if (isNaN(date.getTime())) return
       const dateStr = date.toISOString().split('T')[0]
       dailyMap.set(dateStr, (dailyMap.get(dateStr) || 0) + getProfit(t))
     })
@@ -640,6 +641,7 @@ export function WeekdayChart({ trades }: { trades: TradeWithProfit[] }) {
 
     trades.forEach(t => {
       const date = parseDateTime(t.datetime || t.time)
+      if (isNaN(date.getTime())) return
       const day = date.getDay()
       const current = weekdayMap.get(day)!
       current.profit += getProfit(t)
@@ -708,6 +710,7 @@ export function TimeOfDayChart({ trades }: { trades: TradeWithProfit[] }) {
 
     trades.forEach(t => {
       const date = parseDateTime(t.datetime || t.time)
+      if (isNaN(date.getTime())) return
       const hour = date.getHours()
       const current = hourMap.get(hour)!
       current.profit += getProfit(t)
