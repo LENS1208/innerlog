@@ -115,12 +115,8 @@ export default function TradeListPage() {
     })();
   }, [dataset, useDatabase]);
 
-  // バナーのボタン（fx:openUpload / fx:preset）と連携
+  // デモデータプリセット（fx:preset）と連携
   useEffect(() => {
-    const openUpload = () => {
-      console.log('📤 Upload button clicked, opening file dialog');
-      fileRef.current?.click();
-    };
     const onPreset = (e: Event) => {
       const n = (e as CustomEvent<"A" | "B" | "C">).detail;
       if (!n) return;
@@ -146,10 +142,8 @@ export default function TradeListPage() {
         setSrcRows([]);
       })();
     };
-    (window as any).addEventListener("fx:openUpload", openUpload);
     (window as any).addEventListener("fx:preset", onPreset);
     return () => {
-      (window as any).removeEventListener("fx:openUpload", openUpload);
       (window as any).removeEventListener("fx:preset", onPreset);
     };
   }, []);
@@ -217,28 +211,55 @@ export default function TradeListPage() {
     <div style={{ display: "grid", gap: 16 }}>
       <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onPick} style={{ display: "none" }} />
 
-      {/* テスト用の直接アップロードボタン */}
-      <div style={{ padding: 16, background: "var(--surface)", borderRadius: 12, border: "1px solid var(--line)" }}>
-        <button
-          onClick={() => {
-            console.log('🔘 Direct upload button clicked');
-            fileRef.current?.click();
-          }}
-          style={{
-            padding: "12px 24px",
-            background: "var(--accent)",
-            color: "#fff",
-            border: "none",
-            borderRadius: 8,
-            cursor: "pointer",
-            fontWeight: 600
-          }}
-        >
-          📤 CSVファイルをアップロード（テスト）
-        </button>
-        <span style={{ marginLeft: 16, color: "var(--muted)", fontSize: 14 }}>
-          useDatabase: {useDatabase ? "ON" : "OFF"}
-        </span>
+      {/* Upload Section */}
+      <div style={{
+        padding: 24,
+        background: "var(--surface)",
+        borderRadius: 12,
+        border: "1px solid var(--line)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between"
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <button
+            onClick={() => fileRef.current?.click()}
+            style={{
+              padding: "12px 24px",
+              background: "var(--accent)",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              cursor: "pointer",
+              fontWeight: 600,
+              fontSize: 15,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "opacity 0.2s"
+            }}
+            onMouseOver={(e) => e.currentTarget.style.opacity = "0.9"}
+            onMouseOut={(e) => e.currentTarget.style.opacity = "1"}
+          >
+            <span style={{ fontSize: 18 }}>📤</span>
+            CSVファイルをアップロード
+          </button>
+          <div style={{ color: "var(--muted)", fontSize: 14, lineHeight: 1.5 }}>
+            取引データ（CSV形式）をアップロードしてください
+          </div>
+        </div>
+        {srcRows.length > 0 && (
+          <div style={{
+            color: "var(--accent)",
+            fontSize: 14,
+            fontWeight: 600,
+            padding: "8px 16px",
+            background: "var(--accent-soft)",
+            borderRadius: 8
+          }}>
+            {srcRows.length}件の取引を読み込み中
+          </div>
+        )}
       </div>
 
       <TradesTable rows={paginatedRows as any[]} />
