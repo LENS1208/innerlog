@@ -8,7 +8,7 @@ type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
 
 // ヘッダー（右カラムの上部）
-function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
+function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: () => void; onFilterToggle: () => void; showFilters: boolean }) {
   const { applyFilters, resetFilters } = useDataset();
   return (
     <>
@@ -69,6 +69,32 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
                 return "ダッシュボード";
               })()}
             </div>
+
+            {/* フィルター表示/非表示トグルボタン（モバイルのみ） */}
+            <button
+              onClick={onFilterToggle}
+              className="mobile-only"
+              style={{
+                width: 40,
+                height: 40,
+                display: "none",
+                justifyContent: "center",
+                alignItems: "center",
+                background: showFilters ? "var(--accent)" : "var(--surface)",
+                color: showFilters ? "#fff" : "var(--ink)",
+                border: "1px solid var(--line)",
+                borderRadius: 8,
+                cursor: "pointer",
+                padding: 0,
+                marginLeft: "auto",
+              }}
+              aria-label="フィルターを表示/非表示"
+              title="フィルターを表示/非表示"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+            </button>
 
             {/* 大画面のみ：1行レイアウト */}
             <div className="header-oneline" style={{ marginLeft: "auto", display: "none", gap: 8, alignItems: "center" }}>
@@ -189,62 +215,64 @@ function Header({ onMenuToggle }: { onMenuToggle: () => void }) {
         </div>
 
         {/* モバイルのみ：フィルター縦配置 */}
-        <div className="mobile-only mobile-filters" style={{ display: "none", padding: "12px 16px", borderTop: "1px solid var(--line)", flexDirection: "column", gap: 10 }}>
-          <FiltersBar />
-          <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-            <button
-              onClick={applyFilters}
-              style={{
-                flex: 1,
-                height: 40,
-                padding: "8px 12px",
-                background: "var(--accent)",
-                color: "#fff",
-                border: 0,
-                borderRadius: 12,
-                fontWeight: 600,
-              }}
-            >
-              適用
-            </button>
-            <button
-              onClick={resetFilters}
-              title="リセット"
-              style={{
-                height: 40,
-                width: 40,
-                display: "grid",
-                placeItems: "center",
-                border: "1px solid var(--line)",
-                borderRadius: 12,
-                background: "var(--surface)",
-              }}
-            >
-              🗑️
-            </button>
-            <button
-              onClick={() => window.dispatchEvent(new CustomEvent("fx:openUpload"))}
-              title="ファイルアップロード"
-              style={{
-                height: 40,
-                width: 40,
-                display: "grid",
-                placeItems: "center",
-                border: "1px solid var(--line)",
-                borderRadius: 12,
-                background: "var(--surface)",
-              }}
-              aria-label="ファイルアップロード"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="12" y1="18" x2="12" y2="12"></line>
-                <polyline points="9 15 12 12 15 15"></polyline>
-              </svg>
-            </button>
+        {showFilters && (
+          <div className="mobile-only mobile-filters" style={{ display: "none", padding: "12px 16px", borderTop: "1px solid var(--line)", flexDirection: "column", gap: 10 }}>
+            <FiltersBar />
+            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+              <button
+                onClick={applyFilters}
+                style={{
+                  flex: 1,
+                  height: 40,
+                  padding: "8px 12px",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  border: 0,
+                  borderRadius: 12,
+                  fontWeight: 600,
+                }}
+              >
+                適用
+              </button>
+              <button
+                onClick={resetFilters}
+                title="リセット"
+                style={{
+                  height: 40,
+                  width: 40,
+                  display: "grid",
+                  placeItems: "center",
+                  border: "1px solid var(--line)",
+                  borderRadius: 12,
+                  background: "var(--surface)",
+                }}
+              >
+                🗑️
+              </button>
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("fx:openUpload"))}
+                title="ファイルアップロード"
+                style={{
+                  height: 40,
+                  width: 40,
+                  display: "grid",
+                  placeItems: "center",
+                  border: "1px solid var(--line)",
+                  borderRadius: 12,
+                  background: "var(--surface)",
+                }}
+                aria-label="ファイルアップロード"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="12" y1="18" x2="12" y2="12"></line>
+                  <polyline points="9 15 12 12 15 15"></polyline>
+                </svg>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
@@ -375,6 +403,7 @@ export default function AppShell({ children }: Props) {
   const [activeKey, setActiveKey] = useState<string>("dashboard");
   const drawerRef = useRef<HTMLDivElement>(null);
   const [quickOpen, setQuickOpen] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -504,7 +533,11 @@ export default function AppShell({ children }: Props) {
             background: "var(--bg)"
           }}
         >
-          <Header onMenuToggle={() => setOpen(true)} />
+          <Header
+            onMenuToggle={() => setOpen(true)}
+            onFilterToggle={() => setShowFilters(!showFilters)}
+            showFilters={showFilters}
+          />
           <Banner />
           <main style={{ flex: 1, padding: "var(--px-mobile)", width: "100%" }} className="main-container">{children}</main>
         </div>
