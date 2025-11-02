@@ -723,7 +723,7 @@ const EquityCurvePage: React.FC = () => {
             {/* ダッシュボードKPI */}
             <DashboardKPI trades={filteredTrades} />
 
-            {/* 累積損益とドローダウン */}
+            {/* 1. 累積損益とドローダウン（最重要：全体のパフォーマンス推移） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>累積損益（Equity）</h3>
@@ -735,34 +735,36 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 日次損益と直近取引 */}
+            {/* 2. 日次損益と今週のトレード（時系列パフォーマンス） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>日次損益</h3>
                 <DailyProfitChart trades={filteredTrades as any} />
               </div>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>直近の取引（上位/下位）</h3>
-                <RecentTradesTable trades={filteredTrades as any} />
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>今週のトレード</h3>
+                <WeekCalendar trades={filteredTrades as any} />
               </div>
             </section>
 
-            {/* 今週のトレード */}
-            <section className="dash-card" style={{ marginBottom: 16 }}>
-              <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>今週のトレード</h3>
-              <WeekCalendar trades={filteredTrades as any} />
+            {/* 3. 損益分布と保有時間分布（トレードの特性分析） */}
+            <section className="dash-row-2" style={{ marginBottom: 16 }}>
+              <ProfitDistributionChart trades={filteredTrades as any} />
+              <HoldingTimeDistributionChart trades={filteredTrades as any} />
             </section>
 
-            {/* セグメント分析 */}
+            {/* 4. セグメント分析（市場条件別の詳細分析） */}
             <section style={{ marginBottom: 16 }}>
               <SegmentCharts trades={filteredTrades as any} />
             </section>
-            <SetupChart trades={filteredTrades as any} />
 
-            {/* 損益分布と保有時間分布 */}
-            <section className="dash-row-2" style={{ marginTop: 16 }}>
-              <ProfitDistributionChart trades={filteredTrades as any} />
-              <HoldingTimeDistributionChart trades={filteredTrades as any} />
+            {/* 5. セットアップ別とベスト/ワーストトレード（戦略分析と個別取引） */}
+            <section className="dash-row-2" style={{ marginBottom: 16 }}>
+              <SetupChart trades={filteredTrades as any} />
+              <div className="dash-card">
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>直近の取引（上位/下位）</h3>
+                <RecentTradesTable trades={filteredTrades as any} />
+              </div>
             </section>
           </div>
         </div>
