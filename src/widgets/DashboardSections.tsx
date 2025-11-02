@@ -33,8 +33,14 @@ function getWeekdayJP(date: Date): string {
 function parseDateTime(datetime: string | number | undefined): Date {
   if (!datetime) return new Date(NaN)  // 無効な日付を返す
   if (typeof datetime === 'number') return new Date(datetime)
-  const dt = datetime.trim().replace(' ', 'T')
+
+  // ドット区切り形式（例: "2025.02.23 06:40:46"）をハイフン区切りに変換
+  let dt = datetime.trim()
   if (!dt) return new Date(NaN)  // 空文字列の場合は無効な日付
+
+  // "2025.02.23 06:40:46" -> "2025-02-23T06:40:46"
+  dt = dt.replace(/\./g, '-').replace(' ', 'T')
+
   return new Date(dt)
 }
 
@@ -45,16 +51,10 @@ function formatDateSafe(date: Date): string {
 
 export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
   const { labels, equity } = useMemo(() => {
-    console.log('📊 EquityChart - received trades:', trades.length);
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
-      const isValid = !isNaN(date.getTime())
-      if (!isValid) {
-        console.log('❌ Invalid trade datetime:', t.datetime, t.time);
-      }
-      return isValid
+      return !isNaN(date.getTime())
     })
-    console.log('📊 EquityChart - valid trades:', validTrades.length);
     const sorted = [...validTrades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
     const labels = sorted.map(t => parseDateTime(t.datetime || t.time).getTime())
     const equity: number[] = []
@@ -63,7 +63,6 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       acc += getProfit(t)
       equity.push(acc)
     }
-    console.log('📊 EquityChart - labels length:', labels.length);
     return { labels, equity }
   }, [trades])
 

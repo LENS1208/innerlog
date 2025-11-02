@@ -35,11 +35,14 @@ export default function FiltersBar() {
         if (useDatabase) {
           const { data, error } = await supabase
             .from('trades')
-            .select('item')
+            .select('item, symbol')
             .order('close_time', { ascending: true });
 
           if (!error && data) {
-            trades = data.map((t: any) => ({ item: t.item } as Trade));
+            trades = data.map((t: any) => ({
+              pair: t.item || t.symbol,
+              symbol: t.symbol || t.item
+            } as Trade));
           }
         } else {
           trades = await loadData(dataset);
@@ -49,8 +52,9 @@ export default function FiltersBar() {
 
         const symbolSet = new Set<string>();
         trades.forEach(trade => {
-          if (trade.item) {
-            symbolSet.add(trade.item);
+          const symbol = trade.pair || trade.symbol;
+          if (symbol) {
+            symbolSet.add(symbol);
           }
         });
 
