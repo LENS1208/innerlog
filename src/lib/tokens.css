@@ -47,17 +47,4 @@ body{background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,-apple-system
   .header-oneline { display: none !important; }
   .header-twoline { display: none !important; }
   .mobile-filters { display: flex !important; }
-
-  .mobile-filters .filters-container {
-    flex-direction: column !important;
-    width: 100% !important;
-  }
-
-  .mobile-filters .filters-container select,
-  .mobile-filters .filters-container button,
-  .mobile-filters .filters-container > div {
-    width: 100% !important;
-    min-width: 0 !important;
-    flex: 1 1 100% !important;
-  }
 }

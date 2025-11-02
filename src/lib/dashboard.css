@@ -315,22 +315,3 @@
 .danger {
   color: var(--danger, #ef4444);
 }
-
-.dash-card h3 {
-  margin: 0 0 8px;
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--muted);
-}
-
-@media (min-width: 640px) {
-  .dash-card h3 {
-    font-size: 14px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .dash-card h3 {
-    font-size: 15px;
-  }
-}
