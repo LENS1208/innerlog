@@ -377,6 +377,24 @@ export default function MonthlyCalendar() {
   return (
     <div className="monthly-calendar-container" style={{ padding: "var(--space-3)" }}>
       <style>{`
+        .monthly-calendar-container .calendar-header-grid {
+          display: grid;
+          grid-template-columns: repeat(8, 1fr);
+          gap: 2px;
+          margin-bottom: 2px;
+        }
+
+        .monthly-calendar-container .calendar-week-row {
+          display: grid;
+          grid-template-columns: repeat(8, 1fr);
+          gap: 2px;
+          min-height: 110px;
+        }
+
+        .monthly-calendar-container .week-summary-cell {
+          display: flex;
+        }
+
         @media (max-width: 1023px) {
           .monthly-calendar-container .calendar-header {
             flex-direction: column !important;
@@ -399,6 +417,18 @@ export default function MonthlyCalendar() {
           .monthly-calendar-container .month-total-display {
             width: 100% !important;
             justify-content: space-between !important;
+          }
+
+          .monthly-calendar-container .week-summary-cell {
+            display: none !important;
+          }
+
+          .monthly-calendar-container .calendar-header-grid {
+            grid-template-columns: repeat(7, 1fr) !important;
+          }
+
+          .monthly-calendar-container .calendar-week-row {
+            grid-template-columns: repeat(7, 1fr) !important;
           }
         }
 
@@ -466,6 +496,20 @@ export default function MonthlyCalendar() {
             font-size: 18px !important;
           }
         }
+
+        @media (min-width: 1024px) {
+          .monthly-calendar-container .calendar-header-grid {
+            grid-template-columns: repeat(8, 1fr) !important;
+          }
+
+          .monthly-calendar-container .calendar-week-row {
+            grid-template-columns: repeat(8, 1fr) !important;
+          }
+
+          .monthly-calendar-container .week-summary-cell {
+            display: flex !important;
+          }
+        }
       `}</style>
 
       <div className="calendar-header" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-4)", minHeight: 56 }}>
@@ -529,11 +573,11 @@ export default function MonthlyCalendar() {
       </div>
 
       <div className="calendar-wrapper" style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)" }}>
-        <div className="calendar-grid" style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 2, marginBottom: 2 }}>
-          {["月", "火", "水", "木", "金", "土", "日", "週合計"].map((day) => (
+        <div className="calendar-header-grid">
+          {["月", "火", "水", "木", "金", "土", "日", "週合計"].map((day, idx) => (
             <div
               key={day}
-              className="day-header"
+              className={`day-header ${idx === 7 ? 'week-summary-cell' : ''}`}
               style={{
                 textAlign: "center",
                 fontWeight: "bold",
@@ -558,7 +602,7 @@ export default function MonthlyCalendar() {
             if (weekIndex === 5 && !hasAnyTradesInWeek) return null;
             const weekProfit = weekSummaries[weekIndex].profitYen;
             return (
-              <div key={weekIndex} className="calendar-grid" style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 2, minHeight: 110 }}>
+              <div key={weekIndex} className="calendar-week-row">
                 {weekDays.map((day, idx) => {
                   const hasTradesValue = day.isCurrentMonth && day.tradeCount > 0;
                   const bgColor = hasTradesValue
@@ -635,13 +679,12 @@ export default function MonthlyCalendar() {
                   );
                 })}
                 <div
-                  className="week-summary"
+                  className="week-summary week-summary-cell"
                   style={{
                     background: "#f9fafb",
                     border: "1px solid var(--line)",
                     borderRadius: 8,
                     padding: 8,
-                    display: "flex",
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
