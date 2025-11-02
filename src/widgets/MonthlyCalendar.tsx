@@ -378,31 +378,92 @@ export default function MonthlyCalendar() {
     <div className="monthly-calendar-container" style={{ padding: "var(--space-3)" }}>
       <style>{`
         @media (max-width: 1023px) {
+          .monthly-calendar-container .calendar-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 12px !important;
+            min-height: auto !important;
+          }
+
           .monthly-calendar-container .calendar-header h1 {
             font-size: 18px !important;
+          }
+
+          .monthly-calendar-container .calendar-header-right {
+            width: 100% !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+          }
+
+          .monthly-calendar-container .month-total-display {
+            width: 100% !important;
+            justify-content: space-between !important;
           }
         }
 
         @media (max-width: 640px) {
+          .monthly-calendar-container {
+            padding: 8px !important;
+          }
+
           .monthly-calendar-container .calendar-day {
-            padding: 4px !important;
+            padding: 2px !important;
+            min-height: 60px !important;
           }
 
           .monthly-calendar-container .calendar-day-number {
-            font-size: 11px !important;
+            font-size: 10px !important;
+            margin-bottom: 2px !important;
           }
 
           .monthly-calendar-container .calendar-day-profit {
-            font-size: 12px !important;
+            font-size: 10px !important;
+            margin-bottom: 1px !important;
           }
 
           .monthly-calendar-container .calendar-day-trades {
-            font-size: 10px !important;
+            font-size: 8px !important;
           }
 
           .monthly-calendar-container .day-header {
             font-size: 10px !important;
+            padding: 2px !important;
+            height: 24px !important;
+          }
+
+          .monthly-calendar-container .week-summary {
             padding: 4px !important;
+            min-height: 60px !important;
+          }
+
+          .monthly-calendar-container .week-summary-label {
+            font-size: 9px !important;
+          }
+
+          .monthly-calendar-container .week-summary-value {
+            font-size: 11px !important;
+          }
+
+          .monthly-calendar-container .calendar-grid {
+            gap: 1px !important;
+          }
+
+          .monthly-calendar-container .calendar-wrapper {
+            padding: 8px !important;
+          }
+
+          .monthly-calendar-container .nav-button {
+            padding: 6px 10px !important;
+            font-size: 16px !important;
+          }
+
+          .monthly-calendar-container .month-total-label {
+            font-size: 11px !important;
+          }
+
+          .monthly-calendar-container .month-total-value {
+            font-size: 18px !important;
           }
         }
       `}</style>
@@ -411,6 +472,7 @@ export default function MonthlyCalendar() {
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
           <button
             onClick={goToPrevMonth}
+            className="nav-button"
             style={{
               background: "var(--surface)",
               border: "1px solid var(--line)",
@@ -425,6 +487,7 @@ export default function MonthlyCalendar() {
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>{monthName}</h1>
           <button
             onClick={goToNextMonth}
+            className="nav-button"
             style={{
               background: "var(--surface)",
               border: "1px solid var(--line)",
@@ -437,10 +500,10 @@ export default function MonthlyCalendar() {
             ›
           </button>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "var(--space-2)" }}>
-            <div style={{ fontSize: 13, color: "var(--muted)" }}>{UI_TEXT.monthlyTotal}</div>
-            <div style={{
+        <div className="calendar-header-right" style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
+          <div className="month-total-display" style={{ display: "flex", alignItems: "baseline", gap: "var(--space-2)" }}>
+            <div className="month-total-label" style={{ fontSize: 13, color: "var(--muted)" }}>{UI_TEXT.monthlyTotal}</div>
+            <div className="month-total-value" style={{
               fontSize: 24,
               fontWeight: 700,
               color: monthTotal >= 0 ? "var(--gain)" : "var(--loss)"
@@ -465,8 +528,8 @@ export default function MonthlyCalendar() {
         </div>
       </div>
 
-      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 2, marginBottom: 2 }}>
+      <div className="calendar-wrapper" style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)" }}>
+        <div className="calendar-grid" style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 2, marginBottom: 2 }}>
           {["月", "火", "水", "木", "金", "土", "日", "週合計"].map((day) => (
             <div
               key={day}
@@ -495,7 +558,7 @@ export default function MonthlyCalendar() {
             if (weekIndex === 5 && !hasAnyTradesInWeek) return null;
             const weekProfit = weekSummaries[weekIndex].profitYen;
             return (
-              <div key={weekIndex} style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 2, minHeight: 110 }}>
+              <div key={weekIndex} className="calendar-grid" style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 2, minHeight: 110 }}>
                 {weekDays.map((day, idx) => {
                   const hasTradesValue = day.isCurrentMonth && day.tradeCount > 0;
                   const bgColor = hasTradesValue
@@ -572,6 +635,7 @@ export default function MonthlyCalendar() {
                   );
                 })}
                 <div
+                  className="week-summary"
                   style={{
                     background: "#f9fafb",
                     border: "1px solid var(--line)",
@@ -586,8 +650,9 @@ export default function MonthlyCalendar() {
                 >
                   {weekProfit !== 0 ? (
                     <>
-                      <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>{weekIndex + 1}週目</div>
+                      <div className="week-summary-label" style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>{weekIndex + 1}週目</div>
                       <div
+                        className="week-summary-value"
                         style={{
                           fontSize: 18,
                           fontWeight: 700,
@@ -599,8 +664,8 @@ export default function MonthlyCalendar() {
                     </>
                   ) : (
                     <>
-                      <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>{weekIndex + 1}週目</div>
-                      <div style={{ fontSize: 16, color: "var(--muted)" }}>0円</div>
+                      <div className="week-summary-label" style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>{weekIndex + 1}週目</div>
+                      <div className="week-summary-value" style={{ fontSize: 16, color: "var(--muted)" }}>0円</div>
                     </>
                   )}
                 </div>
