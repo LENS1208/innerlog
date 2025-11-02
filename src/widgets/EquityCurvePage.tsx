@@ -15,7 +15,7 @@ import {
   DrawdownChart,
   DailyProfitChart,
   RecentTradesTable,
-  WeekCalendar,
+  MonthCalendar,
   SegmentCharts,
   SetupChart,
   ProfitDistributionChart,
@@ -735,15 +735,15 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 2. 日次損益と今週のトレード（時系列パフォーマンス） */}
+            {/* 2. 日次損益と今月のトレード（時系列パフォーマンス） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>日次損益</h3>
                 <DailyProfitChart trades={filteredTrades as any} />
               </div>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>今週のトレード</h3>
-                <WeekCalendar trades={filteredTrades as any} />
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>今月のトレード</h3>
+                <MonthCalendar trades={filteredTrades as any} />
               </div>
             </section>
 

@@ -299,6 +299,156 @@ export function RecentTradesTable({ trades }: { trades: TradeWithProfit[] }) {
   )
 }
 
+export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
+  const monthData = useMemo(() => {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = today.getMonth()
+
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const startDay = firstDay.getDay()
+    const daysInMonth = lastDay.getDate()
+
+    const days = []
+
+    for (let i = 0; i < startDay; i++) {
+      days.push(null)
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day)
+      const dateStr = date.toISOString().split('T')[0]
+
+      const dayTrades = trades.filter(t => {
+        if (!t.datetime && !t.time) return false
+        try {
+          const tDate = parseDateTime(t.datetime || t.time).toISOString().split('T')[0]
+          return tDate === dateStr
+        } catch {
+          return false
+        }
+      })
+
+      const profit = dayTrades.reduce((sum, t) => sum + getProfit(t), 0)
+
+      days.push({
+        date: day,
+        dateStr,
+        weekday: getWeekdayJP(date),
+        profit,
+        count: dayTrades.length,
+        isSat: date.getDay() === 6,
+        isSun: date.getDay() === 0,
+        isToday: date.toDateString() === today.toDateString()
+      })
+    }
+
+    return { days, year, month: month + 1 }
+  }, [trades])
+
+  const weekDays = ['日', '月', '火', '水', '木', '金', '土']
+
+  return (
+    <div>
+      <div style={{
+        marginBottom: 12,
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: 'var(--ink)'
+      }}>
+        {monthData.year}年 {monthData.month}月
+      </div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(7, 1fr)',
+        gap: 4,
+        marginBottom: 8
+      }}>
+        {weekDays.map(day => (
+          <div key={day} style={{
+            textAlign: 'center',
+            fontSize: 12,
+            fontWeight: 'bold',
+            padding: '4px 0',
+            color: day === '日' ? '#ef4444' : day === '土' ? '#3b82f6' : 'var(--muted)'
+          }}>
+            {day}
+          </div>
+        ))}
+      </div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(7, 1fr)',
+        gap: 4
+      }}>
+        {monthData.days.map((day, i) =>
+          day === null ? (
+            <div key={`empty-${i}`} style={{ minHeight: 80 }} />
+          ) : (
+            <div
+              key={i}
+              style={{
+                border: '1px solid var(--line)',
+                borderRadius: 8,
+                padding: 8,
+                minHeight: 80,
+                backgroundColor: day.isToday ? 'rgba(59, 130, 246, 0.05)' : 'var(--surface)',
+                cursor: day.count > 0 ? 'pointer' : 'default',
+                transition: 'all 0.2s',
+                borderLeft: day.isSun ? '3px solid #ef4444' : day.isSat ? '3px solid #3b82f6' : undefined
+              }}
+              onClick={() => {
+                if (day.count > 0) {
+                  location.hash = `/calendar/day/${day.dateStr}`;
+                }
+              }}
+              onMouseEnter={(e) => {
+                if (day.count > 0) {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)'
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)'
+                e.currentTarget.style.boxShadow = 'none'
+              }}
+            >
+              <div style={{
+                fontSize: 14,
+                fontWeight: day.isToday ? 'bold' : 'normal',
+                marginBottom: 4,
+                color: day.isSun ? '#ef4444' : day.isSat ? '#3b82f6' : 'var(--ink)'
+              }}>
+                {day.date}
+              </div>
+              {day.count > 0 && (
+                <>
+                  <div style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: day.profit >= 0 ? '#22c55e' : '#ef4444',
+                    marginBottom: 2
+                  }}>
+                    {day.profit >= 0 ? '+' : ''}{formatJPY(day.profit)}
+                  </div>
+                  <div style={{
+                    fontSize: 11,
+                    color: 'var(--muted)'
+                  }}>
+                    {day.count}件
+                  </div>
+                </>
+              )}
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function WeekCalendar({ trades }: { trades: TradeWithProfit[] }) {
   const weekData = useMemo(() => {
     const today = new Date()
