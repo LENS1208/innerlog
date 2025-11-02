@@ -44,7 +44,11 @@ function formatDateSafe(date: Date): string {
 
 export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
   const { labels, equity } = useMemo(() => {
-    const sorted = [...trades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
+    const validTrades = trades.filter(t => {
+      const date = parseDateTime(t.datetime || t.time)
+      return !isNaN(date.getTime())
+    })
+    const sorted = [...validTrades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
     const labels = sorted.map(t => parseDateTime(t.datetime || t.time).getTime())
     const equity: number[] = []
     let acc = 0
@@ -130,7 +134,11 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
 
 export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
   const { labels, dd } = useMemo(() => {
-    const sorted = [...trades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
+    const validTrades = trades.filter(t => {
+      const date = parseDateTime(t.datetime || t.time)
+      return !isNaN(date.getTime())
+    })
+    const sorted = [...validTrades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
     const labels = sorted.map(t => parseDateTime(t.datetime || t.time).getTime())
     let equity = 0
     let peak = 0
