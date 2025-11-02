@@ -1,17 +1,67 @@
 import React from "react";
 import { useDataset } from "../lib/dataset.context";
 import { UI_TEXT } from "../lib/i18n";
+import { supabase } from "../lib/supabase";
+import type { Trade } from "../lib/types";
+import { parseCsvText } from "../lib/csv";
 
 const box: React.CSSProperties = { height: 36, border: "1px solid var(--line)", borderRadius: 12, background: "var(--surface)", padding: "0 10px" };
 
 type DatePreset = "all"|"today"|"yesterday"|"last7"|"last30"|"thisMonth"|"lastMonth"|"last12"|"lastYear"|"ytd"|"custom";
 
+function loadData(ds: "A" | "B" | "C"): Promise<Trade[]> {
+  if (ds === "A" || ds === "B" || ds === "C") {
+    const cacheBuster = `?t=${Date.now()}`;
+    return fetch(`/demo/${ds}.csv${cacheBuster}`)
+      .then((r) => r.text())
+      .then((text) => parseCsvText(text));
+  }
+  return Promise.resolve([]);
+}
+
 export default function FiltersBar() {
-  const { uiFilters, setUiFilters } = useDataset();
+  const { uiFilters, setUiFilters, dataset, useDatabase } = useDataset();
   const [datePreset, setDatePreset] = React.useState<DatePreset>("all");
   const [showModal, setShowModal] = React.useState(false);
   const [tempFrom, setTempFrom] = React.useState("");
   const [tempTo, setTempTo] = React.useState("");
+  const [availableSymbols, setAvailableSymbols] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    const loadSymbols = async () => {
+      try {
+        let trades: Trade[] = [];
+
+        if (useDatabase) {
+          const { data, error } = await supabase
+            .from('trades')
+            .select('item')
+            .order('close_time', { ascending: true });
+
+          if (!error && data) {
+            trades = data.map((t: any) => ({ item: t.item } as Trade));
+          }
+        } else {
+          trades = await loadData(dataset);
+        }
+
+        const symbolSet = new Set<string>();
+        trades.forEach(trade => {
+          if (trade.item) {
+            symbolSet.add(trade.item);
+          }
+        });
+
+        const symbols = Array.from(symbolSet).sort();
+        setAvailableSymbols(symbols);
+      } catch (e) {
+        console.error('Error loading symbols:', e);
+        setAvailableSymbols([]);
+      }
+    };
+
+    loadSymbols();
+  }, [dataset, useDatabase]);
 
   const getPresetLabel = () => {
     switch(datePreset) {
@@ -108,15 +158,9 @@ export default function FiltersBar() {
         {/* 銘柄 */}
         <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">{UI_TEXT.symbol}</option>
-          <optgroup label="メジャーペア">
-            <option>USD/JPY</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/CHF</option><option>AUD/USD</option><option>NZD/USD</option><option>USD/CAD</option>
-          </optgroup>
-          <optgroup label="クロス円">
-            <option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/JPY</option><option>CHF/JPY</option><option>CAD/JPY</option><option>NZD/JPY</option>
-          </optgroup>
-          <optgroup label="その他">
-            <option>EUR/GBP</option><option>EUR/AUD</option><option>GBP/AUD</option><option>AUD/NZD</option>
-          </optgroup>
+          {availableSymbols.map(symbol => (
+            <option key={symbol} value={symbol}>{symbol}</option>
+          ))}
         </select>
 
         {/* ポジション */}
