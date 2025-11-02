@@ -10,6 +10,16 @@ type Props = { children: React.ReactNode };
 // ヘッダー（右カラムの上部）
 function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: () => void; onFilterToggle: () => void; showFilters: boolean }) {
   const { applyFilters, resetFilters } = useDataset();
+
+  const handleUploadClick = () => {
+    console.log('📤 Header upload button clicked');
+    // 取引一覧ページに遷移
+    window.location.hash = '#/trades';
+    // イベントを発火してファイルダイアログを開く
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("fx:openUpload"));
+    }, 100);
+  };
   return (
     <>
       <div
@@ -129,7 +139,7 @@ function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: (
                 🗑️
               </button>
               <button
-                onClick={() => window.dispatchEvent(new CustomEvent("fx:openUpload"))}
+                onClick={handleUploadClick}
                 title="ファイルアップロード"
                 style={{
                   height: 36,
@@ -189,7 +199,7 @@ function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: (
                 🗑️
               </button>
               <button
-                onClick={() => window.dispatchEvent(new CustomEvent("fx:openUpload"))}
+                onClick={handleUploadClick}
                 title="ファイルアップロード"
                 style={{
                   height: 36,
@@ -250,7 +260,7 @@ function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: (
                 🗑️
               </button>
               <button
-                onClick={() => window.dispatchEvent(new CustomEvent("fx:openUpload"))}
+                onClick={handleUploadClick}
                 title="ファイルアップロード"
                 style={{
                   height: 40,
