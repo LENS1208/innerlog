@@ -45,6 +45,8 @@ export default function FiltersBar() {
           trades = await loadData(dataset);
         }
 
+        console.log('Loaded trades for symbols:', trades.length);
+
         const symbolSet = new Set<string>();
         trades.forEach(trade => {
           if (trade.item) {
@@ -53,6 +55,7 @@ export default function FiltersBar() {
         });
 
         const symbols = Array.from(symbolSet).sort();
+        console.log('Available symbols:', symbols);
         setAvailableSymbols(symbols);
       } catch (e) {
         console.error('Error loading symbols:', e);
@@ -157,7 +160,7 @@ export default function FiltersBar() {
       <div className="filters-container" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
         {/* 銘柄 */}
         <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
-          <option value="">{UI_TEXT.symbol}</option>
+          <option value="">{availableSymbols.length === 0 ? '読み込み中...' : UI_TEXT.symbol}</option>
           {availableSymbols.map(symbol => (
             <option key={symbol} value={symbol}>{symbol}</option>
           ))}
