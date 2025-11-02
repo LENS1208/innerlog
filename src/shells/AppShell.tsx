@@ -13,19 +13,8 @@ function Header({ onMenuToggle, onFilterToggle, showFilters }: { onMenuToggle: (
 
   const handleUploadClick = () => {
     console.log('📤 Header upload button clicked');
-    const currentHash = window.location.hash;
-
-    // 取引一覧ページにいない場合のみ遷移
-    if (currentHash !== '#/trades') {
-      window.location.hash = '#/trades';
-      // ページ遷移後にイベントを発火
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent("fx:openUpload"));
-      }, 100);
-    } else {
-      // すでに取引一覧ページにいる場合は即座にイベント発火
-      window.dispatchEvent(new CustomEvent("fx:openUpload"));
-    }
+    // ページ遷移せずにイベントを発火
+    window.dispatchEvent(new CustomEvent("fx:openUpload"));
   };
   return (
     <>
