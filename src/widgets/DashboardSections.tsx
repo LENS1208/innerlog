@@ -704,3 +704,185 @@ export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
     </div>
   )
 }
+
+export function ProfitDistributionChart({ trades }: { trades: TradeWithProfit[] }) {
+  const distributionData = useMemo(() => {
+    const ranges = [
+      { label: '-5万円以下', min: -Infinity, max: -50000 },
+      { label: '-5万～-2万円', min: -50000, max: -20000 },
+      { label: '-2万～-1万円', min: -20000, max: -10000 },
+      { label: '-1万～-5千円', min: -10000, max: -5000 },
+      { label: '-5千円～0円', min: -5000, max: 0 },
+      { label: '0～5千円', min: 0, max: 5000 },
+      { label: '5千～1万円', min: 5000, max: 10000 },
+      { label: '1万～2万円', min: 10000, max: 20000 },
+      { label: '2万～5万円', min: 20000, max: 50000 },
+      { label: '5万円以上', min: 50000, max: Infinity },
+    ]
+
+    const counts = ranges.map(range => {
+      return trades.filter(t => {
+        const profit = getProfit(t)
+        return profit > range.min && profit <= range.max
+      }).length
+    })
+
+    return { ranges, counts }
+  }, [trades])
+
+  const data = {
+    labels: distributionData.ranges.map(r => r.label),
+    datasets: [{
+      label: '取引回数',
+      data: distributionData.counts,
+      backgroundColor: distributionData.ranges.map((r, i) =>
+        r.max <= 0 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(34, 197, 94, 0.8)'
+      ),
+    }]
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => `取引回数: ${context.parsed.y}件`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: '#f3f4f6' },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
+          font: { size: 11 }
+        }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value: any) => `${value}件`,
+          stepSize: 200
+        },
+        grid: { color: '#f3f4f6' }
+      }
+    }
+  }
+
+  return (
+    <div className="dash-card">
+      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>損益分布</h3>
+      <div style={{ height: 360, minWidth: 0, width: '100%' }}>
+        {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
+      </div>
+    </div>
+  )
+}
+
+export function HoldingTimeDistributionChart({ trades }: { trades: TradeWithProfit[] }) {
+  const distributionData = useMemo(() => {
+    const ranges = [
+      { label: '30分以内', min: 0, max: 30 },
+      { label: '30分～1時間', min: 30, max: 60 },
+      { label: '1～2時間', min: 60, max: 120 },
+      { label: '2～4時間', min: 120, max: 240 },
+      { label: '4～8時間', min: 240, max: 480 },
+      { label: '8～24時間', min: 480, max: 1440 },
+      { label: '1日以上', min: 1440, max: Infinity },
+    ]
+
+    const winCounts = ranges.map(() => 0)
+    const lossCounts = ranges.map(() => 0)
+
+    trades.forEach(t => {
+      const profit = getProfit(t)
+      let holdingTimeMin = 0
+
+      if (typeof t.time === 'number' && (t as any).openTimeMs) {
+        holdingTimeMin = (t.time - (t as any).openTimeMs) / (1000 * 60)
+      } else if (t.datetime && (t as any).openTime) {
+        const closeTime = parseDateTime(t.datetime).getTime()
+        const openTime = parseDateTime((t as any).openTime).getTime()
+        holdingTimeMin = (closeTime - openTime) / (1000 * 60)
+      }
+
+      if (!Number.isFinite(holdingTimeMin) || holdingTimeMin < 0) return
+
+      const rangeIndex = ranges.findIndex(r => holdingTimeMin > r.min && holdingTimeMin <= r.max)
+      if (rangeIndex >= 0) {
+        if (profit > 0) {
+          winCounts[rangeIndex]++
+        } else {
+          lossCounts[rangeIndex]++
+        }
+      }
+    })
+
+    return { ranges, winCounts, lossCounts }
+  }, [trades])
+
+  const data = {
+    labels: distributionData.ranges.map(r => r.label),
+    datasets: [
+      {
+        label: '勝ちトレード',
+        data: distributionData.winCounts,
+        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+      },
+      {
+        label: '負けトレード',
+        data: distributionData.lossCounts,
+        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+      }
+    ]
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: { font: { size: 12 } }
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => `${context.dataset.label}: ${context.parsed.y}件`
+        }
+      }
+    },
+    scales: {
+      x: {
+        stacked: false,
+        grid: { color: '#f3f4f6' },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 45,
+          font: { size: 11 }
+        }
+      },
+      y: {
+        stacked: false,
+        beginAtZero: true,
+        ticks: {
+          callback: (value: any) => `${value}件`,
+          stepSize: 200
+        },
+        grid: { color: '#f3f4f6' }
+      }
+    }
+  }
+
+  return (
+    <div className="dash-card">
+      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>保有時間分布</h3>
+      <div style={{ height: 360, minWidth: 0, width: '100%' }}>
+        {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
+      </div>
+    </div>
+  )
+}

@@ -17,7 +17,9 @@ import {
   RecentTradesTable,
   WeekCalendar,
   SegmentCharts,
-  SetupChart
+  SetupChart,
+  ProfitDistributionChart,
+  HoldingTimeDistributionChart
 } from "./DashboardSections";
 import "../lib/dashboard.css";
 
@@ -756,6 +758,12 @@ const EquityCurvePage: React.FC = () => {
               <SegmentCharts trades={filteredTrades as any} />
             </section>
             <SetupChart trades={filteredTrades as any} />
+
+            {/* 損益分布と保有時間分布 */}
+            <section className="dash-row-2" style={{ marginTop: 16 }}>
+              <ProfitDistributionChart trades={filteredTrades as any} />
+              <HoldingTimeDistributionChart trades={filteredTrades as any} />
+            </section>
           </div>
         </div>
       </div>
