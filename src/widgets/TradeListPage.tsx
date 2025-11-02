@@ -8,7 +8,7 @@ import { getAllTrades, dbToTrade } from "../lib/db.service";
 
 function mapToRow(t: Trade) {
   return {
-    ticket: t.id,
+    ticket: t.ticket || t.id,
     datetime: t.datetime,
     symbol: t.pair,
     side: t.side,
