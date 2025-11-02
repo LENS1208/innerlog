@@ -210,7 +210,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>取引件数（取引日数）</div>
         <div className="kpi-value">
-          {dash.count} <span className="kpi-unit">件</span> ({dash.tradingDays} <span className="kpi-unit">日</span>)
+          {dash.count} <span className="kpi-unit">件</span> <span style={{ fontWeight: 'normal' }}>({dash.tradingDays} <span className="kpi-unit">日</span>)</span>
         </div>
         <div className="kpi-desc">アクティブなトレード件数と日数</div>
       </div>
