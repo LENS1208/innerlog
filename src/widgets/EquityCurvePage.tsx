@@ -80,7 +80,11 @@ const EquityCurvePage: React.FC = () => {
   }, [useDatabase, contextDataset]);
   // フィルタ適用（filterTradesを使用）
   const filteredTrades = useMemo(() => {
-    return filterTrades(trades, filters);
+    console.log('🔍 Dashboard - trades:', trades.length);
+    console.log('🔍 Dashboard - filters:', filters);
+    const filtered = filterTrades(trades, filters);
+    console.log('🔍 Dashboard - filtered:', filtered.length);
+    return filtered;
   }, [trades, filters]);
 
   // 累積損益計算は不要（DashboardSectionsコンポーネント内で計算される）

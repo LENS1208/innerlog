@@ -31,9 +31,10 @@ function getWeekdayJP(date: Date): string {
 }
 
 function parseDateTime(datetime: string | number | undefined): Date {
-  if (!datetime) return new Date()
+  if (!datetime) return new Date(NaN)  // 無効な日付を返す
   if (typeof datetime === 'number') return new Date(datetime)
-  const dt = datetime.replace(' ', 'T')
+  const dt = datetime.trim().replace(' ', 'T')
+  if (!dt) return new Date(NaN)  // 空文字列の場合は無効な日付
   return new Date(dt)
 }
 
@@ -44,10 +45,16 @@ function formatDateSafe(date: Date): string {
 
 export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
   const { labels, equity } = useMemo(() => {
+    console.log('📊 EquityChart - received trades:', trades.length);
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
-      return !isNaN(date.getTime())
+      const isValid = !isNaN(date.getTime())
+      if (!isValid) {
+        console.log('❌ Invalid trade datetime:', t.datetime, t.time);
+      }
+      return isValid
     })
+    console.log('📊 EquityChart - valid trades:', validTrades.length);
     const sorted = [...validTrades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
     const labels = sorted.map(t => parseDateTime(t.datetime || t.time).getTime())
     const equity: number[] = []
@@ -56,6 +63,7 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       acc += getProfit(t)
       equity.push(acc)
     }
+    console.log('📊 EquityChart - labels length:', labels.length);
     return { labels, equity }
   }, [trades])
 
