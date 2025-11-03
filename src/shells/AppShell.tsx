@@ -454,8 +454,8 @@ export default function AppShell({ children }: Props) {
   useEffect(() => {
     (async () => {
       try {
-        const url = `/menu/app_nav_menu.ja_v1.json?v=${Date.now()}`;
-        const res = await fetch(url, { cache: "no-store" });
+        const url = `/menu/app_nav_menu.ja_v1.json`;
+        const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = (await res.json()) as MenuItem[];
         setMenu(data);
