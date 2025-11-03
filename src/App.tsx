@@ -15,7 +15,7 @@ import DailyNotePage from "./widgets/DailyNotePage";
 import JournalNotesPage from "./pages/JournalNotesPage";
 import AiProposalPage from "./pages/AiProposalPage";
 
-type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/forecast" | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal";
+type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal";
 
 function parseHashToNewRoute(): NewRoute {
   const h = location.hash.replace(/^#/, "");
@@ -40,7 +40,7 @@ function parseHashToNewRoute(): NewRoute {
   if (h.startsWith("/calendar")) return "/calendar";
   if (h.startsWith("/trades")) return "/trades";
   if (h.startsWith("/reports")) return h as NewRoute;
-  if (h.startsWith("/forecast")) return "/forecast";
+  if (h.startsWith("/forecast")) return "/ai-proposal";
   if (h === "/notebook" || h.startsWith("/notebook/")) return h as NewRoute;
   if (h.startsWith("/settings")) return "/settings";
   if (h === "/journal-v0") return "/journal-v0";
@@ -70,7 +70,6 @@ export default function App() {
   }
   else if (route === "/trades") Page = <TradeListPage />;
   else if (route.startsWith("/reports")) Page = <ReportsPage />;
-  else if (route === "/forecast") Page = <ForecastHybrid />;
   else if (route === "/notebook") Page = <JournalNotesPage />;
   else if (route.startsWith("/notebook/")) {
     const entryId = route.split("/")[2] ?? "";

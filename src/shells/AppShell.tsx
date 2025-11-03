@@ -75,7 +75,7 @@ function Header({
                 if (k === "calendar") return "カレンダー";
                 if (k === "trades") return "取引一覧";
                 if (k === "reports") return "レポート/分析";
-                if (k === "forecast") return "相場予想";
+                if (k === "forecast" || k === "ai-proposal") return "相場予想";
                 if (k === "notebook") return "トレード日記";
                 if (k === "settings") return "設定";
                 return "ダッシュボード";
@@ -468,7 +468,7 @@ export default function AppShell({ children }: Props) {
           { key: "reports", label: "レポート/分析" },
           { key: "calendar", label: "カレンダー" },
           { key: "notebook", label: "トレード日記" },
-          { key: "forecast", label: "相場予想" },
+          { key: "ai-proposal", label: "相場予想" },
           { key: "trades", label: "取引一覧" },
           { key: "settings", label: "設定" },
         ]);
