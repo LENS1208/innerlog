@@ -74,7 +74,8 @@ function Header({
                 if (!k || k === "dashboard") return "ダッシュボード";
                 if (k === "calendar") return "カレンダー";
                 if (k === "trades") return "取引一覧";
-                if (k === "reports") return "レポート/分析";
+                if (k === "reports") return "レポート";
+                if (k === "ai-evaluation") return "AI評価";
                 if (k === "forecast" || k === "ai-proposal") return "相場予想";
                 if (k === "notebook") return "トレード日記";
                 if (k === "settings") return "設定";
@@ -465,7 +466,8 @@ export default function AppShell({ children }: Props) {
         console.error("❌ メニュー読み込み失敗:", err);
         setMenu([
           { key: "dashboard", label: "ダッシュボード", active: true },
-          { key: "reports", label: "レポート/分析" },
+          { key: "reports", label: "レポート" },
+          { key: "ai-evaluation", label: "AI評価" },
           { key: "calendar", label: "カレンダー" },
           { key: "notebook", label: "トレード日記" },
           { key: "ai-proposal", label: "相場予想" },

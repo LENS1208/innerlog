@@ -1,6 +1,7 @@
 [
   { "key": "dashboard",  "label": "ダッシュボード",     "active": true },
-  { "key": "reports",    "label": "レポート/分析" },
+  { "key": "reports",    "label": "レポート" },
+  { "key": "ai-evaluation",   "label": "AI評価" },
   { "key": "calendar",   "label": "カレンダー" },
   { "key": "notebook",   "label": "トレード日記" },
   { "key": "ai-proposal",   "label": "相場予想" },

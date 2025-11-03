@@ -15,7 +15,7 @@ import DailyNotePage from "./widgets/DailyNotePage";
 import JournalNotesPage from "./pages/JournalNotesPage";
 import AiProposalPage from "./pages/AiProposalPage";
 
-type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal";
+type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | "/ai-evaluation";
 
 function parseHashToNewRoute(): NewRoute {
   const h = location.hash.replace(/^#/, "");
@@ -45,6 +45,7 @@ function parseHashToNewRoute(): NewRoute {
   if (h.startsWith("/settings")) return "/settings";
   if (h === "/journal-v0") return "/journal-v0";
   if (h.startsWith("/ai-proposal")) return "/ai-proposal";
+  if (h.startsWith("/ai-evaluation")) return "/ai-evaluation";
 
   return "/dashboard";
 }
@@ -145,6 +146,9 @@ export default function App() {
       },
     };
     Page = <AiProposalPage {...mockData} />;
+  }
+  else if (route === "/ai-evaluation") {
+    Page = <div style={{padding: 40, textAlign: "center"}}>AI評価（準備中）</div>;
   }
   else {
     Page = <EquityCurvePage />;
