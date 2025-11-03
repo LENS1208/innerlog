@@ -360,3 +360,97 @@ textarea.input {
   line-height: 1.6;
   min-height: 100px;
 }
+
+/* AI Proposal Page CSS (from Canvas HTML) */
+* {
+  box-sizing: border-box;
+}
+
+.hero {
+  background: var(--panel, #ffffff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.hero h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.hero .status {
+  font-weight: 700;
+}
+
+.bar {
+  height: 8px;
+  border-radius: 6px;
+  background: #e6e8ef;
+  overflow: hidden;
+}
+
+.bar > i {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #0ea5e9);
+  transition: width 0.3s ease;
+}
+
+.kpi-quick {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .kpi-quick {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.kpi-quick .mini {
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.kpi-quick .mini .label {
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+}
+
+.kpi-quick .mini .value {
+  font-weight: 700;
+}
+
+.subnote {
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+  margin: 8px 0 0;
+}
+
+.analysis-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.analysis-vertical h5 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--muted, #6b7280);
+}
+
+.grid-ai {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .grid-ai {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
