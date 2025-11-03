@@ -454,3 +454,49 @@ textarea.input {
     grid-template-columns: 1.2fr 1fr;
   }
 }
+
+/* AI Evaluation Page Styles */
+.kpi {
+  padding: 12px;
+  border: 1px dashed var(--border, #e5e7eb);
+  border-radius: 14px;
+  min-height: 86px;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.kpi .label {
+  font-size: 12px;
+  color: var(--muted, #6b7280);
+}
+
+.kpi .value {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border, #e5e7eb);
+}
+
+.badge.ok {
+  background: rgba(63, 209, 134, 0.1);
+  color: var(--ok, #16a34a);
+}
+
+.badge.warn {
+  background: rgba(255, 207, 91, 0.12);
+  color: var(--warn, #f59e0b);
+}
+
+.badge.danger {
+  background: rgba(255, 123, 123, 0.14);
+  color: var(--danger, #ef4444);
+}

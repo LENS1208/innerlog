@@ -14,6 +14,7 @@ import CalendarDayPage from "./widgets/CalendarDayPage";
 import DailyNotePage from "./widgets/DailyNotePage";
 import JournalNotesPage from "./pages/JournalNotesPage";
 import AiProposalPage from "./pages/AiProposalPage";
+import AiEvaluationPage from "./pages/AiEvaluationPage";
 
 type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | "/ai-evaluation";
 
@@ -148,7 +149,7 @@ export default function App() {
     Page = <AiProposalPage {...mockData} />;
   }
   else if (route === "/ai-evaluation") {
-    Page = <div style={{padding: 40, textAlign: "center"}}>AI評価（準備中）</div>;
+    Page = <AiEvaluationPage />;
   }
   else {
     Page = <EquityCurvePage />;
