@@ -44,18 +44,23 @@ export default function AiEvaluationPage() {
           for (const key of datasetKeys) {
             try {
               const dbTrades = await getTradesByDataset(key);
-              const trades = dbTrades.map(dbToTrade);
-              const tradeRows = trades.map(t => ({
-                pnl: t.profitYen,
-                pips: t.pips,
-                win: t.profitYen > 0,
-                pair: t.pair,
-                side: t.side,
-                datetime: t.datetime,
-                hour: new Date(t.datetime).getUTCHours(),
-                dayOfWeek: new Date(t.datetime).getUTCDay(),
-              }));
-              loadedDatasets[key] = tradeRows;
+              if (dbTrades.length > 0) {
+                const trades = dbTrades.map(dbToTrade);
+                const tradeRows = trades.map(t => ({
+                  pnl: t.profitYen,
+                  pips: t.pips,
+                  win: t.profitYen > 0,
+                  pair: t.pair,
+                  side: t.side,
+                  datetime: t.datetime,
+                  hour: new Date(t.datetime).getUTCHours(),
+                  dayOfWeek: new Date(t.datetime).getUTCDay(),
+                }));
+                loadedDatasets[key] = tradeRows;
+                console.log(`デモ${key}: ${tradeRows.length}件読み込み (DB)`);
+              } else {
+                console.log(`デモ${key}: データなし (DB)`);
+              }
             } catch (err) {
               console.error(`デモ${key}読み込みエラー (DB):`, err);
             }
@@ -67,17 +72,24 @@ export default function AiEvaluationPage() {
               if (res.ok) {
                 const text = await res.text();
                 const trades = parseCsvText(text);
-                const tradeRows = trades.map(t => ({
-                  pnl: t.profitYen,
-                  pips: t.pips,
-                  win: t.profitYen > 0,
-                  pair: t.pair,
-                  side: t.side,
-                  datetime: t.datetime,
-                  hour: new Date(t.datetime || Date.now()).getUTCHours(),
-                  dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
-                }));
-                loadedDatasets[key] = tradeRows;
+                if (trades.length > 0) {
+                  const tradeRows = trades.map(t => ({
+                    pnl: t.profitYen,
+                    pips: t.pips,
+                    win: t.profitYen > 0,
+                    pair: t.pair,
+                    side: t.side,
+                    datetime: t.datetime,
+                    hour: new Date(t.datetime || Date.now()).getUTCHours(),
+                    dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
+                  }));
+                  loadedDatasets[key] = tradeRows;
+                  console.log(`デモ${key}: ${tradeRows.length}件読み込み (CSV)`);
+                } else {
+                  console.log(`デモ${key}: CSVは空`);
+                }
+              } else {
+                console.error(`デモ${key}: HTTP ${res.status}`);
               }
             } catch (err) {
               console.error(`デモ${key}読み込みエラー (CSV):`, err);
