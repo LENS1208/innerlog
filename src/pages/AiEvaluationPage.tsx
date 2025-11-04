@@ -17,7 +17,7 @@ import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
 import DataStatusSection from '../components/evaluation/DataStatusSection';
 import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
 import { useDataset } from '../lib/dataset.context';
-import { getAllTrades, dbToTrade } from '../lib/db.service';
+import { getAllTrades, getTradesByDataset, dbToTrade } from '../lib/db.service';
 import { parseCsvText } from '../lib/csv';
 import '../styles/journal-notebook.css';
 
@@ -37,24 +37,30 @@ export default function AiEvaluationPage() {
     setLoading(true);
     (async () => {
       try {
-        if (useDatabase) {
-          const dbTrades = await getAllTrades();
-          const trades = dbTrades.map(dbToTrade);
-          const tradeRows = trades.map(t => ({
-            pnl: t.profitYen,
-            pips: t.pips,
-            win: t.profitYen > 0,
-            pair: t.pair,
-            side: t.side,
-            datetime: t.datetime,
-            hour: new Date(t.datetime).getUTCHours(),
-            dayOfWeek: new Date(t.datetime).getUTCDay(),
-          }));
-          setDatasets({ A: tradeRows, B: null, C: null });
-        } else {
-          const datasetKeys: DatasetKey[] = ['A', 'B', 'C'];
-          const loadedDatasets: Record<DatasetKey, TradeRow[] | null> = { A: null, B: null, C: null };
+        const datasetKeys: DatasetKey[] = ['A', 'B', 'C'];
+        const loadedDatasets: Record<DatasetKey, TradeRow[] | null> = { A: null, B: null, C: null };
 
+        if (useDatabase) {
+          for (const key of datasetKeys) {
+            try {
+              const dbTrades = await getTradesByDataset(key);
+              const trades = dbTrades.map(dbToTrade);
+              const tradeRows = trades.map(t => ({
+                pnl: t.profitYen,
+                pips: t.pips,
+                win: t.profitYen > 0,
+                pair: t.pair,
+                side: t.side,
+                datetime: t.datetime,
+                hour: new Date(t.datetime).getUTCHours(),
+                dayOfWeek: new Date(t.datetime).getUTCDay(),
+              }));
+              loadedDatasets[key] = tradeRows;
+            } catch (err) {
+              console.error(`デモ${key}読み込みエラー (DB):`, err);
+            }
+          }
+        } else {
           for (const key of datasetKeys) {
             try {
               const res = await fetch(`/demo/${key}.csv?t=${Date.now()}`, { cache: 'no-store' });
@@ -74,12 +80,12 @@ export default function AiEvaluationPage() {
                 loadedDatasets[key] = tradeRows;
               }
             } catch (err) {
-              console.error(`デモ${key}読み込みエラー:`, err);
+              console.error(`デモ${key}読み込みエラー (CSV):`, err);
             }
           }
-
-          setDatasets(loadedDatasets);
         }
+
+        setDatasets(loadedDatasets);
       } catch (err) {
         console.error('データ読み込みエラー:', err);
       } finally {
