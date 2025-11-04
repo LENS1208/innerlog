@@ -52,22 +52,33 @@ export default function AiEvaluationPage() {
           }));
           setDatasets({ A: tradeRows, B: null, C: null });
         } else {
-          const res = await fetch(`/demo/${activeDataset}.csv?t=${Date.now()}`, { cache: 'no-store' });
-          if (res.ok) {
-            const text = await res.text();
-            const trades = parseCsvText(text);
-            const tradeRows = trades.map(t => ({
-              pnl: t.profitYen,
-              pips: t.pips,
-              win: t.profitYen > 0,
-              pair: t.pair,
-              side: t.side,
-              datetime: t.datetime,
-              hour: new Date(t.datetime || Date.now()).getUTCHours(),
-              dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
-            }));
-            setDatasets(prev => ({ ...prev, [activeDataset]: tradeRows }));
+          const datasetKeys: DatasetKey[] = ['A', 'B', 'C'];
+          const loadedDatasets: Record<DatasetKey, TradeRow[] | null> = { A: null, B: null, C: null };
+
+          for (const key of datasetKeys) {
+            try {
+              const res = await fetch(`/demo/${key}.csv?t=${Date.now()}`, { cache: 'no-store' });
+              if (res.ok) {
+                const text = await res.text();
+                const trades = parseCsvText(text);
+                const tradeRows = trades.map(t => ({
+                  pnl: t.profitYen,
+                  pips: t.pips,
+                  win: t.profitYen > 0,
+                  pair: t.pair,
+                  side: t.side,
+                  datetime: t.datetime,
+                  hour: new Date(t.datetime || Date.now()).getUTCHours(),
+                  dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
+                }));
+                loadedDatasets[key] = tradeRows;
+              }
+            } catch (err) {
+              console.error(`デモ${key}読み込みエラー:`, err);
+            }
           }
+
+          setDatasets(loadedDatasets);
         }
       } catch (err) {
         console.error('データ読み込みエラー:', err);
@@ -75,7 +86,7 @@ export default function AiEvaluationPage() {
         setLoading(false);
       }
     })();
-  }, [activeDataset, useDatabase]);
+  }, [useDatabase]);
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
     const rows = datasets[activeDataset];
@@ -118,24 +129,32 @@ export default function AiEvaluationPage() {
           borderRadius: 12,
         }}
       >
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+          {loading && <div style={{ fontSize: 13, color: 'var(--muted)' }}>読み込み中...</div>}
           <div style={{ display: 'inline-flex', gap: 6, padding: 4, background: '#f8fafc', borderRadius: 10 }}>
-            {(['A', 'B', 'C'] as DatasetKey[]).map((key) => (
-              <button
-                key={key}
-                onClick={() => handleDatasetChange(key)}
-                style={{
-                  padding: '6px 10px',
-                  border: activeDataset === key ? '1px solid var(--line)' : '1px solid transparent',
-                  borderRadius: 10,
-                  background: activeDataset === key ? '#e5e7eb' : 'transparent',
-                  color: activeDataset === key ? '#0b1220' : 'var(--muted)',
-                  cursor: 'pointer',
-                }}
-              >
-                デモ{key}
-              </button>
-            ))}
+            {(['A', 'B', 'C'] as DatasetKey[]).map((key) => {
+              const count = datasets[key]?.length || 0;
+              const hasData = count > 0;
+              return (
+                <button
+                  key={key}
+                  onClick={() => handleDatasetChange(key)}
+                  disabled={!hasData}
+                  style={{
+                    padding: '6px 10px',
+                    border: activeDataset === key ? '1px solid var(--line)' : '1px solid transparent',
+                    borderRadius: 10,
+                    background: activeDataset === key ? '#e5e7eb' : 'transparent',
+                    color: !hasData ? '#d1d5db' : activeDataset === key ? '#0b1220' : 'var(--muted)',
+                    cursor: hasData ? 'pointer' : 'not-allowed',
+                    opacity: !hasData ? 0.5 : 1,
+                  }}
+                  title={hasData ? `${count}件` : 'データなし'}
+                >
+                  デモ{key} {hasData && `(${count})`}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -175,6 +194,17 @@ export default function AiEvaluationPage() {
           </label>
         </div>
       </div>
+
+      {!loading && datasets[activeDataset]?.length === 0 && (
+        <div style={{ padding: 40, textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, marginBottom: 16 }}>
+          <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8, color: 'var(--muted)' }}>
+            デモ{activeDataset}のデータがありません
+          </div>
+          <div style={{ fontSize: 13, color: 'var(--muted)' }}>
+            別のデータセットを選択するか、/demo/{activeDataset}.csvファイルを確認してください。
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'grid', gap: 16 }}>
         <section className="panel">
