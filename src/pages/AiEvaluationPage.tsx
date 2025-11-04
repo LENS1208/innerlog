@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import type { DatasetKey, DDBasic, TradeRow, TradeMetrics } from '../types/evaluation.types';
 import { computeMetrics, demoMetrics } from '../utils/evaluation-metrics';
 import { scoreFromMetrics } from '../utils/evaluation-score';
@@ -7,9 +7,22 @@ import RadarChart from '../components/evaluation/RadarChart';
 import KPICards from '../components/evaluation/KPICards';
 import WhatIfSimulator from '../components/evaluation/WhatIfSimulator';
 import Sparkline from '../components/evaluation/Sparkline';
+import AiInsightsSection from '../components/evaluation/AiInsightsSection';
+import TimingQualitySection from '../components/evaluation/TimingQualitySection';
+import RiskAnalysisSection from '../components/evaluation/RiskAnalysisSection';
+import StrengthWeaknessSection from '../components/evaluation/StrengthWeaknessSection';
+import TPSLEvaluationSection from '../components/evaluation/TPSLEvaluationSection';
+import RecommendedActionsSection from '../components/evaluation/RecommendedActionsSection';
+import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
+import DataStatusSection from '../components/evaluation/DataStatusSection';
+import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
+import { useDataset } from '../lib/dataset.context';
+import { getAllTrades, dbToTrade } from '../lib/db.service';
+import { parseCsvText } from '../lib/csv';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
+  const { dataset: contextDataset, useDatabase } = useDataset();
   const [datasets, setDatasets] = useState<Record<DatasetKey, TradeRow[] | null>>({
     A: null,
     B: null,
@@ -18,6 +31,51 @@ export default function AiEvaluationPage() {
   const [activeDataset, setActiveDataset] = useState<DatasetKey>('A');
   const [ddBasis, setDdBasis] = useState<DDBasic>('capital');
   const [initCap, setInitCap] = useState(1000000);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    (async () => {
+      try {
+        if (useDatabase) {
+          const dbTrades = await getAllTrades();
+          const trades = dbTrades.map(dbToTrade);
+          const tradeRows = trades.map(t => ({
+            pnl: t.profitYen,
+            pips: t.pips,
+            win: t.profitYen > 0,
+            pair: t.pair,
+            side: t.side,
+            datetime: t.datetime,
+            hour: new Date(t.datetime).getUTCHours(),
+            dayOfWeek: new Date(t.datetime).getUTCDay(),
+          }));
+          setDatasets({ A: tradeRows, B: null, C: null });
+        } else {
+          const res = await fetch(`/demo/${activeDataset}.csv?t=${Date.now()}`, { cache: 'no-store' });
+          if (res.ok) {
+            const text = await res.text();
+            const trades = parseCsvText(text);
+            const tradeRows = trades.map(t => ({
+              pnl: t.profitYen,
+              pips: t.pips,
+              win: t.profitYen > 0,
+              pair: t.pair,
+              side: t.side,
+              datetime: t.datetime,
+              hour: new Date(t.datetime || Date.now()).getUTCHours(),
+              dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
+            }));
+            setDatasets(prev => ({ ...prev, [activeDataset]: tradeRows }));
+          }
+        }
+      } catch (err) {
+        console.error('データ読み込みエラー:', err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [activeDataset, useDatabase]);
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
     const rows = datasets[activeDataset];
@@ -246,9 +304,15 @@ export default function AiEvaluationPage() {
           </div>
         </section>
 
-        <section className="panel" style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-          その他のセクション（3, 5, 6, 7, 8, 9, 10, 11, 12）は今後実装予定
-        </section>
+        <AiInsightsSection />
+        <TimingQualitySection />
+        <RiskAnalysisSection />
+        <StrengthWeaknessSection trades={datasets[activeDataset] || []} />
+        <TPSLEvaluationSection />
+        <RecommendedActionsSection />
+        <AlertsRulesSection />
+        <DataStatusSection />
+        <NotesReflectionSection />
       </div>
     </div>
   );

@@ -1,0 +1,100 @@
+import React, { useMemo } from 'react';
+
+type Feature = {
+  name: string;
+  value: number;
+};
+
+type AiInsightsProps = {
+  topFeatures?: Feature[];
+  clusters?: string[];
+};
+
+export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsProps) {
+  const demoFeatures: Feature[] = useMemo(() => topFeatures || [
+    { name: 'トレンド追従', value: 0.82 },
+    { name: '時間帯選択', value: 0.71 },
+    { name: '損切り遵守', value: 0.68 },
+    { name: 'エントリータイミング', value: 0.59 },
+    { name: 'リスク管理', value: 0.54 },
+  ], [topFeatures]);
+
+  const demoClusters = useMemo(() => clusters || [
+    'トレンドフォロー（欧州時間）',
+    'レンジ逆張り（アジア時間）',
+    'ブレイクアウト（米国時間）',
+  ], [clusters]);
+
+  const maxValue = Math.max(...demoFeatures.map(f => f.value));
+
+  return (
+    <section className="panel" id="sec3">
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '14px 16px',
+          borderBottom: '1px solid var(--line)',
+        }}
+      >
+        <div>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>3. AIの気づき（要点）</div>
+          <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+            戦略クラスタ、勝率の源泉、改善提案
+          </div>
+        </div>
+      </div>
+      <div style={{ padding: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 20 }}>
+          <div className="panel" style={{ padding: 16 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--accent)' }}>戦略クラスタ</div>
+            <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13, lineHeight: 1.8 }}>
+              {demoClusters.map((cluster, idx) => (
+                <li key={idx}>{cluster}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="panel" style={{ padding: 16 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--accent)' }}>勝率の源泉</div>
+            <div style={{ fontSize: 13, lineHeight: 1.8 }}>
+              トレンド方向と時間帯選択が勝率に大きく寄与。特に欧州時間のトレンドフォローが効果的。
+            </div>
+          </div>
+
+          <div className="panel" style={{ padding: 16 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--accent)' }}>改善提案</div>
+            <div style={{ fontSize: 13, lineHeight: 1.8 }}>
+              アジア時間のレンジ相場でのエントリー精度向上。損切り位置の見直しでPF改善の余地あり。
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>重要特徴 Top5</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {demoFeatures.map((feature, idx) => (
+              <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ minWidth: 140, fontSize: 13 }}>{feature.name}</div>
+                <div style={{ flex: 1, height: 24, background: 'var(--chip)', borderRadius: 4, overflow: 'hidden', position: 'relative' }}>
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${(feature.value / maxValue) * 100}%`,
+                      background: 'linear-gradient(90deg, var(--accent), #22c55e)',
+                      transition: 'width 0.3s ease',
+                    }}
+                  />
+                </div>
+                <div style={{ minWidth: 40, textAlign: 'right', fontSize: 13, fontWeight: 600 }}>
+                  {(feature.value * 100).toFixed(0)}%
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
