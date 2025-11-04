@@ -306,12 +306,12 @@ export default function AiEvaluationPage() {
 
         <AiInsightsSection />
         <TimingQualitySection />
-        <RiskAnalysisSection />
+        <RiskAnalysisSection trades={datasets[activeDataset] || []} initialCapital={initCap} />
         <StrengthWeaknessSection trades={datasets[activeDataset] || []} />
         <TPSLEvaluationSection />
-        <RecommendedActionsSection />
-        <AlertsRulesSection />
-        <DataStatusSection />
+        <RecommendedActionsSection metrics={baseMetrics} />
+        <AlertsRulesSection metrics={baseMetrics} />
+        <DataStatusSection metrics={baseMetrics} />
         <NotesReflectionSection />
       </div>
     </div>

@@ -1,6 +1,56 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import type { TradeRow } from '../../types/evaluation.types';
+import { computeEquityCurve, computeLossStreakProbabilities, findLongestLossStreak } from '../../utils/risk-analysis';
 
-export default function RiskAnalysisSection() {
+type Props = {
+  trades?: TradeRow[];
+  initialCapital?: number;
+};
+
+export default function RiskAnalysisSection({ trades = [], initialCapital = 100000 }: Props) {
+  const equityCurve = useMemo(() => {
+    return trades.length > 0 ? computeEquityCurve(trades, initialCapital) : [];
+  }, [trades, initialCapital]);
+
+  const lossStreakProbs = useMemo(() => {
+    return trades.length > 0 ? computeLossStreakProbabilities(trades) : [];
+  }, [trades]);
+
+  const longestStreak = useMemo(() => {
+    return trades.length > 0 ? findLongestLossStreak(trades) : 0;
+  }, [trades]);
+
+  if (trades.length === 0) {
+    return (
+      <section className="panel" id="sec6">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '14px 16px',
+            borderBottom: '1px solid var(--line)',
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700 }}>6. リスクのようす（DD/連敗）</div>
+            <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+              エクイティカーブ、ドローダウン、連敗確率
+            </div>
+          </div>
+        </div>
+        <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
+          データがありません
+        </div>
+      </section>
+    );
+  }
+
+  const maxEquity = Math.max(...equityCurve.map(p => p.equity));
+  const minEquity = Math.min(...equityCurve.map(p => p.equity));
+  const range = maxEquity - minEquity || 1;
+  const maxDD = Math.max(...equityCurve.map(p => p.dd));
+
   return (
     <section className="panel" id="sec6">
       <div
@@ -18,9 +68,100 @@ export default function RiskAnalysisSection() {
             エクイティカーブ、ドローダウン、連敗確率
           </div>
         </div>
+        <div className="badge warn">最大DD: {maxDD.toLocaleString()}円</div>
       </div>
-      <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
-        データ結線予定（PHASE 3）
+      <div style={{ padding: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>エクイティカーブ & DD帯</div>
+            <svg width="100%" height="220" viewBox="0 0 500 220">
+              <defs>
+                <linearGradient id="ddGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity="0.1" />
+                </linearGradient>
+              </defs>
+
+              <line x1="40" y1="200" x2="480" y2="200" stroke="var(--line)" strokeWidth="1" />
+              <line x1="40" y1="20" x2="40" y2="200" stroke="var(--line)" strokeWidth="1" />
+
+              {equityCurve.length > 1 && (
+                <>
+                  <polygon
+                    points={equityCurve
+                      .map((p, i) => {
+                        const x = 40 + (i * 440) / equityCurve.length;
+                        const yPeak = 200 - ((p.peak - minEquity) / range) * 170;
+                        const yEquity = 200 - ((p.equity - minEquity) / range) * 170;
+                        return `${x},${yPeak} ${x},${yEquity}`;
+                      })
+                      .join(' ')}
+                    fill="url(#ddGradient)"
+                  />
+
+                  <polyline
+                    points={equityCurve
+                      .map((p, i) => {
+                        const x = 40 + (i * 440) / equityCurve.length;
+                        const y = 200 - ((p.peak - minEquity) / range) * 170;
+                        return `${x},${y}`;
+                      })
+                      .join(' ')}
+                    fill="none"
+                    stroke="var(--muted)"
+                    strokeWidth="1"
+                    strokeDasharray="3,3"
+                  />
+
+                  <polyline
+                    points={equityCurve
+                      .map((p, i) => {
+                        const x = 40 + (i * 440) / equityCurve.length;
+                        const y = 200 - ((p.equity - minEquity) / range) * 170;
+                        return `${x},${y}`;
+                      })
+                      .join(' ')}
+                    fill="none"
+                    stroke="#3b82f6"
+                    strokeWidth="2"
+                  />
+                </>
+              )}
+
+              <text x="250" y="15" textAnchor="middle" fontSize="11" fill="var(--muted)">
+                破線=ピーク 青=エクイティ 赤帯=DD
+              </text>
+            </svg>
+          </div>
+
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
+              n連敗確率（最長: {longestStreak}連敗）
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {lossStreakProbs.map((d, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ minWidth: 60, fontSize: 13 }}>{d.n}連敗</div>
+                  <div style={{ flex: 1, height: 24, background: 'var(--chip)', borderRadius: 4, overflow: 'hidden' }}>
+                    <div
+                      style={{
+                        width: `${Math.min(d.prob, 100)}%`,
+                        height: '100%',
+                        background: d.prob > 5 ? '#ef4444' : '#22c55e',
+                      }}
+                    />
+                  </div>
+                  <div style={{ minWidth: 50, textAlign: 'right', fontSize: 13, fontWeight: 600 }}>
+                    {d.prob.toFixed(1)}%
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 12, padding: 12, background: 'var(--chip)', borderRadius: 8, fontSize: 12, color: 'var(--muted)' }}>
+              負けトレードの確率を基に計算。実際の連敗リスクを事前に把握することでメンタル管理に役立ちます。
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
