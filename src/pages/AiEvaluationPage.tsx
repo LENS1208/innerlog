@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import type { TradeRow, TradeMetrics } from '../types/evaluation.types';
 import { scoreFromMetrics } from '../utils/evaluation-score';
 import OverallScore from '../components/evaluation/OverallScore';
@@ -15,17 +15,45 @@ import RecommendedActionsSection from '../components/evaluation/RecommendedActio
 import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
 import DataStatusSection from '../components/evaluation/DataStatusSection';
 import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
-import { getDemoMetrics, getDemoRows, INIT_CAPITAL } from '../services/demoData';
+import { getDataMetrics, getDataRows, INIT_CAPITAL } from '../services/demoData';
+import { useDataset } from '../lib/dataset.context';
+import { computeMetrics } from '../utils/evaluation-metrics';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
-  const baseMetrics = useMemo<TradeMetrics>(() => {
-    return getDemoMetrics();
-  }, []);
+  const { dataset, useDatabase } = useDataset();
+  const [dataRows, setDataRows] = useState<TradeRow[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const demoRows = useMemo<TradeRow[]>(() => {
-    return getDemoRows();
-  }, []);
+  useEffect(() => {
+    setLoading(true);
+    (async () => {
+      try {
+        const rows = await getDataRows(useDatabase, dataset);
+        setDataRows(rows);
+      } catch (err) {
+        console.error('データ取得エラー:', err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [dataset, useDatabase]);
+
+  const baseMetrics = useMemo<TradeMetrics>(() => {
+    if (dataRows.length === 0) {
+      return {
+        trades: 0,
+        winrate: 0,
+        pf: 0,
+        pipsSum: 0,
+        equity: [],
+        maxdd: 0,
+        pnls: [],
+        pipsArr: [],
+      };
+    }
+    return computeMetrics(dataRows);
+  }, [dataRows]);
 
   const scoreData = useMemo(() => {
     return scoreFromMetrics(baseMetrics, 'capital', INIT_CAPITAL);
@@ -163,9 +191,9 @@ export default function AiEvaluationPage() {
         </section>
 
         <AiInsightsSection />
-        <TimingQualitySection trades={demoRows} />
-        <RiskAnalysisSection trades={demoRows} initialCapital={INIT_CAPITAL} />
-        <StrengthWeaknessSection trades={demoRows} />
+        <TimingQualitySection trades={dataRows} />
+        <RiskAnalysisSection trades={dataRows} initialCapital={INIT_CAPITAL} />
+        <StrengthWeaknessSection trades={dataRows} />
         <TPSLEvaluationSection metrics={baseMetrics} />
         <RecommendedActionsSection metrics={baseMetrics} />
         <AlertsRulesSection metrics={baseMetrics} />

@@ -1,9 +1,11 @@
 import type { TradeRow, TradeMetrics } from '../types/evaluation.types';
 import { computeMetrics } from '../utils/evaluation-metrics';
+import { getAllTrades, dbToTrade } from '../lib/db.service';
+import { parseCsvText } from '../lib/csv';
 
 export const INIT_CAPITAL = 1_000_000;
 
-export function getDemoRows(): TradeRow[] {
+function generateMockTrades(): TradeRow[] {
   const mockTrades: TradeRow[] = [];
   const pairs = ['USD/JPY', 'EUR/USD', 'GBP/JPY', 'AUD/USD', 'EUR/JPY'];
   const baseDate = new Date('2024-01-01').getTime();
@@ -35,8 +37,47 @@ export function getDemoRows(): TradeRow[] {
   return mockTrades;
 }
 
-export function getDemoMetrics(): TradeMetrics {
-  const rows = getDemoRows();
+export async function getDataRows(useDatabase: boolean, dataset: string = 'A'): Promise<TradeRow[]> {
+  try {
+    if (useDatabase) {
+      const dbTrades = await getAllTrades();
+      const trades = dbTrades.map(dbToTrade);
+      return trades.map(t => ({
+        pnl: t.profitYen,
+        pips: t.pips,
+        win: t.profitYen > 0,
+        pair: t.pair,
+        side: t.side,
+        datetime: t.datetime,
+        hour: new Date(t.datetime).getUTCHours(),
+        dayOfWeek: new Date(t.datetime).getUTCDay(),
+      }));
+    } else {
+      const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const text = await res.text();
+        const trades = parseCsvText(text);
+        return trades.map(t => ({
+          pnl: t.profitYen,
+          pips: t.pips,
+          win: t.profitYen > 0,
+          pair: t.pair,
+          side: t.side,
+          datetime: t.datetime,
+          hour: new Date(t.datetime || Date.now()).getUTCHours(),
+          dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
+        }));
+      }
+    }
+  } catch (err) {
+    console.error('データ読み込みエラー:', err);
+  }
+
+  return generateMockTrades();
+}
+
+export async function getDataMetrics(useDatabase: boolean, dataset: string = 'A'): Promise<TradeMetrics> {
+  const rows = await getDataRows(useDatabase, dataset);
   return computeMetrics(rows);
 }
 
