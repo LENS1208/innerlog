@@ -1,6 +1,5 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import type { DatasetKey, DDBasic, TradeRow, TradeMetrics } from '../types/evaluation.types';
-import { computeMetrics, demoMetrics } from '../utils/evaluation-metrics';
+import React, { useMemo } from 'react';
+import type { TradeRow, TradeMetrics } from '../types/evaluation.types';
 import { scoreFromMetrics } from '../utils/evaluation-score';
 import OverallScore from '../components/evaluation/OverallScore';
 import RadarChart from '../components/evaluation/RadarChart';
@@ -16,165 +15,24 @@ import RecommendedActionsSection from '../components/evaluation/RecommendedActio
 import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
 import DataStatusSection from '../components/evaluation/DataStatusSection';
 import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
-import { useDataset } from '../lib/dataset.context';
-import { getAllTrades, dbToTrade } from '../lib/db.service';
-import { parseCsvText } from '../lib/csv';
+import { getDemoMetrics, getDemoRows, INIT_CAPITAL } from '../services/demoData';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
-  const { dataset: contextDataset, useDatabase } = useDataset();
-  const [datasets, setDatasets] = useState<Record<DatasetKey, TradeRow[] | null>>({
-    A: null,
-    B: null,
-    C: null,
-  });
-  const [activeDataset, setActiveDataset] = useState<DatasetKey>('A');
-  const [ddBasis, setDdBasis] = useState<DDBasic>('capital');
-  const [initCap, setInitCap] = useState(1000000);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    (async () => {
-      try {
-        if (useDatabase) {
-          const dbTrades = await getAllTrades();
-          const trades = dbTrades.map(dbToTrade);
-          const tradeRows = trades.map(t => ({
-            pnl: t.profitYen,
-            pips: t.pips,
-            win: t.profitYen > 0,
-            pair: t.pair,
-            side: t.side,
-            datetime: t.datetime,
-            hour: new Date(t.datetime).getUTCHours(),
-            dayOfWeek: new Date(t.datetime).getUTCDay(),
-          }));
-          setDatasets({ A: tradeRows, B: null, C: null });
-        } else {
-          const res = await fetch(`/demo/${activeDataset}.csv?t=${Date.now()}`, { cache: 'no-store' });
-          if (res.ok) {
-            const text = await res.text();
-            const trades = parseCsvText(text);
-            const tradeRows = trades.map(t => ({
-              pnl: t.profitYen,
-              pips: t.pips,
-              win: t.profitYen > 0,
-              pair: t.pair,
-              side: t.side,
-              datetime: t.datetime,
-              hour: new Date(t.datetime || Date.now()).getUTCHours(),
-              dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
-            }));
-            setDatasets(prev => ({ ...prev, [activeDataset]: tradeRows }));
-          }
-        }
-      } catch (err) {
-        console.error('データ読み込みエラー:', err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [activeDataset, useDatabase]);
-
   const baseMetrics = useMemo<TradeMetrics>(() => {
-    const rows = datasets[activeDataset];
-    if (!rows || rows.length === 0) {
-      return demoMetrics();
-    }
-    return computeMetrics(rows) || demoMetrics();
-  }, [datasets, activeDataset]);
+    return getDemoMetrics();
+  }, []);
+
+  const demoRows = useMemo<TradeRow[]>(() => {
+    return getDemoRows();
+  }, []);
 
   const scoreData = useMemo(() => {
-    return scoreFromMetrics(baseMetrics, ddBasis, initCap);
-  }, [baseMetrics, ddBasis, initCap]);
-
-  const handleDatasetChange = useCallback((key: DatasetKey) => {
-    setActiveDataset(key);
-  }, []);
-
-  const handleDdBasisChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDdBasis(e.target.value as DDBasic);
-  }, []);
-
-  const handleInitCapChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseFloat(e.target.value);
-    if (val > 0) setInitCap(val);
-  }, []);
+    return scoreFromMetrics(baseMetrics, 'capital', INIT_CAPITAL);
+  }, [baseMetrics]);
 
   return (
     <div style={{ width: '100%', padding: 16 }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 8,
-          marginBottom: 16,
-          padding: '12px 16px',
-          background: 'var(--surface)',
-          border: '1px solid var(--line)',
-          borderRadius: 12,
-        }}
-      >
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <div style={{ display: 'inline-flex', gap: 6, padding: 4, background: '#f8fafc', borderRadius: 10 }}>
-            {(['A', 'B', 'C'] as DatasetKey[]).map((key) => (
-              <button
-                key={key}
-                onClick={() => handleDatasetChange(key)}
-                style={{
-                  padding: '6px 10px',
-                  border: activeDataset === key ? '1px solid var(--line)' : '1px solid transparent',
-                  borderRadius: 10,
-                  background: activeDataset === key ? '#e5e7eb' : 'transparent',
-                  color: activeDataset === key ? '#0b1220' : 'var(--muted)',
-                  cursor: 'pointer',
-                }}
-              >
-                デモ{key}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            DD基準
-            <select
-              value={ddBasis}
-              onChange={handleDdBasisChange}
-              style={{
-                padding: '6px 10px',
-                border: '1px solid var(--line)',
-                borderRadius: 10,
-                background: '#ffffff',
-              }}
-            >
-              <option value="capital">初期資金%</option>
-              <option value="r">ロット基準(1R)%</option>
-            </select>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            初期資金
-            <input
-              type="number"
-              value={initCap}
-              onChange={handleInitCapChange}
-              min="1"
-              step="1000"
-              style={{
-                width: 140,
-                padding: '6px 10px',
-                border: '1px solid var(--line)',
-                borderRadius: 10,
-                background: '#ffffff',
-              }}
-            />
-          </label>
-        </div>
-      </div>
 
       <div style={{ display: 'grid', gap: 16 }}>
         <section className="panel">
@@ -273,7 +131,7 @@ export default function AiEvaluationPage() {
             </div>
           </div>
           <div style={{ padding: 16 }}>
-            <KPICards metrics={baseMetrics} ddBasis={ddBasis} initCap={initCap} />
+            <KPICards metrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
             {baseMetrics.equity && baseMetrics.equity.length > 1 && (
               <div style={{ marginTop: 12 }}>
                 <Sparkline data={baseMetrics.equity} />
@@ -300,14 +158,14 @@ export default function AiEvaluationPage() {
             </div>
           </div>
           <div style={{ padding: 16 }}>
-            <WhatIfSimulator baseMetrics={baseMetrics} ddBasis={ddBasis} initCap={initCap} />
+            <WhatIfSimulator baseMetrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
           </div>
         </section>
 
         <AiInsightsSection />
-        <TimingQualitySection trades={datasets[activeDataset] || []} />
-        <RiskAnalysisSection trades={datasets[activeDataset] || []} initialCapital={initCap} />
-        <StrengthWeaknessSection trades={datasets[activeDataset] || []} />
+        <TimingQualitySection trades={demoRows} />
+        <RiskAnalysisSection trades={demoRows} initialCapital={INIT_CAPITAL} />
+        <StrengthWeaknessSection trades={demoRows} />
         <TPSLEvaluationSection metrics={baseMetrics} />
         <RecommendedActionsSection metrics={baseMetrics} />
         <AlertsRulesSection metrics={baseMetrics} />
