@@ -16,12 +16,10 @@ import RecommendedActionsSection from '../components/evaluation/RecommendedActio
 import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
 import DataStatusSection from '../components/evaluation/DataStatusSection';
 import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
-import { useDataset } from '../lib/dataset.context';
 import { getAllTrades, dbToTrade } from '../lib/db.service';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
-  const { useDatabase } = useDataset();
   const [trades, setTrades] = useState<TradeRow[] | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -29,25 +27,23 @@ export default function AiEvaluationPage() {
     setLoading(true);
     (async () => {
       try {
-        if (useDatabase) {
-          const dbTrades = await getAllTrades();
-          if (dbTrades.length > 0) {
-            const allTrades = dbTrades.map(dbToTrade);
-            const tradeRows = allTrades.map(t => ({
-              pnl: t.profitYen,
-              pips: t.pips,
-              win: t.profitYen > 0,
-              pair: t.pair,
-              side: t.side,
-              datetime: t.datetime,
-              hour: new Date(t.datetime).getUTCHours(),
-              dayOfWeek: new Date(t.datetime).getUTCDay(),
-            }));
-            setTrades(tradeRows);
-            console.log(`${tradeRows.length}件のトレードを読み込みました (DB)`);
-          } else {
-            console.log('トレードデータがありません (DB)');
-          }
+        const dbTrades = await getAllTrades();
+        if (dbTrades.length > 0) {
+          const allTrades = dbTrades.map(dbToTrade);
+          const tradeRows = allTrades.map(t => ({
+            pnl: t.profitYen,
+            pips: t.pips,
+            win: t.profitYen > 0,
+            pair: t.pair,
+            side: t.side,
+            datetime: t.datetime,
+            hour: new Date(t.datetime).getUTCHours(),
+            dayOfWeek: new Date(t.datetime).getUTCDay(),
+          }));
+          setTrades(tradeRows);
+          console.log(`${tradeRows.length}件のトレードを読み込みました`);
+        } else {
+          console.log('トレードデータがありません');
         }
       } catch (err) {
         console.error('データ読み込みエラー:', err);
@@ -55,7 +51,7 @@ export default function AiEvaluationPage() {
         setLoading(false);
       }
     })();
-  }, [useDatabase]);
+  }, []);
 
   const baseMetrics = useMemo<TradeMetrics | null>(() => {
     if (!trades || trades.length === 0) {
