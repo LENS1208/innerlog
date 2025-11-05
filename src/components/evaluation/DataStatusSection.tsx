@@ -20,7 +20,7 @@ export default function DataStatusSection({ metrics }: Props) {
       <section className="panel" id="sec11">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid var(--line)' }}>
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700 }}>11. データの状態</div>
+            <div style={{ fontSize: 16, fontWeight: 700 }}>データの状態</div>
             <div style={{ fontSize: 12, color: 'var(--muted)' }}>入力健全性、検証ステータス</div>
           </div>
         </div>

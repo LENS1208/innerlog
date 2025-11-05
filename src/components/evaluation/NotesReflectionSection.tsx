@@ -53,7 +53,7 @@ export default function NotesReflectionSection() {
         }}
       >
         <div>
-          <div style={{ fontSize: 16, fontWeight: 700 }}>12. メモ・ふり返り</div>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>メモ・ふり返り</div>
           <div style={{ fontSize: 12, color: 'var(--muted)' }}>
             感情トレンド、行動バイアス
           </div>

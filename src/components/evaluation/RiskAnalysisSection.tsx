@@ -33,7 +33,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
           }}
         >
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700 }}>6. リスクのようす（DD/連敗）</div>
+            <div style={{ fontSize: 16, fontWeight: 700 }}>リスクのようす（DD/連敗）</div>
             <div style={{ fontSize: 12, color: 'var(--muted)' }}>
               エクイティカーブ、ドローダウン、連敗確率
             </div>
