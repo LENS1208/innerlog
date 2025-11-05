@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import type { DatasetKey, DDBasic, TradeRow, TradeMetrics } from '../types/evaluation.types';
+import React, { useState, useMemo, useEffect } from 'react';
+import type { TradeRow, TradeMetrics } from '../types/evaluation.types';
 import { computeMetrics } from '../utils/evaluation-metrics';
 import { scoreFromMetrics } from '../utils/evaluation-score';
 import OverallScore from '../components/evaluation/OverallScore';
@@ -17,87 +17,38 @@ import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
 import DataStatusSection from '../components/evaluation/DataStatusSection';
 import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
 import { useDataset } from '../lib/dataset.context';
-import { getAllTrades, getTradesByDataset, dbToTrade } from '../lib/db.service';
-import { parseCsvText } from '../lib/csv';
+import { getAllTrades, dbToTrade } from '../lib/db.service';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
-  const { dataset: contextDataset, useDatabase } = useDataset();
-  const [datasets, setDatasets] = useState<Record<DatasetKey, TradeRow[] | null>>({
-    A: null,
-    B: null,
-    C: null,
-  });
-  const [activeDataset, setActiveDataset] = useState<DatasetKey>('A');
-  const [ddBasis, setDdBasis] = useState<DDBasic>('capital');
-  const [initCap, setInitCap] = useState(1000000);
+  const { useDatabase } = useDataset();
+  const [trades, setTrades] = useState<TradeRow[] | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
     (async () => {
       try {
-        const datasetKeys: DatasetKey[] = ['A', 'B', 'C'];
-        const loadedDatasets: Record<DatasetKey, TradeRow[] | null> = { A: null, B: null, C: null };
-
         if (useDatabase) {
-          for (const key of datasetKeys) {
-            try {
-              const dbTrades = await getTradesByDataset(key);
-              if (dbTrades.length > 0) {
-                const trades = dbTrades.map(dbToTrade);
-                const tradeRows = trades.map(t => ({
-                  pnl: t.profitYen,
-                  pips: t.pips,
-                  win: t.profitYen > 0,
-                  pair: t.pair,
-                  side: t.side,
-                  datetime: t.datetime,
-                  hour: new Date(t.datetime).getUTCHours(),
-                  dayOfWeek: new Date(t.datetime).getUTCDay(),
-                }));
-                loadedDatasets[key] = tradeRows;
-                console.log(`デモ${key}: ${tradeRows.length}件読み込み (DB)`);
-              } else {
-                console.log(`デモ${key}: データなし (DB)`);
-              }
-            } catch (err) {
-              console.error(`デモ${key}読み込みエラー (DB):`, err);
-            }
-          }
-        } else {
-          for (const key of datasetKeys) {
-            try {
-              const res = await fetch(`/demo/${key}.csv?t=${Date.now()}`, { cache: 'no-store' });
-              if (res.ok) {
-                const text = await res.text();
-                const trades = parseCsvText(text);
-                if (trades.length > 0) {
-                  const tradeRows = trades.map(t => ({
-                    pnl: t.profitYen,
-                    pips: t.pips,
-                    win: t.profitYen > 0,
-                    pair: t.pair,
-                    side: t.side,
-                    datetime: t.datetime,
-                    hour: new Date(t.datetime || Date.now()).getUTCHours(),
-                    dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
-                  }));
-                  loadedDatasets[key] = tradeRows;
-                  console.log(`デモ${key}: ${tradeRows.length}件読み込み (CSV)`);
-                } else {
-                  console.log(`デモ${key}: CSVは空`);
-                }
-              } else {
-                console.error(`デモ${key}: HTTP ${res.status}`);
-              }
-            } catch (err) {
-              console.error(`デモ${key}読み込みエラー (CSV):`, err);
-            }
+          const dbTrades = await getAllTrades();
+          if (dbTrades.length > 0) {
+            const allTrades = dbTrades.map(dbToTrade);
+            const tradeRows = allTrades.map(t => ({
+              pnl: t.profitYen,
+              pips: t.pips,
+              win: t.profitYen > 0,
+              pair: t.pair,
+              side: t.side,
+              datetime: t.datetime,
+              hour: new Date(t.datetime).getUTCHours(),
+              dayOfWeek: new Date(t.datetime).getUTCDay(),
+            }));
+            setTrades(tradeRows);
+            console.log(`${tradeRows.length}件のトレードを読み込みました (DB)`);
+          } else {
+            console.log('トレードデータがありません (DB)');
           }
         }
-
-        setDatasets(loadedDatasets);
       } catch (err) {
         console.error('データ読み込みエラー:', err);
       } finally {
@@ -107,142 +58,33 @@ export default function AiEvaluationPage() {
   }, [useDatabase]);
 
   const baseMetrics = useMemo<TradeMetrics | null>(() => {
-    const rows = datasets[activeDataset];
-    if (!rows || rows.length === 0) {
+    if (!trades || trades.length === 0) {
       return null;
     }
-    return computeMetrics(rows);
-  }, [datasets, activeDataset]);
+    return computeMetrics(trades);
+  }, [trades]);
 
   const scoreData = useMemo(() => {
     if (!baseMetrics) return null;
-    return scoreFromMetrics(baseMetrics, ddBasis, initCap);
-  }, [baseMetrics, ddBasis, initCap]);
-
-  const handleDatasetChange = useCallback((key: DatasetKey) => {
-    setActiveDataset(key);
-  }, []);
-
-  const handleDdBasisChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDdBasis(e.target.value as DDBasic);
-  }, []);
-
-  const handleInitCapChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseFloat(e.target.value);
-    if (val > 0) setInitCap(val);
-  }, []);
+    return scoreFromMetrics(baseMetrics, 'capital', 1000000);
+  }, [baseMetrics]);
 
   return (
     <div style={{ width: '100%', padding: 16 }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 8,
-          marginBottom: 16,
-          padding: '12px 16px',
-          background: 'var(--surface)',
-          border: '1px solid var(--line)',
-          borderRadius: 12,
-        }}
-      >
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-          {loading && <div style={{ fontSize: 13, color: 'var(--muted)' }}>読み込み中...</div>}
-          <div style={{ display: 'inline-flex', gap: 6, padding: 4, background: '#f8fafc', borderRadius: 10 }}>
-            {(['A', 'B', 'C'] as DatasetKey[]).map((key) => {
-              const count = datasets[key]?.length || 0;
-              const hasData = count > 0;
-              return (
-                <button
-                  key={key}
-                  onClick={() => handleDatasetChange(key)}
-                  disabled={!hasData}
-                  style={{
-                    padding: '6px 10px',
-                    border: activeDataset === key ? '1px solid var(--line)' : '1px solid transparent',
-                    borderRadius: 10,
-                    background: activeDataset === key ? '#e5e7eb' : 'transparent',
-                    color: !hasData ? '#d1d5db' : activeDataset === key ? '#0b1220' : 'var(--muted)',
-                    cursor: hasData ? 'pointer' : 'not-allowed',
-                    opacity: !hasData ? 0.5 : 1,
-                  }}
-                  title={hasData ? `${count}件` : 'データなし'}
-                >
-                  デモ{key} {hasData && `(${count})`}
-                </button>
-              );
-            })}
-          </div>
+      {loading && (
+        <div style={{ padding: 20, textAlign: 'center', fontSize: 13, color: 'var(--muted)' }}>
+          読み込み中...
         </div>
+      )}
 
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            DD基準
-            <select
-              value={ddBasis}
-              onChange={handleDdBasisChange}
-              style={{
-                padding: '6px 10px',
-                border: '1px solid var(--line)',
-                borderRadius: 10,
-                background: '#ffffff',
-              }}
-            >
-              <option value="capital">初期資金%</option>
-              <option value="r">ロット基準(1R)%</option>
-            </select>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            初期資金
-            <input
-              type="number"
-              value={initCap}
-              onChange={handleInitCapChange}
-              min="1"
-              step="1000"
-              style={{
-                width: 140,
-                padding: '6px 10px',
-                border: '1px solid var(--line)',
-                borderRadius: 10,
-                background: '#ffffff',
-              }}
-            />
-          </label>
-        </div>
-      </div>
-
-      {!loading && (!datasets[activeDataset] || datasets[activeDataset]?.length === 0) && (
+      {!loading && (!trades || trades.length === 0) && (
         <div style={{ padding: 40, textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, marginBottom: 16 }}>
           <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8, color: 'var(--muted)' }}>
-            デモ{activeDataset}のデータがありません
+            トレードデータがありません
           </div>
-          <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>
-            {useDatabase
-              ? 'デモデータをデータベースに投入してください。load-demo.htmlを開いて「デモデータを投入する」ボタンをクリックしてください。'
-              : `別のデータセットを選択するか、/demo/${activeDataset}.csvファイルを確認してください。`
-            }
+          <div style={{ fontSize: 13, color: 'var(--muted)' }}>
+            トレードデータをアップロードしてください。
           </div>
-          {useDatabase && (
-            <a
-              href="/load-demo.html"
-              target="_blank"
-              style={{
-                display: 'inline-block',
-                padding: '10px 20px',
-                background: '#3b82f6',
-                color: 'white',
-                borderRadius: 8,
-                textDecoration: 'none',
-                fontSize: 14,
-                fontWeight: 600
-              }}
-            >
-              デモデータ投入ツールを開く
-            </a>
-          )}
         </div>
       )}
 
@@ -344,7 +186,7 @@ export default function AiEvaluationPage() {
             </div>
           </div>
           <div style={{ padding: 16 }}>
-            <KPICards metrics={baseMetrics} ddBasis={ddBasis} initCap={initCap} />
+            <KPICards metrics={baseMetrics} ddBasis="capital" initCap={1000000} />
             {baseMetrics.equity && baseMetrics.equity.length > 1 && (
               <div style={{ marginTop: 12 }}>
                 <Sparkline data={baseMetrics.equity} />
@@ -376,9 +218,9 @@ export default function AiEvaluationPage() {
         </section>
 
         <AiInsightsSection />
-        <TimingQualitySection trades={datasets[activeDataset] || []} />
-        <RiskAnalysisSection trades={datasets[activeDataset] || []} initialCapital={initCap} />
-        <StrengthWeaknessSection trades={datasets[activeDataset] || []} />
+        <TimingQualitySection trades={trades || []} />
+        <RiskAnalysisSection trades={trades || []} initialCapital={1000000} />
+        <StrengthWeaknessSection trades={trades || []} />
         <TPSLEvaluationSection metrics={baseMetrics} />
         <RecommendedActionsSection metrics={baseMetrics} />
         <AlertsRulesSection metrics={baseMetrics} />
