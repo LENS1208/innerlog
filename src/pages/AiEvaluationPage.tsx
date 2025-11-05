@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import type { DatasetKey, DDBasic, TradeRow, TradeMetrics } from '../types/evaluation.types';
-import { computeMetrics } from '../utils/evaluation-metrics';
+import { computeMetrics, demoMetrics } from '../utils/evaluation-metrics';
 import { scoreFromMetrics } from '../utils/evaluation-score';
 import OverallScore from '../components/evaluation/OverallScore';
 import RadarChart from '../components/evaluation/RadarChart';
@@ -44,23 +44,18 @@ export default function AiEvaluationPage() {
           for (const key of datasetKeys) {
             try {
               const dbTrades = await getTradesByDataset(key);
-              if (dbTrades.length > 0) {
-                const trades = dbTrades.map(dbToTrade);
-                const tradeRows = trades.map(t => ({
-                  pnl: t.profitYen,
-                  pips: t.pips,
-                  win: t.profitYen > 0,
-                  pair: t.pair,
-                  side: t.side,
-                  datetime: t.datetime,
-                  hour: new Date(t.datetime).getUTCHours(),
-                  dayOfWeek: new Date(t.datetime).getUTCDay(),
-                }));
-                loadedDatasets[key] = tradeRows;
-                console.log(`デモ${key}: ${tradeRows.length}件読み込み (DB)`);
-              } else {
-                console.log(`デモ${key}: データなし (DB)`);
-              }
+              const trades = dbTrades.map(dbToTrade);
+              const tradeRows = trades.map(t => ({
+                pnl: t.profitYen,
+                pips: t.pips,
+                win: t.profitYen > 0,
+                pair: t.pair,
+                side: t.side,
+                datetime: t.datetime,
+                hour: new Date(t.datetime).getUTCHours(),
+                dayOfWeek: new Date(t.datetime).getUTCDay(),
+              }));
+              loadedDatasets[key] = tradeRows;
             } catch (err) {
               console.error(`デモ${key}読み込みエラー (DB):`, err);
             }
@@ -72,24 +67,17 @@ export default function AiEvaluationPage() {
               if (res.ok) {
                 const text = await res.text();
                 const trades = parseCsvText(text);
-                if (trades.length > 0) {
-                  const tradeRows = trades.map(t => ({
-                    pnl: t.profitYen,
-                    pips: t.pips,
-                    win: t.profitYen > 0,
-                    pair: t.pair,
-                    side: t.side,
-                    datetime: t.datetime,
-                    hour: new Date(t.datetime || Date.now()).getUTCHours(),
-                    dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
-                  }));
-                  loadedDatasets[key] = tradeRows;
-                  console.log(`デモ${key}: ${tradeRows.length}件読み込み (CSV)`);
-                } else {
-                  console.log(`デモ${key}: CSVは空`);
-                }
-              } else {
-                console.error(`デモ${key}: HTTP ${res.status}`);
+                const tradeRows = trades.map(t => ({
+                  pnl: t.profitYen,
+                  pips: t.pips,
+                  win: t.profitYen > 0,
+                  pair: t.pair,
+                  side: t.side,
+                  datetime: t.datetime,
+                  hour: new Date(t.datetime || Date.now()).getUTCHours(),
+                  dayOfWeek: new Date(t.datetime || Date.now()).getUTCDay(),
+                }));
+                loadedDatasets[key] = tradeRows;
               }
             } catch (err) {
               console.error(`デモ${key}読み込みエラー (CSV):`, err);
@@ -106,16 +94,15 @@ export default function AiEvaluationPage() {
     })();
   }, [useDatabase]);
 
-  const baseMetrics = useMemo<TradeMetrics | null>(() => {
+  const baseMetrics = useMemo<TradeMetrics>(() => {
     const rows = datasets[activeDataset];
     if (!rows || rows.length === 0) {
-      return null;
+      return demoMetrics();
     }
-    return computeMetrics(rows);
+    return computeMetrics(rows) || demoMetrics();
   }, [datasets, activeDataset]);
 
   const scoreData = useMemo(() => {
-    if (!baseMetrics) return null;
     return scoreFromMetrics(baseMetrics, ddBasis, initCap);
   }, [baseMetrics, ddBasis, initCap]);
 
@@ -214,39 +201,17 @@ export default function AiEvaluationPage() {
         </div>
       </div>
 
-      {!loading && (!datasets[activeDataset] || datasets[activeDataset]?.length === 0) && (
+      {!loading && datasets[activeDataset]?.length === 0 && (
         <div style={{ padding: 40, textAlign: 'center', background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, marginBottom: 16 }}>
           <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8, color: 'var(--muted)' }}>
             デモ{activeDataset}のデータがありません
           </div>
-          <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>
-            {useDatabase
-              ? 'デモデータをデータベースに投入してください。load-demo.htmlを開いて「デモデータを投入する」ボタンをクリックしてください。'
-              : `別のデータセットを選択するか、/demo/${activeDataset}.csvファイルを確認してください。`
-            }
+          <div style={{ fontSize: 13, color: 'var(--muted)' }}>
+            別のデータセットを選択するか、/demo/{activeDataset}.csvファイルを確認してください。
           </div>
-          {useDatabase && (
-            <a
-              href="/load-demo.html"
-              target="_blank"
-              style={{
-                display: 'inline-block',
-                padding: '10px 20px',
-                background: '#3b82f6',
-                color: 'white',
-                borderRadius: 8,
-                textDecoration: 'none',
-                fontSize: 14,
-                fontWeight: 600
-              }}
-            >
-              デモデータ投入ツールを開く
-            </a>
-          )}
         </div>
       )}
 
-      {baseMetrics && scoreData && (
       <div style={{ display: 'grid', gap: 16 }}>
         <section className="panel">
           <div
@@ -385,7 +350,6 @@ export default function AiEvaluationPage() {
         <DataStatusSection metrics={baseMetrics} />
         <NotesReflectionSection />
       </div>
-      )}
     </div>
   );
 }
