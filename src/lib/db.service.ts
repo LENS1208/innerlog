@@ -78,18 +78,6 @@ export async function getAllTrades(): Promise<DbTrade[]> {
   const { data, error } = await supabase
     .from('trades')
     .select('*')
-    .is('dataset', null)
-    .order('close_time', { ascending: false });
-
-  if (error) throw error;
-  return data || [];
-}
-
-export async function getTradesByDataset(dataset: string): Promise<DbTrade[]> {
-  const { data, error } = await supabase
-    .from('trades')
-    .select('*')
-    .eq('dataset', dataset)
     .order('close_time', { ascending: false });
 
   if (error) throw error;
