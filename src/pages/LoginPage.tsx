@@ -31,10 +31,30 @@ export default function LoginPage() {
     }
   };
 
+  const validatePassword = (password: string): string | null => {
+    if (password.length < 8) {
+      return 'パスワードは8文字以上にしてください';
+    }
+    if (!/^[a-zA-Z0-9]+$/.test(password)) {
+      return 'パスワードは半角英数字のみ使用できます';
+    }
+    if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
+      return 'パスワードは英字と数字を両方含める必要があります';
+    }
+    return null;
+  };
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setMessage(passwordError);
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -209,7 +229,9 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              minLength={6}
+              minLength={8}
+              pattern="[a-zA-Z0-9]+"
+              title="半角英数字8文字以上（英字と数字を両方含む）"
               style={{
                 width: '100%',
                 padding: '14px 16px',
@@ -326,7 +348,7 @@ export default function LoginPage() {
             テストアカウント
           </p>
           <p style={{ fontSize: 12, color: '#718096' }}>
-            kan.yamaji@gmail.com / testtest
+            kan.yamaji@gmail.com / test2025
           </p>
         </div>
       </div>
