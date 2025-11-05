@@ -4,10 +4,19 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Supabase configuration missing:', { supabaseUrl, supabaseAnonKey });
   throw new Error('Supabase URL and Anon Key are required');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+console.log('Initializing Supabase client with URL:', supabaseUrl);
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+});
 
 export type Database = {
   public: {

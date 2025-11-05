@@ -16,16 +16,25 @@ export default function LoginPage() {
     setMessage('');
 
     try {
+      console.log('Attempting login with:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      console.log('Login response:', { data, error });
 
+      if (error) {
+        console.error('Login error:', error);
+        throw error;
+      }
+
+      console.log('Login successful, redirecting...');
       window.location.hash = '#/dashboard';
     } catch (error: any) {
-      setMessage(error.message || 'ログインに失敗しました');
+      console.error('Login exception:', error);
+      const errorMsg = error.message || 'ログインに失敗しました';
+      setMessage(`${errorMsg} (詳細: ${JSON.stringify(error)})`);
     } finally {
       setLoading(false);
     }
