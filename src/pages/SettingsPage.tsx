@@ -212,6 +212,14 @@ export default function SettingsPage() {
     }
   };
 
+  const handleLogout = async () => {
+    if (confirm('ログアウトしますか？')) {
+      await supabase.auth.signOut();
+      window.location.hash = '#/';
+      window.location.reload();
+    }
+  };
+
   if (loading) {
     return (
       <div style={{ padding: 16 }}>
@@ -368,6 +376,24 @@ export default function SettingsPage() {
                   </button>
                 </div>
               </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid var(--line)', paddingTop: 24, marginTop: 24 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>アカウント管理</div>
+              <button
+                onClick={handleLogout}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: '#f56565',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 4,
+                  fontSize: 14,
+                  cursor: 'pointer',
+                }}
+              >
+                ログアウト
+              </button>
             </div>
           </div>
         </section>

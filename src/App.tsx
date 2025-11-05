@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import AppShell from "./shells/AppShell";
+import { supabase } from "./lib/supabase";
 
-// 既存 widgets をそのまま使う（後で pages に移す）
 import DashboardKPI from "./widgets/DashboardKPI";
 import ForecastHybrid from "./widgets/ForecastHybrid";
-import EquityCurvePage from "./widgets/EquityCurvePage"; // 使わない場合は後で削除
+import EquityCurvePage from "./widgets/EquityCurvePage";
 import TradeListPage from "./widgets/TradeListPage";
 import TradeDiaryPage from "./widgets/TradeDiaryPage";
 import DiaryIndexPage from "./widgets/DiaryIndexPage";
@@ -16,6 +16,7 @@ import JournalNotesPage from "./pages/JournalNotesPage";
 import AiProposalPage from "./pages/AiProposalPage";
 import AiEvaluationPage from "./pages/AiEvaluationPage";
 import SettingsPage from "./pages/SettingsPage";
+import LoginPage from "./pages/LoginPage";
 
 type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | "/ai-evaluation";
 
@@ -54,7 +55,25 @@ function parseHashToNewRoute(): NewRoute {
 
 export default function App() {
   const [route, setRoute] = useState<NewRoute>(parseHashToNewRoute());
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   console.log("🔄 App render - route:", route);
+
+  useEffect(() => {
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      setLoading(false);
+    })();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   useEffect(() => {
     const onHash = () => {
       console.log("🔄 hashchange event");
@@ -154,6 +173,18 @@ export default function App() {
   }
   else {
     Page = <EquityCurvePage />;
+  }
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{ fontSize: 18, color: 'var(--muted)' }}>読み込み中...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginPage />;
   }
 
   return <AppShell>{Page}</AppShell>;
