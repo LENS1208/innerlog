@@ -15,7 +15,6 @@ import DailyNotePage from "./widgets/DailyNotePage";
 import JournalNotesPage from "./pages/JournalNotesPage";
 import AiProposalPage from "./pages/AiProposalPage";
 import AiEvaluationPage from "./pages/AiEvaluationPage";
-import SettingsPage from "./pages/SettingsPage";
 
 type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | "/ai-evaluation";
 
@@ -78,7 +77,7 @@ export default function App() {
     const entryId = route.split("/")[2] ?? "";
     Page = <TradeDiaryPage entryId={entryId as any} />;
   }
-  else if (route === "/settings") Page = <SettingsPage />;
+  else if (route === "/settings") Page = <div style={{padding: 40, textAlign: "center"}}>設定（準備中）</div>;
   else if (route === "/ai-proposal") {
     const mockData = {
       hero: {

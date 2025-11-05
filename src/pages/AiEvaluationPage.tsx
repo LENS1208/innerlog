@@ -15,15 +15,13 @@ import RecommendedActionsSection from '../components/evaluation/RecommendedActio
 import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
 import DataStatusSection from '../components/evaluation/DataStatusSection';
 import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
-import { getDataMetrics, getDataRows } from '../services/demoData';
+import { getDataMetrics, getDataRows, INIT_CAPITAL } from '../services/demoData';
 import { useDataset } from '../lib/dataset.context';
-import { useSettings } from '../lib/settings.context';
 import { computeMetrics } from '../utils/evaluation-metrics';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
   const { dataset, useDatabase } = useDataset();
-  const { settings } = useSettings();
   const [dataRows, setDataRows] = useState<TradeRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,8 +56,8 @@ export default function AiEvaluationPage() {
   }, [dataRows]);
 
   const scoreData = useMemo(() => {
-    return scoreFromMetrics(baseMetrics, settings.dd_basis, settings.initial_capital);
-  }, [baseMetrics, settings.dd_basis, settings.initial_capital]);
+    return scoreFromMetrics(baseMetrics, 'capital', INIT_CAPITAL);
+  }, [baseMetrics]);
 
   return (
     <div style={{ width: '100%', padding: 16 }}>
@@ -161,7 +159,7 @@ export default function AiEvaluationPage() {
             </div>
           </div>
           <div style={{ padding: 16 }}>
-            <KPICards metrics={baseMetrics} ddBasis={settings.dd_basis} initCap={settings.initial_capital} />
+            <KPICards metrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
             {baseMetrics.equity && baseMetrics.equity.length > 1 && (
               <div style={{ marginTop: 12 }}>
                 <Sparkline data={baseMetrics.equity} />
@@ -188,13 +186,13 @@ export default function AiEvaluationPage() {
             </div>
           </div>
           <div style={{ padding: 16 }}>
-            <WhatIfSimulator baseMetrics={baseMetrics} ddBasis={settings.dd_basis} initCap={settings.initial_capital} />
+            <WhatIfSimulator baseMetrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
           </div>
         </section>
 
         <AiInsightsSection />
         <TimingQualitySection trades={dataRows} />
-        <RiskAnalysisSection trades={dataRows} initialCapital={settings.initial_capital} />
+        <RiskAnalysisSection trades={dataRows} initialCapital={INIT_CAPITAL} />
         <StrengthWeaknessSection trades={dataRows} />
         <TPSLEvaluationSection metrics={baseMetrics} />
         <RecommendedActionsSection metrics={baseMetrics} />
