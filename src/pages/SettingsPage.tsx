@@ -632,24 +632,32 @@ export default function SettingsPage() {
                   </div>
                 </>
               )}
-              <div style={{ marginTop: 12 }}>
-                <button
-                  onClick={handleDeleteAllTrades}
-                  disabled={saving}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: 'var(--error)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: 4,
-                    fontSize: 13,
-                    cursor: 'pointer',
-                    opacity: saving ? 0.5 : 1,
-                  }}
-                >
-                  {saving ? '削除中...' : '現在アップロード中の取引履歴を削除'}
-                </button>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>取引データ管理</div>
+              <div style={{ padding: 16, backgroundColor: 'var(--bg-secondary)', borderRadius: 4, marginBottom: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>
+                  データベースに保存されている取引履歴をすべて削除します。この操作は元に戻せません。
+                </div>
               </div>
+              <button
+                onClick={handleDeleteAllTrades}
+                disabled={saving}
+                style={{
+                  padding: '10px 16px',
+                  backgroundColor: 'var(--error)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 4,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  opacity: saving ? 0.5 : 1,
+                }}
+              >
+                {saving ? '削除中...' : '現在アップロード中の取引履歴を削除'}
+              </button>
             </div>
           </div>
         </section>
