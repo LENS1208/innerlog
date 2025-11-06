@@ -1,4 +1,7 @@
 import React from "react";
+import { debounce } from './debounce';
+import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './urlSync';
+import { showToast } from './toast';
 
 type DS = "A"|"B"|"C";
 export type Filters = {
@@ -11,9 +14,9 @@ type Ctx = {
   filters: Filters;
   uiFilters: Filters;
   useDatabase: boolean;
+  loading: boolean;
   setDataset: (d:DS)=>void;
   setUiFilters: (p:Partial<Filters>)=>void;
-  applyFilters: ()=>void;
   resetFilters: ()=>void;
   setUseDatabase: (value: boolean)=>void;
 };
@@ -28,11 +31,72 @@ export const useDataset = () => {
 export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [dataset, setDataset] = React.useState<DS>("A");
   const [filters, setFilters] = React.useState<Filters>({});
-  const [uiFilters, setUiFiltersState] = React.useState<Filters>({});
+  const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
   const [useDatabase, setUseDatabase] = React.useState<boolean>(false);
-  const setUiFilters = (p:Partial<Filters>)=> setUiFiltersState(prev=>({...prev,...p}));
-  const applyFilters = ()=> setFilters(uiFilters);
-  const resetFilters = ()=> { setUiFiltersState({}); setFilters({}); };
-  const v:Ctx = {dataset, filters, uiFilters, useDatabase, setDataset, setUiFilters, applyFilters, resetFilters, setUseDatabase};
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const previousFiltersRef = React.useRef<Filters>({});
+
+  const debouncedApplyFilters = React.useMemo(
+    () => debounce(async (newFilters: Filters) => {
+      const controller = abortPreviousRequest();
+      previousFiltersRef.current = filters;
+
+      setLoading(true);
+
+      try {
+        if (controller.signal.aborted) return;
+
+        setFilters(newFilters);
+        syncFiltersToUrl(newFilters);
+      } catch (error) {
+        console.error('Filter application failed:', error);
+        setFilters(previousFiltersRef.current);
+        showToast('フィルター適用に失敗しました', 'error');
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    }, 200),
+    [filters]
+  );
+
+  const setUiFilters = React.useCallback((p: Partial<Filters>) => {
+    setUiFiltersState(prev => {
+      const newFilters = { ...prev, ...p };
+      debouncedApplyFilters(newFilters);
+      return newFilters;
+    });
+  }, [debouncedApplyFilters]);
+
+  const resetFilters = React.useCallback(() => {
+    setUiFiltersState({});
+    setFilters({});
+    syncFiltersToUrl({});
+  }, []);
+
+  React.useEffect(() => {
+    const handlePopState = () => {
+      const urlFilters = parseFiltersFromUrl();
+      setUiFiltersState(urlFilters);
+      setFilters(urlFilters);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const v: Ctx = {
+    dataset,
+    filters,
+    uiFilters,
+    useDatabase,
+    loading,
+    setDataset,
+    setUiFilters,
+    resetFilters,
+    setUseDatabase
+  };
+
   return <C.Provider value={v}>{children}</C.Provider>;
 }

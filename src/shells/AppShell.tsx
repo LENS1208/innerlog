@@ -21,7 +21,7 @@ function Header({
   showFilters: boolean;
   onUploadClick: () => void;
 }) {
-  const { applyFilters, resetFilters } = useDataset();
+  const { resetFilters, loading } = useDataset();
   return (
     <>
       <div
@@ -111,21 +111,26 @@ function Header({
 
             {/* 大画面のみ：1行レイアウト */}
             <div className="header-oneline" style={{ marginLeft: "auto", display: "none", gap: 8, alignItems: "center" }}>
+              {loading && (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  fontSize: 13,
+                  color: 'var(--muted)'
+                }}>
+                  <div style={{
+                    width: 16,
+                    height: 16,
+                    border: '2px solid var(--line)',
+                    borderTopColor: 'var(--accent)',
+                    borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite'
+                  }} />
+                  <span>適用中...</span>
+                </div>
+              )}
               <FiltersBar />
-              <button
-                onClick={applyFilters}
-                style={{
-                  height: 36,
-                  padding: "8px 12px",
-                  background: "var(--accent)",
-                  color: "#fff",
-                  border: 0,
-                  borderRadius: 12,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                適用
-              </button>
               <button
                 onClick={resetFilters}
                 title="リセット"
@@ -172,35 +177,39 @@ function Header({
                 <FiltersBar />
               </div>
               <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0, marginLeft: "auto" }}>
+                {loading && (
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    fontSize: 13,
+                    color: 'var(--muted)'
+                  }}>
+                    <div style={{
+                      width: 16,
+                      height: 16,
+                      border: '2px solid var(--line)',
+                      borderTopColor: 'var(--accent)',
+                      borderRadius: '50%',
+                      animation: 'spin 0.8s linear infinite'
+                    }} />
+                  </div>
+                )}
                 <button
-                onClick={applyFilters}
-                style={{
-                  height: 36,
-                  padding: "8px 12px",
-                  background: "var(--accent)",
-                  color: "#fff",
-                  border: 0,
-                  borderRadius: 12,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                適用
-              </button>
-              <button
-                onClick={resetFilters}
-                title="リセット"
-                style={{
-                  height: 36,
-                  width: 36,
-                  display: "grid",
-                  placeItems: "center",
-                  border: "1px solid var(--line)",
-                  borderRadius: 12,
-                  background: "var(--surface)",
-                }}
-              >
-                🗑️
-              </button>
+                  onClick={resetFilters}
+                  title="リセット"
+                  style={{
+                    height: 36,
+                    width: 36,
+                    display: "grid",
+                    placeItems: "center",
+                    border: "1px solid var(--line)",
+                    borderRadius: 12,
+                    background: "var(--surface)",
+                  }}
+                >
+                  🗑️
+                </button>
               <button
                 onClick={onUploadClick}
                 title="ファイルアップロード"

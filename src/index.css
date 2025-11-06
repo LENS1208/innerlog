@@ -1,6 +1,15 @@
 /* ===== Global resets for ForecastHybrid ===== */
 /* body background is controlled by tokens.css */
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* 2) 予想UIのコンテナは常に左寄せで読む */
 .fh-wrap, .fh-root, .fh-card{ text-align:left; }
 
