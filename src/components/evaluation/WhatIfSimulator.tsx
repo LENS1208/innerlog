@@ -44,7 +44,7 @@ export default function WhatIfSimulator({ baseMetrics, ddBasis, initCap }: WhatI
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, minWidth: 0 }}>
       {recommendation && (
         <div className="badge ok" style={{ marginBottom: 8 }}>
           おすすめ設定：TP/SL ≈ {recommendation.ratio.toFixed(1)}（PF{' '}
@@ -88,29 +88,43 @@ export default function WhatIfSimulator({ baseMetrics, ddBasis, initCap }: WhatI
               建値に戻したら決済（BE）
             </label>
           </div>
+          <style>{`
+            .whatif-grid {
+              display: grid;
+              grid-template-columns: 1fr;
+              gap: 12px;
+              min-width: 0;
+            }
+
+            @media (min-width: 480px) {
+              .whatif-grid {
+                grid-template-columns: repeat(2, 1fr);
+              }
+            }
+          `}</style>
           <div style={{ height: 8 }} />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-            <div className="kpi">
+          <div className="whatif-grid">
+            <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">PF（元→試算）</div>
-              <div className="value">
+              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
                 {fmt(baseMetrics.pf)} → {fmt(whatIfMetrics.pf)}
               </div>
             </div>
-            <div className="kpi">
+            <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">勝率（元→試算）</div>
-              <div className="value">
+              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
                 {(baseMetrics.winrate * 100).toFixed(1)}% → {(whatIfMetrics.winrate * 100).toFixed(1)}%
               </div>
             </div>
-            <div className="kpi">
+            <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">最大DD%（元→試算）</div>
-              <div className="value">
+              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
                 {baseDDPct.toFixed(1)}% → {whatDDPct.toFixed(1)}%
               </div>
             </div>
-            <div className="kpi">
+            <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">獲得pips（元→試算）</div>
-              <div className="value">
+              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
                 {Math.round(baseMetrics.pipsSum).toLocaleString()} →{' '}
                 {Math.round(whatIfMetrics.pipsSum).toLocaleString()}
               </div>
