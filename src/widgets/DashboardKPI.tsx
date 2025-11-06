@@ -206,15 +206,55 @@ function BarSplit({ avgProfit, avgLoss }: { avgProfit: number; avgLoss: number }
 export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
   const dash = useMemo(() => computeDashboard(trades), [trades])
 
+  const tradePeriod = useMemo(() => {
+    if (trades.length === 0) return null;
+
+    const dates = trades
+      .map(t => {
+        const dateStr = t.openTime || t.datetime;
+        if (!dateStr) return null;
+        try {
+          return new Date(dateStr);
+        } catch {
+          return null;
+        }
+      })
+      .filter((d): d is Date => d !== null)
+      .sort((a, b) => a.getTime() - b.getTime());
+
+    if (dates.length === 0) return null;
+
+    const firstDate = dates[0];
+    const lastDate = dates[dates.length - 1];
+
+    const formatDate = (date: Date) => {
+      return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+    };
+
+    return `${formatDate(firstDate)}〜${formatDate(lastDate)}`;
+  }, [trades]);
+
   return (
     <>
       <div className="kpi-grid" style={{ marginBottom: 12 }}>
       <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>取引件数（取引日数）</div>
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>取引件数（期間）</div>
         <div className="kpi-value">
-          {dash.count} <span className="kpi-unit">件</span> <span style={{ fontWeight: 'normal' }}>({dash.tradingDays} <span className="kpi-unit">日</span>)</span>
+          {dash.count} <span className="kpi-unit">件</span>
         </div>
-        <div className="kpi-desc">アクティブなトレード件数と日数</div>
+        {tradePeriod && (
+          <div style={{
+            fontSize: 12,
+            color: 'var(--muted)',
+            marginTop: 8,
+            lineHeight: 1.5,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word'
+          }}>
+            {tradePeriod}
+          </div>
+        )}
+        <div className="kpi-desc">アクティブなトレード件数</div>
       </div>
 
       <div className="kpi-card">
