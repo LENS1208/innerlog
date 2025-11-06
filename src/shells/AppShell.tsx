@@ -447,10 +447,12 @@ export default function AppShell({ children }: Props) {
         const dbTrades = trades.map(tradeToDb);
         await insertTrades(dbTrades);
         console.log(`✅ Uploaded ${trades.length} trades to database`);
-        alert(`${trades.length}件の取引データをアップロードしました`);
 
-        // TradeListPageにイベント発火して再読み込みを促す
+        // TradeListPageや他のコンポーネントにイベント発火して再読み込みを促す
         window.dispatchEvent(new CustomEvent("fx:tradesUpdated"));
+
+        // ページをリロードしてデータを反映
+        window.location.reload();
       } else {
         console.warn('⚠️ No trades parsed');
         alert('有効な取引データが見つかりませんでした');
