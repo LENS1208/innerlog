@@ -20,12 +20,15 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
   const trades: ParsedTrade[] = [];
 
   const tables = doc.querySelectorAll('table');
+  console.log(`🔍 Found ${tables.length} tables in HTML`);
 
   for (const table of tables) {
     const rows = table.querySelectorAll('tr');
+    console.log(`📊 Processing table with ${rows.length} rows`);
 
     let headerIndices: { [key: string]: number } = {};
     let isDataSection = false;
+    let rowsParsed = 0;
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
@@ -113,14 +116,18 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
 
         if (trade.ticket && trade.openTime && trade.closeTime && !isNaN(trade.pnl)) {
           trades.push(trade);
+          rowsParsed++;
         }
       } catch (error) {
         console.warn('Failed to parse row:', error);
         continue;
       }
     }
+
+    console.log(`✅ Parsed ${rowsParsed} trades from this table`);
   }
 
+  console.log(`📈 Total trades parsed: ${trades.length}`);
   return trades;
 }
 
