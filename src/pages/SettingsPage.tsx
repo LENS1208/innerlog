@@ -277,6 +277,30 @@ export default function SettingsPage() {
     }
   };
 
+  const handleDeleteAllTrades = async () => {
+    if (!confirm('現在アップロード中の取引履歴をすべて削除しますか？\nこの操作は元に戻せません。')) {
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('trades')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (error) throw error;
+
+      alert('取引履歴を削除しました');
+      window.dispatchEvent(new CustomEvent('fx:tradesUpdated'));
+    } catch (err) {
+      console.error('取引履歴削除エラー:', err);
+      alert('削除に失敗しました');
+    } finally {
+      setSaving(false);
+    }
+  };
+
 
   if (loading) {
     return (
@@ -590,7 +614,7 @@ export default function SettingsPage() {
                       </tbody>
                     </table>
                   </div>
-                  <div style={{ marginTop: 8 }}>
+                  <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
                     <button
                       onClick={handleClearHistory}
                       style={{
@@ -604,6 +628,22 @@ export default function SettingsPage() {
                       }}
                     >
                       履歴をクリア
+                    </button>
+                    <button
+                      onClick={handleDeleteAllTrades}
+                      disabled={saving}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: 'var(--error)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 4,
+                        fontSize: 13,
+                        cursor: 'pointer',
+                        opacity: saving ? 0.5 : 1,
+                      }}
+                    >
+                      {saving ? '削除中...' : '現在アップロード中の取引履歴を削除'}
                     </button>
                   </div>
                 </>
