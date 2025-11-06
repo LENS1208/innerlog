@@ -375,138 +375,134 @@ export default function MonthlyCalendar() {
   }, [trades, year, month, weekSummaries]);
 
   return (
-    <div className="monthly-calendar-container" style={{ padding: "var(--space-3)", width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
+    <div style={{ width: "100%" }}>
       <style>{`
-        .monthly-calendar-container .calendar-header-grid {
+        .calendar-header-grid {
           display: grid;
           grid-template-columns: repeat(8, 1fr);
           gap: 2px;
           margin-bottom: 2px;
         }
 
-        .monthly-calendar-container .calendar-week-row {
+        .calendar-week-row {
           display: grid;
           grid-template-columns: repeat(8, 1fr);
           gap: 2px;
           min-height: 110px;
         }
 
-        .monthly-calendar-container .week-summary-cell {
+        .week-summary-cell {
           display: flex;
         }
 
         @media (max-width: 1023px) {
-          .monthly-calendar-container .calendar-header {
+          .calendar-header {
             flex-direction: column !important;
             align-items: flex-start !important;
             gap: 12px !important;
             min-height: auto !important;
           }
 
-          .monthly-calendar-container .calendar-header h1 {
+          .calendar-header h1 {
             font-size: 18px !important;
           }
 
-          .monthly-calendar-container .calendar-header-right {
+          .calendar-header-right {
             width: 100% !important;
             flex-direction: column !important;
             align-items: flex-start !important;
             gap: 8px !important;
           }
 
-          .monthly-calendar-container .month-total-display {
+          .month-total-display {
             width: 100% !important;
             justify-content: space-between !important;
           }
 
-          .monthly-calendar-container .week-summary-cell {
+          .week-summary-cell {
             display: none !important;
           }
 
-          .monthly-calendar-container .calendar-header-grid {
+          .calendar-header-grid {
             grid-template-columns: repeat(7, 1fr) !important;
           }
 
-          .monthly-calendar-container .calendar-week-row {
+          .calendar-week-row {
             grid-template-columns: repeat(7, 1fr) !important;
           }
         }
 
         @media (max-width: 640px) {
-          .monthly-calendar-container {
-            padding: 4px !important;
-          }
-
-          .monthly-calendar-container .calendar-day {
+          .calendar-day {
             padding: 2px !important;
             min-height: 60px !important;
           }
 
-          .monthly-calendar-container .calendar-day-number {
+          .calendar-day-number {
             font-size: 10px !important;
             margin-bottom: 2px !important;
           }
 
-          .monthly-calendar-container .calendar-day-profit {
+          .calendar-day-profit {
             font-size: 10px !important;
             margin-bottom: 1px !important;
           }
 
-          .monthly-calendar-container .calendar-day-trades {
+          .calendar-day-trades {
             font-size: 8px !important;
           }
 
-          .monthly-calendar-container .day-header {
+          .day-header {
             font-size: 10px !important;
             padding: 2px !important;
             height: 24px !important;
           }
 
-          .monthly-calendar-container .week-summary {
+          .week-summary {
             padding: 4px !important;
             min-height: 60px !important;
           }
 
-          .monthly-calendar-container .week-summary-label {
+          .week-summary-label {
             font-size: 9px !important;
           }
 
-          .monthly-calendar-container .week-summary-value {
+          .week-summary-value {
             font-size: 11px !important;
           }
 
-          .monthly-calendar-container .calendar-grid {
+          .calendar-grid {
             gap: 1px !important;
           }
 
-          .monthly-calendar-container .calendar-wrapper {
+          .calendar-wrapper {
             padding: 8px !important;
           }
 
-          .monthly-calendar-container .nav-button {
+          .nav-button {
             padding: 6px 10px !important;
             font-size: 16px !important;
           }
 
-          .monthly-calendar-container .month-total-label {
+          .month-total-label {
             font-size: 11px !important;
           }
 
-          .monthly-calendar-container .month-total-value {
+          .month-total-value {
             font-size: 18px !important;
           }
         }
 
         @media (min-width: 1024px) {
-          .monthly-calendar-container .calendar-header-grid {
+          .calendar-header-grid {
             grid-template-columns: repeat(8, 1fr) !important;
           }
 
-          .monthly-calendar-container .calendar-week-row {
+          .calendar-week-row {
             grid-template-columns: repeat(8, 1fr) !important;
           }
 
-          .monthly-calendar-container .week-summary-cell {
+          .week-summary-cell {
             display: flex !important;
           }
         }
