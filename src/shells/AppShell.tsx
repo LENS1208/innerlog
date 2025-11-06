@@ -6,6 +6,7 @@ import UserMenu from "../components/UserMenu";
 import logoImg from "../assets/inner-log-logo.png";
 import { parseCsvText } from "../lib/csv";
 import { tradeToDb, insertTrades } from "../lib/db.service";
+import { parseHtmlStatement, convertHtmlTradesToCsvFormat } from "../lib/html-parser";
 
 type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
@@ -410,20 +411,46 @@ export default function AppShell({ children }: Props) {
       const text = await file.text();
       console.log('📝 File content length:', text.length);
 
-      const trades = parseCsvText(text);
-      console.log('📊 Parsed trades:', trades.length);
+      const fileName = file.name.toLowerCase();
+      let trades;
+
+      if (fileName.endsWith('.html') || fileName.endsWith('.htm')) {
+        console.log('🌐 Detected HTML file, parsing...');
+        const htmlTrades = parseHtmlStatement(text);
+        console.log('📊 Parsed HTML trades:', htmlTrades.length);
+
+        if (htmlTrades.length === 0) {
+          console.warn('⚠️ No trades found in HTML file');
+          alert('HTML形式から有効な取引データが見つかりませんでした');
+          e.target.value = '';
+          return;
+        }
+
+        const csvText = convertHtmlTradesToCsvFormat(htmlTrades);
+        trades = parseCsvText(csvText);
+        console.log('✅ Converted HTML to CSV format:', trades.length, 'trades');
+      } else {
+        console.log('📄 Parsing as CSV file...');
+        trades = parseCsvText(text);
+        console.log('📊 Parsed CSV trades:', trades.length);
+      }
 
       if (trades.length > 0) {
         // データベースに保存
         const dbTrades = trades.map(tradeToDb);
         await insertTrades(dbTrades);
         console.log(`✅ Uploaded ${trades.length} trades to database`);
+        alert(`${trades.length}件の取引データをアップロードしました`);
 
         // TradeListPageにイベント発火して再読み込みを促す
         window.dispatchEvent(new CustomEvent("fx:tradesUpdated"));
+      } else {
+        console.warn('⚠️ No trades parsed');
+        alert('有効な取引データが見つかりませんでした');
       }
     } catch (error) {
-      console.error('❌ Error processing CSV:', error);
+      console.error('❌ Error processing file:', error);
+      alert('ファイルの処理に失敗しました: ' + (error as Error).message);
     }
 
     // input要素をリセット
@@ -476,7 +503,7 @@ export default function AppShell({ children }: Props) {
       <input
         ref={fileInputRef}
         type="file"
-        accept=".csv"
+        accept=".csv,.html,.htm"
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />
