@@ -83,9 +83,9 @@ export type DbNoteLink = {
 export async function getAllTrades(): Promise<DbTrade[]> {
   const { data, error } = await supabase
     .from('trades')
-    .select('*', { count: 'exact' })
+    .select('*', { count: 'exact', head: false })
     .order('close_time', { ascending: false })
-    .limit(50000);
+    .range(0, 299999);
 
   if (error) throw error;
   return data || [];
