@@ -112,9 +112,6 @@ export default function UserMenu() {
               fontSize: 14,
               color: '#111827',
               borderBottom: '1px solid var(--line)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'rgba(59, 130, 246, 0.08)';
@@ -123,10 +120,6 @@ export default function UserMenu() {
               e.currentTarget.style.background = 'transparent';
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M12 1v6m0 6v6m-9-9h6m6 0h6m-2.636-6.364L16.95 7.05m-9.9 9.9l-1.414 1.414m12.728 0L16.95 16.95m-9.9-9.9L5.636 5.636"></path>
-            </svg>
             設定
           </button>
           <button
@@ -140,9 +133,6 @@ export default function UserMenu() {
               cursor: 'pointer',
               fontSize: 14,
               color: '#dc2626',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'rgba(220, 38, 38, 0.08)';
@@ -151,11 +141,6 @@ export default function UserMenu() {
               e.currentTarget.style.background = 'transparent';
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-              <polyline points="16 17 21 12 16 7"></polyline>
-              <line x1="21" y1="12" x2="9" y2="12"></line>
-            </svg>
             ログアウト
           </button>
         </div>
