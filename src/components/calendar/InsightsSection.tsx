@@ -399,7 +399,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           }}
         >
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>ベスト/ワーストデイ & 最大日次DD</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div
               style={{
                 borderRadius: 12,
@@ -447,7 +447,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
             通貨ペア 上位/下位 / Top & Bottom Symbols
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div>
               <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
@@ -487,6 +487,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           }}
         >
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>タグ / Mini Expectation</div>
+          <div style={{ overflowX: "auto", width: "100%" }}>
           <div
             style={{
               display: "grid",
@@ -497,6 +498,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               fontWeight: 600,
               paddingBottom: 8,
               borderBottom: "1px solid var(--line)",
+              minWidth: "400px",
             }}
           >
             <div>タグ</div>
@@ -504,7 +506,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             <div style={{ textAlign: "right" }}>勝率</div>
             <div style={{ textAlign: "right" }}>注目</div>
           </div>
-          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8, minWidth: "400px" }}>
             {topTags.map((tag, i) => (
               <div
                 key={i}
@@ -533,6 +535,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               </div>
             ))}
           </div>
+          </div>
         </div>
 
         {/* 9) 期待値ミニ表（抜粋） */}
@@ -545,6 +548,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           }}
         >
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>期待値ミニ表（抜粋）</div>
+          <div style={{ overflowX: "auto", width: "100%" }}>
           <div
             style={{
               display: "grid",
@@ -555,6 +559,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               fontWeight: 600,
               paddingBottom: 8,
               borderBottom: "1px solid var(--line)",
+              minWidth: "450px",
             }}
           >
             <div>セグメント</div>
@@ -563,7 +568,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             <div style={{ textAlign: "right" }}>勝率</div>
             <div style={{ textAlign: "right" }}>PF</div>
           </div>
-          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8, minWidth: "450px" }}>
             {expectationRows.map((row, i) => (
               <div
                 key={i}
@@ -594,6 +599,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </div>
       </div>
