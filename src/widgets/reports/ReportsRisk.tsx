@@ -404,10 +404,11 @@ export default function ReportsRisk() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
+          gridTemplateColumns: "1fr",
           gap: 12,
           marginBottom: 16,
         }}
+        className="risk-cards-grid"
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>最大ドローダウン</h3>
