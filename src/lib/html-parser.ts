@@ -33,7 +33,7 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
 
       if (cells.length === 0) continue;
 
-      const cellTexts = Array.from(cells).map(cell => cell.textContent?.trim() || '');
+      const cellTexts = Array.from(cells).map(cell => cell.textContent?.trim().replace(/\s+/g, ' ') || '');
 
       if (cellTexts.some(text =>
         text.toLowerCase().includes('ticket') ||
@@ -47,12 +47,11 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
           if (lower.includes('type')) headerIndices['type'] = idx;
           if (lower.includes('size') || lower.includes('volume') || lower.includes('lot')) headerIndices['size'] = idx;
           if (lower.includes('item') || lower.includes('symbol')) headerIndices['symbol'] = idx;
-          if (lower.includes('open price') || lower.includes('openprice')) headerIndices['openPrice'] = idx;
+          if (lower.includes('price') && idx < 8 && !lower.includes('close')) headerIndices['openPrice'] = idx;
           if (lower.includes('close time') || lower.includes('closetime')) headerIndices['closeTime'] = idx;
-          if (lower.includes('close price') || lower.includes('closeprice') || lower.includes('s/l')) headerIndices['closePrice'] = idx;
-          if (lower.includes('profit') || lower.includes('p/l') || lower.includes('pnl')) headerIndices['pnl'] = idx;
           if (lower.includes('commission')) headerIndices['commission'] = idx;
           if (lower.includes('swap')) headerIndices['swap'] = idx;
+          if (lower.includes('profit')) headerIndices['pnl'] = idx;
           if (lower.includes('pips')) headerIndices['pips'] = idx;
         });
         isDataSection = true;
@@ -64,32 +63,43 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
       if (cellTexts.length < 3) continue;
 
       const ticketText = cellTexts[headerIndices['ticket']] || '';
-      if (!ticketText || isNaN(Number(ticketText))) continue;
+      const numericTicket = ticketText.replace(/\D/g, '');
+      if (!numericTicket || isNaN(Number(numericTicket))) continue;
 
       const typeText = (cellTexts[headerIndices['type']] || '').toLowerCase();
       if (!typeText.includes('buy') && !typeText.includes('sell')) continue;
 
       try {
+        const openTimeIdx = headerIndices['openTime'];
+        const sizeIdx = headerIndices['size'];
+        const symbolIdx = headerIndices['symbol'];
+        const openPriceIdx = headerIndices['openPrice'];
+        const closeTimeIdx = headerIndices['closeTime'];
+        const closeTimeText = cellTexts[closeTimeIdx] || '';
+
+        let closePriceIdx = closeTimeIdx + 1;
+        if (closePriceIdx >= cellTexts.length) continue;
+
         const trade: ParsedTrade = {
-          ticket: ticketText,
-          openTime: cellTexts[headerIndices['openTime']] || '',
+          ticket: numericTicket,
+          openTime: cellTexts[openTimeIdx] || '',
           type: typeText.includes('buy') ? 'buy' : 'sell',
-          size: parseFloat(cellTexts[headerIndices['size']] || '0'),
-          item: cellTexts[headerIndices['symbol']] || '',
-          openPrice: parseFloat(cellTexts[headerIndices['openPrice']] || '0'),
-          closeTime: cellTexts[headerIndices['closeTime']] || '',
-          closePrice: parseFloat(cellTexts[headerIndices['closePrice']] || '0'),
-          pnl: parseFloat(cellTexts[headerIndices['pnl']] || '0'),
+          size: parseFloat(cellTexts[sizeIdx]?.replace(/[^\d.]/g, '') || '0'),
+          item: (cellTexts[symbolIdx] || '').toLowerCase(),
+          openPrice: parseFloat(cellTexts[openPriceIdx]?.replace(/[^\d.]/g, '') || '0'),
+          closeTime: closeTimeText,
+          closePrice: parseFloat(cellTexts[closePriceIdx]?.replace(/[^\d.]/g, '') || '0'),
+          pnl: parseFloat(cellTexts[headerIndices['pnl']]?.replace(/[^\d.-]/g, '') || '0'),
         };
 
         if (headerIndices['commission'] !== undefined) {
-          trade.commission = parseFloat(cellTexts[headerIndices['commission']] || '0');
+          trade.commission = parseFloat(cellTexts[headerIndices['commission']]?.replace(/[^\d.-]/g, '') || '0');
         }
         if (headerIndices['swap'] !== undefined) {
-          trade.swap = parseFloat(cellTexts[headerIndices['swap']] || '0');
+          trade.swap = parseFloat(cellTexts[headerIndices['swap']]?.replace(/[^\d.-]/g, '') || '0');
         }
         if (headerIndices['pips'] !== undefined) {
-          trade.pips = parseFloat(cellTexts[headerIndices['pips']] || '0');
+          trade.pips = parseFloat(cellTexts[headerIndices['pips']]?.replace(/[^\d.-]/g, '') || '0');
         }
 
         if (trade.openPrice > 0 && trade.closePrice > 0) {
@@ -97,11 +107,11 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
             ? trade.closePrice - trade.openPrice
             : trade.openPrice - trade.closePrice;
 
-          const pipMultiplier = trade.item.includes('JPY') ? 100 : 10000;
+          const pipMultiplier = trade.item.includes('jpy') ? 100 : 10000;
           trade.pips = priceDiff * pipMultiplier;
         }
 
-        if (trade.ticket && trade.openTime && trade.closeTime && trade.pnl !== 0) {
+        if (trade.ticket && trade.openTime && trade.closeTime && !isNaN(trade.pnl)) {
           trades.push(trade);
         }
       } catch (error) {
