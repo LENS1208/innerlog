@@ -125,12 +125,20 @@ export default function InsightsSection(props: InsightsSectionProps) {
   };
 
   return (
-    <section style={{ padding: "16px 0", marginTop: 24 }}>
+    <section style={{ padding: "16px 0", marginTop: 24, width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
       <style>{`
         .insights-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 16px;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        @media (max-width: 640px) {
+          .insights-grid {
+            gap: 12px;
+          }
         }
 
         @media (min-width: 640px) {
@@ -153,6 +161,18 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         .insights-grid-full-width {
           grid-column: 1 / -1;
+        }
+
+        .insights-grid > div {
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+
+        @media (max-width: 640px) {
+          .insights-grid > div {
+            padding: 12px !important;
+          }
         }
       `}</style>
 
