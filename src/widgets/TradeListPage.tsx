@@ -184,20 +184,27 @@ export default function TradeListPage() {
       const trades = parseCsvText(text);
       console.log('📊 Parsed trades:', trades.length);
 
-      if (useDatabase && trades.length > 0) {
+      const MAX_TRADES = 50000;
+      if (trades.length > MAX_TRADES) {
+        alert(`アップロードできる取引件数の最大は5万件です。5万件以上の取引は対象外となります\n\n検出された件数: ${trades.length.toLocaleString()}件\nアップロードされる件数: ${MAX_TRADES.toLocaleString()}件`);
+      }
+
+      const tradesToUpload = trades.slice(0, MAX_TRADES);
+
+      if (useDatabase && tradesToUpload.length > 0) {
         console.log('💾 Saving to database...');
-        const dbTrades = trades.map(tradeToDb);
+        const dbTrades = tradesToUpload.map(tradeToDb);
         console.log('🔄 Converted to DB format:', dbTrades.length);
 
         await insertTrades(dbTrades);
-        console.log(`✅ Uploaded ${trades.length} trades to database`);
+        console.log(`✅ Uploaded ${tradesToUpload.length} trades to database`);
 
         const dbData = await getAllTrades();
         console.log('📥 Retrieved from database:', dbData.length);
         setSrcRows(dbData.map(dbToTrade));
       } else {
         console.log('📝 Setting trades in memory (useDatabase=' + useDatabase + ')');
-        setSrcRows(trades);
+        setSrcRows(tradesToUpload);
       }
     } catch (err) {
       console.error('❌ Error uploading file:', err);

@@ -84,7 +84,8 @@ export async function getAllTrades(): Promise<DbTrade[]> {
   const { data, error } = await supabase
     .from('trades')
     .select('*')
-    .order('close_time', { ascending: false });
+    .order('close_time', { ascending: false })
+    .range(0, 49999);
 
   if (error) throw error;
   return data || [];
