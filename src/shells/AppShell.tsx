@@ -146,27 +146,6 @@ function Header({
               >
                 🗑️
               </button>
-              <button
-                onClick={onUploadClick}
-                title="ファイルアップロード"
-                style={{
-                  height: 36,
-                  width: 36,
-                  display: "grid",
-                  placeItems: "center",
-                  border: "1px solid var(--line)",
-                  borderRadius: 12,
-                  background: "var(--surface)",
-                }}
-                aria-label="ファイルアップロード"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="12" y1="18" x2="12" y2="12"></line>
-                  <polyline points="9 15 12 12 15 15"></polyline>
-                </svg>
-              </button>
             </div>
           </div>
 
@@ -210,27 +189,6 @@ function Header({
                 >
                   🗑️
                 </button>
-              <button
-                onClick={onUploadClick}
-                title="ファイルアップロード"
-                style={{
-                  height: 36,
-                  width: 36,
-                  display: "grid",
-                  placeItems: "center",
-                  border: "1px solid var(--line)",
-                  borderRadius: 12,
-                  background: "var(--surface)",
-                }}
-                aria-label="ファイルアップロード"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="12" y1="18" x2="12" y2="12"></line>
-                  <polyline points="9 15 12 12 15 15"></polyline>
-                </svg>
-              </button>
               </div>
             </div>
           </div>
@@ -270,27 +228,6 @@ function Header({
                 }}
               >
                 🗑️
-              </button>
-              <button
-                onClick={onUploadClick}
-                title="ファイルアップロード"
-                style={{
-                  height: 40,
-                  width: 40,
-                  display: "grid",
-                  placeItems: "center",
-                  border: "1px solid var(--line)",
-                  borderRadius: 12,
-                  background: "var(--surface)",
-                }}
-                aria-label="ファイルアップロード"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="12" y1="18" x2="12" y2="12"></line>
-                  <polyline points="9 15 12 12 15 15"></polyline>
-                </svg>
               </button>
             </div>
           </div>
@@ -368,7 +305,7 @@ function Banner() {
 }
 
 // 左メニュー（左上に固定）
-function SideNav({ menu, activeKey }: { menu: MenuItem[]; activeKey: string }) {
+function SideNav({ menu, activeKey, onUploadClick }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void }) {
   return (
     <aside
       style={{
@@ -402,6 +339,35 @@ function SideNav({ menu, activeKey }: { menu: MenuItem[]; activeKey: string }) {
           </li>
         ))}
       </ul>
+      {onUploadClick && (
+        <button
+          onClick={onUploadClick}
+          style={{
+            width: "100%",
+            marginTop: 12,
+            padding: "10px 12px",
+            background: "var(--accent)",
+            color: "#fff",
+            border: "none",
+            borderRadius: 10,
+            fontWeight: 600,
+            cursor: "pointer",
+            fontSize: 14,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <polyline points="9 15 12 12 15 15"></polyline>
+          </svg>
+          取引履歴を追加
+        </button>
+      )}
     </aside>
   );
 }
@@ -527,7 +493,7 @@ export default function AppShell({ children }: Props) {
             zIndex: 10,
           }}
         >
-          <SideNav menu={menu} activeKey={activeKey} />
+          <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} />
         </div>
 
         {/* モバイルメニュー（ドロワー） */}
@@ -579,7 +545,7 @@ export default function AppShell({ children }: Props) {
                   ✕
                 </button>
               </div>
-              <SideNav menu={menu} activeKey={activeKey} />
+              <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} />
             </div>
           </>
         )}
