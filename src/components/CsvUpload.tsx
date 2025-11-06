@@ -13,6 +13,7 @@ type CsvUploadProps = {
 export default function CsvUpload({ useDatabase, onToggleDatabase, loading, dataCount }: CsvUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
+  const [fileInputKey, setFileInputKey] = useState(0);
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -55,7 +56,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       setMessage('アップロードに失敗しました: ' + (error as Error).message);
     } finally {
       setUploading(false);
-      e.target.value = '';
+      setFileInputKey(prev => prev + 1);
     }
   };
 
@@ -111,9 +112,8 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
         }}>
           {uploading ? 'アップロード中...' : 'CSV/HTMLファイルを選択'}
           <input
-            key={Date.now()}
+            key={fileInputKey}
             type="file"
-            accept="*/*"
             onChange={handleFileSelect}
             disabled={uploading}
             style={{ display: 'none' }}
