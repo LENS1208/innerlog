@@ -26,9 +26,11 @@ export default function FiltersBar() {
   const [tempFrom, setTempFrom] = React.useState("");
   const [tempTo, setTempTo] = React.useState("");
   const [availableSymbols, setAvailableSymbols] = React.useState<string[]>([]);
+  const [loadingSymbols, setLoadingSymbols] = React.useState(false);
 
   React.useEffect(() => {
     const loadSymbols = async () => {
+      setLoadingSymbols(true);
       try {
         let trades: Trade[] = [];
 
@@ -64,6 +66,8 @@ export default function FiltersBar() {
       } catch (e) {
         console.error('Error loading symbols:', e);
         setAvailableSymbols([]);
+      } finally {
+        setLoadingSymbols(false);
       }
     };
 
@@ -163,8 +167,8 @@ export default function FiltersBar() {
     <>
       <div className="filters-container" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
         {/* 銘柄 */}
-        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
-          <option value="">{availableSymbols.length === 0 ? '読み込み中...' : UI_TEXT.symbol}</option>
+        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }} disabled={loadingSymbols}>
+          <option value="">{loadingSymbols ? '読み込み中...' : UI_TEXT.symbol}</option>
           {availableSymbols.map(symbol => (
             <option key={symbol} value={symbol}>{symbol}</option>
           ))}
