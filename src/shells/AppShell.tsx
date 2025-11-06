@@ -484,7 +484,6 @@ export default function AppShell({ children }: Props) {
           { key: "notebook", label: "トレード日記" },
           { key: "ai-proposal", label: "相場予想" },
           { key: "trades", label: "取引一覧" },
-          { key: "settings", label: "設定" },
         ]);
         const fromHash = (location.hash.replace(/^#\//, "") || "").trim();
         setActiveKey(fromHash || "dashboard");
