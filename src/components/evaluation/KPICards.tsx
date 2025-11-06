@@ -18,7 +18,7 @@ export default function KPICards({ metrics, ddBasis, initCap }: KPICardsProps) {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, minWidth: 0 }}>
       <div className="kpi">
         <div className="label">収益効率（PF）</div>
         <div className="value">{metrics.pf === Infinity ? '∞' : metrics.pf.toFixed(2)}</div>

@@ -46,7 +46,7 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
         </div>
       </div>
       <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div className="panel" style={{ padding: 16 }}>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--accent)' }}>戦略クラスタ</div>
             <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13, lineHeight: 1.8 }}>

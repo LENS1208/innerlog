@@ -38,7 +38,7 @@ export default function DataStatusSection({ metrics }: Props) {
         </div>
       </div>
       <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, minWidth: 0 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>入力健全性</div>
             <div style={{ padding: 16, border: '1px solid #22c55e', borderRadius: 8, background: 'rgba(22, 163, 74, 0.1)', fontSize: 13 }}>✓ 問題なし</div>

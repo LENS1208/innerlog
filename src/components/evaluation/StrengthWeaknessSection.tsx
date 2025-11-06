@@ -71,7 +71,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
         </div>
       </div>
       <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, minWidth: 0 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>通貨×時間帯（PF）</div>
             <div style={{ overflowX: 'auto' }}>

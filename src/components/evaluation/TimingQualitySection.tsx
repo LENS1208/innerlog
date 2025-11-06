@@ -74,7 +74,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
         </div>
       </div>
       <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div className="panel" style={{ padding: 16 }}>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>MFE（最大含み益）</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: '#22c55e', marginBottom: 4 }}>

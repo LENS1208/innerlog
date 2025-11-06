@@ -60,9 +60,31 @@ export default function AiEvaluationPage() {
   }, [baseMetrics]);
 
   return (
-    <div style={{ width: '100%', padding: 16 }}>
+    <div style={{ width: '100%' }}>
+      <style>{`
+        .eval-grid-2col {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+          min-width: 0;
+        }
 
-      <div style={{ display: 'grid', gap: 16 }}>
+        @media (min-width: 768px) {
+          .eval-grid-2col {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        .panel {
+          min-width: 0;
+        }
+
+        .panel > div {
+          min-width: 0;
+        }
+      `}</style>
+
+      <div style={{ display: 'grid', gap: 16, minWidth: 0 }}>
         <section className="panel">
           <div
             style={{
@@ -86,9 +108,10 @@ export default function AiEvaluationPage() {
               display: 'grid',
               gridTemplateColumns: '1fr',
               gap: 12,
+              minWidth: 0,
             }}
           >
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 12 }}>
+            <div className="eval-grid-2col">
               <OverallScore score={scoreData.overall} rank={scoreData.rank} />
               <RadarChart parts={scoreData.parts} />
             </div>
@@ -113,7 +136,7 @@ export default function AiEvaluationPage() {
             </div>
             <div className="badge ok">分析の信頼度: 高め</div>
           </div>
-          <div style={{ padding: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 12 }}>
+          <div style={{ padding: 16, minWidth: 0 }} className="eval-grid-2col">
             <div className="panel" style={{ padding: 16 }}>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>サマリー</div>
               {baseMetrics.equity && baseMetrics.equity.length > 1 && (

@@ -80,7 +80,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
         </div>
       </div>
       <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>現在のR:R比</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>

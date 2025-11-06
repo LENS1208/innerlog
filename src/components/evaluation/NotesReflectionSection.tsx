@@ -60,7 +60,7 @@ export default function NotesReflectionSection() {
         </div>
       </div>
       <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: 16, marginBottom: 20 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>感情トレンド（直近5日）</div>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 120 }}>

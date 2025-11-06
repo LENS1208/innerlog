@@ -71,7 +71,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
         <div className="badge warn">最大DD: {maxDD.toLocaleString()}円</div>
       </div>
       <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, minWidth: 0 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>エクイティカーブ & DD帯</div>
             <svg width="100%" height="220" viewBox="0 0 500 220">
