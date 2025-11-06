@@ -90,6 +90,26 @@ export async function getAllTrades(): Promise<DbTrade[]> {
   return data || [];
 }
 
+export async function getTradesCount(): Promise<number> {
+  const { count, error } = await supabase
+    .from('trades')
+    .select('*', { count: 'exact', head: true });
+
+  if (error) throw error;
+  return count || 0;
+}
+
+export async function deleteAllTrades(): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { error } = await supabase
+    .from('trades')
+    .delete()
+    .neq('id', '00000000-0000-0000-0000-000000000000');
+
+  if (error) throw error;
+}
+
 export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> {
   const { data, error } = await supabase
     .from('trades')

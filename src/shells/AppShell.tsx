@@ -5,7 +5,7 @@ import FiltersBar from "../components/FiltersBar";
 import UserMenu from "../components/UserMenu";
 import logoImg from "../assets/inner-log-logo.png";
 import { parseCsvText } from "../lib/csv";
-import { tradeToDb, insertTrades } from "../lib/db.service";
+import { tradeToDb, insertTrades, getTradesCount, deleteAllTrades } from "../lib/db.service";
 import { parseHtmlStatement, convertHtmlTradesToCsvFormat } from "../lib/html-parser";
 
 type MenuItem = { key: string; label: string; active?: boolean };
@@ -243,7 +243,30 @@ function Header({
 
 // 常時バナー（右カラム上：ヘッダーの下）
 function Banner() {
-  const { dataset, setDataset, useDatabase, setUseDatabase } = useDataset();
+  const { dataset, setDataset } = useDataset();
+  const [tradesCount, setTradesCount] = useState(0);
+
+  useEffect(() => {
+    const checkTradesCount = async () => {
+      try {
+        const count = await getTradesCount();
+        setTradesCount(count);
+      } catch (error) {
+        console.error('取引履歴の件数取得に失敗:', error);
+      }
+    };
+
+    checkTradesCount();
+
+    const handler = () => checkTradesCount();
+    window.addEventListener('fx:tradesUpdated', handler);
+    return () => window.removeEventListener('fx:tradesUpdated', handler);
+  }, []);
+
+  if (tradesCount > 0) {
+    return null;
+  }
+
   return (
     <section
       style={{
@@ -262,27 +285,8 @@ function Banner() {
       aria-label="データ操作"
       className="banner-section"
     >
-      <strong>データ操作</strong>
-      <span>サンプル切替やアップロードはこちら。</span>
+      <strong>MT4/MT5の取引履歴を追加してください</strong>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        <label style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          cursor: 'pointer',
-          padding: '6px 12px',
-          background: '#fff',
-          borderRadius: 8,
-          border: '1px solid var(--line)',
-        }}>
-          <input
-            type="checkbox"
-            checked={useDatabase}
-            onChange={(e) => setUseDatabase(e.target.checked)}
-            style={{ width: 18, height: 18, cursor: 'pointer', accentColor: 'var(--accent)' }}
-          />
-          <span style={{ fontSize: 14, fontWeight: 500, color: '#111827' }}>データベースから読み込む</span>
-        </label>
         <div style={{ display: "inline-flex", border: "1px solid var(--line)", borderRadius: 999, overflow: "hidden" }}>
           {(["A", "B", "C"] as const).map((d) => (
             <button
@@ -436,7 +440,10 @@ export default function AppShell({ children }: Props) {
       }
 
       if (trades.length > 0) {
-        // データベースに保存
+        // 既存の取引履歴を削除してから新しいデータを保存
+        await deleteAllTrades();
+        console.log('🗑️ Deleted all existing trades');
+
         const dbTrades = trades.map(tradeToDb);
         await insertTrades(dbTrades);
         console.log(`✅ Uploaded ${trades.length} trades to database`);
