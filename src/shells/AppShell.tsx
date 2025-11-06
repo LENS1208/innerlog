@@ -138,15 +138,21 @@ function Header({
                 title="リセット"
                 style={{
                   height: 36,
-                  width: 36,
-                  display: "grid",
-                  placeItems: "center",
-                  border: "1px solid var(--line)",
+                  padding: "0 16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "none",
                   borderRadius: 12,
-                  background: "var(--surface)",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
                 }}
               >
-                🗑️
+                リセット
               </button>
               <UserMenu />
             </div>
@@ -182,15 +188,21 @@ function Header({
                   title="リセット"
                   style={{
                     height: 36,
-                    width: 36,
-                    display: "grid",
-                    placeItems: "center",
-                    border: "1px solid var(--line)",
+                    padding: "0 16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "none",
                     borderRadius: 12,
-                    background: "var(--surface)",
+                    background: "var(--accent)",
+                    color: "#fff",
+                    fontWeight: 600,
+                    fontSize: 14,
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  🗑️
+                  リセット
                 </button>
                 <UserMenu />
               </div>
@@ -202,36 +214,27 @@ function Header({
         {showFilters && (
           <div className="mobile-only mobile-filters" style={{ display: "none", padding: "12px 16px", borderTop: "1px solid var(--line)", flexDirection: "column", gap: 10 }}>
             <FiltersBar />
-            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-              <button
-                onClick={applyFilters}
-                style={{
-                  flex: 1,
-                  height: 40,
-                  padding: "8px 12px",
-                  background: "var(--accent)",
-                  color: "#fff",
-                  border: 0,
-                  borderRadius: 12,
-                  fontWeight: 600,
-                }}
-              >
-                適用
-              </button>
+            <div style={{ display: "flex", gap: 8, marginTop: 4, justifyContent: "flex-end" }}>
               <button
                 onClick={resetFilters}
                 title="リセット"
                 style={{
                   height: 40,
-                  width: 40,
-                  display: "grid",
-                  placeItems: "center",
-                  border: "1px solid var(--line)",
+                  padding: "0 16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "none",
                   borderRadius: 12,
-                  background: "var(--surface)",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
                 }}
               >
-                🗑️
+                リセット
               </button>
             </div>
           </div>
