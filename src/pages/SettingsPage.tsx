@@ -33,6 +33,9 @@ export default function SettingsPage() {
   const [user, setUser] = useState<any>(null);
   const [traderName, setTraderName] = useState('');
   const [email, setEmail] = useState('');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string>('');
+  const [uploading, setUploading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -68,6 +71,7 @@ export default function SettingsPage() {
       if (user) {
         setEmail(user.email || '');
         setTraderName(user.user_metadata?.trader_name || '');
+        setAvatarPreview(user.user_metadata?.avatar_url || '');
 
         const { data, error } = await supabase
           .from('user_settings')
@@ -118,6 +122,67 @@ export default function SettingsPage() {
       setImportHistory(history);
     } catch (err) {
       console.error('インポート履歴の保存エラー:', err);
+    }
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('画像ファイルを選択してください');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert('ファイルサイズは2MB以下にしてください');
+      return;
+    }
+
+    setAvatarFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAvatarPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleUploadAvatar = async () => {
+    if (!user || !avatarFile) return;
+
+    setUploading(true);
+    try {
+      const fileExt = avatarFile.name.split('.').pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('user-avatars')
+        .upload(filePath, avatarFile, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('user-avatars')
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { avatar_url: publicUrl }
+      });
+
+      if (updateError) throw updateError;
+
+      setAvatarPreview(publicUrl);
+      setAvatarFile(null);
+      alert('アイコン画像をアップロードしました');
+    } catch (err) {
+      console.error('アップロードエラー:', err);
+      alert('アップロードに失敗しました');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -212,13 +277,6 @@ export default function SettingsPage() {
     }
   };
 
-  const handleLogout = async () => {
-    if (confirm('ログアウトしますか？')) {
-      await supabase.auth.signOut();
-      window.location.hash = '#/';
-      window.location.reload();
-    }
-  };
 
   if (loading) {
     return (
@@ -259,6 +317,84 @@ export default function SettingsPage() {
             <div>
               <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>プロフィール情報</div>
               <div style={{ display: 'grid', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 13, marginBottom: 8, color: 'var(--muted)' }}>
+                    アイコン画像
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div
+                      style={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: '50%',
+                        border: '2px solid var(--line)',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'var(--bg-secondary)',
+                      }}
+                    >
+                      {avatarPreview ? (
+                        <img
+                          src={avatarPreview}
+                          alt="Avatar preview"
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="8" r="4"></circle>
+                          <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                        </svg>
+                      )}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/gif,image/webp"
+                        onChange={handleAvatarChange}
+                        style={{ display: 'none' }}
+                        id="avatar-upload"
+                      />
+                      <label
+                        htmlFor="avatar-upload"
+                        style={{
+                          display: 'inline-block',
+                          padding: '8px 16px',
+                          backgroundColor: 'var(--surface)',
+                          border: '1px solid var(--line)',
+                          borderRadius: 4,
+                          fontSize: 14,
+                          cursor: 'pointer',
+                          marginBottom: 8,
+                        }}
+                      >
+                        画像を選択
+                      </label>
+                      {avatarFile && (
+                        <button
+                          onClick={handleUploadAvatar}
+                          disabled={uploading}
+                          style={{
+                            display: 'block',
+                            padding: '8px 16px',
+                            backgroundColor: 'var(--accent)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: 4,
+                            fontSize: 14,
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {uploading ? 'アップロード中...' : 'アップロード'}
+                        </button>
+                      )}
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>
+                        JPEG、PNG、GIF、WebP形式、2MB以下
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div>
                   <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
                     トレーダー名
@@ -378,23 +514,6 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid var(--line)', paddingTop: 24, marginTop: 24 }}>
-              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>アカウント管理</div>
-              <button
-                onClick={handleLogout}
-                style={{
-                  padding: '8px 16px',
-                  backgroundColor: '#f56565',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: 4,
-                  fontSize: 14,
-                  cursor: 'pointer',
-                }}
-              >
-                ログアウト
-              </button>
-            </div>
           </div>
         </section>
 
