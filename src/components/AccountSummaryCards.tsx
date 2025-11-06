@@ -1,18 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { getAccountSummary, type DbAccountSummary } from '../lib/db.service';
+import { useDataset } from '../lib/dataset.context';
 
 export default function AccountSummaryCards() {
   const [summary, setSummary] = useState<DbAccountSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { useDatabase, dataset } = useDataset();
 
   useEffect(() => {
     loadSummary();
-  }, []);
+  }, [useDatabase, dataset]);
 
   const loadSummary = async () => {
     try {
-      const data = await getAccountSummary();
+      // デモデータを使用している場合は、ゼロデータを直接設定（データベースには保存しない）
+      if (!useDatabase) {
+        setSummary({
+          id: 'demo',
+          user_id: 'demo',
+          dataset: dataset,
+          total_deposits: 0,
+          total_withdrawals: 0,
+          xm_points_earned: 0,
+          xm_points_used: 0,
+          total_swap: 0,
+          total_commission: 0,
+          total_profit: 0,
+          closed_pl: 0,
+          updated_at: new Date().toISOString(),
+        });
+        setError(null);
+        setLoading(false);
+        return;
+      }
+
+      // データベースモードの場合のみ実際にデータを取得
+      const data = await getAccountSummary('default');
       console.log('📊 Account summary loaded:', data);
       setSummary(data);
       setError(null);
@@ -32,18 +56,24 @@ export default function AccountSummaryCards() {
     return null;
   }
 
-  if (!summary) {
-    return null;
-  }
+  // データがない場合はすべて0として扱う
+  const summaryData = summary || {
+    total_deposits: 0,
+    total_withdrawals: 0,
+    xm_points_earned: 0,
+    xm_points_used: 0,
+    total_swap: 0,
+    closed_pl: 0,
+  };
 
-  const hasXmPoints = summary.xm_points_earned > 0 || summary.xm_points_used > 0;
+  const hasXmPoints = summaryData.xm_points_earned > 0 || summaryData.xm_points_used > 0;
 
   return (
     <>
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>総入金額</div>
         <div className="kpi-value" style={{ color: '#10b981' }}>
-          {summary.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+          {summaryData.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
         <div className="kpi-desc">累計入金額の合計</div>
       </div>
@@ -51,24 +81,24 @@ export default function AccountSummaryCards() {
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>総出金額</div>
         <div className="kpi-value" style={{ color: '#ef4444' }}>
-          {summary.total_withdrawals.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+          {summaryData.total_withdrawals.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
         <div className="kpi-desc">累計出金額の合計</div>
       </div>
 
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>スワップ損益</div>
-        <div className="kpi-value" style={{ color: summary.total_swap >= 0 ? '#10b981' : '#ef4444' }}>
-          {summary.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+        <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? '#10b981' : '#ef4444' }}>
+          {summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
         <div className="kpi-desc">スワップポイントの累計</div>
       </div>
 
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>純損益 (CLOSED P/L)</div>
-        <div className="kpi-value" style={{ color: summary.closed_pl >= 0 ? '#10b981' : '#ef4444' }}>
-          {summary.closed_pl >= 0 ? '' : '-'}
-          {Math.abs(summary.closed_pl).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+        <div className="kpi-value" style={{ color: summaryData.closed_pl >= 0 ? '#10b981' : '#ef4444' }}>
+          {summaryData.closed_pl >= 0 ? '' : '-'}
+          {Math.abs(summaryData.closed_pl).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
         <div className="kpi-desc">確定損益の総額</div>
       </div>
@@ -78,7 +108,7 @@ export default function AccountSummaryCards() {
           <div className="kpi-card">
             <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>XMポイント獲得</div>
             <div className="kpi-value" style={{ color: '#3b82f6' }}>
-              {summary.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+              {summaryData.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
             </div>
             <div className="kpi-desc">XMPで獲得した金額</div>
           </div>
@@ -86,7 +116,7 @@ export default function AccountSummaryCards() {
           <div className="kpi-card">
             <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>XMポイント利用</div>
             <div className="kpi-value" style={{ color: '#8b5cf6' }}>
-              {summary.xm_points_used.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+              {summaryData.xm_points_used.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
             </div>
             <div className="kpi-desc">XMPから使用した金額</div>
           </div>
