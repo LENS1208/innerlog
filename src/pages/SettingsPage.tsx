@@ -629,25 +629,27 @@ export default function SettingsPage() {
                     >
                       履歴をクリア
                     </button>
-                    <button
-                      onClick={handleDeleteAllTrades}
-                      disabled={saving}
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: 'var(--error)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: 4,
-                        fontSize: 13,
-                        cursor: 'pointer',
-                        opacity: saving ? 0.5 : 1,
-                      }}
-                    >
-                      {saving ? '削除中...' : '現在アップロード中の取引履歴を削除'}
-                    </button>
                   </div>
                 </>
               )}
+              <div style={{ marginTop: 12 }}>
+                <button
+                  onClick={handleDeleteAllTrades}
+                  disabled={saving}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: 'var(--error)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: 4,
+                    fontSize: 13,
+                    cursor: 'pointer',
+                    opacity: saving ? 0.5 : 1,
+                  }}
+                >
+                  {saving ? '削除中...' : '現在アップロード中の取引履歴を削除'}
+                </button>
+              </div>
             </div>
           </div>
         </section>
