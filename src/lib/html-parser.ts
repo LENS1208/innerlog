@@ -87,11 +87,17 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
       const ticketText = cellTexts[headerIndices['ticket']] || '';
       const numericTicket = ticketText.replace(/\D/g, '');
       if (!numericTicket || isNaN(Number(numericTicket))) {
+        if (sectionStartRow >= 0 && i < sectionStartRow + 10) {
+          console.log(`❌ Row ${i} failed ticket check. Ticket text: "${ticketText}", cells:`, cellTexts.slice(0, 8));
+        }
         continue;
       }
 
       const typeText = (cellTexts[headerIndices['type']] || '').toLowerCase();
       if (!typeText.includes('buy') && !typeText.includes('sell')) {
+        if (sectionStartRow >= 0 && i < sectionStartRow + 10) {
+          console.log(`❌ Row ${i} failed type check. Type text: "${typeText}"`);
+        }
         continue;
       }
 
