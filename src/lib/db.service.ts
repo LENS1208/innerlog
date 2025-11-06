@@ -151,11 +151,23 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | '
     dataset: null,
   }));
 
-  const { error } = await supabase
-    .from('trades')
-    .upsert(tradesWithUser, { onConflict: 'ticket' });
+  const BATCH_SIZE = 1000;
+  let processed = 0;
 
-  if (error) throw error;
+  for (let i = 0; i < tradesWithUser.length; i += BATCH_SIZE) {
+    const batch = tradesWithUser.slice(i, i + BATCH_SIZE);
+
+    const { error } = await supabase
+      .from('trades')
+      .upsert(batch, { onConflict: 'ticket' });
+
+    if (error) throw error;
+
+    processed += batch.length;
+    console.log(`📥 Inserted batch: ${processed}/${tradesWithUser.length} trades`);
+  }
+
+  console.log(`✅ All trades inserted: ${tradesWithUser.length} total`);
 }
 
 export async function getAllDailyNotes(): Promise<DbDailyNote[]> {
