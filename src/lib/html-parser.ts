@@ -43,6 +43,7 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         text.toLowerCase().includes('order') ||
         text.toLowerCase().includes('position')
       )) {
+        headerIndices = {};
         cellTexts.forEach((text, idx) => {
           const lower = text.toLowerCase();
           if (lower.includes('ticket') || lower.includes('order')) headerIndices['ticket'] = idx;
@@ -58,6 +59,7 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
           if (lower.includes('pips')) headerIndices['pips'] = idx;
         });
         isDataSection = true;
+        console.log(`🔖 Found header row at index ${i}, header indices:`, headerIndices);
         continue;
       }
 
@@ -67,10 +69,14 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
 
       const ticketText = cellTexts[headerIndices['ticket']] || '';
       const numericTicket = ticketText.replace(/\D/g, '');
-      if (!numericTicket || isNaN(Number(numericTicket))) continue;
+      if (!numericTicket || isNaN(Number(numericTicket))) {
+        continue;
+      }
 
       const typeText = (cellTexts[headerIndices['type']] || '').toLowerCase();
-      if (!typeText.includes('buy') && !typeText.includes('sell')) continue;
+      if (!typeText.includes('buy') && !typeText.includes('sell')) {
+        continue;
+      }
 
       try {
         const openTimeIdx = headerIndices['openTime'];
@@ -124,10 +130,17 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
       }
     }
 
-    console.log(`✅ Parsed ${rowsParsed} trades from this table`);
+    console.log(`✅ Parsed ${rowsParsed} trades from this table (${rows.length} total rows)`);
   }
 
   console.log(`📈 Total trades parsed: ${trades.length}`);
+
+  if (trades.length > 0) {
+    const firstTrade = trades[0];
+    const lastTrade = trades[trades.length - 1];
+    console.log(`📅 Date range: ${firstTrade.openTime} to ${lastTrade.openTime}`);
+  }
+
   return trades;
 }
 
