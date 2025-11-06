@@ -277,6 +277,65 @@ export default function SettingsPage() {
     }
   };
 
+  const handleCalculateSummary = async () => {
+    if (!user) return;
+
+    setSaving(true);
+    try {
+      console.log('📊 Calculating account summary from existing trades...');
+
+      const { data: trades, error: tradesError } = await supabase
+        .from('trades')
+        .select('swap, commission, profit')
+        .eq('user_id', user.id);
+
+      if (tradesError) throw tradesError;
+
+      if (!trades || trades.length === 0) {
+        alert('取引データが見つかりません');
+        return;
+      }
+
+      let totalSwap = 0;
+      let totalCommission = 0;
+      let totalProfit = 0;
+
+      trades.forEach((trade: any) => {
+        totalSwap += trade.swap || 0;
+        totalCommission += trade.commission || 0;
+        totalProfit += trade.profit || 0;
+      });
+
+      const closedPL = totalCommission + totalSwap + totalProfit;
+
+      const { error: upsertError } = await supabase
+        .from('account_summary')
+        .upsert({
+          user_id: user.id,
+          dataset: 'default',
+          total_deposits: 0,
+          total_withdrawals: 0,
+          xm_points_earned: 0,
+          xm_points_used: 0,
+          total_swap: totalSwap,
+          total_commission: totalCommission,
+          total_profit: totalProfit,
+          closed_pl: closedPL,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id,dataset' });
+
+      if (upsertError) throw upsertError;
+
+      alert(`サマリーを計算しました\n${trades.length}件の取引から計算`);
+      window.location.reload();
+    } catch (err) {
+      console.error('サマリー計算エラー:', err);
+      alert('計算に失敗しました');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleDeleteAllTrades = async () => {
     if (!confirm('現在アップロード中の取引履歴をすべて削除しますか？\nこの操作は元に戻せません。')) {
       return;
@@ -636,6 +695,33 @@ export default function SettingsPage() {
 
             <div>
               <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>取引データ管理</div>
+
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ padding: 16, backgroundColor: '#eff6ff', borderRadius: 4, marginBottom: 12, border: '1px solid #bfdbfe' }}>
+                  <div style={{ fontSize: 13, color: '#1e40af', marginBottom: 0 }}>
+                    既存の取引データからサマリー情報を再計算します。サマリーが表示されない場合にご利用ください。
+                  </div>
+                </div>
+                <button
+                  onClick={handleCalculateSummary}
+                  disabled={saving}
+                  style={{
+                    padding: '10px 16px',
+                    backgroundColor: '#3b82f6',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: 4,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    cursor: saving ? 'default' : 'pointer',
+                    opacity: saving ? 0.5 : 1,
+                    display: 'inline-block',
+                  }}
+                >
+                  {saving ? '計算中...' : '🧮 サマリーを再計算'}
+                </button>
+              </div>
+
               <div style={{ padding: 16, backgroundColor: '#fef2f2', borderRadius: 4, marginBottom: 12, border: '1px solid #fecaca' }}>
                 <div style={{ fontSize: 13, color: '#991b1b', marginBottom: 0 }}>
                   データベースに保存されている取引履歴をすべて削除します。この操作は元に戻せません。
