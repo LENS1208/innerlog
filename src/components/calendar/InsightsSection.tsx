@@ -129,25 +129,25 @@ export default function InsightsSection(props: InsightsSectionProps) {
       <style>{`
         .insights-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: 1fr;
           gap: 16px;
         }
 
-        @media (max-width: 1400px) {
-          .insights-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        @media (max-width: 1024px) {
+        @media (min-width: 640px) {
           .insights-grid {
             grid-template-columns: repeat(2, 1fr);
           }
         }
 
-        @media (max-width: 768px) {
+        @media (min-width: 1024px) {
           .insights-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        @media (min-width: 1400px) {
+          .insights-grid {
+            grid-template-columns: repeat(4, 1fr);
           }
         }
 
@@ -273,7 +273,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             </div>
           </div>
 
-          <div style={{ marginBottom: 12, display: "flex", flexWrap: "wrap", gap: 12, fontSize: 13 }}>
+          <div style={{ marginBottom: 12, display: "flex", flexWrap: "wrap", gap: 12, fontSize: 13, alignItems: "center" }}>
             <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
               件数 <span style={{ fontWeight: 600 }}>{tradesStats.count}</span>
             </div>
@@ -283,7 +283,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
               平均保有 <span style={{ fontWeight: 600 }}>{tradesStats.avgHrs.toFixed(1)}</span>h
             </div>
-            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
               <button
                 onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
                 disabled={currentPage === 0}
@@ -322,17 +322,18 @@ export default function InsightsSection(props: InsightsSectionProps) {
             </div>
           </div>
 
-          <div style={{ overflowX: "auto" }}>
+          <div style={{ overflowX: "auto", width: "100%" }}>
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "100px 80px 2fr 80px 100px",
+                gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
                 gap: 8,
                 fontSize: 11,
                 color: "var(--muted)",
                 fontWeight: 600,
                 paddingBottom: 8,
                 borderBottom: "1px solid var(--line)",
+                minWidth: "600px",
               }}
             >
               <div>通貨</div>
@@ -356,12 +357,13 @@ export default function InsightsSection(props: InsightsSectionProps) {
                       key={idx}
                       style={{
                         display: "grid",
-                        gridTemplateColumns: "100px 80px 2fr 80px 100px",
+                        gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
                         gap: 8,
                         fontSize: 13,
                         alignItems: "center",
                         padding: "8px 0",
                         borderBottom: "1px solid #f3f4f6",
+                        minWidth: "600px",
                       }}
                     >
                       <div>{t.symbol}</div>
@@ -397,7 +399,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           }}
         >
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>ベスト/ワーストデイ & 最大日次DD</div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
             <div
               style={{
                 borderRadius: 12,
@@ -445,7 +447,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
             通貨ペア 上位/下位 / Top & Bottom Symbols
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12 }}>
             <div>
               <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
@@ -488,7 +490,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "2fr 1fr 1fr 60px",
+              gridTemplateColumns: "minmax(100px, 2fr) minmax(80px, 1fr) minmax(60px, 1fr) 60px",
               gap: 8,
               fontSize: 11,
               color: "var(--muted)",
@@ -508,7 +510,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 key={i}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "2fr 1fr 1fr 60px",
+                  gridTemplateColumns: "minmax(100px, 2fr) minmax(80px, 1fr) minmax(60px, 1fr) 60px",
                   gap: 8,
                   fontSize: 13,
                   alignItems: "center",
@@ -546,7 +548,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "2fr 60px 1fr 60px 60px",
+              gridTemplateColumns: "minmax(100px, 2fr) minmax(50px, 60px) minmax(80px, 1fr) minmax(50px, 60px) minmax(50px, 60px)",
               gap: 8,
               fontSize: 11,
               color: "var(--muted)",
@@ -567,7 +569,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 key={i}
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "2fr 60px 1fr 60px 60px",
+                  gridTemplateColumns: "minmax(100px, 2fr) minmax(50px, 60px) minmax(80px, 1fr) minmax(50px, 60px) minmax(50px, 60px)",
                   gap: 8,
                   fontSize: 13,
                   alignItems: "center",
