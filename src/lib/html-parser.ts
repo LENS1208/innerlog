@@ -43,23 +43,32 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         text.toLowerCase().includes('order') ||
         text.toLowerCase().includes('position')
       )) {
-        headerIndices = {};
+        const tempHeaderIndices: { [key: string]: number } = {};
         cellTexts.forEach((text, idx) => {
           const lower = text.toLowerCase();
-          if (lower.includes('ticket') || lower.includes('order')) headerIndices['ticket'] = idx;
-          if (lower.includes('open time') || lower.includes('opentime')) headerIndices['openTime'] = idx;
-          if (lower.includes('type')) headerIndices['type'] = idx;
-          if (lower.includes('size') || lower.includes('volume') || lower.includes('lot')) headerIndices['size'] = idx;
-          if (lower.includes('item') || lower.includes('symbol')) headerIndices['symbol'] = idx;
-          if (lower.includes('price') && idx < 8 && !lower.includes('close')) headerIndices['openPrice'] = idx;
-          if (lower.includes('close time') || lower.includes('closetime')) headerIndices['closeTime'] = idx;
-          if (lower.includes('commission')) headerIndices['commission'] = idx;
-          if (lower.includes('swap')) headerIndices['swap'] = idx;
-          if (lower.includes('profit')) headerIndices['pnl'] = idx;
-          if (lower.includes('pips')) headerIndices['pips'] = idx;
+          if (lower.includes('ticket') || lower.includes('order')) tempHeaderIndices['ticket'] = idx;
+          if (lower.includes('open time') || lower.includes('opentime')) tempHeaderIndices['openTime'] = idx;
+          if (lower.includes('type')) tempHeaderIndices['type'] = idx;
+          if (lower.includes('size') || lower.includes('volume') || lower.includes('lot')) tempHeaderIndices['size'] = idx;
+          if (lower.includes('item') || lower.includes('symbol')) tempHeaderIndices['symbol'] = idx;
+          if (lower.includes('price') && idx < 8 && !lower.includes('close')) tempHeaderIndices['openPrice'] = idx;
+          if (lower.includes('close time') || lower.includes('closetime')) tempHeaderIndices['closeTime'] = idx;
+          if (lower.includes('commission')) tempHeaderIndices['commission'] = idx;
+          if (lower.includes('swap')) tempHeaderIndices['swap'] = idx;
+          if (lower.includes('profit')) tempHeaderIndices['pnl'] = idx;
+          if (lower.includes('pips')) tempHeaderIndices['pips'] = idx;
         });
-        isDataSection = true;
-        console.log(`🔖 Found header row at index ${i}, header indices:`, headerIndices);
+
+        const requiredFields = ['ticket', 'openTime', 'type', 'symbol'];
+        const hasAllRequired = requiredFields.every(field => tempHeaderIndices[field] !== undefined);
+
+        if (hasAllRequired) {
+          headerIndices = tempHeaderIndices;
+          isDataSection = true;
+          console.log(`🔖 Found valid header row at index ${i}, header indices:`, headerIndices);
+        } else {
+          console.log(`⚠️ Skipped incomplete header at index ${i}:`, tempHeaderIndices);
+        }
         continue;
       }
 
