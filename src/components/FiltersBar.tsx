@@ -35,17 +35,39 @@ export default function FiltersBar() {
         let trades: Trade[] = [];
 
         if (useDatabase) {
-          const { data, error } = await supabase
-            .from('trades')
-            .select('item')
-            .order('close_time', { ascending: true });
+          const PAGE_SIZE = 1000;
+          let allData: any[] = [];
+          let currentPage = 0;
+          let hasMore = true;
 
-          if (!error && data) {
-            trades = data.map((t: any) => ({
-              pair: t.item,
-              symbol: t.item
-            } as Trade));
+          while (hasMore) {
+            const start = currentPage * PAGE_SIZE;
+            const end = start + PAGE_SIZE - 1;
+
+            const { data, error } = await supabase
+              .from('trades')
+              .select('item')
+              .order('close_time', { ascending: true })
+              .range(start, end);
+
+            if (error) {
+              console.error('Error loading trades:', error);
+              break;
+            }
+
+            if (data && data.length > 0) {
+              allData = [...allData, ...data];
+              currentPage++;
+              hasMore = data.length === PAGE_SIZE;
+            } else {
+              hasMore = false;
+            }
           }
+
+          trades = allData.map((t: any) => ({
+            pair: t.item,
+            symbol: t.item
+          } as Trade));
         } else {
           trades = await loadData(dataset);
         }
