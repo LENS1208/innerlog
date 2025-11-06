@@ -76,16 +76,10 @@ export default function MonthlyCalendar() {
       setLoading(true);
       try {
         if (useDatabase) {
-          const { data, error } = await supabase
-            .from('trades')
-            .select('*')
-            .order('close_time', { ascending: true });
+          const { getAllTrades } = await import('../lib/db.service');
+          const data = await getAllTrades();
 
-          if (error) {
-            console.error('Error loading trades from database:', error);
-            setTrades([]);
-          } else {
-            const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+          const mappedTrades: Trade[] = (data || []).map((t: any) => ({
               datetime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
               ticket: t.ticket,
               item: t.item,
@@ -113,7 +107,6 @@ export default function MonthlyCalendar() {
               const latestDate = parseDateSafe(latestTrade.datetime);
               setCurrentDate(new Date(latestDate.getFullYear(), latestDate.getMonth(), 1));
             }
-          }
         } else {
           const data = await loadData(dataset);
           setTrades(data);

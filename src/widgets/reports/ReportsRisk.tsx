@@ -17,16 +17,8 @@ export default function ReportsRisk() {
     (async () => {
       try {
         if (useDatabase) {
-          const { data, error } = await supabase
-            .from('trades')
-            .select('*')
-            .order('close_time', { ascending: true });
-
-          if (error) {
-            console.error('Error loading trades from database:', error);
-            setTrades([]);
-            return;
-          }
+          const { getAllTrades } = await import('../../lib/db.service');
+          const data = await getAllTrades();
 
           const normalizeSide = (side: string): 'LONG' | 'SHORT' => {
             const s = side?.toUpperCase();

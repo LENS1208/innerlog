@@ -29,16 +29,8 @@ const EquityCurvePage: React.FC = () => {
       try {
         if (useDatabase) {
           // データベースから読み込む
-          const { data, error } = await supabase
-            .from('trades')
-            .select('*')
-            .order('close_time', { ascending: true });
-
-          if (error) {
-            console.error('Error loading trades from database:', error);
-            setTrades([]);
-            return;
-          }
+          const { getAllTrades } = await import('../lib/db.service');
+          const data = await getAllTrades();
 
           const dbTrades: FilteredTrade[] = (data || []).map((t: any) => ({
             id: String(t.ticket || t.id),

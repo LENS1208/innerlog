@@ -130,16 +130,10 @@ export default function CalendarDayPage() {
       setLoading(true);
       try {
         if (useDatabase) {
-          const { data, error } = await supabase
-            .from('trades')
-            .select('*')
-            .order('close_time', { ascending: true });
+          const { getAllTrades } = await import('../lib/db.service');
+          const data = await getAllTrades();
 
-          if (error) {
-            console.error('Error loading trades from database:', error);
-            setTrades([]);
-          } else {
-            const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+          const mappedTrades: Trade[] = (data || []).map((t: any) => ({
               ticket: t.ticket,
               symbol: t.item,
               type: t.side,
