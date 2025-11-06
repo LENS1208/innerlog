@@ -87,17 +87,11 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
       const ticketText = cellTexts[headerIndices['ticket']] || '';
       const numericTicket = ticketText.replace(/\D/g, '');
       if (!numericTicket || isNaN(Number(numericTicket))) {
-        if (sectionStartRow >= 0 && i < sectionStartRow + 10) {
-          console.log(`❌ Row ${i} failed ticket check. Ticket text: "${ticketText}", cells:`, cellTexts.slice(0, 8));
-        }
         continue;
       }
 
       const typeText = (cellTexts[headerIndices['type']] || '').toLowerCase();
       if (!typeText.includes('buy') && !typeText.includes('sell')) {
-        if (sectionStartRow >= 0 && i < sectionStartRow + 10) {
-          console.log(`❌ Row ${i} failed type check. Type text: "${typeText}"`);
-        }
         continue;
       }
 
@@ -156,7 +150,9 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
     if (sectionStartRow >= 0) {
       console.log(`📍 Final section from row ${sectionStartRow}: parsed ${rowsParsed} trades`);
     }
-    console.log(`✅ Total parsed from this table: ${trades.length} trades (${rows.length} total rows)`);
+
+    const uniqueTrades = trades.length;
+    console.log(`✅ Parsed ${uniqueTrades} trades from ${rows.length} rows in this table`);
   }
 
   console.log(`📈 Grand total trades parsed: ${trades.length}`);
