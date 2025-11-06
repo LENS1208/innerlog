@@ -111,7 +111,9 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
         }}>
           {uploading ? 'アップロード中...' : 'CSV/HTMLファイルを選択'}
           <input
+            key={Date.now()}
             type="file"
+            accept="*/*"
             onChange={handleFileSelect}
             disabled={uploading}
             style={{ display: 'none' }}
