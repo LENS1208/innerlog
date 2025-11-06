@@ -4,6 +4,7 @@ import { getAccountSummary, type DbAccountSummary } from '../lib/db.service';
 export default function AccountSummaryCards() {
   const [summary, setSummary] = useState<DbAccountSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadSummary();
@@ -12,9 +13,12 @@ export default function AccountSummaryCards() {
   const loadSummary = async () => {
     try {
       const data = await getAccountSummary();
+      console.log('📊 Account summary loaded:', data);
       setSummary(data);
+      setError(null);
     } catch (error) {
-      console.error('Failed to load account summary:', error);
+      console.error('❌ Failed to load account summary:', error);
+      setError((error as Error).message);
     } finally {
       setLoading(false);
     }
@@ -32,15 +36,36 @@ export default function AccountSummaryCards() {
     );
   }
 
+  if (error) {
+    return (
+      <div style={{
+        padding: 'var(--space-4)',
+        textAlign: 'center',
+        color: 'var(--danger)',
+        fontSize: 14,
+        background: 'var(--surface)',
+        border: '1px solid var(--line)',
+        borderRadius: 12,
+        marginBottom: 'var(--space-4)',
+      }}>
+        エラー: {error}
+      </div>
+    );
+  }
+
   if (!summary) {
     return (
       <div style={{
         padding: 'var(--space-4)',
         textAlign: 'center',
         color: 'var(--muted)',
-        fontSize: 14
+        fontSize: 14,
+        background: 'var(--surface)',
+        border: '1px solid var(--line)',
+        borderRadius: 12,
+        marginBottom: 'var(--space-4)',
       }}>
-        HTMLファイルをアップロードすると、口座サマリーが表示されます
+        📊 口座サマリー情報を表示するには、XMのHTML形式のStatementをアップロードしてください
       </div>
     );
   }

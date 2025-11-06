@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { parseCsvText } from '../lib/csv';
 import { insertTrades, tradeToDb, upsertAccountSummary } from '../lib/db.service';
 import { parseHtmlStatement, convertHtmlTradesToCsvFormat, parseFullHtmlStatement } from '../lib/html-parser';
+import { showToast } from '../lib/toast';
 
 type CsvUploadProps = {
   useDatabase: boolean;
@@ -14,6 +15,56 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
   const [fileInputKey, setFileInputKey] = useState(0);
+
+  const handleLoadDemoData = async () => {
+    setUploading(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/demo/sample/Statement_1106_ 41045484 - KAN YAMAJI.html');
+      const text = await response.text();
+
+      const parsed = parseFullHtmlStatement(text);
+
+      if (parsed.trades.length === 0) {
+        setMessage('デモデータの読み込みに失敗しました');
+        return;
+      }
+
+      const csvText = convertHtmlTradesToCsvFormat(parsed.trades);
+      const trades = parseCsvText(csvText);
+
+      await upsertAccountSummary({
+        total_deposits: parsed.summary.totalDeposits,
+        total_withdrawals: parsed.summary.totalWithdrawals,
+        xm_points_earned: parsed.summary.xmPointsEarned,
+        xm_points_used: parsed.summary.xmPointsUsed,
+        total_swap: parsed.summary.totalSwap,
+        total_commission: parsed.summary.totalCommission,
+        total_profit: parsed.summary.totalProfit,
+        closed_pl: parsed.summary.closedPL,
+      });
+
+      const dbTrades = trades.map(tradeToDb);
+      await insertTrades(dbTrades);
+
+      setMessage(`✅ デモデータを読み込みました: ${trades.length}件の取引と口座サマリー`);
+      showToast('デモデータを読み込みました', 'success');
+
+      if (!useDatabase) {
+        onToggleDatabase(true);
+      }
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      console.error('Demo data load error:', error);
+      setMessage('デモデータの読み込みに失敗しました: ' + (error as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -133,6 +184,24 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
             style={{ display: 'none' }}
           />
         </label>
+
+        <button
+          onClick={handleLoadDemoData}
+          disabled={uploading}
+          style={{
+            padding: '10px 20px',
+            background: 'var(--surface)',
+            border: '1px solid var(--line)',
+            borderRadius: 8,
+            cursor: uploading ? 'not-allowed' : 'pointer',
+            fontSize: 14,
+            fontWeight: 600,
+            opacity: uploading ? 0.6 : 1,
+            color: 'var(--text)',
+          }}
+        >
+          📊 デモデータを読み込む
+        </button>
       </div>
 
       {message && (
