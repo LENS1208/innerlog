@@ -208,7 +208,6 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
 
   return (
     <>
-      <AccountSummaryCards />
       <div className="kpi-grid" style={{ marginBottom: 12 }}>
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>取引件数（取引日数）</div>
@@ -329,6 +328,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
         </div>
         <div className="kpi-desc">リターン / リスク</div>
       </div>
+
+      <AccountSummaryCards />
     </div>
     </>
   )

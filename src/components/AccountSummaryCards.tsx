@@ -25,144 +25,73 @@ export default function AccountSummaryCards() {
   };
 
   if (loading) {
-    return (
-      <div style={{
-        padding: 'var(--space-4)',
-        textAlign: 'center',
-        color: 'var(--muted)'
-      }}>
-        読み込み中...
-      </div>
-    );
+    return null;
   }
 
   if (error) {
-    return (
-      <div style={{
-        padding: 'var(--space-4)',
-        textAlign: 'center',
-        color: 'var(--danger)',
-        fontSize: 14,
-        background: 'var(--surface)',
-        border: '1px solid var(--line)',
-        borderRadius: 12,
-        marginBottom: 'var(--space-4)',
-      }}>
-        エラー: {error}
-      </div>
-    );
+    return null;
   }
 
   if (!summary) {
-    return (
-      <div style={{
-        padding: 'var(--space-4)',
-        textAlign: 'center',
-        color: 'var(--muted)',
-        fontSize: 14,
-        background: 'var(--surface)',
-        border: '1px solid var(--line)',
-        borderRadius: 12,
-        marginBottom: 'var(--space-4)',
-      }}>
-        📊 サマリー情報を表示するには、HTML形式の取引履歴をアップロードしてください
-      </div>
-    );
+    return null;
   }
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('ja-JP', {
-      style: 'currency',
-      currency: 'JPY',
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
-  const cards = [
-    {
-      label: '総入金額',
-      value: summary.total_deposits,
-      color: '#10b981',
-      icon: '💰',
-    },
-    {
-      label: '総出金額',
-      value: summary.total_withdrawals,
-      color: '#ef4444',
-      icon: '💸',
-    },
-    {
-      label: 'XMポイント獲得',
-      value: summary.xm_points_earned,
-      color: '#3b82f6',
-      icon: '🎁',
-    },
-    {
-      label: 'XMポイント利用',
-      value: summary.xm_points_used,
-      color: '#8b5cf6',
-      icon: '✨',
-    },
-    {
-      label: 'スワップ損益',
-      value: summary.total_swap,
-      color: summary.total_swap >= 0 ? '#10b981' : '#ef4444',
-      icon: '📊',
-    },
-    {
-      label: '純損益 (Closed P/L)',
-      value: summary.closed_pl,
-      color: summary.closed_pl >= 0 ? '#10b981' : '#ef4444',
-      icon: '💵',
-    },
-  ];
+  const hasXmPoints = summary.xm_points_earned > 0 || summary.xm_points_used > 0;
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-      gap: 'var(--space-3)',
-      marginBottom: 'var(--space-4)',
-    }}>
-      {cards.map((card, index) => (
-        <div
-          key={index}
-          style={{
-            background: 'var(--surface)',
-            border: '1px solid var(--line)',
-            borderRadius: 12,
-            padding: 'var(--space-3)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 'var(--space-2)',
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-            <span style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: 'var(--muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-            }}>
-              {card.label}
-            </span>
-            <span style={{ fontSize: 20 }}>{card.icon}</span>
-          </div>
-          <div style={{
-            fontSize: 28,
-            fontWeight: 700,
-            color: card.color,
-            fontVariantNumeric: 'tabular-nums',
-          }}>
-            {formatCurrency(card.value)}
-          </div>
+    <>
+      <div className="kpi-card">
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>総入金額</div>
+        <div className="kpi-value" style={{ color: '#10b981' }}>
+          {summary.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
-      ))}
-    </div>
+        <div className="kpi-desc">累計入金額の合計</div>
+      </div>
+
+      <div className="kpi-card">
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>総出金額</div>
+        <div className="kpi-value" style={{ color: '#ef4444' }}>
+          {summary.total_withdrawals.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+        </div>
+        <div className="kpi-desc">累計出金額の合計</div>
+      </div>
+
+      <div className="kpi-card">
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>スワップ損益</div>
+        <div className="kpi-value" style={{ color: summary.total_swap >= 0 ? '#10b981' : '#ef4444' }}>
+          {summary.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+        </div>
+        <div className="kpi-desc">スワップポイントの累計</div>
+      </div>
+
+      <div className="kpi-card">
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>純損益 (CLOSED P/L)</div>
+        <div className="kpi-value" style={{ color: summary.closed_pl >= 0 ? '#10b981' : '#ef4444' }}>
+          {summary.closed_pl >= 0 ? '' : '-'}
+          {Math.abs(summary.closed_pl).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+        </div>
+        <div className="kpi-desc">確定損益の総額</div>
+      </div>
+
+      {hasXmPoints && (
+        <>
+          <div className="kpi-card">
+            <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>XMポイント獲得</div>
+            <div className="kpi-value" style={{ color: '#3b82f6' }}>
+              {summary.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+            </div>
+            <div className="kpi-desc">XMPで獲得した金額</div>
+          </div>
+
+          <div className="kpi-card">
+            <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>XMポイント利用</div>
+            <div className="kpi-value" style={{ color: '#8b5cf6' }}>
+              {summary.xm_points_used.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+            </div>
+            <div className="kpi-desc">XMPから使用した金額</div>
+          </div>
+        </>
+      )}
+    </>
   );
 }
