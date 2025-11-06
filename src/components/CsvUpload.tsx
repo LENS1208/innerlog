@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { parseCsvText } from '../lib/csv';
 import { insertTrades, tradeToDb } from '../lib/db.service';
+import { parseHtmlStatement, convertHtmlTradesToCsvFormat } from '../lib/html-parser';
 
 type CsvUploadProps = {
   useDatabase: boolean;
@@ -22,12 +23,27 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
 
     try {
       const text = await file.text();
-      const trades = parseCsvText(text);
+      const fileName = file.name.toLowerCase();
+      let trades;
 
-      if (trades.length === 0) {
-        setMessage('有効な取引データが見つかりませんでした');
-        setUploading(false);
-        return;
+      if (fileName.endsWith('.html') || fileName.endsWith('.htm')) {
+        const htmlTrades = parseHtmlStatement(text);
+        if (htmlTrades.length === 0) {
+          setMessage('HTML形式から有効な取引データが見つかりませんでした');
+          setUploading(false);
+          return;
+        }
+        const csvText = convertHtmlTradesToCsvFormat(htmlTrades);
+        trades = parseCsvText(csvText);
+        setMessage(`HTML形式から${trades.length}件の取引データを読み込みました`);
+      } else {
+        trades = parseCsvText(text);
+        if (trades.length === 0) {
+          setMessage('有効な取引データが見つかりませんでした');
+          setUploading(false);
+          return;
+        }
+        setMessage(`${trades.length}件の取引データを読み込みました`);
       }
 
       const dbTrades = trades.map(tradeToDb);
@@ -54,7 +70,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
         データ操作
       </h3>
       <p style={{ margin: '0 0 var(--space-3) 0', fontSize: 13, color: 'var(--muted)' }}>
-        取引データのCSVファイルをアップロードしてデータベースに保存します
+        取引データのCSVまたはHTML形式のファイルをアップロードしてデータベースに保存します
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
@@ -93,10 +109,10 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
           opacity: uploading ? 0.6 : 1,
           width: 'fit-content',
         }}>
-          {uploading ? 'アップロード中...' : 'CSVファイルを選択'}
+          {uploading ? 'アップロード中...' : 'CSV/HTMLファイルを選択'}
           <input
             type="file"
-            accept=".csv"
+            accept=".csv,.html,.htm"
             onChange={handleFileSelect}
             disabled={uploading}
             style={{ display: 'none' }}
