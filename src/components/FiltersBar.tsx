@@ -37,13 +37,13 @@ export default function FiltersBar() {
         if (useDatabase) {
           const { data, error } = await supabase
             .from('trades')
-            .select('item, symbol')
+            .select('item')
             .order('close_time', { ascending: true });
 
           if (!error && data) {
             trades = data.map((t: any) => ({
-              pair: t.item || t.symbol,
-              symbol: t.symbol || t.item
+              pair: t.item,
+              symbol: t.item
             } as Trade));
           }
         } else {
