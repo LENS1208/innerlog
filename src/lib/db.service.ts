@@ -81,14 +81,34 @@ export type DbNoteLink = {
 };
 
 export async function getAllTrades(): Promise<DbTrade[]> {
-  const { data, error } = await supabase
-    .from('trades')
-    .select('*', { count: 'exact', head: false })
-    .order('close_time', { ascending: false })
-    .range(0, 299999);
+  const PAGE_SIZE = 1000;
+  let allTrades: DbTrade[] = [];
+  let currentPage = 0;
+  let hasMore = true;
 
-  if (error) throw error;
-  return data || [];
+  while (hasMore) {
+    const start = currentPage * PAGE_SIZE;
+    const end = start + PAGE_SIZE - 1;
+
+    const { data, error } = await supabase
+      .from('trades')
+      .select('*')
+      .order('close_time', { ascending: false })
+      .range(start, end);
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      allTrades = [...allTrades, ...data];
+      currentPage++;
+      hasMore = data.length === PAGE_SIZE;
+    } else {
+      hasMore = false;
+    }
+  }
+
+  console.log(`✅ Loaded from database: ${allTrades.length} trades`);
+  return allTrades;
 }
 
 export async function getTradesCount(): Promise<number> {
