@@ -3,6 +3,7 @@ import { parseCsvText } from '../lib/csv';
 import { insertTrades, tradeToDb, upsertAccountSummary } from '../lib/db.service';
 import { parseHtmlStatement, convertHtmlTradesToCsvFormat, parseFullHtmlStatement } from '../lib/html-parser';
 import { showToast } from '../lib/toast';
+import { supabase } from '../lib/supabase';
 
 type CsvUploadProps = {
   useDatabase: boolean;
@@ -15,6 +16,68 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState('');
   const [fileInputKey, setFileInputKey] = useState(0);
+
+  const handleCalculateSummary = async () => {
+    setUploading(true);
+    setMessage('');
+
+    try {
+      console.log('📊 Calculating account summary from existing trades...');
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setMessage('認証が必要です');
+        return;
+      }
+
+      const { data: trades, error: tradesError } = await supabase
+        .from('trades')
+        .select('swap, commission, profit')
+        .eq('user_id', user.id);
+
+      if (tradesError) throw tradesError;
+
+      if (!trades || trades.length === 0) {
+        setMessage('取引データが見つかりません');
+        return;
+      }
+
+      let totalSwap = 0;
+      let totalCommission = 0;
+      let totalProfit = 0;
+
+      trades.forEach((trade: any) => {
+        totalSwap += trade.swap || 0;
+        totalCommission += trade.commission || 0;
+        totalProfit += trade.profit || 0;
+      });
+
+      const closedPL = totalCommission + totalSwap + totalProfit;
+
+      await upsertAccountSummary({
+        total_deposits: 0,
+        total_withdrawals: 0,
+        xm_points_earned: 0,
+        xm_points_used: 0,
+        total_swap: totalSwap,
+        total_commission: totalCommission,
+        total_profit: totalProfit,
+        closed_pl: closedPL,
+      });
+
+      setMessage(`✅ サマリーを計算しました: ${trades.length}件の取引から`);
+      showToast('サマリーを計算しました', 'success');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } catch (error) {
+      console.error('Calculate summary error:', error);
+      setMessage('サマリーの計算に失敗しました: ' + (error as Error).message);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleLoadDemoData = async () => {
     setUploading(true);
@@ -202,6 +265,26 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
         >
           📊 デモデータを読み込む
         </button>
+
+        {dataCount > 0 && (
+          <button
+            onClick={handleCalculateSummary}
+            disabled={uploading}
+            style={{
+              padding: '10px 20px',
+              background: '#3b82f6',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 8,
+              cursor: uploading ? 'not-allowed' : 'pointer',
+              fontSize: 14,
+              fontWeight: 600,
+              opacity: uploading ? 0.6 : 1,
+            }}
+          >
+            🧮 サマリーを再計算
+          </button>
+        )}
       </div>
 
       {message && (

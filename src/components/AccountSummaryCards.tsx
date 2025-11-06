@@ -65,7 +65,7 @@ export default function AccountSummaryCards() {
         borderRadius: 12,
         marginBottom: 'var(--space-4)',
       }}>
-        📊 口座サマリー情報を表示するには、XMのHTML形式のStatementをアップロードしてください
+        📊 サマリー情報を表示するには、HTML形式の取引履歴をアップロードしてください
       </div>
     );
   }
