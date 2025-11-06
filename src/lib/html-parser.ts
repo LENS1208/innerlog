@@ -29,6 +29,7 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
     let headerIndices: { [key: string]: number } = {};
     let isDataSection = false;
     let rowsParsed = 0;
+    let sectionStartRow = -1;
 
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i];
@@ -63,9 +64,16 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         const hasAllRequired = requiredFields.every(field => tempHeaderIndices[field] !== undefined);
 
         if (hasAllRequired) {
+          if (sectionStartRow >= 0) {
+            const sectionRowsParsed = rowsParsed;
+            console.log(`📍 Section from row ${sectionStartRow} to ${i-1}: parsed ${rowsParsed} trades`);
+          }
           headerIndices = tempHeaderIndices;
           isDataSection = true;
-          console.log(`🔖 Found valid header row at index ${i}, header indices:`, headerIndices);
+          sectionStartRow = i;
+          const prevRowsParsed = rowsParsed;
+          rowsParsed = 0;
+          console.log(`🔖 Found valid header row at index ${i}, starting new section`);
         } else {
           console.log(`⚠️ Skipped incomplete header at index ${i}:`, tempHeaderIndices);
         }
@@ -139,10 +147,13 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
       }
     }
 
-    console.log(`✅ Parsed ${rowsParsed} trades from this table (${rows.length} total rows)`);
+    if (sectionStartRow >= 0) {
+      console.log(`📍 Final section from row ${sectionStartRow}: parsed ${rowsParsed} trades`);
+    }
+    console.log(`✅ Total parsed from this table: ${trades.length} trades (${rows.length} total rows)`);
   }
 
-  console.log(`📈 Total trades parsed: ${trades.length}`);
+  console.log(`📈 Grand total trades parsed: ${trades.length}`);
 
   if (trades.length > 0) {
     const firstTrade = trades[0];
