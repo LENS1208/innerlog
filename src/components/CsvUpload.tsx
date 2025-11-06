@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { parseCsvText } from '../lib/csv';
-import { insertTrades, tradeToDb } from '../lib/db.service';
-import { parseHtmlStatement, convertHtmlTradesToCsvFormat } from '../lib/html-parser';
+import { insertTrades, tradeToDb, upsertAccountSummary } from '../lib/db.service';
+import { parseHtmlStatement, convertHtmlTradesToCsvFormat, parseFullHtmlStatement } from '../lib/html-parser';
 
 type CsvUploadProps = {
   useDatabase: boolean;
@@ -28,15 +28,29 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       let trades;
 
       if (fileName.endsWith('.html') || fileName.endsWith('.htm')) {
-        const htmlTrades = parseHtmlStatement(text);
-        if (htmlTrades.length === 0) {
+        const parsed = parseFullHtmlStatement(text);
+
+        if (parsed.trades.length === 0) {
           setMessage('HTML形式から有効な取引データが見つかりませんでした');
           setUploading(false);
           return;
         }
-        const csvText = convertHtmlTradesToCsvFormat(htmlTrades);
+
+        const csvText = convertHtmlTradesToCsvFormat(parsed.trades);
         trades = parseCsvText(csvText);
-        setMessage(`HTML形式から${trades.length}件の取引データを読み込みました`);
+
+        await upsertAccountSummary({
+          total_deposits: parsed.summary.totalDeposits,
+          total_withdrawals: parsed.summary.totalWithdrawals,
+          xm_points_earned: parsed.summary.xmPointsEarned,
+          xm_points_used: parsed.summary.xmPointsUsed,
+          total_swap: parsed.summary.totalSwap,
+          total_commission: parsed.summary.totalCommission,
+          total_profit: parsed.summary.totalProfit,
+          closed_pl: parsed.summary.closedPL,
+        });
+
+        setMessage(`HTML形式から${trades.length}件の取引データと口座サマリーを読み込みました`);
       } else {
         trades = parseCsvText(text);
         if (trades.length === 0) {

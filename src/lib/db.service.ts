@@ -434,3 +434,63 @@ export function dbToTrade(dbTrade: DbTrade): Trade {
 }
 
 type Side = "LONG" | "SHORT";
+
+export type DbAccountSummary = {
+  id: string;
+  user_id: string;
+  dataset: string;
+  total_deposits: number;
+  total_withdrawals: number;
+  xm_points_earned: number;
+  xm_points_used: number;
+  total_swap: number;
+  total_commission: number;
+  total_profit: number;
+  closed_pl: number;
+  updated_at: string;
+};
+
+export async function getAccountSummary(dataset: string = 'default'): Promise<DbAccountSummary | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { data, error } = await supabase
+    .from('account_summary')
+    .select('*')
+    .eq('dataset', dataset)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertAccountSummary(summary: {
+  dataset?: string;
+  total_deposits: number;
+  total_withdrawals: number;
+  xm_points_earned: number;
+  xm_points_used: number;
+  total_swap: number;
+  total_commission: number;
+  total_profit: number;
+  closed_pl: number;
+}): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { error } = await supabase
+    .from('account_summary')
+    .upsert({
+      user_id: user?.id || '',
+      dataset: summary.dataset || 'default',
+      total_deposits: summary.total_deposits,
+      total_withdrawals: summary.total_withdrawals,
+      xm_points_earned: summary.xm_points_earned,
+      xm_points_used: summary.xm_points_used,
+      total_swap: summary.total_swap,
+      total_commission: summary.total_commission,
+      total_profit: summary.total_profit,
+      closed_pl: summary.closed_pl,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,dataset' });
+
+  if (error) throw error;
+}

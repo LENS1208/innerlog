@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 import { UI_TEXT, formatCount } from '../lib/i18n'
 import { computePipsFromPrices, computeDurationMinutes } from '../lib/metrics'
 import type { Trade } from '../lib/types'
+import AccountSummaryCards from '../components/AccountSummaryCards'
 
 export type DashTrade = {
   profitJPY?: number
@@ -206,7 +207,9 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
   const dash = useMemo(() => computeDashboard(trades), [trades])
 
   return (
-    <div className="kpi-grid" style={{ marginBottom: 12 }}>
+    <>
+      <AccountSummaryCards />
+      <div className="kpi-grid" style={{ marginBottom: 12 }}>
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>取引件数（取引日数）</div>
         <div className="kpi-value">
@@ -327,5 +330,6 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
         <div className="kpi-desc">リターン / リスク</div>
       </div>
     </div>
+    </>
   )
 }

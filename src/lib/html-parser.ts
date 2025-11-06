@@ -13,6 +13,32 @@ export type ParsedTrade = {
   swap?: number;
 };
 
+export type AccountTransaction = {
+  ticket: string;
+  transactionDate: string;
+  transactionType: string;
+  category: string;
+  description: string;
+  amount: number;
+};
+
+export type AccountSummary = {
+  totalDeposits: number;
+  totalWithdrawals: number;
+  xmPointsEarned: number;
+  xmPointsUsed: number;
+  totalSwap: number;
+  totalCommission: number;
+  totalProfit: number;
+  closedPL: number;
+};
+
+export type ParsedStatement = {
+  trades: ParsedTrade[];
+  transactions: AccountTransaction[];
+  summary: AccountSummary;
+};
+
 export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlText, 'text/html');
@@ -164,6 +190,137 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
   }
 
   return trades;
+}
+
+export function parseFullHtmlStatement(htmlText: string): ParsedStatement {
+  const trades = parseHtmlStatement(htmlText);
+  const transactions = parseAccountTransactions(htmlText);
+  const summary = parseAccountSummary(htmlText, trades);
+
+  return { trades, transactions, summary };
+}
+
+function parseAccountTransactions(htmlText: string): AccountTransaction[] {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlText, 'text/html');
+  const transactions: AccountTransaction[] = [];
+
+  const tables = doc.querySelectorAll('table');
+
+  for (const table of tables) {
+    const rows = table.querySelectorAll('tr');
+
+    for (const row of rows) {
+      const cells = row.querySelectorAll('td');
+      if (cells.length < 3) continue;
+
+      const cellTexts = Array.from(cells).map(cell => cell.textContent?.trim() || '');
+      const typeCell = cellTexts[2]?.toLowerCase() || '';
+
+      if (typeCell === 'balance' || typeCell === 'credit') {
+        const ticket = cellTexts[0]?.replace(/\D/g, '') || '';
+        const dateText = cellTexts[1] || '';
+        const description = cellTexts[3] || '';
+        const amountText = cellTexts[cellTexts.length - 1] || '0';
+        const amount = parseFloat(amountText.replace(/[^\d.-]/g, '') || '0');
+
+        let transactionType = 'other';
+        let category = typeCell;
+
+        if (typeCell === 'balance') {
+          if (description.includes('Transfer') || description.includes('CD-') || description.includes('CW-')) {
+            if (amount > 0) {
+              transactionType = 'deposit';
+              category = 'transfer';
+            } else {
+              transactionType = 'withdrawal';
+              category = 'transfer';
+            }
+          } else if (description.includes('EXP')) {
+            transactionType = 'fee';
+            category = 'fee';
+          }
+        } else if (typeCell === 'credit') {
+          if (description.includes('Credit In-XMP')) {
+            transactionType = 'xm_points_earned';
+            category = 'credit';
+          } else if (description.includes('Credit Out')) {
+            transactionType = 'xm_points_used';
+            category = 'credit';
+          } else if (description.includes('Credit In')) {
+            transactionType = 'bonus';
+            category = 'credit';
+          }
+        }
+
+        transactions.push({
+          ticket,
+          transactionDate: dateText,
+          transactionType,
+          category,
+          description,
+          amount,
+        });
+      }
+    }
+  }
+
+  console.log(`💰 Parsed ${transactions.length} account transactions`);
+  return transactions;
+}
+
+function parseAccountSummary(htmlText: string, trades: ParsedTrade[]): AccountSummary {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlText, 'text/html');
+
+  let totalSwap = 0;
+  let totalCommission = 0;
+  let totalProfit = 0;
+  let closedPL = 0;
+
+  const summaryText = doc.body.textContent || '';
+  const closedPLMatch = summaryText.match(/Closed P\/L:.*?(-?\d[\d\s,]*)/);
+  if (closedPLMatch) {
+    closedPL = parseFloat(closedPLMatch[1].replace(/[\s,]/g, ''));
+  }
+
+  trades.forEach(trade => {
+    totalCommission += trade.commission || 0;
+    totalSwap += trade.swap || 0;
+    totalProfit += trade.pnl || 0;
+  });
+
+  const transactions = parseAccountTransactions(htmlText);
+
+  let totalDeposits = 0;
+  let totalWithdrawals = 0;
+  let xmPointsEarned = 0;
+  let xmPointsUsed = 0;
+
+  transactions.forEach(txn => {
+    if (txn.transactionType === 'deposit' && txn.amount > 0) {
+      totalDeposits += txn.amount;
+    } else if (txn.transactionType === 'withdrawal' && txn.amount < 0) {
+      totalWithdrawals += Math.abs(txn.amount);
+    } else if (txn.transactionType === 'xm_points_earned') {
+      xmPointsEarned += txn.amount;
+    } else if (txn.transactionType === 'xm_points_used') {
+      xmPointsUsed += Math.abs(txn.amount);
+    }
+  });
+
+  console.log(`📊 Summary: Deposits=${totalDeposits}, Withdrawals=${totalWithdrawals}, XMP Earned=${xmPointsEarned}, XMP Used=${xmPointsUsed}`);
+
+  return {
+    totalDeposits,
+    totalWithdrawals,
+    xmPointsEarned,
+    xmPointsUsed,
+    totalSwap,
+    totalCommission,
+    totalProfit,
+    closedPL,
+  };
 }
 
 export function convertHtmlTradesToCsvFormat(trades: ParsedTrade[]): string {
