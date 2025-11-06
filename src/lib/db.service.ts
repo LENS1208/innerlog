@@ -17,6 +17,8 @@ export type DbTrade = {
   pips: number;
   sl: number | null;
   tp: number | null;
+  user_id: string | null;
+  dataset: string | null;
   created_at: string;
 };
 
@@ -28,6 +30,7 @@ export type DbDailyNote = {
   improve: string;
   next_promise: string;
   free: string;
+  user_id: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -51,6 +54,7 @@ export type DbTradeNote = {
   images: string[];
   ai_advice: string;
   ai_advice_pinned: boolean;
+  user_id: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -61,6 +65,7 @@ export type DbFreeMemo = {
   content: string;
   date_key: string;
   tags: string[];
+  user_id: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -71,6 +76,7 @@ export type DbNoteLink = {
   source_id: string;
   target_type: 'trade' | 'daily' | 'free';
   target_id: string;
+  user_id: string | null;
   created_at: string;
 };
 
@@ -95,10 +101,18 @@ export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> 
   return data;
 }
 
-export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at'>[]): Promise<void> {
+export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>[]): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const tradesWithUser = trades.map(trade => ({
+    ...trade,
+    user_id: user?.id || null,
+    dataset: null,
+  }));
+
   const { error } = await supabase
     .from('trades')
-    .upsert(trades, { onConflict: 'ticket' });
+    .upsert(tradesWithUser, { onConflict: 'ticket' });
 
   if (error) throw error;
 }
@@ -124,11 +138,14 @@ export async function getDailyNote(dateKey: string): Promise<DbDailyNote | null>
   return data;
 }
 
-export async function saveDailyNote(note: Omit<DbDailyNote, 'id' | 'created_at' | 'updated_at'>): Promise<void> {
+export async function saveDailyNote(note: Omit<DbDailyNote, 'id' | 'created_at' | 'updated_at' | 'user_id'>): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+
   const { error } = await supabase
     .from('daily_notes')
     .upsert({
       ...note,
+      user_id: user?.id || null,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'date_key' });
 
@@ -156,11 +173,17 @@ export async function getTradeNote(ticket: string): Promise<DbTradeNote | null> 
   return data;
 }
 
-export async function saveTradeNote(note: Omit<DbTradeNote, 'id' | 'created_at' | 'updated_at'>, tradeData?: Omit<DbTrade, 'id' | 'created_at'>): Promise<void> {
+export async function saveTradeNote(note: Omit<DbTradeNote, 'id' | 'created_at' | 'updated_at' | 'user_id'>, tradeData?: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+
   if (tradeData) {
     const { error: tradeError } = await supabase
       .from('trades')
-      .upsert(tradeData, { onConflict: 'ticket' });
+      .upsert({
+        ...tradeData,
+        user_id: user?.id || null,
+        dataset: null,
+      }, { onConflict: 'ticket' });
 
     if (tradeError) throw tradeError;
   }
@@ -169,6 +192,7 @@ export async function saveTradeNote(note: Omit<DbTradeNote, 'id' | 'created_at' 
     .from('trade_notes')
     .upsert({
       ...note,
+      user_id: user?.id || null,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'ticket' });
 
@@ -196,12 +220,17 @@ export async function getAllFreeMemos(): Promise<DbFreeMemo[]> {
   return data || [];
 }
 
-export async function saveFreeMemo(memo: Omit<DbFreeMemo, 'id' | 'created_at' | 'updated_at'> & { id?: string }): Promise<string> {
+export async function saveFreeMemo(memo: Omit<DbFreeMemo, 'id' | 'created_at' | 'updated_at' | 'user_id'> & { id?: string }): Promise<string> {
+  const { data: { user } } = await supabase.auth.getUser();
+
   if (memo.id) {
     const { error } = await supabase
       .from('free_memos')
       .update({
-        ...memo,
+        title: memo.title,
+        content: memo.content,
+        date_key: memo.date_key,
+        tags: memo.tags,
         updated_at: new Date().toISOString(),
       })
       .eq('id', memo.id);
@@ -216,6 +245,7 @@ export async function saveFreeMemo(memo: Omit<DbFreeMemo, 'id' | 'created_at' | 
         content: memo.content,
         date_key: memo.date_key,
         tags: memo.tags,
+        user_id: user?.id || null,
         updated_at: new Date().toISOString(),
       })
       .select('id')
@@ -241,6 +271,8 @@ export async function createLink(
   targetType: 'trade' | 'daily' | 'free',
   targetId: string
 ): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+
   const { error } = await supabase
     .from('note_links')
     .insert({
@@ -248,6 +280,7 @@ export async function createLink(
       source_id: sourceId,
       target_type: targetType,
       target_id: targetId,
+      user_id: user?.id || null,
     });
 
   if (error && error.code !== '23505') {
