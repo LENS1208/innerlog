@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { DatasetProvider, useDataset } from "../lib/dataset.context";
 import FiltersBar from "../components/FiltersBar";
+import UserMenu from "../components/UserMenu";
 import logoImg from "../assets/inner-log-logo.png";
 import { parseCsvText } from "../lib/csv";
 import { tradeToDb, insertTrades } from "../lib/db.service";
@@ -146,6 +147,7 @@ function Header({
               >
                 🗑️
               </button>
+              <UserMenu />
             </div>
           </div>
 
@@ -189,6 +191,7 @@ function Header({
                 >
                   🗑️
                 </button>
+                <UserMenu />
               </div>
             </div>
           </div>
