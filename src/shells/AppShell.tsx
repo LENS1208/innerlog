@@ -5,8 +5,8 @@ import FiltersBar from "../components/FiltersBar";
 import UserMenu from "../components/UserMenu";
 import logoImg from "../assets/inner-log-logo.png";
 import { parseCsvText } from "../lib/csv";
-import { tradeToDb, insertTrades, getTradesCount, deleteAllTrades } from "../lib/db.service";
-import { parseHtmlStatement, convertHtmlTradesToCsvFormat } from "../lib/html-parser";
+import { tradeToDb, insertTrades, getTradesCount, deleteAllTrades, upsertAccountSummary } from "../lib/db.service";
+import { parseHtmlStatement, parseFullHtmlStatement, convertHtmlTradesToCsvFormat } from "../lib/html-parser";
 
 type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
@@ -417,20 +417,25 @@ export default function AppShell({ children }: Props) {
 
       const fileName = file.name.toLowerCase();
       let trades;
+      let summary = null;
 
       if (fileName.endsWith('.html') || fileName.endsWith('.htm')) {
         console.log('🌐 Detected HTML file, parsing...');
-        const htmlTrades = parseHtmlStatement(text);
-        console.log('📊 Parsed HTML trades:', htmlTrades.length);
+        const parsed = parseFullHtmlStatement(text);
+        console.log('📊 Parsed HTML trades:', parsed.trades.length);
+        console.log('💰 Parsed transactions:', parsed.transactions.length);
+        console.log('📈 Parsed summary:', parsed.summary);
 
-        if (htmlTrades.length === 0) {
+        if (parsed.trades.length === 0) {
           console.warn('⚠️ No trades found in HTML file');
           alert('HTML形式から有効な取引データが見つかりませんでした');
           e.target.value = '';
           return;
         }
 
-        const csvText = convertHtmlTradesToCsvFormat(htmlTrades);
+        summary = parsed.summary;
+
+        const csvText = convertHtmlTradesToCsvFormat(parsed.trades);
         trades = parseCsvText(csvText);
         console.log('✅ Converted HTML to CSV format:', trades.length, 'trades');
       } else {
@@ -447,6 +452,21 @@ export default function AppShell({ children }: Props) {
         const dbTrades = trades.map(tradeToDb);
         await insertTrades(dbTrades);
         console.log(`✅ Uploaded ${trades.length} trades to database`);
+
+        // HTMLファイルからサマリー情報が取得できた場合は保存
+        if (summary) {
+          await upsertAccountSummary({
+            total_deposits: summary.totalDeposits,
+            total_withdrawals: summary.totalWithdrawals,
+            xm_points_earned: summary.xmPointsEarned,
+            xm_points_used: summary.xmPointsUsed,
+            total_swap: summary.totalSwap,
+            total_commission: summary.totalCommission,
+            total_profit: summary.totalProfit,
+            closed_pl: summary.closedPL,
+          });
+          console.log('📊 Account summary saved to database');
+        }
 
         // TradeListPageや他のコンポーネントにイベント発火して再読み込みを促す
         window.dispatchEvent(new CustomEvent("fx:tradesUpdated"));

@@ -452,10 +452,12 @@ export type DbAccountSummary = {
 
 export async function getAccountSummary(dataset: string = 'default'): Promise<DbAccountSummary | null> {
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
 
   const { data, error } = await supabase
     .from('account_summary')
     .select('*')
+    .eq('user_id', user.id)
     .eq('dataset', dataset)
     .maybeSingle();
 
