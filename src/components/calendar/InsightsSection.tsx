@@ -125,12 +125,30 @@ export default function InsightsSection(props: InsightsSectionProps) {
   };
 
   return (
-    <section style={{ marginTop: 24, width: "100%" }}>
+    <section className="insights-section" style={{ marginTop: 24, width: "100%" }}>
       <style>{`
+        .insights-section {
+          --card-padding: 16px;
+        }
+
         .insights-grid {
           display: grid;
           grid-template-columns: 1fr;
           gap: 16px;
+          width: 100%;
+          min-width: 0;
+        }
+
+        .insights-grid > div {
+          min-width: 0;
+          overflow: hidden;
+        }
+
+        .insight-card {
+          background: var(--surface);
+          border: 1px solid var(--line);
+          border-radius: 16px;
+          padding: var(--card-padding);
         }
 
         @media (min-width: 640px) {
@@ -156,8 +174,12 @@ export default function InsightsSection(props: InsightsSectionProps) {
         }
 
         @media (max-width: 640px) {
-          .insights-grid > div {
-            padding: 12px !important;
+          .insights-section {
+            --card-padding: 12px;
+          }
+
+          .insights-grid {
+            gap: 12px;
           }
         }
       `}</style>
@@ -168,14 +190,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
       <div className="insights-grid">
         {/* 1) 週別サマリー */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>週別サマリー / Weekly Summary</div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(weeklySummary)} options={barOptions} />
@@ -183,14 +198,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 2) 曜日別パフォーマンス */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>
             曜日別パフォーマンス / Performance by Day of Week
           </div>
@@ -200,14 +208,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 3) 時間帯パフォーマンス */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>時間帯パフォーマンス / Hour of Day</div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(hourlyPerformance)} options={barOptions} />
@@ -215,14 +216,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 4) 保有時間レンジ */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>保有時間レンジ / Intraday Duration</div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(durationPerformance)} options={barOptions} />
@@ -230,15 +224,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 5) ポジション一覧（週跨ぎ / 日跨ぎ） full width */}
-        <div
-          className="insights-grid-full-width"
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insights-grid-full-width insight-card">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <div style={{ fontSize: 14, fontWeight: 600 }}>ポジション一覧（週跨ぎ / 日跨ぎ）</div>
             <div
@@ -396,16 +382,9 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 6) ベスト/ワーストデイ & 最大日次DD */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>ベスト/ワーストデイ & 最大日次DD</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
             <div
               style={{
                 borderRadius: 12,
@@ -442,18 +421,11 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 7) 通貨ペア 上位/下位 */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
             通貨ペア 上位/下位 / Top & Bottom Symbols
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
             <div>
               <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
@@ -484,16 +456,9 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 8) タグ / Mini Expectation */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>タグ / Mini Expectation</div>
-          <div style={{ overflowX: "auto", width: "100%" }}>
+          <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
           <div
             style={{
               display: "grid",
@@ -545,16 +510,9 @@ export default function InsightsSection(props: InsightsSectionProps) {
         </div>
 
         {/* 9) 期待値ミニ表（抜粋） */}
-        <div
-          style={{
-            background: "var(--surface)",
-            border: "1px solid var(--line)",
-            borderRadius: 16,
-            padding: 16,
-          }}
-        >
+        <div className="insight-card">
           <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>期待値ミニ表（抜粋）</div>
-          <div style={{ overflowX: "auto", width: "100%" }}>
+          <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
           <div
             style={{
               display: "grid",
