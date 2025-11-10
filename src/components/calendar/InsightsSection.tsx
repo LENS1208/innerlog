@@ -159,12 +159,33 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         @media (min-width: 1024px) {
           .insights-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
           }
         }
 
         .insights-grid-full-width {
           grid-column: 1 / -1;
+        }
+
+        .insights-grid-secondary {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+          width: 100%;
+          min-width: 0;
+          margin-top: 16px;
+        }
+
+        @media (min-width: 640px) {
+          .insights-grid-secondary {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .insights-grid-secondary {
+            grid-template-columns: repeat(2, 1fr);
+          }
         }
 
         @media (max-width: 640px) {
@@ -312,9 +333,9 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 display: "grid",
                 gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
                 gap: 8,
-                fontSize: 12,
+                fontSize: 15,
                 color: "var(--muted)",
-                fontWeight: 600,
+                fontWeight: "bold",
                 paddingBottom: 8,
                 borderBottom: "1px solid var(--line)",
                 minWidth: "600px",
@@ -373,7 +394,9 @@ export default function InsightsSection(props: InsightsSectionProps) {
             </div>
           </div>
         </div>
+      </div>
 
+      <div className="insights-grid-secondary">
         {/* 6) ベスト/ワーストデイ & 最大日次DD */}
         <div className="insight-card">
           <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>ベスト/ワーストデイ & 最大日次DD</div>
@@ -418,7 +441,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>通貨ペア 上位/下位</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
             <div>
-              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
+              <div style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                 {topSymbols.map((s, i) => (
                   <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--ink)" }}>
@@ -431,7 +454,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               </ul>
             </div>
             <div>
-              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 8 }}>Bottom 3</div>
+              <div style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)", marginBottom: 8 }}>Bottom 3</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                 {bottomSymbols.map((s, i) => (
                   <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--ink)" }}>
@@ -455,9 +478,9 @@ export default function InsightsSection(props: InsightsSectionProps) {
               display: "grid",
               gridTemplateColumns: "minmax(100px, 2fr) minmax(80px, 1fr) minmax(60px, 1fr) 60px",
               gap: 8,
-              fontSize: 12,
+              fontSize: 15,
               color: "var(--muted)",
-              fontWeight: 600,
+              fontWeight: "bold",
               paddingBottom: 8,
               borderBottom: "1px solid var(--line)",
               minWidth: "400px",
@@ -510,9 +533,9 @@ export default function InsightsSection(props: InsightsSectionProps) {
               display: "grid",
               gridTemplateColumns: "minmax(100px, 2fr) minmax(50px, 60px) minmax(80px, 1fr) minmax(50px, 60px) minmax(50px, 60px)",
               gap: 8,
-              fontSize: 12,
+              fontSize: 15,
               color: "var(--muted)",
-              fontWeight: 600,
+              fontWeight: "bold",
               paddingBottom: 8,
               borderBottom: "1px solid var(--line)",
               minWidth: "450px",
