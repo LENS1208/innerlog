@@ -184,7 +184,7 @@ export default function MonthlyCalendar() {
       });
     }
 
-    const remainingCells = 42 - days.length;
+    const remainingCells = 35 - days.length;
     for (let day = 1; day <= remainingCells; day++) {
       days.push({
         date: formatDateLocal(year, month + 1, day),
@@ -206,7 +206,7 @@ export default function MonthlyCalendar() {
 
     const weekSummaries: WeekSummary[] = [];
     let monthTotal = 0;
-    for (let i = 1; i <= 6; i++) {
+    for (let i = 1; i <= 5; i++) {
       const profit = weeks.get(i) || 0;
       monthTotal += profit;
       weekSummaries.push({
@@ -585,10 +585,8 @@ export default function MonthlyCalendar() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {Array.from({ length: 6 }).map((_, weekIndex) => {
+          {Array.from({ length: 5 }).map((_, weekIndex) => {
             const weekDays = calendarDays.slice(weekIndex * 7, (weekIndex + 1) * 7);
-            const hasAnyTradesInWeek = weekDays.some((day) => day.isCurrentMonth && day.tradeCount > 0);
-            if (weekIndex === 5 && !hasAnyTradesInWeek) return null;
             const weekProfit = weekSummaries[weekIndex].profitYen;
             return (
               <div key={weekIndex} className="calendar-week-row">
