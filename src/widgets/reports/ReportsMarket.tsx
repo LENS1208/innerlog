@@ -20,7 +20,7 @@ export default function ReportsMarket() {
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../../lib/db.service');
-          const data = await getAllTrades();
+          const data = await getAllTrades(contextDataset);
 
           const normalizeSide = (side: string): 'LONG' | 'SHORT' => {
             const s = side?.toUpperCase();

@@ -26,7 +26,7 @@ async function migrateDemoData() {
       console.log(`Found ${trades.length} trades in ${url}`);
 
       const dbTrades = trades.map(tradeToDb);
-      await insertTrades(dbTrades);
+      await insertTrades(dbTrades, dataset);
 
       totalMigrated += trades.length;
       console.log(`✓ Migrated ${trades.length} trades from ${dataset}.csv`);
