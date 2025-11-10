@@ -570,7 +570,7 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
               rows={1}
               value={fundNote}
               onChange={(e) => setFundNote(e.target.value)}
-              placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたのでロングを検討。"
+              placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたので買いを検討。"
             />
           </label>
 
@@ -636,8 +636,8 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
               <label>
                 <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
                   <option value="">AIの方向感</option>
-                  <option>買い（ロング）</option>
-                  <option>売り（ショート）</option>
+                  <option>買い</option>
+                  <option>売り</option>
                   <option>様子見</option>
                 </select>
               </label>

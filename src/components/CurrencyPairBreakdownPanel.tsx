@@ -167,7 +167,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
   }, [trades]);
 
   const sideChartData = {
-    labels: ['ロング', 'ショート'],
+    labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: ['rgba(22, 163, 74, 0.8)', 'rgba(239, 68, 68, 0.8)'],
@@ -345,7 +345,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>ロング vs ショート</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
             <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {(stats.longCount > 0 || stats.shortCount > 0) ? (
                 <Doughnut

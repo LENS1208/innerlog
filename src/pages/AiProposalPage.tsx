@@ -28,7 +28,7 @@ export default function AiProposalPage({
   onCreateTradeNote,
 }: AiProposalPageProps) {
   const todaysPlan = [
-    '<b>戻り売り優先</b>（147.00 上で陽線包みなら短期ロングも）',
+    '<b>戻り売り優先</b>（147.00 上で陽線包みなら短期買いも）',
     '時間帯：10:00–12:00 / 16:00–17:30 を主戦場に',
     'イベント：パウエル発言・雇用関連は一時撤退',
   ];

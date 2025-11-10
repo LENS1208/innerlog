@@ -34,8 +34,8 @@ export const UI_TEXT = {
   side: '方向',
   symbol: '銘柄',
   position: 'ポジション',
-  long: 'LONG',
-  short: 'SHORT',
+  long: '買い',
+  short: '売り',
 } as const;
 
 export function formatCurrency(value: number): string {

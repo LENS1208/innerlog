@@ -198,7 +198,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
             </select>
           </label>
           <label><div className="muted small">AIの方向感</div><select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-            <option>設定なし</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option></select></label>
+            <option>設定なし</option><option>買い</option><option>売り</option><option>様子見</option></select></label>
 
           <label><div className="muted small">トレードの判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
             <option>選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option></select></label>

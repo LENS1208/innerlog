@@ -1171,7 +1171,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             <label>
               <div className="muted small">自由メモ</div>
               <textarea className="note" rows={1} value={fundNote} onChange={(e) => setFundNote(e.target.value)}
-                placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたのでロングを検討。" />
+                placeholder="例）朝9時のニュースで日銀総裁の発言を確認。円高に動きそうだと予想。チャートでは200日移動平均線付近で反発していたので買いを検討。" />
             </label>
 
             <button
@@ -1206,7 +1206,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                 <h3 style={{ margin: "12px 0 8px 0", fontSize: 15, color: "var(--muted)" }}>AIの予想</h3>
                 <label>
                   <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-                    <option value="">AIの方向感</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option>
+                    <option value="">AIの方向感</option><option>買い</option><option>売り</option><option>様子見</option>
                   </select>
                 </label>
                 <label>
