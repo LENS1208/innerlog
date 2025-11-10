@@ -259,6 +259,8 @@ export default function SettingsPage() {
           ai_evaluation_enabled: settings.ai_evaluation_enabled,
           ai_proposal_enabled: settings.ai_proposal_enabled,
           ai_advice_enabled: settings.ai_advice_enabled,
+        }, {
+          onConflict: 'user_id'
         });
 
       if (error) throw error;
