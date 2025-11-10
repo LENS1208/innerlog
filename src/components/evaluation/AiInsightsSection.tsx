@@ -45,9 +45,29 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
           </div>
         </div>
       </div>
-      <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
-          <div className="panel" style={{ padding: 16 }}>
+      <div style={{ padding: '20px 16px' }}>
+        <style>{`
+          .ai-insights-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+            min-width: 0;
+          }
+          @media (min-width: 768px) {
+            .ai-insights-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 20px;
+            }
+          }
+          @media (min-width: 1024px) {
+            .ai-insights-grid {
+              grid-template-columns: repeat(4, 1fr);
+            }
+          }
+        `}</style>
+        <div className="ai-insights-grid">
+          <div className="panel" style={{ padding: 20 }}>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>戦略クラスタ</div>
             <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13, lineHeight: 1.8, color: 'var(--ink)' }}>
               {demoClusters.map((cluster, idx) => (
@@ -56,14 +76,14 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
             </ul>
           </div>
 
-          <div className="panel" style={{ padding: 16 }}>
+          <div className="panel" style={{ padding: 20 }}>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>勝率の源泉</div>
             <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink)' }}>
               トレンド方向と時間帯選択が勝率に大きく寄与。特に欧州時間のトレンドフォローが効果的。
             </div>
           </div>
 
-          <div className="panel" style={{ padding: 16 }}>
+          <div className="panel" style={{ padding: 20 }}>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>改善提案</div>
             <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink)' }}>
               アジア時間のレンジ相場でのエントリー精度向上。損切り位置の見直しでPF改善の余地あり。

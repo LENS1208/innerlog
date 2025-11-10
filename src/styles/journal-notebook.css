@@ -501,6 +501,7 @@ textarea.input {
   font-size: 15px;
   font-weight: bold;
   color: var(--muted);
+  white-space: nowrap;
 }
 
 .kpi .value {

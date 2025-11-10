@@ -106,25 +106,25 @@ export default function WhatIfSimulator({ baseMetrics, ddBasis, initCap }: WhatI
           <div className="whatif-grid">
             <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">PF（元→試算）</div>
-              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
+              <div className="value" style={{ fontSize: '18px', whiteSpace: 'nowrap' }}>
                 {fmt(baseMetrics.pf)} → {fmt(whatIfMetrics.pf)}
               </div>
             </div>
             <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">勝率（元→試算）</div>
-              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
+              <div className="value" style={{ fontSize: '18px', whiteSpace: 'nowrap' }}>
                 {(baseMetrics.winrate * 100).toFixed(1)}% → {(whatIfMetrics.winrate * 100).toFixed(1)}%
               </div>
             </div>
             <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">最大DD%（元→試算）</div>
-              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
+              <div className="value" style={{ fontSize: '18px', whiteSpace: 'nowrap' }}>
                 {baseDDPct.toFixed(1)}% → {whatDDPct.toFixed(1)}%
               </div>
             </div>
             <div className="kpi" style={{ minWidth: 0 }}>
               <div className="label">獲得pips（元→試算）</div>
-              <div className="value" style={{ fontSize: '18px', wordBreak: 'break-all' }}>
+              <div className="value" style={{ fontSize: '18px', whiteSpace: 'nowrap' }}>
                 {Math.round(baseMetrics.pipsSum).toLocaleString()} →{' '}
                 {Math.round(whatIfMetrics.pipsSum).toLocaleString()}
               </div>
