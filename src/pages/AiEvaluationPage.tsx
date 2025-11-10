@@ -96,8 +96,8 @@ export default function AiEvaluationPage() {
             }}
           >
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>総合スコア & レーダーチャート</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <div style={{ fontSize: 18, fontWeight: 700 }}>総合スコア & レーダーチャート</div>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
                 取引データから総合点とバランス（5指標）を自動評価
               </div>
             </div>
@@ -129,8 +129,8 @@ export default function AiEvaluationPage() {
             }}
           >
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>評価まとめ</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <div style={{ fontSize: 18, fontWeight: 700 }}>評価まとめ</div>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
                 全体の評価と、最初にやると良いこと
               </div>
             </div>
@@ -175,8 +175,8 @@ export default function AiEvaluationPage() {
             }}
           >
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>大事な数字（KPI）</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <div style={{ fontSize: 18, fontWeight: 700 }}>大事な数字（KPI）</div>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
                 成績をざっくりつかむための指標
               </div>
             </div>
@@ -202,8 +202,8 @@ export default function AiEvaluationPage() {
             }}
           >
             <div>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>シミュレーション（利確/損切り）</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+              <div style={{ fontSize: 18, fontWeight: 700 }}>シミュレーション（利確/損切り）</div>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
                 比率やルールを変えたら、成績はどう変わる？
               </div>
             </div>

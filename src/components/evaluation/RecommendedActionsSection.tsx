@@ -34,8 +34,8 @@ export default function RecommendedActionsSection({ metrics }: Props) {
           }}
         >
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700 }}>おすすめ行動（3件＋理由）</div>
-            <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+            <div style={{ fontSize: 18, fontWeight: 700 }}>おすすめ行動（3件＋理由）</div>
+            <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
               優先度付き施策リスト
             </div>
           </div>
@@ -59,8 +59,8 @@ export default function RecommendedActionsSection({ metrics }: Props) {
         }}
       >
         <div>
-          <div style={{ fontSize: 16, fontWeight: 700 }}>おすすめ行動（3件＋理由）</div>
-          <div style={{ fontSize: 12, color: 'var(--muted)' }}>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>おすすめ行動（3件＋理由）</div>
+          <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
             優先度付き施策リスト
           </div>
         </div>
