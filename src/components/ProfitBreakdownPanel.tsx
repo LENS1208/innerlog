@@ -235,31 +235,27 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
           </div>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--muted)', marginBottom: 16 }}>基本統計</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
-              <div style={{ padding: 16, background: 'var(--surface)', borderRadius: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--ink)' }}>{stats.tradeCount}回</div>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>該当取引数</div>
-              </div>
-              <div style={{ padding: 16, background: 'var(--surface)', borderRadius: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: stats.avgPnL >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
-                  {stats.avgPnL >= 0 ? '+' : ''}¥{Math.round(stats.avgPnL).toLocaleString('ja-JP')}
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>基本統計</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+              <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>該当取引数</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--ink)' }}>
+                  {stats.tradeCount} <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>回</span>
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
+              </div>
+              <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>
                   {stats.avgPnL >= 0 ? '平均利益' : '平均損失'}
                 </div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: stats.avgPnL >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
+                  {Math.round(stats.avgPnL).toLocaleString('ja-JP')} <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>円</span>
+                </div>
               </div>
-              <div style={{ padding: 16, background: 'var(--surface)', borderRadius: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: formatTime(stats.avgHoldingTimeMin) }}>
+              <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>平均保有時間</div>
+                <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--ink)' }}>
                   {formatTime(stats.avgHoldingTimeMin)}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>平均保有時間</div>
-              </div>
-              <div style={{ padding: 16, background: 'var(--surface)', borderRadius: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--ink)' }}>
-                  {stats.winRate.toFixed(1)}%
-                </div>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>勝率</div>
               </div>
             </div>
           </section>
