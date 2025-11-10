@@ -987,7 +987,7 @@ export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
   )
 }
 
-export function ProfitDistributionChart({ trades }: { trades: TradeWithProfit[] }) {
+export function ProfitDistributionChart({ trades, onRangeClick }: { trades: TradeWithProfit[], onRangeClick?: (rangeLabel: string, rangeTrades: TradeWithProfit[]) => void }) {
   const distributionData = useMemo(() => {
     const ranges = [
       { label: '-5万円以下', min: -Infinity, max: -50000 },
@@ -1026,6 +1026,17 @@ export function ProfitDistributionChart({ trades }: { trades: TradeWithProfit[] 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    onClick: (event: any, elements: any[]) => {
+      if (elements.length > 0 && onRangeClick) {
+        const index = elements[0].index;
+        const range = distributionData.ranges[index];
+        const rangeTrades = trades.filter(t => {
+          const profit = getProfit(t);
+          return profit > range.min && profit <= range.max;
+        });
+        onRangeClick(range.label, rangeTrades);
+      }
+    },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -1055,7 +1066,7 @@ export function ProfitDistributionChart({ trades }: { trades: TradeWithProfit[] 
   }
 
   return (
-    <div className="dash-card">
+    <div className="dash-card" style={{ cursor: onRangeClick ? 'pointer' : 'default' }}>
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>損益分布</h3>
       <div style={{ height: 360, minWidth: 0, width: '100%' }}>
         {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}

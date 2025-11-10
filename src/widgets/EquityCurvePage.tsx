@@ -16,13 +16,14 @@ import {
   ProfitDistributionChart,
   HoldingTimeDistributionChart
 } from "./DashboardSections";
+import ProfitBreakdownPanel from "../components/ProfitBreakdownPanel";
 import "../lib/dashboard.css";
 const EquityCurvePage: React.FC = () => {
   console.log("🔄 EquityCurvePage render");
   const { filters, useDatabase, dataset: contextDataset } = useDataset();
 
-  // データ読み込み（useDatabase + contextDatasetに応じて）
   const [trades, setTrades] = useState<FilteredTrade[]>([]);
+  const [breakdownPanel, setBreakdownPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
     const loadTrades = async () => {
@@ -112,7 +113,12 @@ const EquityCurvePage: React.FC = () => {
 
             {/* 3. 損益分布と保有時間分布（トレードの特性分析） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
-              <ProfitDistributionChart trades={filteredTrades as any} />
+              <ProfitDistributionChart
+                trades={filteredTrades as any}
+                onRangeClick={(rangeLabel, rangeTrades) => {
+                  setBreakdownPanel({ rangeLabel, trades: rangeTrades });
+                }}
+              />
               <HoldingTimeDistributionChart trades={filteredTrades as any} />
             </section>
 
@@ -132,6 +138,14 @@ const EquityCurvePage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {breakdownPanel && (
+        <ProfitBreakdownPanel
+          trades={breakdownPanel.trades}
+          rangeLabel={breakdownPanel.rangeLabel}
+          onClose={() => setBreakdownPanel(null)}
+        />
+      )}
     </div>
   );
 };
