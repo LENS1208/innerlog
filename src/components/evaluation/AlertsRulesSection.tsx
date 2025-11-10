@@ -52,7 +52,7 @@ export default function AlertsRulesSection({ metrics }: Props) {
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, minWidth: 0 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>アラート</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>アラート</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {alerts.length === 0 ? (
                 <div style={{ padding: 16, border: '1px solid #22c55e', borderRadius: 8, background: 'rgba(22, 163, 74, 0.1)', color: '#22c55e', fontSize: 13 }}>✓ アラートなし</div>
@@ -71,7 +71,7 @@ export default function AlertsRulesSection({ metrics }: Props) {
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>目標進捗</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>目標進捗</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {goals.map((goal, idx) => {
                 const progress = goal.name === 'DD' ? Math.min(100, Math.max(0, ((goal.target - goal.actual) / goal.target) * 100)) : Math.min(100, Math.max(0, (goal.actual / goal.target) * 100));

@@ -48,7 +48,7 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div className="panel" style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>戦略クラスタ</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>戦略クラスタ</div>
             <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13, lineHeight: 1.8, color: 'var(--ink)' }}>
               {demoClusters.map((cluster, idx) => (
                 <li key={idx}>{cluster}</li>
@@ -57,14 +57,14 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
           </div>
 
           <div className="panel" style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>勝率の源泉</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>勝率の源泉</div>
             <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink)' }}>
               トレンド方向と時間帯選択が勝率に大きく寄与。特に欧州時間のトレンドフォローが効果的。
             </div>
           </div>
 
           <div className="panel" style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>改善提案</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>改善提案</div>
             <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--ink)' }}>
               アジア時間のレンジ相場でのエントリー精度向上。損切り位置の見直しでPF改善の余地あり。
             </div>
@@ -72,7 +72,7 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
         </div>
 
         <div>
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>重要特徴 Top5</div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>重要特徴 Top5</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {demoFeatures.map((feature, idx) => (
               <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

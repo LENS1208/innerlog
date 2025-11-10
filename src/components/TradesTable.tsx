@@ -10,7 +10,7 @@ export default function TradesTable({rows}:{rows:Row[]}){
         <thead>
           <tr>
             {cfg.columns.map(c=>(
-              <th key={c.id} style={{position:"sticky",top:0,background:"var(--surface)",borderBottom:"1px solid var(--line)",textAlign:"left",padding:8,fontSize:15,fontWeight:"bold",color:"var(--muted)"}}>
+              <th key={c.id} style={{position:"sticky",top:0,background:"var(--surface)",borderBottom:"1px solid var(--line)",textAlign:"left",padding:8,fontSize:13,fontWeight:"bold",color:"var(--muted)"}}>
                 {c.label}
               </th>
             ))}

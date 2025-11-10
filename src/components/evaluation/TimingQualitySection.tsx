@@ -76,7 +76,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div className="panel" style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>MFE（最大含み益）</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>MFE（最大含み益）</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: '#22c55e', marginBottom: 4 }}>
               {(timingMetrics.avgMfe * 100).toFixed(1)}%
             </div>
@@ -84,7 +84,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
           </div>
 
           <div className="panel" style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>MAE（最大含み損）</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>MAE（最大含み損）</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: '#ef4444', marginBottom: 4 }}>
               {(timingMetrics.avgMae * 100).toFixed(1)}%
             </div>
@@ -92,7 +92,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
           </div>
 
           <div className="panel" style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>MFE活用率</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>MFE活用率</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: '#3b82f6', marginBottom: 4 }}>
               {(timingMetrics.mfeUtilization * 100).toFixed(1)}%
             </div>
@@ -100,7 +100,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
           </div>
 
           <div className="panel" style={{ padding: 16 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>早期利確率</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>早期利確率</div>
             <div style={{ fontSize: 24, fontWeight: 700, color: '#f59e0b', marginBottom: 4 }}>
               {(timingMetrics.earlyExitRate * 100).toFixed(1)}%
             </div>
@@ -109,7 +109,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
         </div>
 
         <div className="panel" style={{ padding: 16, background: 'var(--chip)' }}>
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>評価コメント</div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>評価コメント</div>
           <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--muted)' }}>
             MFE活用率が58%と中程度。含み益が出た際に早期に利確している傾向があります。
             トレーリングストップの導入やTP位置の見直しで、さらに10-15%の改善余地があります。

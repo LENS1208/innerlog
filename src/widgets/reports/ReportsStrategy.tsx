@@ -553,7 +553,7 @@ export default function ReportsStrategy() {
           }}
         >
           <div>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>決済効率分布</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>決済効率分布</h4>
             <div style={{ height: 180 }}>
               <Bar
                 data={{
@@ -582,7 +582,7 @@ export default function ReportsStrategy() {
           </div>
 
           <div>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>決済戦略ランキング（損失大）</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>決済戦略ランキング（損失大）</h4>
             <div style={{ maxHeight: 180, overflowY: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
                 <thead>

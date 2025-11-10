@@ -668,23 +668,10 @@
   display:flex;
   align-items:center;
   gap:6px;
-  font-size:13px;
-  font-weight:normal;
+  font-size:15px;
+  font-weight:bold;
   color:var(--muted);
-  margin:0 0 6px;
-}
-
-@media (min-width: 640px) {
-  .kpi-title {
-    font-size: 14px;
-    margin: 0 0 8px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .kpi-title {
-    font-size: 15px;
-  }
+  margin:0 0 8px;
 }
 
 .kpi-value {

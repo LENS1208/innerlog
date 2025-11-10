@@ -363,7 +363,7 @@ export default function ReportsRisk() {
         </div>
 
         <div>
-          <h4 style={{ margin: "0 0 12px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>ロット分布（四分位点）</h4>
+          <h4 style={{ margin: "0 0 12px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>ロット分布（四分位点）</h4>
           <div style={{ display: "flex", gap: 16, alignItems: "center", justifyContent: "space-around", padding: "16px 0" }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Min</div>

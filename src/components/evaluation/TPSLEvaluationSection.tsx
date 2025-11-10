@@ -82,7 +82,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>現在のR:R比</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>現在のR:R比</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
               <span style={{ fontSize: 32, fontWeight: 700, color: '#3b82f6' }}>
                 {analysis.currentRR.toFixed(2)}
@@ -96,7 +96,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           </div>
 
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>推奨R:R比</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>推奨R:R比</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
               <span style={{ fontSize: 32, fontWeight: 700, color: '#22c55e' }}>
                 {analysis.optimalRR.toFixed(2)}
@@ -109,7 +109,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           </div>
 
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>到達率</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>到達率</div>
             <div style={{ marginBottom: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}>
                 <span>SL到達率</span>
@@ -132,7 +132,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
         </div>
 
         <div className="panel" style={{ padding: 16, background: 'var(--chip)' }}>
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8, color: 'var(--ink)' }}>改善提案</div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>改善提案</div>
           <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--muted)' }}>
             {analysis.improvement}
           </div>

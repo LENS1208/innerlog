@@ -73,7 +73,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
       <div style={{ padding: 16, minWidth: 0 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, minWidth: 0 }}>
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>通貨×時間帯（PF）</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>通貨×時間帯（PF）</div>
             <div style={{ overflowX: 'auto', minWidth: 0, width: '100%' }}>
               <table style={{ minWidth: '600px', borderCollapse: 'collapse', fontSize: 11 }}>
                 <thead>
@@ -127,7 +127,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
           </div>
 
           <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>曜日×時間帯（勝率）</div>
+            <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>曜日×時間帯（勝率）</div>
             <div style={{ overflowX: 'auto', minWidth: 0, width: '100%' }}>
               <table style={{ minWidth: '600px', borderCollapse: 'collapse', fontSize: 11 }}>
                 <thead>
