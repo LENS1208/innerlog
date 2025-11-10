@@ -467,7 +467,7 @@ export default function ReportsTimeAxis() {
           }}
         >
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝利トレード平均保有時間</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝ちトレード平均保有時間</h4>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
               {formatHoldTime(holdTimeStats.avgWinHoldTime)}
             </div>

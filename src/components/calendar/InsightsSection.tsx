@@ -330,7 +330,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             >
               <div>通貨</div>
               <div>方向</div>
-              <div>Entry → Exit (UTC)</div>
+              <div>Entry → 決済 (UTC)</div>
               <div style={{ textAlign: "right" }}>保有h</div>
               <div style={{ textAlign: "right" }}>損益</div>
             </div>

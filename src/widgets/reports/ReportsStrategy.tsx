@@ -185,7 +185,7 @@ export default function ReportsStrategy() {
     return mins > 0 ? `${hours}h${mins}m` : `${hours}h`;
   };
 
-  // Exit効率分析
+  // 決済効率分析
   const exitEfficiencyData = useMemo(() => {
     const tradesWithPotential = filteredTrades.filter(t => t.pips !== undefined && t.openPrice && t.closePrice);
 
@@ -197,7 +197,7 @@ export default function ReportsStrategy() {
       const maxPotentialPips = pips * 2;
       const maxPotentialProfit = profit > 0 ? profit * 2 : Math.abs(profit);
 
-      // Exit効率 = 実現利益 / 最大可能利益
+      // 決済効率 = 実現利益 / 最大可能利益
       const efficiency = maxPotentialProfit > 0 ? (profit / maxPotentialProfit) * 100 : 0;
 
       return {
@@ -216,7 +216,7 @@ export default function ReportsStrategy() {
     const earlyExits = efficiencies.filter(e => e.profit > 0 && e.efficiency < 30).length;
     const holdRatio = efficiencies.filter(e => e.efficiency > 50).length / efficiencies.length * 100;
 
-    // Exit効率分布
+    // 決済効率分布
     const ranges = [
       { label: "-100~-50%", min: -100, max: -50 },
       { label: "-50~0%", min: -50, max: 0 },
@@ -231,7 +231,7 @@ export default function ReportsStrategy() {
       count: efficiencies.filter(e => e.efficiency >= range.min && e.efficiency < range.max).length,
     }));
 
-    // Exit戦略ランキング（最も損失が大きいパターン）
+    // 決済戦略ランキング（最も損失が大きいパターン）
     const setupExitMap = new Map<string, { totalLoss: number; count: number; avgEfficiency: number }>();
     efficiencies.filter(e => e.profit < 0).forEach(e => {
       const setup = extractSetup(e.trade);
@@ -509,7 +509,7 @@ export default function ReportsStrategy() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>Exit効率分析</h3>
+        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>決済効率分析</h3>
 
         <div
           style={{
@@ -520,7 +520,7 @@ export default function ReportsStrategy() {
           }}
         >
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>平均Exit効率</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>平均決済効率</h4>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
               {exitEfficiencyData.avgEfficiency.toFixed(1)}%
             </div>
@@ -528,7 +528,7 @@ export default function ReportsStrategy() {
           </div>
 
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>早期Exit回数</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>早期決済回数</h4>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
               {exitEfficiencyData.earlyExits}件
             </div>
@@ -553,7 +553,7 @@ export default function ReportsStrategy() {
           }}
         >
           <div>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>Exit効率分布</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>決済効率分布</h4>
             <div style={{ height: 180 }}>
               <Bar
                 data={{
@@ -582,7 +582,7 @@ export default function ReportsStrategy() {
           </div>
 
           <div>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>Exit戦略ランキング（損失大）</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)" }}>決済戦略ランキング（損失大）</h4>
             <div style={{ maxHeight: 180, overflowY: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
                 <thead>
