@@ -138,7 +138,7 @@ export default function AiEvaluationPage() {
           </div>
           <div style={{ padding: 16, minWidth: 0 }} className="eval-grid-2col">
             <div className="panel" style={{ padding: 16 }}>
-              <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, fontWeight: 600 }}>サマリー</div>
+              <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>サマリー</div>
               {baseMetrics.equity && baseMetrics.equity.length > 1 && (
                 <Sparkline data={baseMetrics.equity} />
               )}
@@ -149,7 +149,7 @@ export default function AiEvaluationPage() {
               </div>
             </div>
             <div className="panel" style={{ padding: 16 }}>
-              <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, fontWeight: 600 }}>
+              <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
                 まずやると良いこと（3つ）
               </div>
               <ol style={{ margin: '0 0 8px 18px', lineHeight: 1.7, fontSize: 13, color: 'var(--ink)' }}>
