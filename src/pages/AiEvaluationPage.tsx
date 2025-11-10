@@ -65,13 +65,14 @@ export default function AiEvaluationPage() {
         .eval-grid-2col {
           display: grid;
           grid-template-columns: 1fr;
-          gap: 12px;
+          gap: 16px;
           min-width: 0;
         }
 
         @media (min-width: 768px) {
           .eval-grid-2col {
             grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
           }
         }
 
@@ -84,7 +85,7 @@ export default function AiEvaluationPage() {
         }
       `}</style>
 
-      <div style={{ display: 'grid', gap: 16, minWidth: 0 }}>
+      <div style={{ display: 'grid', gap: 24, minWidth: 0 }}>
         <section className="panel">
           <div
             style={{
@@ -102,15 +103,7 @@ export default function AiEvaluationPage() {
               </div>
             </div>
           </div>
-          <div
-            style={{
-              padding: 16,
-              display: 'grid',
-              gridTemplateColumns: '1fr',
-              gap: 12,
-              minWidth: 0,
-            }}
-          >
+          <div style={{ padding: '20px 16px', minWidth: 0 }}>
             <div className="eval-grid-2col">
               <OverallScore score={scoreData.overall} rank={scoreData.rank} />
               <RadarChart parts={scoreData.parts} />
@@ -136,9 +129,9 @@ export default function AiEvaluationPage() {
             </div>
             <div className="badge ok">分析の信頼度: 高め</div>
           </div>
-          <div style={{ padding: 16, minWidth: 0 }} className="eval-grid-2col">
-            <div className="panel" style={{ padding: 16 }}>
-              <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>サマリー</div>
+          <div style={{ padding: '20px 16px', minWidth: 0 }} className="eval-grid-2col">
+            <div className="panel" style={{ padding: 20 }}>
+              <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>サマリー</div>
               {baseMetrics.equity && baseMetrics.equity.length > 1 && (
                 <Sparkline data={baseMetrics.equity} />
               )}
@@ -148,8 +141,8 @@ export default function AiEvaluationPage() {
                 <div className="badge">得意パターン: EURUSD × LDN × ブレイク</div>
               </div>
             </div>
-            <div className="panel" style={{ padding: 16 }}>
-              <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
+            <div className="panel" style={{ padding: 20 }}>
+              <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
                 まずやると良いこと（3つ）
               </div>
               <ol style={{ margin: '0 0 8px 18px', lineHeight: 1.7, fontSize: 13, color: 'var(--ink)' }}>
@@ -181,10 +174,10 @@ export default function AiEvaluationPage() {
               </div>
             </div>
           </div>
-          <div style={{ padding: 16 }}>
+          <div style={{ padding: '20px 16px' }}>
             <KPICards metrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
             {baseMetrics.equity && baseMetrics.equity.length > 1 && (
-              <div style={{ marginTop: 12 }}>
+              <div style={{ marginTop: 16 }}>
                 <Sparkline data={baseMetrics.equity} />
               </div>
             )}
@@ -208,7 +201,7 @@ export default function AiEvaluationPage() {
               </div>
             </div>
           </div>
-          <div style={{ padding: 16 }}>
+          <div style={{ padding: '20px 16px' }}>
             <WhatIfSimulator baseMetrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
           </div>
         </section>

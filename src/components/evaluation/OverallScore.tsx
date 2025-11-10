@@ -10,7 +10,7 @@ export default function OverallScore({ score, rank }: OverallScoreProps) {
     <div
       className="panel"
       style={{
-        padding: 16,
+        padding: 20,
         minHeight: 300,
         display: 'grid',
         placeItems: 'center',

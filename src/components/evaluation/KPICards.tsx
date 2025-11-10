@@ -18,31 +18,53 @@ export default function KPICards({ metrics, ddBasis, initCap }: KPICardsProps) {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, minWidth: 0 }}>
-      <div className="kpi">
-        <div className="label">収益効率（PF）</div>
-        <div className="value">{metrics.pf === Infinity ? '∞' : metrics.pf.toFixed(2)}</div>
+    <>
+      <style>{`
+        .kpi-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+          min-width: 0;
+        }
+
+        @media (min-width: 768px) {
+          .kpi-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .kpi-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+      `}</style>
+      <div className="kpi-grid">
+        <div className="kpi">
+          <div className="label">収益効率（PF）</div>
+          <div className="value">{metrics.pf === Infinity ? '∞' : metrics.pf.toFixed(2)}</div>
+        </div>
+        <div className="kpi">
+          <div className="label">勝率</div>
+          <div className="value">{(metrics.winrate * 100).toFixed(1)}%</div>
+        </div>
+        <div className="kpi">
+          <div className="label">最大ドローダウン（%）</div>
+          <div className="value">{ddPct.toFixed(1)}%</div>
+        </div>
+        <div className="kpi">
+          <div className="label">取引数</div>
+          <div className="value">{fmtNum(metrics.trades)}</div>
+        </div>
+        <div className="kpi">
+          <div className="label">獲得pips（合計）</div>
+          <div className="value">{fmtNum(Math.round(metrics.pipsSum))}</div>
+        </div>
+        <div className="kpi">
+          <div className="label">平均保有</div>
+          <div className="value">—</div>
+        </div>
       </div>
-      <div className="kpi">
-        <div className="label">勝率</div>
-        <div className="value">{(metrics.winrate * 100).toFixed(1)}%</div>
-      </div>
-      <div className="kpi">
-        <div className="label">最大ドローダウン（%）</div>
-        <div className="value">{ddPct.toFixed(1)}%</div>
-      </div>
-      <div className="kpi">
-        <div className="label">取引数</div>
-        <div className="value">{fmtNum(metrics.trades)}</div>
-      </div>
-      <div className="kpi">
-        <div className="label">獲得pips（合計）</div>
-        <div className="value">{fmtNum(Math.round(metrics.pipsSum))}</div>
-      </div>
-      <div className="kpi">
-        <div className="label">平均保有</div>
-        <div className="value">—</div>
-      </div>
-    </div>
+    </>
   );
 }

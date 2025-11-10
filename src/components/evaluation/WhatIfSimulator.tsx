@@ -58,8 +58,8 @@ export default function WhatIfSimulator({ baseMetrics, ddBasis, initCap }: WhatI
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
-        <div className="panel" style={{ padding: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
+        <div className="panel" style={{ padding: 20 }}>
           <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
             TP/SL シナリオ
           </div>
