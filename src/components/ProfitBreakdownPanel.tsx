@@ -192,7 +192,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
           top: 0,
           right: 0,
           width: '100%',
-          maxWidth: 800,
+          maxWidth: 560,
           height: '100vh',
           background: 'white',
           zIndex: 1001,
@@ -236,7 +236,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--muted)', marginBottom: 16 }}>基本統計</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 16 }}>
               <div style={{ padding: 16, background: 'var(--surface)', borderRadius: 12, textAlign: 'center' }}>
                 <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--ink)' }}>{stats.tradeCount}回</div>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>該当取引数</div>
@@ -266,7 +266,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別分布</h3>
-            <div style={{ height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {topPairs.length > 0 ? (
                 <Doughnut
                   data={pairChartData}
@@ -291,7 +291,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--muted)', marginBottom: 16 }}>ロング vs ショート</h3>
-            <div style={{ height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {(stats.longCount > 0 || stats.shortCount > 0) ? (
                 <Doughnut
                   data={sideChartData}
@@ -299,7 +299,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                      legend: { position: 'bottom' },
+                      legend: { position: 'right' },
                       tooltip: {
                         callbacks: {
                           label: (context: any) => `${context.label}: ${context.parsed}件`,
