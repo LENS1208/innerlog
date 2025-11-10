@@ -321,7 +321,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア特性</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>最大利益</div>
@@ -370,7 +370,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>時間帯別分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>時間帯別</h3>
             <div style={{ height: 280 }}>
               <Bar
                 data={hourChartData}
@@ -405,7 +405,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>曜日別分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>曜日別</h3>
             <div style={{ height: 280 }}>
               <Bar
                 data={weekdayChartData}
@@ -439,7 +439,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間別</h3>
             <div style={{ height: 300 }}>
               <Bar
                 data={holdingTimeChartData}

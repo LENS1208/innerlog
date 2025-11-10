@@ -289,7 +289,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別</h3>
             <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {topPairs.length > 0 ? (
                 <Doughnut
@@ -340,7 +340,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>
-              時間帯別分布（日本時間）
+              時間帯別（日本時間）
             </h3>
             <div style={{ height: 300 }}>
               <Bar
@@ -383,7 +383,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間別</h3>
             <div style={{ height: 300 }}>
               <Bar
                 data={holdingTimeChartData}

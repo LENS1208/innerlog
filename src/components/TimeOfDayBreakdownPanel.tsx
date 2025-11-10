@@ -321,7 +321,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別</h3>
             <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {topPairs.length > 0 ? (
                 <Doughnut
@@ -371,7 +371,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>曜日別分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>曜日別</h3>
             <div style={{ height: 280 }}>
               <Bar
                 data={weekdayChartData}
@@ -405,7 +405,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間分布</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間別</h3>
             <div style={{ height: 300 }}>
               <Bar
                 data={holdingTimeChartData}

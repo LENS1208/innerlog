@@ -356,7 +356,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向別（買い・売り）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>買い vs 売り</h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{

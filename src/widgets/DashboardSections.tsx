@@ -958,7 +958,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
   if (!trades || trades.length === 0) {
     return (
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別</h3>
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
           データがありません
         </div>
@@ -969,7 +969,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
   if (setupData.items.length === 0) {
     return (
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別</h3>
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
           セットアップタグが見つかりません<br/>
           <span style={{ fontSize: 12 }}>メモに「ブレイクアウト」「トレンド」などを記載してください</span>
@@ -980,7 +980,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
 
   return (
     <div className="dash-card">
-      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
+      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別</h3>
       <div style={{ height: 240, cursor: onSetupClick ? 'pointer' : 'default' }}>
         <Bar
           data={{
