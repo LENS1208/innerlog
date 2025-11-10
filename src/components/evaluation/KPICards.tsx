@@ -49,7 +49,7 @@ export default function KPICards({ metrics, ddBasis, initCap }: KPICardsProps) {
           <div className="value">{(metrics.winrate * 100).toFixed(1)}%</div>
         </div>
         <div className="kpi">
-          <div className="label">最大ドローダウン（%）</div>
+          <div className="label" style={{ whiteSpace: 'nowrap' }}>最大DD（%）</div>
           <div className="value">{ddPct.toFixed(1)}%</div>
         </div>
         <div className="kpi">

@@ -79,8 +79,23 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           </div>
         </div>
       </div>
-      <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
+      <div style={{ padding: '20px 16px' }}>
+        <style>{`
+          .tpsl-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+            min-width: 0;
+          }
+          @media (min-width: 768px) {
+            .tpsl-grid {
+              grid-template-columns: repeat(3, 1fr);
+              gap: 20px;
+            }
+          }
+        `}</style>
+        <div className="tpsl-grid">
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>現在のR:R比</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
@@ -131,7 +146,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           </div>
         </div>
 
-        <div className="panel" style={{ padding: 16, background: 'var(--chip)' }}>
+        <div className="panel" style={{ padding: 20, background: 'var(--chip)' }}>
           <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>改善提案</div>
           <div style={{ fontSize: 13, lineHeight: 1.8, color: 'var(--muted)' }}>
             {analysis.improvement}

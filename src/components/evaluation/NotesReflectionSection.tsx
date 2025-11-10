@@ -59,8 +59,34 @@ export default function NotesReflectionSection() {
           </div>
         </div>
       </div>
-      <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
+      <div style={{ padding: '20px 16px' }}>
+        <style>{`
+          .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+            min-width: 0;
+          }
+          @media (min-width: 768px) {
+            .notes-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 20px;
+            }
+          }
+          .bias-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+          }
+          @media (min-width: 768px) {
+            .bias-grid {
+              grid-template-columns: repeat(3, 1fr);
+              gap: 12px;
+            }
+          }
+        `}</style>
+        <div className="notes-grid">
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>感情トレンド（直近5日）</div>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 120 }}>
@@ -81,9 +107,9 @@ export default function NotesReflectionSection() {
             </div>
           </div>
 
-          <div>
+          <div style={{ gridColumn: '1 / -1' }}>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>検出された行動バイアス</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <div className="bias-grid">
               {detectedBiases.map((bias, idx) => (
                 <div
                   key={idx}
