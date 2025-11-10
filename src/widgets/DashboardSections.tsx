@@ -810,27 +810,29 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
   )
 }
 
-export function CurrencyPairChart({ trades }: { trades: TradeWithProfit[] }) {
-  const { labels, profits, counts } = useMemo(() => {
-    const pairMap = new Map<string, { profit: number; count: number }>()
+export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithProfit[], onPairClick?: (pairLabel: string, pairTrades: TradeWithProfit[]) => void }) {
+  const { labels, profits, counts, tradesPerPair } = useMemo(() => {
+    const pairMap = new Map<string, { profit: number; count: number; trades: TradeWithProfit[] }>()
 
     trades.forEach(t => {
       const pair = t.pair || t.symbol
       if (!pair) return
       if (!pairMap.has(pair)) {
-        pairMap.set(pair, { profit: 0, count: 0 })
+        pairMap.set(pair, { profit: 0, count: 0, trades: [] })
       }
       const current = pairMap.get(pair)!
       current.profit += getProfit(t)
       current.count += 1
+      current.trades.push(t)
     })
 
     const sorted = Array.from(pairMap.entries()).sort((a, b) => b[1].profit - a[1].profit)
     const labels = sorted.map(([pair]) => pair)
     const profits = sorted.map(([, data]) => data.profit)
     const counts = sorted.map(([, data]) => data.count)
+    const tradesPerPair = sorted.map(([, data]) => data.trades)
 
-    return { labels, profits, counts }
+    return { labels, profits, counts, tradesPerPair }
   }, [trades])
 
   const data = {
@@ -847,6 +849,16 @@ export function CurrencyPairChart({ trades }: { trades: TradeWithProfit[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    onClick: (event: any, elements: any[]) => {
+      if (elements.length > 0 && onPairClick) {
+        const index = elements[0].index;
+        const pairLabel = labels[index];
+        const pairTrades = tradesPerPair[index];
+        if (pairTrades.length > 0) {
+          onPairClick(pairLabel, pairTrades);
+        }
+      }
+    },
     indexAxis: 'y' as const,
     scales: {
       x: {
@@ -872,13 +884,13 @@ export function CurrencyPairChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 200, minWidth: 0, width: '100%' }}>
+    <div style={{ height: 200, minWidth: 0, width: '100%', cursor: onPairClick ? 'pointer' : 'default' }}>
       {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
 }
 
-export function SegmentCharts({ trades, onWeekdayClick, onTimeClick }: { trades: TradeWithProfit[], onWeekdayClick?: (weekdayLabel: string, weekdayTrades: TradeWithProfit[]) => void, onTimeClick?: (timeLabel: string, timeTrades: TradeWithProfit[]) => void }) {
+export function SegmentCharts({ trades, onWeekdayClick, onTimeClick, onPairClick }: { trades: TradeWithProfit[], onWeekdayClick?: (weekdayLabel: string, weekdayTrades: TradeWithProfit[]) => void, onTimeClick?: (timeLabel: string, timeTrades: TradeWithProfit[]) => void, onPairClick?: (pairLabel: string, pairTrades: TradeWithProfit[]) => void }) {
   return (
     <div className="dash-row-3">
       <div className="dash-card">
@@ -891,7 +903,7 @@ export function SegmentCharts({ trades, onWeekdayClick, onTimeClick }: { trades:
       </div>
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>通貨ペア別</h3>
-        <CurrencyPairChart trades={trades} />
+        <CurrencyPairChart trades={trades} onPairClick={onPairClick} />
       </div>
     </div>
   )

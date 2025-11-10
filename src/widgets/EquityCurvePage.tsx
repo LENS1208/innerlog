@@ -20,6 +20,7 @@ import ProfitBreakdownPanel from "../components/ProfitBreakdownPanel";
 import HoldingTimeBreakdownPanel from "../components/HoldingTimeBreakdownPanel";
 import WeekdayBreakdownPanel from "../components/WeekdayBreakdownPanel";
 import TimeOfDayBreakdownPanel from "../components/TimeOfDayBreakdownPanel";
+import CurrencyPairBreakdownPanel from "../components/CurrencyPairBreakdownPanel";
 import "../lib/dashboard.css";
 const EquityCurvePage: React.FC = () => {
   console.log("🔄 EquityCurvePage render");
@@ -30,6 +31,7 @@ const EquityCurvePage: React.FC = () => {
   const [holdingTimePanel, setHoldingTimePanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
   const [weekdayPanel, setWeekdayPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
   const [timeOfDayPanel, setTimeOfDayPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
+  const [currencyPairPanel, setCurrencyPairPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
     const loadTrades = async () => {
@@ -143,6 +145,9 @@ const EquityCurvePage: React.FC = () => {
                 onTimeClick={(timeLabel, timeTrades) => {
                   setTimeOfDayPanel({ rangeLabel: timeLabel, trades: timeTrades });
                 }}
+                onPairClick={(pairLabel, pairTrades) => {
+                  setCurrencyPairPanel({ rangeLabel: pairLabel, trades: pairTrades });
+                }}
               />
             </section>
 
@@ -187,6 +192,14 @@ const EquityCurvePage: React.FC = () => {
           trades={timeOfDayPanel.trades}
           rangeLabel={timeOfDayPanel.rangeLabel}
           onClose={() => setTimeOfDayPanel(null)}
+        />
+      )}
+
+      {currencyPairPanel && (
+        <CurrencyPairBreakdownPanel
+          trades={currencyPairPanel.trades}
+          pairLabel={currencyPairPanel.rangeLabel}
+          onClose={() => setCurrencyPairPanel(null)}
         />
       )}
     </div>
