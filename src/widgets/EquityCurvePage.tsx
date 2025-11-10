@@ -21,6 +21,7 @@ import HoldingTimeBreakdownPanel from "../components/HoldingTimeBreakdownPanel";
 import WeekdayBreakdownPanel from "../components/WeekdayBreakdownPanel";
 import TimeOfDayBreakdownPanel from "../components/TimeOfDayBreakdownPanel";
 import CurrencyPairBreakdownPanel from "../components/CurrencyPairBreakdownPanel";
+import SetupBreakdownPanel from "../components/SetupBreakdownPanel";
 import "../lib/dashboard.css";
 const EquityCurvePage: React.FC = () => {
   console.log("🔄 EquityCurvePage render");
@@ -32,6 +33,7 @@ const EquityCurvePage: React.FC = () => {
   const [weekdayPanel, setWeekdayPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
   const [timeOfDayPanel, setTimeOfDayPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
   const [currencyPairPanel, setCurrencyPairPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
+  const [setupPanel, setSetupPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
     const loadTrades = async () => {
@@ -153,7 +155,12 @@ const EquityCurvePage: React.FC = () => {
 
             {/* 5. セットアップ別とベスト/ワーストトレード（戦略分析と個別取引） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
-              <SetupChart trades={filteredTrades as any} />
+              <SetupChart
+                trades={filteredTrades as any}
+                onSetupClick={(setupLabel, setupTrades) => {
+                  setSetupPanel({ rangeLabel: setupLabel, trades: setupTrades });
+                }}
+              />
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>直近の取引（上位/下位）</h3>
                 <RecentTradesTable trades={filteredTrades as any} />
@@ -200,6 +207,14 @@ const EquityCurvePage: React.FC = () => {
           trades={currencyPairPanel.trades}
           pairLabel={currencyPairPanel.rangeLabel}
           onClose={() => setCurrencyPairPanel(null)}
+        />
+      )}
+
+      {setupPanel && (
+        <SetupBreakdownPanel
+          trades={setupPanel.trades}
+          setupLabel={setupPanel.rangeLabel}
+          onClose={() => setSetupPanel(null)}
         />
       )}
     </div>

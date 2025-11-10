@@ -909,11 +909,10 @@ export function SegmentCharts({ trades, onWeekdayClick, onTimeClick, onPairClick
   )
 }
 
-export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
+export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[], onSetupClick?: (setupLabel: string, setupTrades: TradeWithProfit[]) => void }) {
   const setupData = useMemo(() => {
-    if (!trades || trades.length === 0) return []
+    if (!trades || trades.length === 0) return { items: [], tradesPerSetup: [] }
 
-    // comment/memoからセットアップを抽出
     const extractSetup = (t: any): string => {
       const text = ((t.comment || t.memo || '') as string).toLowerCase()
       if (text.includes('breakout') || text.includes('ブレイクアウト')) return 'Breakout'
@@ -925,26 +924,35 @@ export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
       return 'Other'
     }
 
-    const map = new Map<string, { profit: number; count: number; wins: number }>()
+    const map = new Map<string, { profit: number; count: number; wins: number; trades: TradeWithProfit[] }>()
     trades.forEach(t => {
       const setup = extractSetup(t)
       const profit = getProfit(t)
-      const current = map.get(setup) || { profit: 0, count: 0, wins: 0 }
+      const current = map.get(setup) || { profit: 0, count: 0, wins: 0, trades: [] }
       map.set(setup, {
         profit: current.profit + profit,
         count: current.count + 1,
         wins: current.wins + (profit > 0 ? 1 : 0),
+        trades: [...current.trades, t],
       })
     })
 
-    return Array.from(map.entries())
+    const sorted = Array.from(map.entries())
       .map(([setup, data]) => ({
         setup,
-        ...data,
+        profit: data.profit,
+        count: data.count,
+        wins: data.wins,
         winRate: data.count > 0 ? (data.wins / data.count) * 100 : 0,
+        trades: data.trades,
       }))
       .sort((a, b) => b.profit - a.profit)
       .slice(0, 6)
+
+    return {
+      items: sorted,
+      tradesPerSetup: sorted.map(s => s.trades),
+    }
   }, [trades])
 
   if (!trades || trades.length === 0) {
@@ -958,7 +966,7 @@ export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
     )
   }
 
-  if (setupData.length === 0) {
+  if (setupData.items.length === 0) {
     return (
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
@@ -973,15 +981,15 @@ export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
   return (
     <div className="dash-card">
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別（タグ）</h3>
-      <div style={{ height: 240 }}>
+      <div style={{ height: 240, cursor: onSetupClick ? 'pointer' : 'default' }}>
         <Bar
           data={{
-            labels: setupData.map(s => s.setup),
+            labels: setupData.items.map(s => s.setup),
             datasets: [
               {
                 label: '損益',
-                data: setupData.map(s => s.profit),
-                backgroundColor: setupData.map(s =>
+                data: setupData.items.map(s => s.profit),
+                backgroundColor: setupData.items.map(s =>
                   s.profit >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'
                 ),
               },
@@ -990,12 +998,22 @@ export function SetupChart({ trades }: { trades?: TradeWithProfit[] }) {
           options={{
             responsive: true,
             maintainAspectRatio: false,
+            onClick: (event: any, elements: any[]) => {
+              if (elements.length > 0 && onSetupClick) {
+                const index = elements[0].index;
+                const setupLabel = setupData.items[index].setup;
+                const setupTrades = setupData.tradesPerSetup[index];
+                if (setupTrades.length > 0) {
+                  onSetupClick(setupLabel, setupTrades);
+                }
+              }
+            },
             plugins: {
               legend: { display: false },
               tooltip: {
                 callbacks: {
                   label: (context) => {
-                    const item = setupData[context.dataIndex]
+                    const item = setupData.items[context.dataIndex]
                     return [
                       `損益: ${formatJPY(item.profit)}円`,
                       `取引: ${item.count}件`,
