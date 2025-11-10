@@ -320,7 +320,7 @@ export default function CalendarDayPage() {
 
       {dayTrades.length > 0 && (
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)", marginBottom: "var(--space-3)" }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: "var(--space-2)" }}>当日の推移</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', marginBottom: "var(--space-2)" }}>当日の推移</h2>
           <div style={{ height: 300 }}>
             <Line
               data={{
@@ -448,7 +448,7 @@ export default function CalendarDayPage() {
       )}
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)", marginBottom: "var(--space-3)" }}>
-        <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: "var(--space-2)" }}>今日のメモ</h2>
+        <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', marginBottom: "var(--space-2)" }}>今日のメモ</h2>
         <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: "var(--space-2)" }}>
           例）指標前は見送り。午前は慎重に。午後は目標到達で機械的に利確。
         </div>
@@ -470,7 +470,7 @@ export default function CalendarDayPage() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)", marginBottom: "var(--space-3)" }}>
-        <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: "var(--space-2)" }}>AI相談</h2>
+        <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', marginBottom: "var(--space-2)" }}>AI相談</h2>
         <ul style={{ margin: 0, paddingLeft: 20, fontSize: 13, lineHeight: 1.7, color: "var(--ink)" }}>
           <li>ルール遵守。損切りは迷わずにした。</li>
           <li>利確が早い傾向があります。</li>
@@ -479,7 +479,7 @@ export default function CalendarDayPage() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12, padding: "var(--space-3)" }}>
-        <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: "var(--space-2)" }}>この日の取引一覧</h2>
+        <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', marginBottom: "var(--space-2)" }}>この日の取引一覧</h2>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>

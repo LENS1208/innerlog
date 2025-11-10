@@ -17,7 +17,7 @@ export default function AiAdviceBlock({
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
-        <h2 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>AI相談</h2>
+        <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', margin: 0 }}>AI相談</h2>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button
             onClick={onGenerate}

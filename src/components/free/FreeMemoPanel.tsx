@@ -204,7 +204,7 @@ export default function FreeMemoPanel({
       <div className="body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
         <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 'var(--space-3)' }}>
           <div style={{ marginBottom: 'var(--space-2)' }}>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{title}</div>
+            <div style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', marginBottom: 4 }}>{title}</div>
             <div style={{ fontSize: 13, color: 'var(--muted)' }}>日付: {dateKey}</div>
           </div>
 

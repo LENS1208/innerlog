@@ -230,7 +230,7 @@ export default function DailyNotePanel({
         </div>
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 'var(--space-3)' }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 'var(--space-2)' }}>当日の推移</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>当日の推移</h2>
           <div
             style={{
               height: '180px',
@@ -269,7 +269,7 @@ export default function DailyNotePanel({
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 'var(--space-3)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
-            <h2 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>この日の取引</h2>
+            <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', margin: 0 }}>この日の取引</h2>
             <button
               onClick={onOpenTradesList}
               style={{
@@ -288,7 +288,7 @@ export default function DailyNotePanel({
         </div>
 
         <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 'var(--space-3)' }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 'var(--space-2)' }}>リンク済みノート</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 'bold', color: 'var(--ink)', marginBottom: 'var(--space-2)' }}>リンク済みノート</h2>
           <LinkedNotesTable notes={linkedNotes} onOpenNote={onOpenLinkedNote} />
         </div>
 
