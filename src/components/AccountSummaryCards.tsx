@@ -49,6 +49,8 @@ export default function AccountSummaryCards() {
         xm_points_earned: demoData?.xm_points_earned || 0,
         xm_points_used: demoData?.xm_points_used || 0,
         total_swap: demoData?.total_swap || 0,
+        swap_positive: demoData?.swap_positive || 0,
+        swap_negative: demoData?.swap_negative || 0,
         total_commission: 0,
         total_profit: 0,
         closed_pl: 0,
@@ -78,10 +80,13 @@ export default function AccountSummaryCards() {
     xm_points_earned: 0,
     xm_points_used: 0,
     total_swap: 0,
+    swap_positive: 0,
+    swap_negative: 0,
     closed_pl: 0,
   };
 
   const hasXmPoints = summaryData.xm_points_earned > 0 || summaryData.xm_points_used > 0;
+  const hasSwapBreakdown = (summaryData.swap_positive || 0) > 0 || (summaryData.swap_negative || 0) > 0;
 
   return (
     <>
@@ -106,7 +111,15 @@ export default function AccountSummaryCards() {
         <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? '#10b981' : '#ef4444' }}>
           {summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
-        <div className="kpi-desc">スワップポイントの累計</div>
+        {hasSwapBreakdown ? (
+          <div className="kpi-desc" style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
+            <span style={{ color: '#10b981' }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')}</span>
+            {' / '}
+            <span style={{ color: '#ef4444' }}>-{(summaryData.swap_negative || 0).toLocaleString('ja-JP')}</span>
+          </div>
+        ) : (
+          <div className="kpi-desc">スワップポイントの累計</div>
+        )}
       </div>
 
       {hasXmPoints && (
