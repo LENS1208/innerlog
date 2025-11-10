@@ -109,15 +109,6 @@ export default function AccountSummaryCards() {
         <div className="kpi-desc">スワップポイントの累計</div>
       </div>
 
-      <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>純損益 (CLOSED P/L)</div>
-        <div className="kpi-value" style={{ color: summaryData.closed_pl >= 0 ? '#10b981' : '#ef4444' }}>
-          {summaryData.closed_pl >= 0 ? '' : '-'}
-          {Math.abs(summaryData.closed_pl).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
-        </div>
-        <div className="kpi-desc">確定損益の総額</div>
-      </div>
-
       {hasXmPoints && (
         <>
           <div className="kpi-card">
