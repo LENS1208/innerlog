@@ -62,7 +62,7 @@ export default function NotesReflectionSection() {
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginBottom: 20, minWidth: 0 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>感情トレンド（直近5日）</div>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>感情トレンド（直近5日）</div>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12, height: 120 }}>
               {emotionTrend.map((day, idx) => (
                 <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
@@ -82,7 +82,7 @@ export default function NotesReflectionSection() {
           </div>
 
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>検出された行動バイアス</div>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>検出された行動バイアス</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {detectedBiases.map((bias, idx) => (
                 <div
@@ -117,7 +117,7 @@ export default function NotesReflectionSection() {
         </div>
 
         <div>
-          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>ふり返りメモ</div>
+          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>ふり返りメモ</div>
           <textarea
             value={reflection}
             onChange={(e) => setReflection(e.target.value)}

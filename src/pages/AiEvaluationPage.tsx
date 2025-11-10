@@ -138,7 +138,7 @@ export default function AiEvaluationPage() {
           </div>
           <div style={{ padding: 16, minWidth: 0 }} className="eval-grid-2col">
             <div className="panel" style={{ padding: 16 }}>
-              <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>サマリー</div>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, fontWeight: 600 }}>サマリー</div>
               {baseMetrics.equity && baseMetrics.equity.length > 1 && (
                 <Sparkline data={baseMetrics.equity} />
               )}
@@ -149,15 +149,15 @@ export default function AiEvaluationPage() {
               </div>
             </div>
             <div className="panel" style={{ padding: 16 }}>
-              <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, fontWeight: 600 }}>
                 まずやると良いこと（3つ）
               </div>
-              <ol style={{ margin: '0 0 8px 18px', lineHeight: 1.7 }}>
+              <ol style={{ margin: '0 0 8px 18px', lineHeight: 1.7, fontSize: 13, color: 'var(--ink)' }}>
                 <li>利確/損切りの比率 1.2 → 1.6（PF +0.18）</li>
                 <li>NY開始前30分は取引を控える（DD -8%）</li>
                 <li>1回のリスク上限を 1.8% → 1.2% に見直す（連敗に強く）</li>
               </ol>
-              <a href="#sec4" style={{ color: 'var(--accent)' }}>
+              <a href="#sec4" style={{ color: 'var(--accent)', fontSize: 13 }}>
                 → シナリオで検証
               </a>
             </div>

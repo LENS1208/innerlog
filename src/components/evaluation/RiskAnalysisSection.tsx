@@ -73,7 +73,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, minWidth: 0 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>エクイティカーブ & DD帯</div>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>エクイティカーブ & DD帯</div>
             <svg width="100%" height="220" viewBox="0 0 500 220">
               <defs>
                 <linearGradient id="ddGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -135,7 +135,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
           </div>
 
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, color: 'var(--ink)' }}>
               n連敗確率（最長: {longestStreak}連敗）
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
