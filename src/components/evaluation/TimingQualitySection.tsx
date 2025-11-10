@@ -42,7 +42,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
           }}
         >
           <div>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>タイミングの質（エントリー/エグジット）</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>タイミングの質（エントリー/エグジット）</div>
             <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
               MFE/MAE分析、利確・損切りのタイミング評価
             </div>
@@ -67,7 +67,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
         }}
       >
         <div>
-          <div style={{ fontSize: 16, fontWeight: 700 }}>タイミングの質（エントリー/エグジット）</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>タイミングの質（エントリー/エグジット）</div>
           <div style={{ fontSize: 12, color: 'var(--muted)' }}>
             MFE/MAE分析、利確・損切りのタイミング評価
           </div>

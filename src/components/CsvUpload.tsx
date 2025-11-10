@@ -195,7 +195,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       borderRadius: 12,
       padding: 'var(--space-3)',
     }}>
-      <h3 style={{ margin: '0 0 var(--space-2) 0', fontSize: 16, fontWeight: 700 }}>
+      <h3 style={{ margin: '0 0 var(--space-2) 0', fontSize: 17, fontWeight: 'bold', color: 'var(--ink)' }}>
         データ操作
       </h3>
       <p style={{ margin: '0 0 var(--space-3) 0', fontSize: 13, color: 'var(--muted)' }}>

@@ -20,7 +20,7 @@ export default function DataStatusSection({ metrics }: Props) {
       <section className="panel" id="sec11">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid var(--line)' }}>
           <div>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>データの状態</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>データの状態</div>
             <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>入力健全性、検証ステータス</div>
           </div>
         </div>
@@ -33,7 +33,7 @@ export default function DataStatusSection({ metrics }: Props) {
     <section className="panel" id="sec11">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid var(--line)' }}>
         <div>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>データの状態</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>データの状態</div>
           <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>入力健全性、検証ステータス</div>
         </div>
       </div>

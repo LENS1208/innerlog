@@ -11,10 +11,10 @@ export default function DayTradesTable({ trades }: DayTradesTableProps) {
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ borderBottom: '1px solid var(--line)' }}>
-            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>決済時間</th>
-            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>銘柄</th>
-            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>方向</th>
-            <th style={{ textAlign: 'right', padding: '12px 8px', fontSize: 12, color: 'var(--muted)', fontWeight: 600 }}>損益</th>
+            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>決済時間</th>
+            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>銘柄</th>
+            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>方向</th>
+            <th style={{ textAlign: 'right', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>損益</th>
           </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@ export default function DayTradesTable({ trades }: DayTradesTableProps) {
               <td
                 style={{
                   padding: '12px 8px',
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: 600,
                   textAlign: 'right',
                   color: trade.pnlYen >= 0 ? 'var(--gain)' : 'var(--loss)'

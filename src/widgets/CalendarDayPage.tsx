@@ -484,15 +484,15 @@ export default function CalendarDayPage() {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid var(--line)" }}>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>決済日時</th>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>銘柄</th>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>方向</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>損益 (円)</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>pips</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>ロット数</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>建値</th>
-                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 15, color: "var(--muted)", fontWeight: "bold" }}>決済</th>
-                <th style={{ textAlign: "center", padding: "12px 8px", fontSize: 12, color: "var(--muted)", fontWeight: 600 }}>ノート</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>決済日時</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>銘柄</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>方向</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>損益 (円)</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>pips</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>ロット数</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>建値</th>
+                <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>決済</th>
+                <th style={{ textAlign: "center", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>ノート</th>
               </tr>
             </thead>
             <tbody>
@@ -514,7 +514,7 @@ export default function CalendarDayPage() {
                     <td style={{ padding: "12px 8px", fontSize: 13 }}>{t.type}</td>
                     <td style={{
                       padding: "12px 8px",
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: 600,
                       textAlign: "right",
                       color: t.profitJPY >= 0 ? "var(--gain)" : "var(--loss)"
@@ -531,7 +531,7 @@ export default function CalendarDayPage() {
                     <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.size?.toFixed(2) ?? "—"}</td>
                     <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.entryPrice ?? "—"}</td>
                     <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "right" }}>{t.exitPrice ?? "—"}</td>
-                    <td style={{ padding: "12px 8px", fontSize: 16, textAlign: "center" }}>
+                    <td style={{ padding: "12px 8px", fontSize: 13, textAlign: "center" }}>
                       —
                     </td>
                   </tr>

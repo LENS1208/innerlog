@@ -39,7 +39,7 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
         }}
       >
         <div>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>AIの気づき（要点）</div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>AIの気づき（要点）</div>
           <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
             戦略クラスタ、勝率の源泉、改善提案
           </div>
