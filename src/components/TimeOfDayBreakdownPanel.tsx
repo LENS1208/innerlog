@@ -174,7 +174,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: ['rgba(22, 163, 74, 0.8)', 'rgba(239, 68, 68, 0.8)'],
+      backgroundColor: ['rgba(59, 130, 246, 0.8)', 'rgba(168, 85, 247, 0.8)'],
     }],
   };
 
