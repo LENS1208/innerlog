@@ -37,8 +37,22 @@ export default function DataStatusSection({ metrics }: Props) {
           <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>入力健全性、検証ステータス</div>
         </div>
       </div>
-      <div style={{ padding: 16 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, minWidth: 0 }}>
+      <div style={{ padding: '20px 16px' }}>
+        <style>{`
+          .data-status-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            min-width: 0;
+          }
+          @media (min-width: 768px) {
+            .data-status-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 20px;
+            }
+          }
+        `}</style>
+        <div className="data-status-grid">
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>入力健全性</div>
             <div style={{ padding: 16, border: '1px solid #22c55e', borderRadius: 8, background: 'rgba(22, 163, 74, 0.1)', fontSize: 13 }}>✓ 問題なし</div>
