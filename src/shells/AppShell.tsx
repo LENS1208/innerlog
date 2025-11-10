@@ -324,27 +324,56 @@ function SideNav({ menu, activeKey, onUploadClick }: { menu: MenuItem[]; activeK
     >
       <img src={logoImg} alt="inner log" style={{ display: "block", marginBottom: 12, width: "100%", height: "auto" }} />
       <ul style={{ padding: 0, margin: 0, listStyle: "none" }}>
-        {menu.map((m) => (
-          <li key={m.key} style={{ listStyle: "none" }}>
-            <a
-              href={`#/${m.key}`}
-              style={{
-                display: "block",
-                textDecoration: "none",
-                padding: "10px 12px",
-                borderRadius: 10,
-                color: "#111827",
-                background: activeKey === m.key ? "rgba(59,130,246,.12)" : "transparent",
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                location.hash = `/${m.key}`;
-              }}
-            >
-              {m.label}
-            </a>
-          </li>
-        ))}
+        {menu.map((m) => {
+          const getIcon = (key: string) => {
+            switch (key) {
+              case "dashboard":
+                return "📊";
+              case "calendar":
+                return "📅";
+              case "trades":
+                return "📋";
+              case "reports":
+                return "📈";
+              case "ai-evaluation":
+                return "🎯";
+              case "forecast":
+              case "ai-proposal":
+                return "🔮";
+              case "notebook":
+                return "📓";
+              case "settings":
+                return "⚙️";
+              default:
+                return "📄";
+            }
+          };
+
+          return (
+            <li key={m.key} style={{ listStyle: "none" }}>
+              <a
+                href={`#/${m.key}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  textDecoration: "none",
+                  padding: "10px 12px",
+                  borderRadius: 10,
+                  color: "#111827",
+                  background: activeKey === m.key ? "rgba(59,130,246,.12)" : "transparent",
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  location.hash = `/${m.key}`;
+                }}
+              >
+                <span style={{ fontSize: 18, lineHeight: 1 }}>{getIcon(m.key)}</span>
+                <span>{m.label}</span>
+              </a>
+            </li>
+          );
+        })}
       </ul>
       {onUploadClick && (
         <button
