@@ -47,6 +47,9 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     const avgProfit = winTrades.length > 0 ? totalProfit / winTrades.length : 0;
     const avgLoss = lossTrades.length > 0 ? totalLoss / lossTrades.length : 0;
 
+    const totalPnL = trades.reduce((sum, t) => sum + getProfit(t), 0);
+    const avgPnL = trades.length > 0 ? totalPnL / trades.length : 0;
+
     const winRate = trades.length > 0 ? (winTrades.length / trades.length) * 100 : 0;
 
     let totalHoldingTimeMin = 0;
@@ -99,6 +102,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
       tradeCount: trades.length,
       avgProfit,
       avgLoss,
+      avgPnL,
       winRate,
       avgHoldingTimeMin,
       pairCounts,
@@ -151,14 +155,10 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
   };
 
   const hourChartData = {
-    labels: Array.from({ length: 12 }, (_, i) => `${i * 2}時`),
+    labels: Array.from({ length: 24 }, (_, i) => `${i}時`),
     datasets: [{
       label: '取引回数',
-      data: Array.from({ length: 12 }, (_, i) => {
-        const hour1 = i * 2;
-        const hour2 = i * 2 + 1;
-        return stats.hourCounts[hour1] + stats.hourCounts[hour2];
-      }),
+      data: stats.hourCounts,
       backgroundColor: 'rgba(59, 130, 246, 0.8)',
     }],
   };
@@ -242,10 +242,12 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>該当取引数</div>
               </div>
               <div style={{ padding: 16, background: 'var(--surface)', borderRadius: 12, textAlign: 'center' }}>
-                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--gain)' }}>
-                  ¥{Math.round(stats.avgProfit).toLocaleString('ja-JP')}
+                <div style={{ fontSize: 28, fontWeight: 700, color: stats.avgPnL >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
+                  {stats.avgPnL >= 0 ? '+' : ''}¥{Math.round(stats.avgPnL).toLocaleString('ja-JP')}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>平均利益</div>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
+                  {stats.avgPnL >= 0 ? '平均利益' : '平均損失'}
+                </div>
               </div>
               <div style={{ padding: 16, background: 'var(--surface)', borderRadius: 12, textAlign: 'center' }}>
                 <div style={{ fontSize: 28, fontWeight: 700, color: formatTime(stats.avgHoldingTimeMin) }}>
@@ -264,7 +266,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別分布</h3>
-            <div style={{ height: 320, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ height: 200, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {topPairs.length > 0 ? (
                 <Doughnut
                   data={pairChartData}
@@ -333,15 +335,20 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                   scales: {
                     x: {
                       grid: { color: '#f3f4f6' },
+                      ticks: {
+                        callback: (value: any, index: number) => {
+                          return index % 2 === 0 ? `${index}時` : '';
+                        },
+                        autoSkip: false,
+                        maxRotation: 0,
+                        minRotation: 0,
+                      },
                     },
                     y: {
                       beginAtZero: true,
                       ticks: {
                         callback: (value: any) => `${value}件`,
-                        stepSize: Math.max(1, Math.ceil(Math.max(...stats.hourCounts.map((c, i, arr) => {
-                          if (i % 2 === 0) return c + (arr[i+1] || 0);
-                          return 0;
-                        })) / 5)),
+                        stepSize: Math.max(1, Math.ceil(Math.max(...stats.hourCounts) / 5)),
                       },
                       grid: { color: '#f3f4f6' },
                     },
