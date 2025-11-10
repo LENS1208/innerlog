@@ -31,12 +31,12 @@ function parseDateTime(datetime: string | number | undefined): Date {
 }
 
 function getMarketSession(hour: number): string {
-  if (hour >= 0 && hour < 3) return '🌙 ニューヨーククローズ';
-  if (hour >= 3 && hour < 9) return '🌅 アジア早朝・オセアニア';
-  if (hour >= 9 && hour < 15) return '🇯🇵 東京タイム';
-  if (hour >= 15 && hour < 17) return '⚡ 東京クローズ・ロンドン準備';
-  if (hour >= 17 && hour < 22) return '🇬🇧 ロンドンタイム';
-  if (hour >= 22 && hour < 24) return '🇺🇸 ニューヨークタイム';
+  if (hour >= 0 && hour < 3) return 'ニューヨーククローズ';
+  if (hour >= 3 && hour < 9) return 'アジア早朝・オセアニア';
+  if (hour >= 9 && hour < 15) return '東京タイム';
+  if (hour >= 15 && hour < 17) return '東京クローズ・ロンドン準備';
+  if (hour >= 17 && hour < 22) return 'ロンドンタイム';
+  if (hour >= 22 && hour < 24) return 'ニューヨークタイム';
   return '市場';
 }
 
@@ -289,9 +289,9 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
             </button>
           </div>
 
-          <section style={{ marginBottom: 24, padding: 16, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: 12, color: 'white' }}>
-            <div style={{ fontSize: 14, opacity: 0.9, marginBottom: 4 }}>市場セッション</div>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>{stats.marketSession}</div>
+          <section style={{ marginBottom: 24, padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+            <div style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 4 }}>市場セッション</div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>{stats.marketSession}</div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
