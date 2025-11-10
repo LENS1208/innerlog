@@ -17,6 +17,7 @@ import {
   HoldingTimeDistributionChart
 } from "./DashboardSections";
 import ProfitBreakdownPanel from "../components/ProfitBreakdownPanel";
+import HoldingTimeBreakdownPanel from "../components/HoldingTimeBreakdownPanel";
 import "../lib/dashboard.css";
 const EquityCurvePage: React.FC = () => {
   console.log("🔄 EquityCurvePage render");
@@ -24,6 +25,7 @@ const EquityCurvePage: React.FC = () => {
 
   const [trades, setTrades] = useState<FilteredTrade[]>([]);
   const [breakdownPanel, setBreakdownPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
+  const [holdingTimePanel, setHoldingTimePanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
     const loadTrades = async () => {
@@ -119,7 +121,12 @@ const EquityCurvePage: React.FC = () => {
                   setBreakdownPanel({ rangeLabel, trades: rangeTrades });
                 }}
               />
-              <HoldingTimeDistributionChart trades={filteredTrades as any} />
+              <HoldingTimeDistributionChart
+                trades={filteredTrades as any}
+                onRangeClick={(rangeLabel, rangeTrades) => {
+                  setHoldingTimePanel({ rangeLabel, trades: rangeTrades });
+                }}
+              />
             </section>
 
             {/* 4. セグメント分析（市場条件別の詳細分析） */}
@@ -144,6 +151,14 @@ const EquityCurvePage: React.FC = () => {
           trades={breakdownPanel.trades}
           rangeLabel={breakdownPanel.rangeLabel}
           onClose={() => setBreakdownPanel(null)}
+        />
+      )}
+
+      {holdingTimePanel && (
+        <HoldingTimeBreakdownPanel
+          trades={holdingTimePanel.trades}
+          rangeLabel={holdingTimePanel.rangeLabel}
+          onClose={() => setHoldingTimePanel(null)}
         />
       )}
     </div>

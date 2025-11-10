@@ -1075,7 +1075,7 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
   )
 }
 
-export function HoldingTimeDistributionChart({ trades }: { trades: TradeWithProfit[] }) {
+export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades: TradeWithProfit[], onRangeClick?: (rangeLabel: string, rangeTrades: TradeWithProfit[]) => void }) {
   const distributionData = useMemo(() => {
     const ranges = [
       { label: '30分以内', min: 0, max: 30 },
@@ -1089,6 +1089,7 @@ export function HoldingTimeDistributionChart({ trades }: { trades: TradeWithProf
 
     const winCounts = ranges.map(() => 0)
     const lossCounts = ranges.map(() => 0)
+    const tradesInRanges = ranges.map(() => [] as TradeWithProfit[])
 
     trades.forEach(t => {
       const profit = getProfit(t)
@@ -1106,6 +1107,7 @@ export function HoldingTimeDistributionChart({ trades }: { trades: TradeWithProf
 
       const rangeIndex = ranges.findIndex(r => holdingTimeMin > r.min && holdingTimeMin <= r.max)
       if (rangeIndex >= 0) {
+        tradesInRanges[rangeIndex].push(t)
         if (profit > 0) {
           winCounts[rangeIndex]++
         } else {
@@ -1114,7 +1116,7 @@ export function HoldingTimeDistributionChart({ trades }: { trades: TradeWithProf
       }
     })
 
-    return { ranges, winCounts, lossCounts }
+    return { ranges, winCounts, lossCounts, tradesInRanges }
   }, [trades])
 
   const data = {
@@ -1136,6 +1138,16 @@ export function HoldingTimeDistributionChart({ trades }: { trades: TradeWithProf
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    onClick: (event: any, elements: any[]) => {
+      if (elements.length > 0 && onRangeClick) {
+        const index = elements[0].index;
+        const range = distributionData.ranges[index];
+        const rangeTrades = distributionData.tradesInRanges[index];
+        if (rangeTrades.length > 0) {
+          onRangeClick(range.label, rangeTrades);
+        }
+      }
+    },
     plugins: {
       legend: {
         display: true,
@@ -1171,7 +1183,7 @@ export function HoldingTimeDistributionChart({ trades }: { trades: TradeWithProf
   }
 
   return (
-    <div className="dash-card">
+    <div className="dash-card" style={{ cursor: onRangeClick ? 'pointer' : 'default' }}>
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>保有時間分布</h3>
       <div style={{ height: 360, minWidth: 0, width: '100%' }}>
         {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
