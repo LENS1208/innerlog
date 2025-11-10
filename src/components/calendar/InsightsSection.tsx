@@ -159,13 +159,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         @media (min-width: 1024px) {
           .insights-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        @media (min-width: 1400px) {
-          .insights-grid {
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 1fr);
           }
         }
 
@@ -191,7 +185,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
       <div className="insights-grid">
         {/* 1) 週別サマリー */}
         <div className="insight-card">
-          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>週別サマリー / Weekly Summary</div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>週別サマリー</div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(weeklySummary)} options={barOptions} />
           </div>
@@ -199,9 +193,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         {/* 2) 曜日別パフォーマンス */}
         <div className="insight-card">
-          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
-            曜日別パフォーマンス / Performance by Day of Week
-          </div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>曜日別パフォーマンス</div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(weekdayPerformance)} options={barOptions} />
           </div>
@@ -209,7 +201,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         {/* 3) 時間帯パフォーマンス */}
         <div className="insight-card">
-          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>時間帯パフォーマンス / Hour of Day</div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>時間帯パフォーマンス</div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(hourlyPerformance)} options={barOptions} />
           </div>
@@ -217,7 +209,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         {/* 4) 保有時間レンジ */}
         <div className="insight-card">
-          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>保有時間レンジ / Intraday Duration</div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>保有時間レンジ</div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(durationPerformance)} options={barOptions} />
           </div>
@@ -292,7 +284,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               >
                 前へ
               </button>
-              <span style={{ fontSize: 11, color: "var(--muted)" }}>
+              <span style={{ fontSize: 12, color: "var(--muted)" }}>
                 {currentPage + 1} / {totalPages || 1}
               </span>
               <button
@@ -320,7 +312,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 display: "grid",
                 gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
                 gap: 8,
-                fontSize: 11,
+                fontSize: 12,
                 color: "var(--muted)",
                 fontWeight: 600,
                 paddingBottom: 8,
@@ -352,6 +344,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                         gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
                         gap: 8,
                         fontSize: 13,
+                        color: "var(--ink)",
                         alignItems: "center",
                         padding: "8px 0",
                         borderBottom: "1px solid #f3f4f6",
@@ -360,7 +353,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                     >
                       <div>{t.symbol}</div>
                       <div>{t.side}</div>
-                      <div style={{ fontSize: 12 }}>
+                      <div style={{ fontSize: 12, color: "var(--muted)" }}>
                         {t.entry.replace("T", " ").substring(0, 16)} → {t.exit.replace("T", " ").substring(0, 16)}
                       </div>
                       <div style={{ textAlign: "right" }}>{hrs}</div>
@@ -392,8 +385,8 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 background: "rgba(34, 197, 94, 0.1)",
               }}
             >
-              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Best Day</div>
-              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2 }}>{bestDay?.date || "—"}</div>
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Best Day</div>
+              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2, color: "var(--ink)" }}>{bestDay?.date || "—"}</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
                 {bestDay ? currencyJPY(bestDay.pnl) : "—"}
               </div>
@@ -405,32 +398,30 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 background: "rgba(239, 68, 68, 0.1)",
               }}
             >
-              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Worst Day</div>
-              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2 }}>{worstDay?.date || "—"}</div>
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Worst Day</div>
+              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2, color: "var(--ink)" }}>{worstDay?.date || "—"}</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
                 {worstDay ? currencyJPY(worstDay.pnl) : "—"}
               </div>
             </div>
           </div>
           {maxDailyDD !== null && (
-            <div style={{ marginTop: 12, fontSize: 11, color: "var(--muted)", display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ marginTop: 12, fontSize: 12, color: "var(--muted)", display: "flex", alignItems: "center", gap: 8 }}>
               Max Daily Drawdown:
-              <span style={{ fontWeight: 600, color: "var(--loss)" }}>{currencyJPY(maxDailyDD)}</span>
+              <span style={{ fontWeight: 600, fontSize: 13, color: "var(--loss)" }}>{currencyJPY(maxDailyDD)}</span>
             </div>
           )}
         </div>
 
         {/* 7) 通貨ペア 上位/下位 */}
         <div className="insight-card">
-          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
-            通貨ペア 上位/下位 / Top & Bottom Symbols
-          </div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>通貨ペア 上位/下位</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
             <div>
-              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                 {topSymbols.map((s, i) => (
-                  <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                  <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--ink)" }}>
                     <span>{s.symbol}</span>
                     <span style={{ fontWeight: 600, color: s.pnl >= 0 ? "var(--gain)" : "var(--loss)" }}>
                       {currencyJPY(s.pnl)}
@@ -440,10 +431,10 @@ export default function InsightsSection(props: InsightsSectionProps) {
               </ul>
             </div>
             <div>
-              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>Bottom 3</div>
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 8 }}>Bottom 3</div>
               <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
                 {bottomSymbols.map((s, i) => (
-                  <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                  <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--ink)" }}>
                     <span>{s.symbol}</span>
                     <span style={{ fontWeight: 600, color: s.pnl >= 0 ? "var(--gain)" : "var(--loss)" }}>
                       {currencyJPY(s.pnl)}
@@ -457,14 +448,14 @@ export default function InsightsSection(props: InsightsSectionProps) {
 
         {/* 8) タグ / Mini Expectation */}
         <div className="insight-card">
-          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>タグ / Mini Expectation</div>
+          <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>タグ別期待値</div>
           <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "minmax(100px, 2fr) minmax(80px, 1fr) minmax(60px, 1fr) 60px",
               gap: 8,
-              fontSize: 11,
+              fontSize: 12,
               color: "var(--muted)",
               fontWeight: 600,
               paddingBottom: 8,
@@ -486,6 +477,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                   gridTemplateColumns: "minmax(100px, 2fr) minmax(80px, 1fr) minmax(60px, 1fr) 60px",
                   gap: 8,
                   fontSize: 13,
+                  color: "var(--ink)",
                   alignItems: "center",
                 }}
               >
@@ -518,7 +510,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               display: "grid",
               gridTemplateColumns: "minmax(100px, 2fr) minmax(50px, 60px) minmax(80px, 1fr) minmax(50px, 60px) minmax(50px, 60px)",
               gap: 8,
-              fontSize: 11,
+              fontSize: 12,
               color: "var(--muted)",
               fontWeight: 600,
               paddingBottom: 8,
@@ -541,6 +533,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                   gridTemplateColumns: "minmax(100px, 2fr) minmax(50px, 60px) minmax(80px, 1fr) minmax(50px, 60px) minmax(50px, 60px)",
                   gap: 8,
                   fontSize: 13,
+                  color: "var(--ink)",
                   alignItems: "center",
                 }}
               >
