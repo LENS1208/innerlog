@@ -317,7 +317,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           </div>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>総合評価</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>総合評価</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>該当取引数</div>
@@ -348,7 +348,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>パフォーマンス指標</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>パフォーマンス指標</h3>
             <div style={{ height: 240 }}>
               <Bar
                 data={performanceMatrixData}
@@ -392,7 +392,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>損益分布（箱ひげ図風）</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>損益分布（箱ひげ図風）</h3>
             <div style={{ padding: 24, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', height: 180 }}>
                 <div style={{ textAlign: 'center' }}>
@@ -444,7 +444,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>累積損益推移</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>累積損益推移</h3>
             <div style={{ height: 300 }}>
               <Line
                 data={cumulativePnLData}
@@ -479,7 +479,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>エントリー時間帯ヒートマップ</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>エントリー時間帯ヒートマップ</h3>
             <div style={{ overflowX: 'auto' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
                 <thead>
@@ -542,7 +542,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>相関分析</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>相関分析</h3>
             <div style={{ padding: 20, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--ink)', marginBottom: 8 }}>
@@ -564,7 +564,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>改善提案</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>改善提案</h3>
             <div style={{ padding: 20, background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: 12 }}>
               {stats.recommendations.length > 0 ? (
                 <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: 'var(--ink)', lineHeight: 1.8 }}>

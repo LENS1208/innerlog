@@ -295,7 +295,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </div>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>基本統計</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>基本統計</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>該当取引数</div>
@@ -321,7 +321,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>通貨ペア別</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>最大利益</div>
@@ -345,7 +345,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
             <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {(stats.longCount > 0 || stats.shortCount > 0) ? (
                 <Doughnut
@@ -370,7 +370,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>時間帯別</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>時間帯別</h3>
             <div style={{ height: 280 }}>
               <Bar
                 data={hourChartData}
@@ -405,7 +405,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>曜日別</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>曜日別</h3>
             <div style={{ height: 280 }}>
               <Bar
                 data={weekdayChartData}
@@ -439,7 +439,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間別</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>保有時間別</h3>
             <div style={{ height: 300 }}>
               <Bar
                 data={holdingTimeChartData}
@@ -483,7 +483,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>損益時系列</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>損益時系列</h3>
             <div style={{ height: 300 }}>
               <Line
                 data={pnlTimeSeriesData}
