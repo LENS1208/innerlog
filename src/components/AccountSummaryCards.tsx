@@ -86,7 +86,7 @@ export default function AccountSummaryCards() {
   return (
     <>
       <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>総入金額</div>
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>入金総額</div>
         <div className="kpi-value" style={{ color: '#10b981' }}>
           {summaryData.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
@@ -94,7 +94,7 @@ export default function AccountSummaryCards() {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>総出金額</div>
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>出金総額</div>
         <div className="kpi-value" style={{ color: '#ef4444' }}>
           {summaryData.total_withdrawals.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
@@ -102,7 +102,7 @@ export default function AccountSummaryCards() {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>スワップ損益</div>
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>累計スワップ</div>
         <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? '#10b981' : '#ef4444' }}>
           {summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
