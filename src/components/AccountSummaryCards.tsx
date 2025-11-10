@@ -14,31 +14,46 @@ export default function AccountSummaryCards() {
 
   const loadSummary = async () => {
     try {
-      // デモデータを使用している場合は、ゼロデータを直接設定（データベースには保存しない）
-      if (!useDatabase) {
-        setSummary({
-          id: 'demo',
-          user_id: 'demo',
-          dataset: dataset,
-          total_deposits: 0,
-          total_withdrawals: 0,
-          xm_points_earned: 0,
-          xm_points_used: 0,
-          total_swap: 0,
-          total_commission: 0,
-          total_profit: 0,
-          closed_pl: 0,
-          updated_at: new Date().toISOString(),
-        });
+      // データベースモードの場合は実際にデータを取得
+      if (useDatabase) {
+        const data = await getAccountSummary('default');
+        console.log('📊 Account summary loaded:', data);
+        setSummary(data);
         setError(null);
         setLoading(false);
         return;
       }
 
-      // データベースモードの場合のみ実際にデータを取得
-      const data = await getAccountSummary('default');
-      console.log('📊 Account summary loaded:', data);
-      setSummary(data);
+      // デモデータを使用している場合は、データセット別のサマリーデータを取得
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/get_demo_account_summary`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({ p_dataset: dataset }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch demo account summary');
+      }
+
+      const demoData = await response.json();
+
+      setSummary({
+        id: 'demo',
+        user_id: 'demo',
+        dataset: dataset,
+        total_deposits: demoData?.total_deposits || 0,
+        total_withdrawals: demoData?.total_withdrawals || 0,
+        xm_points_earned: demoData?.xm_points_earned || 0,
+        xm_points_used: demoData?.xm_points_used || 0,
+        total_swap: demoData?.total_swap || 0,
+        total_commission: 0,
+        total_profit: 0,
+        closed_pl: 0,
+        updated_at: new Date().toISOString(),
+      });
       setError(null);
     } catch (error) {
       console.error('❌ Failed to load account summary:', error);
