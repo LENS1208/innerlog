@@ -113,9 +113,9 @@ export default function AccountSummaryCards() {
         </div>
         {hasSwapBreakdown ? (
           <div className="kpi-desc" style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
-            <span style={{ color: '#10b981' }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')}</span>
+            <span style={{ color: '#10b981' }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')}円</span>
             {' / '}
-            <span style={{ color: '#ef4444' }}>-{(summaryData.swap_negative || 0).toLocaleString('ja-JP')}</span>
+            <span style={{ color: '#ef4444' }}>-{(summaryData.swap_negative || 0).toLocaleString('ja-JP')}円</span>
           </div>
         ) : (
           <div className="kpi-desc">スワップポイントの累計</div>
