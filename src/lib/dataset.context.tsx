@@ -2,6 +2,7 @@ import React from "react";
 import { debounce } from './debounce';
 import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './urlSync';
 import { showToast } from './toast';
+import { supabase } from './supabase';
 
 type DS = "A"|"B"|"C";
 export type Filters = {
@@ -35,6 +36,39 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [useDatabase, setUseDatabase] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const previousFiltersRef = React.useRef<Filters>({});
+
+  React.useEffect(() => {
+    const loadUserSettings = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from('user_settings')
+          .select('data_source, default_dataset')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error('Failed to load user settings:', error);
+          return;
+        }
+
+        if (data) {
+          if (data.data_source === 'database') {
+            setUseDatabase(true);
+          }
+          if (data.default_dataset && ['A', 'B', 'C'].includes(data.default_dataset)) {
+            setDataset(data.default_dataset as DS);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user settings:', error);
+      }
+    };
+
+    loadUserSettings();
+  }, []);
 
   const debouncedApplyFilters = React.useMemo(
     () => debounce(async (newFilters: Filters) => {
