@@ -14,8 +14,29 @@ export default function AccountSummaryCards() {
 
   const loadSummary = async () => {
     try {
-      // データベースモードまたはデモモード両方でデータを取得
-      const data = await getAccountSummary(dataset);
+      // デモデータを使用している場合は、ゼロデータを直接設定（データベースには保存しない）
+      if (!useDatabase) {
+        setSummary({
+          id: 'demo',
+          user_id: 'demo',
+          dataset: dataset,
+          total_deposits: 0,
+          total_withdrawals: 0,
+          xm_points_earned: 0,
+          xm_points_used: 0,
+          total_swap: 0,
+          total_commission: 0,
+          total_profit: 0,
+          closed_pl: 0,
+          updated_at: new Date().toISOString(),
+        });
+        setError(null);
+        setLoading(false);
+        return;
+      }
+
+      // データベースモードの場合のみ実際にデータを取得
+      const data = await getAccountSummary('default');
       console.log('📊 Account summary loaded:', data);
       setSummary(data);
       setError(null);

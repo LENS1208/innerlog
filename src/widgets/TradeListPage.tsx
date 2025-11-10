@@ -73,7 +73,7 @@ export default function TradeListPage() {
     (async () => {
       if (useDatabase) {
         try {
-          const dbTrades = await getAllTrades(dataset);
+          const dbTrades = await getAllTrades();
           const trades = dbTrades.map(dbToTrade);
           console.log("✅ Loaded from database:", trades.length);
           setSrcRows(trades);
@@ -125,7 +125,7 @@ export default function TradeListPage() {
     const tradesUpdated = async () => {
       console.log('🔄 Trades updated, reloading from database');
       if (useDatabase) {
-        const dbData = await getAllTrades(dataset);
+        const dbData = await getAllTrades();
         setSrcRows(dbData.map(dbToTrade));
         console.log(`✅ Reloaded ${dbData.length} trades from database`);
       }
@@ -199,7 +199,7 @@ export default function TradeListPage() {
         await insertTrades(dbTrades);
         console.log(`✅ Uploaded ${tradesToUpload.length} trades to database`);
 
-        const dbData = await getAllTrades(dataset);
+        const dbData = await getAllTrades();
         console.log('📥 Retrieved from database:', dbData.length);
         setSrcRows(dbData.map(dbToTrade));
       } else {

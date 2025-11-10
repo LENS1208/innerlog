@@ -18,7 +18,7 @@ export default function ReportsRisk() {
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../../lib/db.service');
-          const data = await getAllTrades(contextDataset);
+          const data = await getAllTrades();
 
           const normalizeSide = (side: string): 'LONG' | 'SHORT' => {
             const s = side?.toUpperCase();

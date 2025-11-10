@@ -77,7 +77,7 @@ export default function MonthlyCalendar() {
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../lib/db.service');
-          const data = await getAllTrades(contextDataset);
+          const data = await getAllTrades();
 
           const mappedTrades: Trade[] = (data || []).map((t: any) => ({
               datetime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
