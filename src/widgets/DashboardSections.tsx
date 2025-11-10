@@ -646,12 +646,12 @@ export function WeekCalendar({ trades }: { trades: TradeWithProfit[] }) {
   )
 }
 
-export function WeekdayChart({ trades }: { trades: TradeWithProfit[] }) {
-  const { labels, profits, counts } = useMemo(() => {
-    const weekdayMap = new Map<number, { profit: number; count: number }>()
+export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProfit[], onWeekdayClick?: (weekdayLabel: string, weekdayTrades: TradeWithProfit[]) => void }) {
+  const { labels, profits, counts, tradesPerDay } = useMemo(() => {
+    const weekdayMap = new Map<number, { profit: number; count: number; trades: TradeWithProfit[] }>()
 
     for (let i = 0; i < 7; i++) {
-      weekdayMap.set(i, { profit: 0, count: 0 })
+      weekdayMap.set(i, { profit: 0, count: 0, trades: [] })
     }
 
     trades.forEach(t => {
@@ -661,14 +661,16 @@ export function WeekdayChart({ trades }: { trades: TradeWithProfit[] }) {
       const current = weekdayMap.get(day)!
       current.profit += getProfit(t)
       current.count += 1
+      current.trades.push(t)
     })
 
     const days = ['日', '月', '火', '水', '木', '金', '土']
     const labels = days
     const profits = days.map((_, i) => weekdayMap.get(i)!.profit)
     const counts = days.map((_, i) => weekdayMap.get(i)!.count)
+    const tradesPerDay = days.map((_, i) => weekdayMap.get(i)!.trades)
 
-    return { labels, profits, counts }
+    return { labels, profits, counts, tradesPerDay }
   }, [trades])
 
   const data = {
@@ -685,6 +687,16 @@ export function WeekdayChart({ trades }: { trades: TradeWithProfit[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    onClick: (event: any, elements: any[]) => {
+      if (elements.length > 0 && onWeekdayClick) {
+        const index = elements[0].index;
+        const weekdayLabel = labels[index];
+        const weekdayTrades = tradesPerDay[index];
+        if (weekdayTrades.length > 0) {
+          onWeekdayClick(weekdayLabel, weekdayTrades);
+        }
+      }
+    },
     scales: {
       x: { grid: { color: '#f3f4f6' } },
       y: {
@@ -709,7 +721,7 @@ export function WeekdayChart({ trades }: { trades: TradeWithProfit[] }) {
   }
 
   return (
-    <div style={{ height: 200, minWidth: 0, width: '100%' }}>
+    <div style={{ height: 200, minWidth: 0, width: '100%', cursor: onWeekdayClick ? 'pointer' : 'default' }}>
       {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
@@ -854,12 +866,12 @@ export function CurrencyPairChart({ trades }: { trades: TradeWithProfit[] }) {
   )
 }
 
-export function SegmentCharts({ trades }: { trades: TradeWithProfit[] }) {
+export function SegmentCharts({ trades, onWeekdayClick }: { trades: TradeWithProfit[], onWeekdayClick?: (weekdayLabel: string, weekdayTrades: TradeWithProfit[]) => void }) {
   return (
     <div className="dash-row-3">
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>曜日別</h3>
-        <WeekdayChart trades={trades} />
+        <WeekdayChart trades={trades} onWeekdayClick={onWeekdayClick} />
       </div>
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>時間帯別</h3>

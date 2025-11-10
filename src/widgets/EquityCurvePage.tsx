@@ -18,6 +18,7 @@ import {
 } from "./DashboardSections";
 import ProfitBreakdownPanel from "../components/ProfitBreakdownPanel";
 import HoldingTimeBreakdownPanel from "../components/HoldingTimeBreakdownPanel";
+import WeekdayBreakdownPanel from "../components/WeekdayBreakdownPanel";
 import "../lib/dashboard.css";
 const EquityCurvePage: React.FC = () => {
   console.log("🔄 EquityCurvePage render");
@@ -26,6 +27,7 @@ const EquityCurvePage: React.FC = () => {
   const [trades, setTrades] = useState<FilteredTrade[]>([]);
   const [breakdownPanel, setBreakdownPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
   const [holdingTimePanel, setHoldingTimePanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
+  const [weekdayPanel, setWeekdayPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
     const loadTrades = async () => {
@@ -131,7 +133,12 @@ const EquityCurvePage: React.FC = () => {
 
             {/* 4. セグメント分析（市場条件別の詳細分析） */}
             <section style={{ marginBottom: 16 }}>
-              <SegmentCharts trades={filteredTrades as any} />
+              <SegmentCharts
+                trades={filteredTrades as any}
+                onWeekdayClick={(weekdayLabel, weekdayTrades) => {
+                  setWeekdayPanel({ rangeLabel: weekdayLabel, trades: weekdayTrades });
+                }}
+              />
             </section>
 
             {/* 5. セットアップ別とベスト/ワーストトレード（戦略分析と個別取引） */}
@@ -159,6 +166,14 @@ const EquityCurvePage: React.FC = () => {
           trades={holdingTimePanel.trades}
           rangeLabel={holdingTimePanel.rangeLabel}
           onClose={() => setHoldingTimePanel(null)}
+        />
+      )}
+
+      {weekdayPanel && (
+        <WeekdayBreakdownPanel
+          trades={weekdayPanel.trades}
+          rangeLabel={weekdayPanel.rangeLabel}
+          onClose={() => setWeekdayPanel(null)}
         />
       )}
     </div>
