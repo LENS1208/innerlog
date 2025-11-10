@@ -1,7 +1,7 @@
 :root{
   --bg:#f3f4f6; --surface:#ffffff; --ink:#0b1220; --muted:#6b7280;
   --line:#e5e7eb; --accent:#3b82f6; --gain:#16a34a; --loss:#ef4444;
-  --accent-2:#22c55e; --danger:#ef4444; --chip:#f1f3f8; --panel-2:#ffffff;
+  --warning:#f59e0b; --danger:#ef4444; --chip:#f1f3f8; --panel-2:#ffffff;
   --radius:14px; --header-h:56px; --row-h:44px;
   --space-1:8px; --space-2:12px; --space-3:16px; --space-4:20px;
   --sidenav-w:240px;

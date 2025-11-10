@@ -235,8 +235,8 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '日次損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#16a34a' : '#ef4444'),
       borderWidth: 1,
     }]
   }
@@ -678,8 +678,8 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#16a34a' : '#ef4444'),
       borderWidth: 1,
     }]
   }
@@ -758,8 +758,8 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#16a34a' : '#ef4444'),
       borderWidth: 1,
     }]
   }
@@ -840,8 +840,8 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#22c55e' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      borderColor: profits.map(p => p >= 0 ? '#16a34a' : '#ef4444'),
       borderWidth: 1,
     }]
   }
@@ -990,7 +990,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
                 label: '損益',
                 data: setupData.items.map(s => s.profit),
                 backgroundColor: setupData.items.map(s =>
-                  s.profit >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'
+                  s.profit >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'
                 ),
               },
             ],
@@ -1072,7 +1072,7 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
       label: '取引回数',
       data: distributionData.counts,
       backgroundColor: distributionData.ranges.map((r, i) =>
-        r.max <= 0 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(34, 197, 94, 0.8)'
+        r.max <= 0 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(22, 163, 74, 0.8)'
       ),
     }]
   }
@@ -1179,7 +1179,7 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
       {
         label: '勝ちトレード',
         data: distributionData.winCounts,
-        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+        backgroundColor: 'rgba(22, 163, 74, 0.8)',
       },
       {
         label: '負けトレード',

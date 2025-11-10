@@ -136,7 +136,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
       backgroundColor: [
         'rgba(59, 130, 246, 0.8)',
         'rgba(239, 68, 68, 0.8)',
-        'rgba(34, 197, 94, 0.8)',
+        'rgba(22, 163, 74, 0.8)',
         'rgba(245, 158, 11, 0.8)',
         'rgba(139, 92, 246, 0.8)',
         'rgba(6, 182, 212, 0.8)',
@@ -150,7 +150,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     labels: ['ロング', 'ショート'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: ['rgba(34, 197, 94, 0.8)', 'rgba(239, 68, 68, 0.8)'],
+      backgroundColor: ['rgba(22, 163, 74, 0.8)', 'rgba(239, 68, 68, 0.8)'],
     }],
   };
 
@@ -168,7 +168,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: 'rgba(34, 197, 94, 0.8)',
+      backgroundColor: 'rgba(22, 163, 74, 0.8)',
     }],
   };
 

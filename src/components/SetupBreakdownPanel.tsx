@@ -218,7 +218,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
       {
         label: 'R:R比',
         data: [0, stats.riskRewardRatio, 0],
-        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+        backgroundColor: 'rgba(22, 163, 74, 0.8)',
         yAxisID: 'y1',
       },
       {
@@ -243,7 +243,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
         const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
         gradient.addColorStop(0, 'rgba(239, 68, 68, 0.2)');
         gradient.addColorStop(0.5, 'rgba(156, 163, 175, 0.1)');
-        gradient.addColorStop(1, 'rgba(34, 197, 94, 0.2)');
+        gradient.addColorStop(1, 'rgba(22, 163, 74, 0.2)');
         return gradient;
       },
       fill: true,
@@ -327,7 +327,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
               </div>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>総合スコア</div>
-                <div style={{ fontSize: 24, fontWeight: 700, color: stats.totalScore >= 80 ? 'var(--gain)' : stats.totalScore >= 50 ? '#f59e0b' : 'var(--loss)' }}>
+                <div style={{ fontSize: 24, fontWeight: 700, color: stats.totalScore >= 80 ? 'var(--gain)' : stats.totalScore >= 50 ? 'var(--warning)' : 'var(--loss)' }}>
                   {stats.totalScore} <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>点</span>
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{stats.scoreLabel}</div>
@@ -340,7 +340,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
               </div>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>R:R比</div>
-                <div style={{ fontSize: 24, fontWeight: 700, color: stats.riskRewardRatio >= 2.0 ? 'var(--gain)' : stats.riskRewardRatio >= 1.0 ? '#f59e0b' : 'var(--loss)' }}>
+                <div style={{ fontSize: 24, fontWeight: 700, color: stats.riskRewardRatio >= 2.0 ? 'var(--gain)' : stats.riskRewardRatio >= 1.0 ? 'var(--warning)' : 'var(--loss)' }}>
                   {stats.riskRewardRatio.toFixed(2)} <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>:1</span>
                 </div>
               </div>
@@ -427,7 +427,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                 </div>
               </div>
               <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ textAlign: 'center', padding: 12, background: 'rgba(34, 197, 94, 0.1)', borderRadius: 8 }}>
+                <div style={{ textAlign: 'center', padding: 12, background: 'rgba(22, 163, 74, 0.1)', borderRadius: 8 }}>
                   <div style={{ fontSize: 12, color: 'var(--muted)' }}>平均利益</div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--gain)' }}>
                     {Math.round(stats.avgWin).toLocaleString('ja-JP')} 円
@@ -507,7 +507,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                         if (data.count > 0) {
                           if (avgProfit > 0) {
                             const intensity = Math.min(Math.abs(avgProfit) / 5000, 1);
-                            bgColor = `rgba(34, 197, 94, ${intensity * 0.8})`;
+                            bgColor = `rgba(22, 163, 74, ${intensity * 0.8})`;
                           } else {
                             const intensity = Math.min(Math.abs(avgProfit) / 5000, 1);
                             bgColor = `rgba(239, 68, 68, ${intensity * 0.8})`;

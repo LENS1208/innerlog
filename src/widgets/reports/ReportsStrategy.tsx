@@ -336,7 +336,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map(getMetricValue),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      s.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -424,7 +424,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: setupData.slice(0, 6).map((s) => s.winRate),
-                    backgroundColor: "rgba(34, 197, 94, 0.8)",
+                    backgroundColor: "rgba(22, 163, 74, 0.8)",
                   },
                 ],
               }}
@@ -453,7 +453,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map((s) => Math.min(s.pf, 5)),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.pf >= 1 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      s.pf >= 1 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -563,8 +563,8 @@ export default function ReportsStrategy() {
                       data: exitEfficiencyData.distribution.map(d => d.count),
                       backgroundColor: exitEfficiencyData.distribution.map((d, idx) =>
                         idx < 2 ? "rgba(239, 68, 68, 0.8)" :
-                        idx < 4 ? "rgba(251, 191, 36, 0.8)" :
-                        "rgba(34, 197, 94, 0.8)"
+                        idx < 4 ? "rgba(245, 158, 11, 0.8)" :
+                        "rgba(22, 163, 74, 0.8)"
                       ),
                     },
                   ],

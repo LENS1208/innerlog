@@ -263,7 +263,7 @@ export default function ReportsMarket() {
                   {
                     data: symbolData.slice(0, 6).map(getMetricValue),
                     backgroundColor: symbolData.slice(0, 6).map((s) =>
-                      s.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      s.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -292,7 +292,7 @@ export default function ReportsMarket() {
                   {
                     data: pipsRangeData.map(getMetricValue),
                     backgroundColor: pipsRangeData.map((r) =>
-                      r.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      r.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -321,7 +321,7 @@ export default function ReportsMarket() {
                   {
                     data: [...currencyData.base.slice(0, 4).map((c) => c.profit), ...currencyData.quote.slice(0, 4).map((c) => c.profit)],
                     backgroundColor: [...currencyData.base.slice(0, 4), ...currencyData.quote.slice(0, 4)].map((c) =>
-                      c.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      c.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -383,7 +383,7 @@ export default function ReportsMarket() {
                   {
                     data: marketConditionData.map((m) => m.profit),
                     backgroundColor: marketConditionData.map((m) =>
-                      m.profit >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      m.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],

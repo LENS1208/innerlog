@@ -170,7 +170,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     labels: ['ロング', 'ショート'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: ['rgba(34, 197, 94, 0.8)', 'rgba(239, 68, 68, 0.8)'],
+      backgroundColor: ['rgba(22, 163, 74, 0.8)', 'rgba(239, 68, 68, 0.8)'],
     }],
   };
 
@@ -179,7 +179,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
-      backgroundColor: stats.hourProfits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: stats.hourProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
     }],
   };
 
@@ -188,7 +188,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
     }],
   };
 
@@ -198,7 +198,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       {
         label: '勝ちトレード',
         data: stats.holdingTimeWinCounts,
-        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+        backgroundColor: 'rgba(22, 163, 74, 0.8)',
       },
       {
         label: '負けトレード',
@@ -215,18 +215,18 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       data: stats.sortedTrades.map(t => getProfit(t)),
       borderColor: (context: any) => {
         if (!context.raw) return 'rgba(59, 130, 246, 0.8)';
-        return context.raw >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)';
+        return context.raw >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)';
       },
       backgroundColor: (context: any) => {
         if (!context.raw) return 'rgba(59, 130, 246, 0.3)';
-        return context.raw >= 0 ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)';
+        return context.raw >= 0 ? 'rgba(22, 163, 74, 0.3)' : 'rgba(239, 68, 68, 0.3)';
       },
       borderWidth: 2,
       pointRadius: 4,
       pointHoverRadius: 6,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? 'rgba(34, 197, 94, 0.8)' : 'rgba(239, 68, 68, 0.8)';
+          return ctx.p1.parsed.y >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)';
         }
       }
     }]
