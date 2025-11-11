@@ -10,6 +10,29 @@
   }
 }
 
+/* スクロールバーは必要な時のみ表示 */
+* {
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 /* 2) 予想UIのコンテナは常に左寄せで読む */
 .fh-wrap, .fh-root, .fh-card{ text-align:left; }
 
