@@ -61,12 +61,10 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
           borderBottom: '1px solid var(--line)',
         }}
       >
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>リスクのようす（DD/連敗）</div>
-          <div style={{ fontSize: 12, color: 'var(--muted)' }}>
-            エクイティカーブ、ドローダウン、連敗確率
-          </div>
-        </div>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          リスクのようす（DD/連敗）
+          <HelpIcon text="エクイティカーブ、ドローダウン、連敗確率を分析します。" />
+        </h3>
         <div className="badge warn">最大DD: {maxDD.toLocaleString()}円</div>
       </div>
       <div style={{ padding: '12px 16px' }}>

@@ -62,12 +62,10 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
           borderBottom: '1px solid var(--line)',
         }}
       >
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>得意・苦手（ヒートマップ）</div>
-          <div style={{ fontSize: 12, color: 'var(--muted)' }}>
-            通貨×時間帯、曜日×時間帯のパフォーマンス
-          </div>
-        </div>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          得意・苦手（ヒートマップ）
+          <HelpIcon text="通貨×時間帯、曜日×時間帯のパフォーマンスを分析します。" />
+        </h3>
       </div>
       <div style={{ padding: 16, minWidth: 0 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, minWidth: 0 }}>

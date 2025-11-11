@@ -71,12 +71,10 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           borderBottom: '1px solid var(--line)',
         }}
       >
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>利確と損切りの見直し（TP/SL評価）</div>
-          <div style={{ fontSize: 12, color: 'var(--muted)' }}>
-            ストップ妥当性、利確最適化
-          </div>
-        </div>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          利確と損切りの見直し（TP/SL評価）
+          <HelpIcon text="ストップ妥当性、利確最適化を評価します。" />
+        </h3>
       </div>
       <div style={{ padding: '12px 16px' }}>
         <style>{`
