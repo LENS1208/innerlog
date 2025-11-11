@@ -1,6 +1,5 @@
 import React from 'react';
 import Card from '../common/Card';
-import SectionTag from '../common/SectionTag';
 import { HelpIcon } from '../common/HelpIcon';
 import type { TradeIdea, HeroData } from '../../types/ai-proposal.types';
 
@@ -25,39 +24,38 @@ export default function TradeIdeasTable({ ideas, hero, onLinkToDaily, onCreateTr
 
   return (
     <Card data-testid="trade-ideas">
-      <SectionTag>エントリープラン</SectionTag>
-      <h4 style={{ display: 'flex', alignItems: 'center' }}>
-        エントリープラン？
+      <h3 style={{ margin: '0 0 12px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+        エントリープラン
         <HelpIcon text="セットアップ（最大3件）を表示します。各プランのエントリーポイント、損切り・利確、期待リターン、信頼度を確認できます。" />
-      </h4>
+      </h3>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'left' }}>方向</th>
-            <th style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'left' }}>エントリー</th>
-            <th style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'left' }}>損切り/利確</th>
-            <th style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'left' }}>期待リターン</th>
-            <th style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'left' }}>信頼度</th>
-            <th style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'right' }}>操作</th>
+            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>方向</th>
+            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>エントリー</th>
+            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>損切り/利確</th>
+            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>期待リターン</th>
+            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>信頼度</th>
+            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'right', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>操作</th>
           </tr>
         </thead>
         <tbody>
           {sortedIdeas.map((idea) => (
             <tr key={idea.id}>
-              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)' }}>{idea.side}</td>
-              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)' }}>{idea.entry}</td>
-              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)' }}>
+              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--ink)' }}>{idea.side}</td>
+              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--ink)' }}>{idea.entry}</td>
+              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--ink)' }}>
                 {idea.slPips > 0 ? '+' : ''}{idea.slPips} / {idea.tpPips > 0 ? '+' : ''}{idea.tpPips} pips
               </td>
-              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)' }} className={idea.expected > 0 ? 'good' : 'bad'}>
+              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', fontSize: 13 }} className={idea.expected > 0 ? 'good' : 'bad'}>
                 {idea.expected > 0 ? '+' : ''}{idea.expected.toFixed(2)}
               </td>
-              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)' }}>{idea.confidence}</td>
+              <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--ink)' }}>{idea.confidence}</td>
               <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'right' }}>
-                <button className="btn" style={{ marginRight: 4 }} onClick={() => onLinkToDaily?.(idea.id)}>
+                <button className="btn" style={{ marginRight: 4, fontSize: 12 }} onClick={() => onLinkToDaily?.(idea.id)}>
                   日次ノートへ
                 </button>
-                <button className="btn" onClick={() => onCreateTradeNote?.(idea.id)}>
+                <button className="btn" style={{ fontSize: 12 }} onClick={() => onCreateTradeNote?.(idea.id)}>
                   取引ノートを作成
                 </button>
               </td>

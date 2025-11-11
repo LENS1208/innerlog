@@ -1,6 +1,5 @@
 import React from 'react';
 import Card from '../common/Card';
-import SectionTag from '../common/SectionTag';
 import { HelpIcon } from '../common/HelpIcon';
 
 type ScenarioCardProps = {
@@ -14,15 +13,14 @@ type ScenarioCardProps = {
 export default function ScenarioCard({ scenario }: ScenarioCardProps) {
   return (
     <Card>
-      <SectionTag>シナリオ（想定パターン）</SectionTag>
-      <h4 style={{ display: 'flex', alignItems: 'center' }}>
-        シナリオ？
+      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+        シナリオ
         <HelpIcon text="価格の想定パスを強気・中立・弱気の3パターンで表示します。" />
-      </h4>
-      <ul style={{ margin: '0 0 0 18px', padding: 0, lineHeight: 1.6 }}>
-        <li>強気：{scenario.strong}</li>
-        <li>中立：{scenario.base}</li>
-        <li>弱気：{scenario.weak}</li>
+      </h3>
+      <ul style={{ margin: '0 0 0 18px', padding: 0, lineHeight: 1.8, color: 'var(--ink)' }}>
+        <li style={{ marginBottom: 4 }}><strong>強気：</strong>{scenario.strong}</li>
+        <li style={{ marginBottom: 4 }}><strong>中立：</strong>{scenario.base}</li>
+        <li style={{ marginBottom: 4 }}><strong>弱気：</strong>{scenario.weak}</li>
       </ul>
     </Card>
   );
