@@ -65,7 +65,7 @@ export default function RadarChart({ parts }: RadarChartProps) {
 
   return (
     <div style={{ padding: '12px 0' }}>
-      <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>
+      <div style={{ fontSize: 12, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>
         レーダーチャート（5項目）
       </div>
       <svg

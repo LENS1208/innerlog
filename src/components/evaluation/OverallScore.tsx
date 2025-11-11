@@ -18,7 +18,7 @@ export default function OverallScore({ score, rank }: OverallScoreProps) {
     }}>
       <div
         style={{
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: 'bold',
           color: 'var(--muted)',
           marginBottom: 8,
