@@ -159,15 +159,23 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | '
 
     const { error } = await supabase
       .from('trades')
-      .upsert(batch, { onConflict: 'ticket' });
+      .upsert(batch, {
+        onConflict: 'user_id,ticket',
+        ignoreDuplicates: false
+      });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Upsert error:', error);
+      throw error;
+    }
 
     processed += batch.length;
     console.log(`📥 Inserted batch: ${processed}/${tradesWithUser.length} trades`);
   }
 
   console.log(`✅ All trades inserted: ${tradesWithUser.length} total`);
+
+  window.dispatchEvent(new Event('fx:tradesUpdated'));
 }
 
 export async function getAllDailyNotes(): Promise<DbDailyNote[]> {
