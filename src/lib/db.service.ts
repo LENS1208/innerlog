@@ -160,7 +160,10 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | '
 
     const { error } = await supabase
       .from('trades')
-      .upsert(batch, { onConflict: 'user_id,ticket' });
+      .upsert(batch, {
+        onConflict: 'user_id,ticket',
+        ignoreDuplicates: false
+      });
 
     if (error) throw error;
 
