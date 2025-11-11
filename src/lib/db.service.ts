@@ -145,11 +145,41 @@ export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> 
 export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>[]): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
 
+  if (!user) {
+    throw new Error('User must be authenticated to insert trades');
+  }
+
   const tradesWithUser = trades.map(trade => ({
     ...trade,
-    user_id: user?.id || null,
+    user_id: user.id,
     dataset: null,
   }));
+
+  const tickets = trades.map(t => t.ticket);
+
+  console.log(`🔍 Checking for existing trades with ${tickets.length} tickets...`);
+
+  const { data: existingTrades } = await supabase
+    .from('trades')
+    .select('ticket')
+    .eq('user_id', user.id)
+    .in('ticket', tickets);
+
+  const existingTickets = new Set(existingTrades?.map(t => t.ticket) || []);
+
+  if (existingTickets.size > 0) {
+    console.log(`🗑️ Deleting ${existingTickets.size} existing trades...`);
+    const { error: deleteError } = await supabase
+      .from('trades')
+      .delete()
+      .eq('user_id', user.id)
+      .in('ticket', Array.from(existingTickets));
+
+    if (deleteError) {
+      console.error('Delete error:', deleteError);
+      throw deleteError;
+    }
+  }
 
   const BATCH_SIZE = 1000;
   let processed = 0;
@@ -159,13 +189,10 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | '
 
     const { error } = await supabase
       .from('trades')
-      .upsert(batch, {
-        onConflict: 'user_id,ticket',
-        ignoreDuplicates: false
-      });
+      .insert(batch);
 
     if (error) {
-      console.error('Upsert error:', error);
+      console.error('Insert error:', error);
       throw error;
     }
 
