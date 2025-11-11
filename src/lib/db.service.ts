@@ -472,19 +472,35 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
     return dt.replace(/\./g, '-');
   };
 
+  const pair = trade.pair || trade.symbol || '';
+  const openPrice = trade.openPrice || 0;
+  const closePrice = trade.closePrice || 0;
+  const side = trade.side;
+
+  // Pips計算ロジック
+  let pips = trade.pips || 0;
+
+  // Pipsが0でopen/closeがある場合は自動計算
+  if (!pips && openPrice && closePrice) {
+    const isJpyCross = /JPY$/i.test(pair);
+    const mult = isJpyCross ? 100 : 10000;
+    const diff = side === 'LONG' ? (closePrice - openPrice) : (openPrice - closePrice);
+    pips = +(diff * mult).toFixed(1);
+  }
+
   return {
     ticket: trade.ticket || trade.id,
-    item: trade.pair || trade.symbol || '',
+    item: pair,
     side: trade.side,
     size: trade.volume,
     open_time: normalizeDateTime(trade.openTime || trade.datetime),
-    open_price: trade.openPrice || 0,
+    open_price: openPrice,
     close_time: normalizeDateTime(trade.datetime),
-    close_price: trade.closePrice || 0,
+    close_price: closePrice,
     commission: trade.commission || 0,
     swap: trade.swap || 0,
     profit: trade.profitYen || trade.profit || 0,
-    pips: trade.pips,
+    pips: pips,
     sl: trade.stopPrice || null,
     tp: trade.targetPrice || null,
   };

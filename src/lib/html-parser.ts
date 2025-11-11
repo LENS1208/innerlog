@@ -71,6 +71,7 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         text.toLowerCase().includes('position')
       )) {
         const tempHeaderIndices: { [key: string]: number } = {};
+        let priceCount = 0;
         cellTexts.forEach((text, idx) => {
           const lower = text.toLowerCase();
           if (lower.includes('ticket') || lower.includes('order')) tempHeaderIndices['ticket'] = idx;
@@ -78,7 +79,18 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
           if (lower.includes('type')) tempHeaderIndices['type'] = idx;
           if (lower.includes('size') || lower.includes('volume') || lower.includes('lot')) tempHeaderIndices['size'] = idx;
           if (lower.includes('item') || lower.includes('symbol')) tempHeaderIndices['symbol'] = idx;
-          if (lower.includes('price') && idx < 8 && !lower.includes('close')) tempHeaderIndices['openPrice'] = idx;
+
+          // Handle Price columns - first Price is open, second Price is close
+          if (lower === 'price' || (lower.includes('price') && !lower.includes('close') && !lower.includes('open'))) {
+            if (priceCount === 0) {
+              tempHeaderIndices['openPrice'] = idx;
+              priceCount++;
+            } else if (priceCount === 1) {
+              tempHeaderIndices['closePrice'] = idx;
+              priceCount++;
+            }
+          }
+
           if (lower.includes('close time') || lower.includes('closetime')) tempHeaderIndices['closeTime'] = idx;
           if (lower.includes('commission')) tempHeaderIndices['commission'] = idx;
           if (lower.includes('swap')) tempHeaderIndices['swap'] = idx;
@@ -129,7 +141,11 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         const closeTimeIdx = headerIndices['closeTime'];
         const closeTimeText = cellTexts[closeTimeIdx] || '';
 
-        let closePriceIdx = closeTimeIdx + 1;
+        // Use detected closePrice index if available, otherwise fallback to closeTime + 1
+        let closePriceIdx = headerIndices['closePrice'];
+        if (closePriceIdx === undefined) {
+          closePriceIdx = closeTimeIdx + 1;
+        }
         if (closePriceIdx >= cellTexts.length) continue;
 
         const trade: ParsedTrade = {
