@@ -266,10 +266,6 @@ function Banner() {
     return () => window.removeEventListener('fx:tradesUpdated', handler);
   }, []);
 
-  if (useDatabase) {
-    return null;
-  }
-
   return (
     <section
       style={{
