@@ -81,7 +81,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
   const [prompt, setPrompt] = useState('');
   const [pair, setPair] = useState('');
   const [timeframe, setTimeframe] = useState('');
-  const [targetDate, setTargetDate] = useState(new Date().toISOString().split('T')[0]);
+  const [period, setPeriod] = useState('');
 
   useEffect(() => {
     loadProposals();
@@ -107,6 +107,10 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
       showToast('分析足を選択してください');
       return;
     }
+    if (!period) {
+      showToast('予想期間を選択してください');
+      return;
+    }
 
     setGenerating(true);
     try {
@@ -121,6 +125,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
         setPrompt('');
         setPair('');
         setTimeframe('');
+        setPeriod('');
         await loadProposals();
         onSelectProposal(newProposal.id);
       } else {
@@ -206,49 +211,44 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
             onChange={(e) => setPrompt(e.target.value)}
             disabled={generating}
           />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', paddingLeft: 4 }}>銘柄</label>
-            <select
-              className="btn"
-              value={pair}
-              onChange={(e) => setPair(e.target.value)}
-              style={{ boxSizing: 'border-box', minWidth: 120 }}
-              disabled={generating}
-            >
-              <option value="" disabled>銘柄</option>
-              <option>USD/JPY</option>
-              <option>EUR/USD</option>
-              <option>GBP/JPY</option>
-              <option>EUR/JPY</option>
-              <option>GBP/USD</option>
-            </select>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', paddingLeft: 4 }}>分析足</label>
-            <select
-              className="btn"
-              value={timeframe}
-              onChange={(e) => setTimeframe(e.target.value)}
-              style={{ boxSizing: 'border-box', minWidth: 100 }}
-              disabled={generating}
-            >
-              <option value="" disabled>分析足</option>
-              <option>1H</option>
-              <option>4H</option>
-              <option>1D</option>
-            </select>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', paddingLeft: 4 }}>予想期間</label>
-            <input
-              type="date"
-              className="btn"
-              value={targetDate}
-              onChange={(e) => setTargetDate(e.target.value)}
-              style={{ boxSizing: 'border-box', minWidth: 140 }}
-              disabled={generating}
-            />
-          </div>
+          <select
+            className="btn"
+            value={pair}
+            onChange={(e) => setPair(e.target.value)}
+            style={{ boxSizing: 'border-box', minWidth: 120 }}
+            disabled={generating}
+          >
+            <option value="" disabled>銘柄</option>
+            <option>USD/JPY</option>
+            <option>EUR/USD</option>
+            <option>GBP/JPY</option>
+            <option>EUR/JPY</option>
+            <option>GBP/USD</option>
+          </select>
+          <select
+            className="btn"
+            value={timeframe}
+            onChange={(e) => setTimeframe(e.target.value)}
+            style={{ boxSizing: 'border-box', minWidth: 100 }}
+            disabled={generating}
+          >
+            <option value="" disabled>分析足</option>
+            <option>1H</option>
+            <option>4H</option>
+            <option>1D</option>
+          </select>
+          <select
+            className="btn"
+            value={period}
+            onChange={(e) => setPeriod(e.target.value)}
+            style={{ boxSizing: 'border-box', minWidth: 140 }}
+            disabled={generating}
+          >
+            <option value="" disabled>予想期間</option>
+            <option value="短期">短期（24時間）</option>
+            <option value="中期">中期（1週間）</option>
+            <option value="長期">長期（1ヶ月）</option>
+          </select>
           <button
             className="btn"
             onClick={handleGenerate}
@@ -257,7 +257,6 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
               background: generating ? 'var(--muted)' : 'var(--accent)',
               color: '#fff',
               fontWeight: 600,
-              alignSelf: 'flex-end',
             }}
           >
             {generating ? '生成中...' : '提案を生成'}
