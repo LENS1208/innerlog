@@ -217,10 +217,6 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
 
   return (
     <div style={{ width: '100%', padding: 16 }}>
-      <h2 style={{ margin: '0 0 16px 0', fontSize: 20, fontWeight: 'bold', color: 'var(--ink)' }}>
-        相場予想
-      </h2>
-
       <section
         className="card"
         style={{
