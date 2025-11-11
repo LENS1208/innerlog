@@ -9,11 +9,11 @@ export default function RadarChart({ parts }: RadarChartProps) {
   const labels = ['エントリー技術', 'DD耐性', 'リスクリワード', 'リスク管理', '収益安定'];
   const values = [parts.entry, parts.dd, parts.rr, parts.risk, parts.stability];
 
-  const W = 400;
-  const H = 360;
+  const W = 320;
+  const H = 260;
   const cx = W / 2;
-  const cy = H / 2 + 10;
-  const R = 130;
+  const cy = H / 2;
+  const R = 100;
   const axes = values.length;
 
   const webLevels = useMemo(() => {
@@ -64,13 +64,13 @@ export default function RadarChart({ parts }: RadarChartProps) {
   }, [values, axes]);
 
   return (
-    <div className="panel" style={{ padding: 20, minHeight: 300 }}>
-      <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
+    <div style={{ padding: '12px 0' }}>
+      <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>
         レーダーチャート（5項目）
       </div>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        style={{ width: '100%', height: 300 }}
+        style={{ width: '100%', height: 'auto', maxHeight: 220 }}
         aria-label="評価レーダー"
       >
         {webLevels.map((points, idx) => (

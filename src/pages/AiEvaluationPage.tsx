@@ -121,41 +121,49 @@ export default function AiEvaluationPage() {
             </div>
             <div className="badge ok">分析の信頼度: 高め</div>
           </div>
-          <div style={{ padding: '16px', minWidth: 0 }}>
-            <div className="eval-grid-2col" style={{ gap: 16, marginBottom: 16 }}>
-              <OverallScore score={scoreData.overall} rank={scoreData.rank} />
-              <RadarChart parts={scoreData.parts} />
-            </div>
+          <div style={{ padding: '12px 16px 16px', minWidth: 0 }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'auto 1fr auto',
+              gap: 20,
+              alignItems: 'start',
+              marginBottom: 16
+            }}>
+              <div style={{ minWidth: 140 }}>
+                <OverallScore score={scoreData.overall} rank={scoreData.rank} />
+              </div>
 
-            <div style={{ borderTop: '1px solid var(--line)', paddingTop: 16 }}>
-              <div className="eval-grid-2col" style={{ gap: 16 }}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 10 }}>サマリー</div>
-                  {baseMetrics.equity && baseMetrics.equity.length > 1 && (
-                    <div style={{ marginBottom: 10 }}>
-                      <Sparkline data={baseMetrics.equity} />
-                    </div>
-                  )}
-                  <div style={{ display: 'grid', gap: 6 }}>
-                    <div className="badge ok" style={{ fontSize: 12 }}>改善見込み: PF +0.18</div>
-                    <div className="badge warn" style={{ fontSize: 12 }}>DD -12%（見込み）</div>
-                    <div className="badge" style={{ fontSize: 12 }}>得意パターン: EURUSD × LDN × ブレイク</div>
+              <div style={{ borderLeft: '1px solid var(--line)', borderRight: '1px solid var(--line)', paddingLeft: 20, paddingRight: 20, minWidth: 0 }}>
+                <RadarChart parts={scoreData.parts} />
+              </div>
+
+              <div style={{ minWidth: 200 }}>
+                <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>サマリー</div>
+                {baseMetrics.equity && baseMetrics.equity.length > 1 && (
+                  <div style={{ marginBottom: 8, height: 40 }}>
+                    <Sparkline data={baseMetrics.equity} />
                   </div>
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 10 }}>
-                    まずやると良いこと
-                  </div>
-                  <ol style={{ margin: '0 0 6px 18px', lineHeight: 1.6, fontSize: 13, color: 'var(--ink)' }}>
-                    <li>利確/損切りの比率 1.2 → 1.6（PF +0.18）</li>
-                    <li>NY開始前30分は取引を控える（DD -8%）</li>
-                    <li>1回のリスク上限を 1.8% → 1.2% に見直す（連敗に強く）</li>
-                  </ol>
-                  <a href="#sec4" style={{ color: 'var(--accent)', fontSize: 13 }}>
-                    → シナリオで検証
-                  </a>
+                )}
+                <div style={{ display: 'grid', gap: 4 }}>
+                  <div className="badge ok" style={{ fontSize: 11, padding: '3px 6px' }}>改善見込み: PF +0.18</div>
+                  <div className="badge warn" style={{ fontSize: 11, padding: '3px 6px' }}>DD -12%（見込み）</div>
+                  <div className="badge" style={{ fontSize: 11, padding: '3px 6px' }}>得意: EURUSD × LDN</div>
                 </div>
               </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid var(--line)', paddingTop: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
+                まずやると良いこと
+              </div>
+              <ol style={{ margin: '0 0 6px 20px', lineHeight: 1.6, fontSize: 13, color: 'var(--ink)' }}>
+                <li>利確/損切りの比率 1.2 → 1.6（PF +0.18）</li>
+                <li>NY開始前30分は取引を控える（DD -8%）</li>
+                <li>1回のリスク上限を 1.8% → 1.2% に見直す（連敗に強く）</li>
+              </ol>
+              <a href="#sec4" style={{ color: 'var(--accent)', fontSize: 12 }}>
+                → シナリオで検証
+              </a>
             </div>
           </div>
         </section>
