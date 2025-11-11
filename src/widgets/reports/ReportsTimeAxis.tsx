@@ -183,6 +183,39 @@ export default function ReportsTimeAxis() {
       .slice(-12);
   }, [filteredTrades]);
 
+  const monthlyData = useMemo(() => {
+    const map = new Map<string, { profit: number; count: number; wins: number }>();
+    filteredTrades.forEach((t) => {
+      const date = new Date(getTradeTime(t));
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const monthKey = `${year}-${String(month).padStart(2, '0')}`;
+      const profit = getTradeProfit(t);
+      const current = map.get(monthKey) || { profit: 0, count: 0, wins: 0 };
+      map.set(monthKey, {
+        profit: current.profit + profit,
+        count: current.count + 1,
+        wins: current.wins + (profit > 0 ? 1 : 0)
+      });
+    });
+    return Array.from(map.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([month, data]) => {
+        const winRate = data.count > 0 ? (data.wins / data.count) * 100 : 0;
+        const monthTrades = filteredTrades.filter(t => {
+          const date = new Date(getTradeTime(t));
+          const year = date.getFullYear();
+          const m = date.getMonth() + 1;
+          return `${year}-${String(m).padStart(2, '0')}` === month;
+        });
+        const grossProfit = monthTrades.filter(t => getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
+        const grossLoss = Math.abs(monthTrades.filter(t => getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
+        const pf = grossLoss > 0 ? grossProfit / grossLoss : grossProfit > 0 ? 999 : 0;
+        const avgProfit = data.count > 0 ? data.profit / data.count : 0;
+        return { month, ...data, winRate, pf, avgProfit };
+      });
+  }, [filteredTrades]);
+
   const holdTimeDistribution = useMemo(() => {
     const ranges = [
       { label: "0-10分", min: 0, max: 10 },
@@ -973,6 +1006,39 @@ export default function ReportsTimeAxis() {
                   </td>
                 </tr>
               ))}
+              {monthlyData.map((m) => (
+                <tr
+                  key={m.month}
+                  style={{
+                    borderBottom: "1px solid var(--line)",
+                    height: 44,
+                    cursor: "pointer",
+                    background: "rgba(59, 130, 246, 0.05)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(59, 130, 246, 0.1)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(59, 130, 246, 0.05)")}
+                >
+                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>月別</td>
+                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{m.month}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.count}</td>
+                  <td
+                    style={{
+                      padding: 10,
+                      textAlign: "right",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: m.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                    }}
+                  >
+                    {Math.round(m.profit).toLocaleString("ja-JP")}円
+                  </td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.winRate.toFixed(0)}%</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.pf.toFixed(2)}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
+                    {Math.round(m.avgProfit).toLocaleString("ja-JP")}円
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -989,7 +1055,7 @@ export default function ReportsTimeAxis() {
               color: "var(--muted)",
             }}
           >
-            曜日・時間帯別の詳細統計
+            曜日・時間帯・月別の詳細統計
           </span>
         </div>
       </Card>
