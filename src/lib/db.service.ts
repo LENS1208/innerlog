@@ -144,10 +144,11 @@ export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> 
 
 export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>[]): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
 
   const tradesWithUser = trades.map(trade => ({
     ...trade,
-    user_id: user?.id || null,
+    user_id: user.id,
     dataset: null,
   }));
 
@@ -159,7 +160,7 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | '
 
     const { error } = await supabase
       .from('trades')
-      .upsert(batch, { onConflict: 'ticket' });
+      .upsert(batch, { onConflict: 'user_id,ticket' });
 
     if (error) throw error;
 
@@ -193,14 +194,15 @@ export async function getDailyNote(dateKey: string): Promise<DbDailyNote | null>
 
 export async function saveDailyNote(note: Omit<DbDailyNote, 'id' | 'created_at' | 'updated_at' | 'user_id'>): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
 
   const { error } = await supabase
     .from('daily_notes')
     .upsert({
       ...note,
-      user_id: user?.id || null,
+      user_id: user.id,
       updated_at: new Date().toISOString(),
-    }, { onConflict: 'date_key' });
+    }, { onConflict: 'user_id,date_key' });
 
   if (error) throw error;
 }
@@ -228,15 +230,16 @@ export async function getTradeNote(ticket: string): Promise<DbTradeNote | null> 
 
 export async function saveTradeNote(note: Omit<DbTradeNote, 'id' | 'created_at' | 'updated_at' | 'user_id'>, tradeData?: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
 
   if (tradeData) {
     const { error: tradeError } = await supabase
       .from('trades')
       .upsert({
         ...tradeData,
-        user_id: user?.id || null,
+        user_id: user.id,
         dataset: null,
-      }, { onConflict: 'ticket' });
+      }, { onConflict: 'user_id,ticket' });
 
     if (tradeError) throw tradeError;
   }
@@ -245,9 +248,9 @@ export async function saveTradeNote(note: Omit<DbTradeNote, 'id' | 'created_at' 
     .from('trade_notes')
     .upsert({
       ...note,
-      user_id: user?.id || null,
+      user_id: user.id,
       updated_at: new Date().toISOString(),
-    }, { onConflict: 'ticket' });
+    }, { onConflict: 'user_id,ticket' });
 
   if (error) throw error;
 }
