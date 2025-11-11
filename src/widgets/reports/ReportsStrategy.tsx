@@ -97,13 +97,13 @@ export default function ReportsStrategy() {
   // セットアップ抽出（comment または memo から）
   const extractSetup = (t: Trade): string => {
     const text = (t.comment || t.memo || "").toLowerCase();
-    if (text.includes("breakout") || text.includes("ブレイクアウト")) return "Breakout";
-    if (text.includes("pullback") || text.includes("プルバック")) return "Pullback";
-    if (text.includes("reversal") || text.includes("反転")) return "Reversal";
-    if (text.includes("trend") || text.includes("トレンド")) return "Trend";
-    if (text.includes("range") || text.includes("レンジ")) return "Range";
-    if (text.includes("scalp") || text.includes("スキャルプ")) return "Scalp";
-    return "デフォルト";
+    if (text.includes("breakout") || text.includes("ブレイクアウト")) return "ブレイクアウト";
+    if (text.includes("pullback") || text.includes("プルバック")) return "プルバック";
+    if (text.includes("reversal") || text.includes("反転")) return "反転";
+    if (text.includes("trend") || text.includes("トレンド")) return "トレンド";
+    if (text.includes("range") || text.includes("レンジ")) return "レンジ";
+    if (text.includes("scalp") || text.includes("スキャルプ")) return "スキャルピング";
+    return "未登録";
   };
 
   const setupData = useMemo(() => {
@@ -306,7 +306,7 @@ export default function ReportsStrategy() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            セットアップ Top
+            戦略 Top
             <HelpIcon text="最も稼げている取引パターンです。この戦略を増やすことで収益を伸ばせます。" />
           </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
@@ -318,7 +318,7 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            セットアップ Bottom
+            戦略 Bottom
             <HelpIcon text="最も損失が出ている取引パターンです。このパターンを避けるか改善する必要があります。" />
           </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
@@ -358,7 +358,7 @@ export default function ReportsStrategy() {
               負け：{formatValue(avgWinLoss.avgLoss, "profit")}
             </div>
           </div>
-          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>各セットアップ横断の平均</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>各戦略横断の平均</div>
         </div>
       </div>
 
@@ -372,9 +372,14 @@ export default function ReportsStrategy() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            セットアップ別（上位6）
+            戦略別（上位6）
             <HelpIcon text="主要6戦略の損益を比較したグラフです。どの戦略を優先すべきか判断できます。" />
           </h3>
+          {setupData.length > 0 && setupData.every(s => s.setup === "未登録") && (
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>
+              トレード日記に「取引ごとの戦略」を記録すると分析データが反映されます。
+            </div>
+          )}
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -430,7 +435,7 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            セットアップ別 平均保有時間
+            戦略別 平均保有時間
             <HelpIcon text="戦略ごとの平均ポジション保有期間です。どの戦略が時間効率が良いか分かります。" />
           </h3>
           <div style={{ height: 180 }}>
@@ -470,7 +475,7 @@ export default function ReportsStrategy() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            セットアップ別 勝率
+            戦略別 勝率
             <HelpIcon text="戦略ごとの勝率を比較したグラフです。確率論的にどの戦略が優れているか把握できます。" />
           </h3>
           <div style={{ height: 180 }}>
@@ -501,7 +506,7 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            セットアップ別 PF
+            戦略別 PF
             <HelpIcon text="戦略ごとのプロフィットファクター（総利益÷総損失）です。1.0以上なら利益が損失を上回っています。" />
           </h3>
           <div style={{ height: 180 }}>
@@ -533,7 +538,7 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            方向×セットアップ（クロス）
+            方向×戦略（クロス）
             <HelpIcon text="売買方向と戦略の組み合わせ分析です。最適な組み合わせを見つけられます。" />
           </h3>
           <div style={{ height: 180 }}>
@@ -659,7 +664,7 @@ export default function ReportsStrategy() {
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--line)" }}>
                     <th style={{ padding: "6px 8px", textAlign: "left", fontSize: 11, color: "var(--muted)" }}>順位</th>
-                    <th style={{ padding: "6px 8px", textAlign: "left", fontSize: 11, color: "var(--muted)" }}>セットアップ</th>
+                    <th style={{ padding: "6px 8px", textAlign: "left", fontSize: 11, color: "var(--muted)" }}>戦略</th>
                     <th style={{ padding: "6px 8px", textAlign: "right", fontSize: 11, color: "var(--muted)" }}>損失額</th>
                     <th style={{ padding: "6px 8px", textAlign: "right", fontSize: 11, color: "var(--muted)" }}>回数</th>
                   </tr>
@@ -691,7 +696,7 @@ export default function ReportsStrategy() {
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セグメント</th>
+                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>区分</th>
                 <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>バケット</th>
                 <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引</th>
                 <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
@@ -712,7 +717,7 @@ export default function ReportsStrategy() {
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                 >
-                  <td style={{ padding: 10, fontSize: 13 }}>セットアップ</td>
+                  <td style={{ padding: 10, fontSize: 13 }}>戦略</td>
                   <td style={{ padding: 10, fontSize: 13 }}>{s.setup}</td>
                   <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{s.count}</td>
                   <td
@@ -804,7 +809,7 @@ export default function ReportsStrategy() {
               color: "var(--muted)",
             }}
           >
-            セットアップ・方向別の詳細統計
+            戦略・方向別の詳細統計
           </span>
         </div>
       </div>
