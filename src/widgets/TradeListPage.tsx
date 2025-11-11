@@ -64,15 +64,10 @@ export default function TradeListPage() {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const { filters, dataset, useDatabase, isInitialized } = useDataset();
+  const { filters, dataset, useDatabase } = useDataset();
 
   // データ読み込み
   useEffect(() => {
-    if (!isInitialized) {
-      console.log("⏳ TradeListPage: Waiting for initialization...");
-      return;
-    }
-
     console.log("📥 TradeListPage: Loading data", { useDatabase, dataset });
     setLoading(true);
     (async () => {
@@ -118,7 +113,7 @@ export default function TradeListPage() {
       }
       setLoading(false);
     })();
-  }, [dataset, useDatabase, isInitialized]);
+  }, [dataset, useDatabase]);
 
   // バナーのボタン（fx:openUpload / fx:preset）と連携
   useEffect(() => {

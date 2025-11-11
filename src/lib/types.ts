@@ -10,10 +10,8 @@ export type Trade = {
   pips: number;
   memo?: string;
 
-  ticket?: string;
   openTime?: string;
   openPrice?: number;
-  closeTime?: string;
   closePrice?: number;
   stopPrice?: number;
   targetPrice?: number;

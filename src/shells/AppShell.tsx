@@ -246,7 +246,7 @@ function Header({
 
 // 常時バナー（右カラム上：ヘッダーの下）
 function Banner() {
-  const { dataset, setDataset, useDatabase } = useDataset();
+  const { dataset, setDataset } = useDataset();
   const [tradesCount, setTradesCount] = useState(0);
 
   useEffect(() => {
@@ -284,7 +284,7 @@ function Banner() {
       aria-label="データ操作"
       className="banner-section"
     >
-      <strong>{tradesCount > 0 ? "データセットを切り替え" : "デモデータを読み込む、またはMT4/MT5の取引履歴を追加してください"}</strong>
+      <strong>{tradesCount > 0 ? "デモデータを切り替え" : "MT4/MT5の取引履歴を追加してください"}</strong>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
         <div style={{ display: "inline-flex", border: "1px solid var(--line)", borderRadius: 999, overflow: "hidden" }}>
           {(["A", "B", "C"] as const).map((d) => (
@@ -292,7 +292,7 @@ function Banner() {
               key={d}
               onClick={() => {
                 setDataset(d);
-                window.dispatchEvent(new CustomEvent("fx:loadDemoData", { detail: d }));
+                window.dispatchEvent(new CustomEvent("fx:preset", { detail: d }));
               }}
               style={{
                 padding: "8px 12px",
@@ -609,62 +609,6 @@ export default function AppShell({ children }: Props) {
     const handler = (e: Event) => setQuickOpen((e as CustomEvent).detail ?? true);
     window.addEventListener("fx:openQuickDiary", handler);
     return () => window.removeEventListener("fx:openQuickDiary", handler);
-  }, []);
-
-  useEffect(() => {
-    const loadDemoData = async (e: Event) => {
-      const dataset = (e as CustomEvent).detail as "A" | "B" | "C";
-      console.log(`🎬 Loading demo data for dataset: ${dataset}`);
-
-      try {
-        const url = `/demo/sample/Statement_1106_ 41045484 - KAN YAMAJI.html`;
-        console.log(`📂 Fetching demo data from: ${url}`);
-
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch demo data: ${response.statusText}`);
-        }
-
-        const htmlContent = await response.text();
-        console.log('✅ HTML content fetched, parsing...');
-
-        const parsed = parseFullHtmlStatement(htmlContent);
-        console.log(`📊 Parsed HTML: ${parsed.trades.length} trades, summary:`, parsed.summary);
-
-        if (parsed.trades.length > 0) {
-          console.log('💾 Converting trades to DB format...');
-          const dbTrades = parsed.trades.map(tradeToDb);
-
-          console.log('🗑️ Deleting existing trades...');
-          await deleteAllTrades();
-
-          console.log('📥 Inserting new trades...');
-          await insertTrades(dbTrades);
-
-          console.log('💰 Upserting account summary...');
-          await upsertAccountSummary({
-            total_deposits: parsed.summary.totalDeposits,
-            total_withdrawals: parsed.summary.totalWithdrawals,
-            xm_points_earned: parsed.summary.xmPointsEarned,
-            xm_points_used: parsed.summary.xmPointsUsed,
-            total_swap: parsed.summary.totalSwap,
-            total_commission: parsed.summary.totalCommission,
-            total_profit: parsed.summary.totalProfit,
-            closed_pl: parsed.summary.closedPL,
-          });
-
-          console.log('✅ Demo data loaded successfully!');
-          window.dispatchEvent(new CustomEvent("fx:tradesUpdated"));
-          window.location.reload();
-        }
-      } catch (error) {
-        console.error('❌ Error loading demo data:', error);
-        alert('デモデータの読み込みに失敗しました: ' + (error as Error).message);
-      }
-    };
-
-    window.addEventListener("fx:loadDemoData", loadDemoData);
-    return () => window.removeEventListener("fx:loadDemoData", loadDemoData);
   }, []);
 
   return (

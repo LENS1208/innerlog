@@ -71,7 +71,6 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         text.toLowerCase().includes('position')
       )) {
         const tempHeaderIndices: { [key: string]: number } = {};
-        let priceCount = 0;
         cellTexts.forEach((text, idx) => {
           const lower = text.toLowerCase();
           if (lower.includes('ticket') || lower.includes('order')) tempHeaderIndices['ticket'] = idx;
@@ -79,18 +78,7 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
           if (lower.includes('type')) tempHeaderIndices['type'] = idx;
           if (lower.includes('size') || lower.includes('volume') || lower.includes('lot')) tempHeaderIndices['size'] = idx;
           if (lower.includes('item') || lower.includes('symbol')) tempHeaderIndices['symbol'] = idx;
-
-          // Handle Price columns - first Price is open, second Price is close
-          if (lower === 'price' || (lower.includes('price') && !lower.includes('close') && !lower.includes('open'))) {
-            if (priceCount === 0) {
-              tempHeaderIndices['openPrice'] = idx;
-              priceCount++;
-            } else if (priceCount === 1) {
-              tempHeaderIndices['closePrice'] = idx;
-              priceCount++;
-            }
-          }
-
+          if (lower.includes('price') && idx < 8 && !lower.includes('close')) tempHeaderIndices['openPrice'] = idx;
           if (lower.includes('close time') || lower.includes('closetime')) tempHeaderIndices['closeTime'] = idx;
           if (lower.includes('commission')) tempHeaderIndices['commission'] = idx;
           if (lower.includes('swap')) tempHeaderIndices['swap'] = idx;
@@ -141,11 +129,7 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         const closeTimeIdx = headerIndices['closeTime'];
         const closeTimeText = cellTexts[closeTimeIdx] || '';
 
-        // Use detected closePrice index if available, otherwise fallback to closeTime + 1
-        let closePriceIdx = headerIndices['closePrice'];
-        if (closePriceIdx === undefined) {
-          closePriceIdx = closeTimeIdx + 1;
-        }
+        let closePriceIdx = closeTimeIdx + 1;
         if (closePriceIdx >= cellTexts.length) continue;
 
         const trade: ParsedTrade = {
@@ -340,13 +324,7 @@ function parseAccountSummary(htmlText: string, trades: ParsedTrade[]): AccountSu
 }
 
 export function convertHtmlTradesToCsvFormat(trades: ParsedTrade[]): string {
-  const headers = ['Ticket', 'Open Time', 'Type', 'Size', 'Item', 'Open Price', 'Close Time', 'Close Price', 'Commission', 'Swap', 'Profit', 'Pips'];
-
-  console.log(`📝 Converting ${trades.length} trades to CSV format`);
-  if (trades.length > 0) {
-    const firstTrade = trades[0];
-    console.log(`📊 First trade: ticket=${firstTrade.ticket}, openPrice=${firstTrade.openPrice}, closePrice=${firstTrade.closePrice}, pips=${firstTrade.pips}`);
-  }
+  const headers = ['Ticket', 'Open Time', 'Type', 'Size', 'Item', 'Price', 'Close Time', 'Price', 'Commission', 'Swap', 'Profit', 'Pips'];
 
   const rows = trades.map(trade => [
     trade.ticket,
@@ -363,8 +341,5 @@ export function convertHtmlTradesToCsvFormat(trades: ParsedTrade[]): string {
     (trade.pips || 0).toFixed(1),
   ]);
 
-  const csvText = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
-  console.log(`📄 CSV sample (first 3 lines):\n${csvText.split('\n').slice(0, 3).join('\n')}`);
-
-  return csvText;
+  return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
 }

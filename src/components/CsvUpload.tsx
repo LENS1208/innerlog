@@ -24,8 +24,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
     try {
       console.log('📊 Calculating account summary from existing trades...');
 
-      const { data: { session } } = await supabase.auth.getSession();
-      const user = session?.user;
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         setMessage('認証が必要です');
         return;
@@ -177,36 +176,12 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       }
 
       const dbTrades = trades.map(tradeToDb);
-
-      if (trades.length > 0 && trades[0].ticket === '100017023') {
-        console.log(`🔄 CsvUpload - Before tradeToDb:`, {
-          ticket: trades[0].ticket,
-          openPrice: trades[0].openPrice,
-          closePrice: trades[0].closePrice,
-          pips: trades[0].pips
-        });
-        console.log(`🔄 CsvUpload - After tradeToDb:`, {
-          ticket: dbTrades[0].ticket,
-          open_price: dbTrades[0].open_price,
-          close_price: dbTrades[0].close_price,
-          pips: dbTrades[0].pips
-        });
-      }
-
       await insertTrades(dbTrades);
 
       setMessage(`${trades.length}件の取引データをアップロードしました`);
-      showToast('データをアップロードしました', 'success');
-
-      onToggleDatabase(true);
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
     } catch (error) {
       console.error('Upload error:', error);
       setMessage('アップロードに失敗しました: ' + (error as Error).message);
-      showToast('アップロードに失敗しました', 'error');
     } finally {
       setUploading(false);
       setFileInputKey(prev => prev + 1);
@@ -228,19 +203,28 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-        {dataCount > 0 && (
-          <div style={{
-            padding: '10px 14px',
-            background: '#f0fdf4',
-            border: '1px solid #86efac',
-            borderRadius: 8,
-            fontSize: 14,
-            color: '#166534',
-            fontWeight: 500,
-          }}>
-            ✅ データベースに {dataCount} 件の取引データがあります
-          </div>
-        )}
+        <label style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          cursor: 'pointer',
+          padding: '8px 12px',
+          background: 'var(--muted-bg)',
+          borderRadius: 8,
+          border: '1px solid var(--line)',
+          width: 'fit-content',
+        }}>
+          <input
+            type="checkbox"
+            checked={useDatabase}
+            onChange={(e) => onToggleDatabase(e.target.checked)}
+            style={{ width: 18, height: 18, cursor: 'pointer' }}
+          />
+          <span style={{ fontSize: 14, fontWeight: 500 }}>データベースから読み込む</span>
+          <span style={{ fontSize: 13, color: 'var(--muted)', marginLeft: 8 }}>
+            {loading ? '読み込み中...' : `${dataCount}件`}
+          </span>
+        </label>
 
         <label style={{
           display: 'inline-block',

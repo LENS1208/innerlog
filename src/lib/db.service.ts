@@ -81,16 +81,6 @@ export type DbNoteLink = {
 };
 
 export async function getAllTrades(): Promise<DbTrade[]> {
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
-
-  console.log('📥 getAllTrades: user=', user?.id || 'no user', 'session=', !!session);
-
-  if (!user) {
-    console.warn('⚠️ No authenticated user, returning empty trades');
-    return [];
-  }
-
   const PAGE_SIZE = 1000;
   let allTrades: DbTrade[] = [];
   let currentPage = 0;
@@ -103,14 +93,10 @@ export async function getAllTrades(): Promise<DbTrade[]> {
     const { data, error } = await supabase
       .from('trades')
       .select('*')
-      .eq('user_id', user.id)
       .order('close_time', { ascending: false })
       .range(start, end);
 
-    if (error) {
-      console.error('❌ Error loading trades:', error);
-      throw error;
-    }
+    if (error) throw error;
 
     if (data && data.length > 0) {
       allTrades = [...allTrades, ...data];
@@ -121,120 +107,49 @@ export async function getAllTrades(): Promise<DbTrade[]> {
     }
   }
 
-  console.log(`✅ Loaded from database: ${allTrades.length} trades for user ${user.id}`);
+  console.log(`✅ Loaded from database: ${allTrades.length} trades`);
   return allTrades;
 }
 
 export async function getTradesCount(): Promise<number> {
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
-
-  if (!user) {
-    return 0;
-  }
-
   const { count, error } = await supabase
     .from('trades')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id);
+    .select('*', { count: 'exact', head: true });
 
-  if (error) {
-    console.error('Error getting trades count:', error);
-    return 0;
-  }
-
+  if (error) throw error;
   return count || 0;
 }
 
 export async function deleteAllTrades(): Promise<void> {
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
-
-  if (!user) {
-    throw new Error('User must be authenticated to delete trades');
-  }
+  const { data: { user } } = await supabase.auth.getUser();
 
   const { error } = await supabase
     .from('trades')
     .delete()
-    .eq('user_id', user.id);
+    .neq('id', '00000000-0000-0000-0000-000000000000');
 
   if (error) throw error;
-
-  window.dispatchEvent(new Event('fx:tradesUpdated'));
 }
 
 export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> {
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
-
-  const query = supabase
+  const { data, error } = await supabase
     .from('trades')
     .select('*')
-    .eq('ticket', ticket);
-
-  if (user) {
-    query.eq('user_id', user.id);
-  } else {
-    query.is('user_id', null);
-  }
-
-  const { data, error } = await query.maybeSingle();
+    .eq('ticket', ticket)
+    .maybeSingle();
 
   if (error) throw error;
   return data;
 }
 
 export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>[]): Promise<void> {
-  const { data: { session } } = await supabase.auth.getSession();
-  const user = session?.user;
-
-  if (!user) {
-    throw new Error('User must be authenticated to insert trades');
-  }
+  const { data: { user } } = await supabase.auth.getUser();
 
   const tradesWithUser = trades.map(trade => ({
     ...trade,
-    user_id: user.id,
+    user_id: user?.id || null,
     dataset: null,
   }));
-
-  if (trades.length > 0 && trades[0].ticket === '100017023') {
-    console.log(`💾 insertTrades - First trade:`, {
-      ticket: trades[0].ticket,
-      open_price: trades[0].open_price,
-      close_price: trades[0].close_price,
-      pips: trades[0].pips,
-      open_time: trades[0].open_time,
-      close_time: trades[0].close_time
-    });
-  }
-
-  const tickets = trades.map(t => t.ticket);
-
-  console.log(`🔍 Checking for existing trades with ${tickets.length} tickets...`);
-
-  const { data: existingTrades } = await supabase
-    .from('trades')
-    .select('ticket')
-    .eq('user_id', user.id)
-    .in('ticket', tickets);
-
-  const existingTickets = new Set(existingTrades?.map(t => t.ticket) || []);
-
-  if (existingTickets.size > 0) {
-    console.log(`🗑️ Deleting ${existingTickets.size} existing trades...`);
-    const { error: deleteError } = await supabase
-      .from('trades')
-      .delete()
-      .eq('user_id', user.id)
-      .in('ticket', Array.from(existingTickets));
-
-    if (deleteError) {
-      console.error('Delete error:', deleteError);
-      throw deleteError;
-    }
-  }
 
   const BATCH_SIZE = 1000;
   let processed = 0;
@@ -244,20 +159,15 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | '
 
     const { error } = await supabase
       .from('trades')
-      .insert(batch);
+      .upsert(batch, { onConflict: 'ticket' });
 
-    if (error) {
-      console.error('Insert error:', error);
-      throw error;
-    }
+    if (error) throw error;
 
     processed += batch.length;
     console.log(`📥 Inserted batch: ${processed}/${tradesWithUser.length} trades`);
   }
 
   console.log(`✅ All trades inserted: ${tradesWithUser.length} total`);
-
-  window.dispatchEvent(new Event('fx:tradesUpdated'));
 }
 
 export async function getAllDailyNotes(): Promise<DbDailyNote[]> {
@@ -483,61 +393,22 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
     return dt.replace(/\./g, '-');
   };
 
-  const pair = trade.pair || trade.symbol || '';
-  const openPrice = trade.openPrice || 0;
-  const closePrice = trade.closePrice || 0;
-  const side = trade.side;
-
-  // Pips計算ロジック
-  let pips = trade.pips || 0;
-
-  // Pipsが0でopen/closeがある場合は自動計算
-  if (!pips && openPrice && closePrice) {
-    const isJpyCross = /JPY$/i.test(pair);
-    const mult = isJpyCross ? 100 : 10000;
-    const diff = side === 'LONG' ? (closePrice - openPrice) : (openPrice - closePrice);
-    pips = +(diff * mult).toFixed(1);
-  }
-
-  const result = {
+  return {
     ticket: trade.ticket || trade.id,
-    item: pair,
+    item: trade.pair || trade.symbol || '',
     side: trade.side,
     size: trade.volume,
     open_time: normalizeDateTime(trade.openTime || trade.datetime),
-    open_price: openPrice,
-    close_time: normalizeDateTime(trade.closeTime || trade.datetime),
-    close_price: closePrice,
+    open_price: trade.openPrice || 0,
+    close_time: normalizeDateTime(trade.datetime),
+    close_price: trade.closePrice || 0,
     commission: trade.commission || 0,
     swap: trade.swap || 0,
     profit: trade.profitYen || trade.profit || 0,
-    pips: pips,
+    pips: trade.pips,
     sl: trade.stopPrice || null,
     tp: trade.targetPrice || null,
   };
-
-  if (trade.ticket === '100017023') {
-    console.log(`💾 DB Service - Converting trade to DB format:`, {
-      input: {
-        ticket: trade.ticket,
-        openPrice: trade.openPrice,
-        closePrice: trade.closePrice,
-        pips: trade.pips,
-        openTime: trade.openTime,
-        closeTime: trade.closeTime
-      },
-      output: {
-        ticket: result.ticket,
-        open_price: result.open_price,
-        close_price: result.close_price,
-        pips: result.pips,
-        open_time: result.open_time,
-        close_time: result.close_time
-      }
-    });
-  }
-
-  return result;
 }
 
 export function dbToTrade(dbTrade: DbTrade): Trade {

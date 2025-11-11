@@ -118,17 +118,6 @@ export function parseCsvText(text: string): Trade[] {
   const iEntryFallback = iOpenPrice >= 0 ? iOpenPrice : (priceIdxs[0] ?? -1);
   const iExitFallback  = iClosePrice >= 0 ? iClosePrice : (priceIdxs[1] ?? priceIdxs[0] ?? -1);
 
-  console.log(`📋 CSV Parser - Column indices:`, {
-    ticket: iTicket,
-    openTime: iOpenTime,
-    openPrice: iOpenPrice,
-    closeTime: iCloseTime,
-    closePrice: iClosePrice,
-    iEntryFallback,
-    iExitFallback,
-    priceIdxs
-  });
-
   const body = lines.slice(1);
 
   return body.map((row, n) => {
@@ -150,27 +139,11 @@ export function parseCsvText(text: string): Trade[] {
     const profitYen = toNumLoose(get(iProfit));
     let pips   = toNumLoose(get(iPips));
 
-    if (n === 0) {
-      console.log(`📊 First trade CSV data:`, {
-        ticket: get(iTicket),
-        entry,
-        exit,
-        pips,
-        pair,
-        side,
-        rawEntry: get(iEntryFallback),
-        rawExit: get(iExitFallback)
-      });
-    }
-
     // pips 自動計算（CSVになければ Open/Close から）
     if (!pips && entry && exit) {
       const mult = isJpyCross(pair) ? 100 : 10000;
       const diff = side === "LONG" ? (exit - entry) : (entry - exit);
       pips = +(diff * mult).toFixed(1);
-      if (n === 0) {
-        console.log(`🧮 Calculated pips:`, { mult, diff, pips });
-      }
     }
 
     // 保有時間計算（分）
@@ -187,7 +160,7 @@ export function parseCsvText(text: string): Trade[] {
       }
     }
 
-    const trade = {
+    return {
       id: `csv-${n}-${closeTime}-${pair}`,
       datetime: closeTime,
       pair,
@@ -201,7 +174,6 @@ export function parseCsvText(text: string): Trade[] {
       ticket: get(iTicket),
       openTime,
       openPrice: entry || undefined,
-      closeTime,
       closePrice: exit || undefined,
       stopPrice: toNumLoose(get(iSL)) || undefined,
       targetPrice: toNumLoose(get(iTP)) || undefined,
@@ -215,18 +187,5 @@ export function parseCsvText(text: string): Trade[] {
       action: side,
       profit: profitYen,
     } as Trade;
-
-    if (n === 0) {
-      console.log(`✅ CSV Parser - Final trade object:`, {
-        ticket: trade.ticket,
-        openPrice: trade.openPrice,
-        closePrice: trade.closePrice,
-        pips: trade.pips,
-        openTime: trade.openTime,
-        closeTime: trade.closeTime
-      });
-    }
-
-    return trade;
   });
 }

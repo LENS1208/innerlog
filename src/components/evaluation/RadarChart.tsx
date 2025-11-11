@@ -98,10 +98,9 @@ export default function RadarChart({ parts }: RadarChartProps) {
             key={`label-${idx}`}
             x={pos.x}
             y={pos.y}
-            fontSize="13"
+            fontSize="11"
             textAnchor="middle"
-            fill="var(--ink)"
-            fontWeight="600"
+            fill="#9fb1c1"
           >
             {pos.label}
           </text>
