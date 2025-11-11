@@ -103,20 +103,6 @@ export default function AiProposalPage({
         </div>
       )}
 
-      <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-        <button
-          className="btn"
-          onClick={onBackToList}
-          style={{
-            background: 'var(--accent)',
-            color: '#fff',
-            fontWeight: 600,
-          }}
-        >
-          新しい予想を生成
-        </button>
-      </div>
-
       <section className="grid-ai" style={{ marginTop: 12 }}>
         <div className="list">
           <DailyActions daily={daily} />
