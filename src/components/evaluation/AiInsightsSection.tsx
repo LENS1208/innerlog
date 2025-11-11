@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { HelpIcon } from '../common/HelpIcon';
 
 type Feature = {
   name: string;
@@ -38,12 +39,10 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
           borderBottom: '1px solid var(--line)',
         }}
       >
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>AIの気づき（要点）</div>
-          <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
-            戦略クラスタ、勝率の源泉、改善提案
-          </div>
-        </div>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          AIの気づき（要点）
+          <HelpIcon text="戦略クラスタ、勝率の源泉、改善提案をAIが分析します。" />
+        </h3>
       </div>
       <div style={{ padding: '12px 16px' }}>
         <style>{`

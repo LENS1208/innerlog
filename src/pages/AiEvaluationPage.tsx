@@ -18,6 +18,7 @@ import NotesReflectionSection from '../components/evaluation/NotesReflectionSect
 import { getDataMetrics, getDataRows, INIT_CAPITAL } from '../services/demoData';
 import { useDataset } from '../lib/dataset.context';
 import { computeMetrics } from '../utils/evaluation-metrics';
+import { HelpIcon } from '../components/common/HelpIcon';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
@@ -163,12 +164,10 @@ export default function AiEvaluationPage() {
       <div style={{ display: 'grid', gap: 16, minWidth: 0 }}>
         <section className="panel">
           <div className="panel-header">
-            <div>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>総合評価</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
-                取引データから総合点とバランスを自動評価
-              </div>
-            </div>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+              総合評価
+              <HelpIcon text="取引データから総合点とバランスを自動評価します。" />
+            </h3>
             <div className="badge ok">分析の信頼度: 高め</div>
           </div>
           <div style={{ padding: '12px 16px', minWidth: 0 }}>
@@ -214,12 +213,10 @@ export default function AiEvaluationPage() {
 
         <section className="panel" id="sec2">
           <div className="panel-header">
-            <div>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>大事な数字（KPI）</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
-                成績をざっくりつかむための指標
-              </div>
-            </div>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+              大事な数字（KPI）
+              <HelpIcon text="成績をざっくりつかむための主要指標です。" />
+            </h3>
           </div>
           <div style={{ padding: '12px 16px' }}>
             <KPICards metrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
@@ -233,12 +230,10 @@ export default function AiEvaluationPage() {
 
         <section className="panel" id="sec4">
           <div className="panel-header">
-            <div>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>シミュレーション（利確/損切り）</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
-                比率やルールを変えたら、成績はどう変わる？
-              </div>
-            </div>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+              シミュレーション（利確/損切り）
+              <HelpIcon text="比率やルールを変えたら、成績はどう変わるかをシミュレーションします。" />
+            </h3>
           </div>
           <div style={{ padding: '12px 16px' }}>
             <WhatIfSimulator baseMetrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
