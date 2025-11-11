@@ -1,6 +1,9 @@
 [
   { "key": "dashboard",  "label": "ダッシュボード",     "active": true },
-  { "key": "reports",    "label": "レポート" },
+  { "key": "reports/time",    "label": "時間軸" },
+  { "key": "reports/market",    "label": "市場・銘柄" },
+  { "key": "reports/risk",    "label": "リスク・分布" },
+  { "key": "reports/strategy",    "label": "戦略・行動" },
   { "key": "ai-evaluation",   "label": "AI評価" },
   { "key": "calendar",   "label": "カレンダー" },
   { "key": "notebook",   "label": "トレード日記" },

@@ -72,11 +72,19 @@ function Header({
 
             <div style={{ fontSize: 22, fontWeight: 700 }} className="page-title">
               {(() => {
-                const k = (location.hash.replace(/^#\//, "") || "dashboard").split("/")[0];
+                const fullPath = location.hash.replace(/^#\//, "") || "dashboard";
+                const k = fullPath.split("/")[0];
                 if (!k || k === "dashboard") return "ダッシュボード";
                 if (k === "calendar") return "カレンダー";
                 if (k === "trades") return "取引一覧";
-                if (k === "reports") return "レポート";
+                if (k === "reports") {
+                  const subPath = fullPath.split("/")[1];
+                  if (subPath === "time") return "時間軸";
+                  if (subPath === "market") return "市場・銘柄";
+                  if (subPath === "risk") return "リスク・分布";
+                  if (subPath === "strategy") return "戦略・行動";
+                  return "レポート";
+                }
                 if (k === "ai-evaluation") return "AI評価";
                 if (k === "forecast" || k === "ai-proposal") return "相場予想";
                 if (k === "notebook") return "トレード日記";
@@ -313,7 +321,8 @@ function SideNav({ menu, activeKey, onUploadClick }: { menu: MenuItem[]; activeK
       <ul style={{ padding: 0, margin: 0, listStyle: "none" }}>
         {menu.map((m) => {
           const getIcon = (key: string) => {
-            switch (key) {
+            const baseKey = key.split('/')[0];
+            switch (baseKey) {
               case "dashboard":
                 return (
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -572,7 +581,10 @@ export default function AppShell({ children }: Props) {
         console.error("❌ メニュー読み込み失敗:", err);
         setMenu([
           { key: "dashboard", label: "ダッシュボード", active: true },
-          { key: "reports", label: "レポート" },
+          { key: "reports/time", label: "時間軸" },
+          { key: "reports/market", label: "市場・銘柄" },
+          { key: "reports/risk", label: "リスク・分布" },
+          { key: "reports/strategy", label: "戦略・行動" },
           { key: "ai-evaluation", label: "AI評価" },
           { key: "calendar", label: "カレンダー" },
           { key: "notebook", label: "トレード日記" },
