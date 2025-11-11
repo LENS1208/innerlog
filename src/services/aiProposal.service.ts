@@ -16,6 +16,8 @@ export type AiProposal = {
   notes: any;
   is_fixed: boolean;
   prompt: string;
+  parent_id: string | null;
+  version: number;
   created_at: string;
   updated_at: string;
 };
@@ -136,6 +138,74 @@ export async function deleteProposal(id: string): Promise<boolean> {
   }
 
   return true;
+}
+
+export async function regenerateProposal(
+  parentId: string,
+  proposalData: AiProposalData,
+  prompt: string
+): Promise<AiProposal | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
+  const parent = await getProposal(parentId);
+  if (!parent) {
+    console.error('Parent proposal not found');
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from('ai_proposals')
+    .insert({
+      user_id: user.id,
+      pair: parent.pair,
+      timeframe: parent.timeframe,
+      bias: proposalData.hero.bias,
+      confidence: proposalData.hero.confidence,
+      hero_data: proposalData.hero,
+      daily_actions: proposalData.daily,
+      scenario: proposalData.scenario,
+      ideas: proposalData.ideas,
+      factors: proposalData.factors,
+      notes: proposalData.notes,
+      is_fixed: true,
+      prompt: prompt || parent.prompt,
+      parent_id: parentId,
+      version: parent.version + 1,
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error regenerating proposal:', error);
+    return null;
+  }
+
+  return data;
+}
+
+export async function getProposalHistory(proposalId: string): Promise<AiProposal[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const proposal = await getProposal(proposalId);
+  if (!proposal) return [];
+
+  const rootId = proposal.parent_id || proposalId;
+
+  const { data, error } = await supabase
+    .from('ai_proposals')
+    .select('*')
+    .eq('user_id', user.id)
+    .or(`id.eq.${rootId},parent_id.eq.${rootId}`)
+    .order('version', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching proposal history:', error);
+    return [];
+  }
+
+  return data || [];
 }
 
 export function mapProposalToData(proposal: AiProposal): AiProposalData {

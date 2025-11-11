@@ -321,6 +321,20 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                     >
                       信頼度 {proposal.confidence}%
                     </span>
+                    {proposal.version && proposal.version > 1 && (
+                      <span
+                        style={{
+                          padding: '2px 8px',
+                          borderRadius: 4,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          background: 'rgba(168, 85, 247, 0.1)',
+                          color: 'rgb(168, 85, 247)',
+                        }}
+                      >
+                        再生成 v{proposal.version}
+                      </span>
+                    )}
                   </div>
                   <p style={{ margin: '0 0 8px 0', fontSize: 13, color: 'var(--muted)', lineHeight: 1.5 }}>
                     {proposal.prompt || '予想を生成しました'}

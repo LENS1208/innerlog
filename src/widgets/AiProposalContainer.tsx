@@ -4,6 +4,7 @@ import {
   getProposal,
   saveProposal,
   updateProposal,
+  regenerateProposal,
   mapProposalToData,
   type AiProposal,
 } from '../services/aiProposal.service';
@@ -120,7 +121,35 @@ export default function AiProposalContainer({
   }
 
   async function handleRegenerate() {
-    showToast('予想を再生成中...');
+    if (!currentProposal) {
+      showToast('予想が読み込まれていません');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      showToast('予想を再生成中...');
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const regenerated = await regenerateProposal(
+        currentProposal.id,
+        proposalData,
+        prompt
+      );
+
+      if (regenerated) {
+        showToast('予想を再生成しました');
+        location.hash = `/ai-proposal/${regenerated.id}`;
+      } else {
+        showToast('再生成に失敗しました');
+      }
+    } catch (error) {
+      console.error('Error regenerating proposal:', error);
+      showToast('再生成に失敗しました');
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleFix() {
@@ -166,6 +195,8 @@ export default function AiProposalContainer({
       pair={pair}
       timeframe={timeframe}
       targetDate={currentProposal?.created_at ? new Date(currentProposal.created_at).toISOString().split('T')[0] : undefined}
+      version={currentProposal?.version}
+      parentId={currentProposal?.parent_id}
       onGenerate={handleGenerate}
       onRegenerate={handleRegenerate}
       onFix={handleFix}

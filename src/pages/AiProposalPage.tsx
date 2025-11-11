@@ -17,6 +17,8 @@ type AiProposalPageProps = AiProposalData & AiProposalHandlers & {
   pair?: string;
   timeframe?: string;
   targetDate?: string;
+  version?: number;
+  parentId?: string | null;
 };
 
 export default function AiProposalPage({
@@ -30,6 +32,8 @@ export default function AiProposalPage({
   pair,
   timeframe,
   targetDate,
+  version,
+  parentId,
   onGenerate,
   onRegenerate,
   onFix,
@@ -57,7 +61,7 @@ export default function AiProposalPage({
             borderRadius: 12,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>入力プロンプト</span>
             {pair && (
               <span style={{
@@ -94,6 +98,39 @@ export default function AiProposalPage({
               }}>
                 {targetDate}
               </span>
+            )}
+            {version && version > 1 && (
+              <span style={{
+                padding: '2px 6px',
+                background: 'rgba(168, 85, 247, 0.1)',
+                color: 'rgb(168, 85, 247)',
+                borderRadius: 4,
+                fontSize: 11,
+                fontWeight: 600,
+              }}>
+                再生成 v{version}
+              </span>
+            )}
+            {parentId && (
+              <a
+                href={`#/ai-proposal/${parentId}`}
+                style={{
+                  padding: '2px 6px',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  color: 'rgb(168, 85, 247)',
+                  borderRadius: 4,
+                  fontSize: 11,
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  location.hash = `/ai-proposal/${parentId}`;
+                }}
+              >
+                ← 元の予想
+              </a>
             )}
           </div>
           <p style={{ margin: 0, fontSize: 13, color: 'var(--ink)', lineHeight: 1.6 }}>
