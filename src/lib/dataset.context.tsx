@@ -2,6 +2,7 @@ import React from "react";
 import { debounce } from './debounce';
 import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './urlSync';
 import { showToast } from './toast';
+import { loadUseDatabaseMode, saveUseDatabaseMode } from './storage';
 
 type DS = "A"|"B"|"C";
 export type Filters = {
@@ -32,9 +33,14 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [dataset, setDataset] = React.useState<DS>("A");
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
-  const [useDatabase, setUseDatabase] = React.useState<boolean>(false);
+  const [useDatabase, setUseDatabaseState] = React.useState<boolean>(() => loadUseDatabaseMode());
   const [loading, setLoading] = React.useState<boolean>(false);
   const previousFiltersRef = React.useRef<Filters>({});
+
+  const setUseDatabase = React.useCallback((value: boolean) => {
+    setUseDatabaseState(value);
+    saveUseDatabaseMode(value);
+  }, []);
 
   const debouncedApplyFilters = React.useMemo(
     () => debounce(async (newFilters: Filters) => {

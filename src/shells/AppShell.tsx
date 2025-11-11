@@ -246,7 +246,7 @@ function Header({
 
 // 常時バナー（右カラム上：ヘッダーの下）
 function Banner() {
-  const { dataset, setDataset } = useDataset();
+  const { dataset, setDataset, useDatabase } = useDataset();
   const [tradesCount, setTradesCount] = useState(0);
 
   useEffect(() => {
@@ -265,6 +265,10 @@ function Banner() {
     window.addEventListener('fx:tradesUpdated', handler);
     return () => window.removeEventListener('fx:tradesUpdated', handler);
   }, []);
+
+  if (useDatabase) {
+    return null;
+  }
 
   return (
     <section

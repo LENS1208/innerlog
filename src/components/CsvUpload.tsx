@@ -179,9 +179,17 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       await insertTrades(dbTrades);
 
       setMessage(`${trades.length}件の取引データをアップロードしました`);
+      showToast('データをアップロードしました', 'success');
+
+      onToggleDatabase(true);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       console.error('Upload error:', error);
       setMessage('アップロードに失敗しました: ' + (error as Error).message);
+      showToast('アップロードに失敗しました', 'error');
     } finally {
       setUploading(false);
       setFileInputKey(prev => prev + 1);
