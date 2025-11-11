@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getAllProposals, deleteProposal, saveProposal, type AiProposal } from '../services/aiProposal.service';
 import { showToast } from '../lib/toast';
 import type { AiProposalData } from '../types/ai-proposal.types';
+import { supabase } from '../lib/supabase';
 
 type AiProposalListPageProps = {
   onSelectProposal: (id: string) => void;
@@ -124,9 +125,14 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
         return;
       }
 
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('ログインが必要です');
+      }
+
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
       const headers = {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${session.access_token}`,
         'Content-Type': 'application/json',
       };
 
