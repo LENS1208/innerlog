@@ -9,13 +9,8 @@ export default function TradesTable({rows}:{rows:Row[]}){
       border:"1px solid var(--line)",
       borderRadius:12,
       background:"var(--surface)",
-      overflow:"hidden"
+      overflow:"auto"
     }}>
-      <div style={{
-        maxHeight:"70vh",
-        overflowY:"auto",
-        overflowX:"auto"
-      }}>
       <table style={{width:"100%",borderCollapse:"separate",borderSpacing:0}}>
         <thead>
           <tr>
@@ -49,7 +44,6 @@ export default function TradesTable({rows}:{rows:Row[]}){
           ))}
         </tbody>
       </table>
-      </div>
     </div>
   );
 }
