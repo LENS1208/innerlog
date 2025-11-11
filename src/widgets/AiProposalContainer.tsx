@@ -117,7 +117,48 @@ export default function AiProposalContainer({
     setPrompt(payload.prompt);
     setPair(payload.pair);
     setTimeframe(payload.timeframe);
+
+    setLoading(true);
     showToast('予想を生成中...');
+
+    try {
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: payload.prompt,
+          pair: payload.pair,
+          timeframe: payload.timeframe,
+          period: payload.period || '本日',
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'API呼び出しに失敗しました');
+      }
+
+      const generatedData = await response.json();
+      setProposalData(generatedData);
+
+      const saved = await saveProposal(generatedData, payload.prompt, payload.pair, payload.timeframe);
+      if (saved) {
+        setCurrentProposal(saved);
+        showToast('予想を生成しました');
+        location.hash = `/ai-proposal/${saved.id}`;
+      } else {
+        showToast('保存に失敗しました');
+      }
+    } catch (error) {
+      console.error('Error generating proposal:', error);
+      showToast(error instanceof Error ? error.message : '予想の生成に失敗しました');
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function handleRegenerate() {
@@ -130,11 +171,31 @@ export default function AiProposalContainer({
     try {
       showToast('予想を再生成中...');
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          pair: pair,
+          timeframe: timeframe,
+          period: '本日',
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'API呼び出しに失敗しました');
+      }
+
+      const generatedData = await response.json();
 
       const regenerated = await regenerateProposal(
         currentProposal.id,
-        proposalData,
+        generatedData,
         prompt
       );
 
@@ -146,7 +207,7 @@ export default function AiProposalContainer({
       }
     } catch (error) {
       console.error('Error regenerating proposal:', error);
-      showToast('再生成に失敗しました');
+      showToast(error instanceof Error ? error.message : '再生成に失敗しました');
     } finally {
       setLoading(false);
     }
