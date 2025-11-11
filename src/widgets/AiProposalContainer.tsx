@@ -122,6 +122,14 @@ export default function AiProposalContainer({
     showToast('予想を生成中...');
 
     try {
+      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+      if (!apiKey || apiKey === 'your_openai_api_key_here' || apiKey.startsWith('sk-proj-YOUR')) {
+        showToast('OpenAI APIキーが設定されていません。.envファイルを確認してください。');
+        setLoading(false);
+        return;
+      }
+
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -134,6 +142,7 @@ export default function AiProposalContainer({
           pair: payload.pair,
           timeframe: payload.timeframe,
           period: payload.period || '本日',
+          apiKey,
         }),
       });
 
@@ -171,6 +180,14 @@ export default function AiProposalContainer({
     try {
       showToast('予想を再生成中...');
 
+      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+      if (!apiKey || apiKey === 'your_openai_api_key_here' || apiKey.startsWith('sk-proj-YOUR')) {
+        showToast('OpenAI APIキーが設定されていません。.envファイルを確認してください。');
+        setLoading(false);
+        return;
+      }
+
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -183,6 +200,7 @@ export default function AiProposalContainer({
           pair: pair,
           timeframe: timeframe,
           period: '本日',
+          apiKey,
         }),
       });
 
