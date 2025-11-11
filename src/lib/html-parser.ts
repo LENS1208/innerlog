@@ -342,6 +342,12 @@ function parseAccountSummary(htmlText: string, trades: ParsedTrade[]): AccountSu
 export function convertHtmlTradesToCsvFormat(trades: ParsedTrade[]): string {
   const headers = ['Ticket', 'Open Time', 'Type', 'Size', 'Item', 'Open Price', 'Close Time', 'Close Price', 'Commission', 'Swap', 'Profit', 'Pips'];
 
+  console.log(`📝 Converting ${trades.length} trades to CSV format`);
+  if (trades.length > 0) {
+    const firstTrade = trades[0];
+    console.log(`📊 First trade: ticket=${firstTrade.ticket}, openPrice=${firstTrade.openPrice}, closePrice=${firstTrade.closePrice}, pips=${firstTrade.pips}`);
+  }
+
   const rows = trades.map(trade => [
     trade.ticket,
     trade.openTime,
@@ -357,5 +363,8 @@ export function convertHtmlTradesToCsvFormat(trades: ParsedTrade[]): string {
     (trade.pips || 0).toFixed(1),
   ]);
 
-  return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+  const csvText = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+  console.log(`📄 CSV sample (first 3 lines):\n${csvText.split('\n').slice(0, 3).join('\n')}`);
+
+  return csvText;
 }
