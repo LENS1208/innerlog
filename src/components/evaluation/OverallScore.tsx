@@ -7,10 +7,18 @@ type OverallScoreProps = {
 
 export default function OverallScore({ score, rank }: OverallScoreProps) {
   return (
-    <div style={{ textAlign: 'center', padding: '12px 0' }}>
+    <div style={{
+      width: '100%',
+      aspectRatio: '1 / 1',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center'
+    }}>
       <div
         style={{
-          fontSize: 13,
+          fontSize: 11,
           fontWeight: 'bold',
           color: 'var(--muted)',
           marginBottom: 8,
@@ -20,7 +28,7 @@ export default function OverallScore({ score, rank }: OverallScoreProps) {
       </div>
       <div
         style={{
-          fontSize: 56,
+          fontSize: 48,
           fontWeight: 900,
           lineHeight: 1,
         }}
@@ -30,7 +38,7 @@ export default function OverallScore({ score, rank }: OverallScoreProps) {
       <div
         style={{
           marginTop: 4,
-          fontSize: 12,
+          fontSize: 11,
           color: 'var(--muted, #6b7280)',
         }}
       >
