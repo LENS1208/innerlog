@@ -438,12 +438,15 @@ export default function ReportsRisk() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
-          <div style={{ fontSize: 14, fontWeight: 600 }}>
-            <span style={{ color: "var(--gain)" }}>+{Math.round(riskMetrics.avgWin).toLocaleString()}円</span>
-            {" / "}
-            <span style={{ color: "var(--loss)" }}>{Math.round(riskMetrics.avgLoss).toLocaleString()}円</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
+              勝ち：+{Math.round(riskMetrics.avgWin).toLocaleString()}円
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
+              負け：{Math.round(riskMetrics.avgLoss).toLocaleString()}円
+            </div>
           </div>
-          <div style={{ fontSize: 12, color: "var(--muted)" }}>分布の歪み把握</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>分布の歪み把握</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>R-multiple 平均</h3>
