@@ -355,6 +355,7 @@ export default function ReportsTimeAxis() {
       <Card
         title="保有時間別の統計"
         helpText="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたのトレードスタイルを分析できます。"
+        annotation="時間区分: 0-10分 | 10-30分 | 30-60分\n1-2h | 2-6h | 6h+"
         style={{ marginBottom: 16 }}
       >
 
