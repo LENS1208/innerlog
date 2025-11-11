@@ -6,11 +6,10 @@ import type { TradeIdea, HeroData } from '../../types/ai-proposal.types';
 type TradeIdeasTableProps = {
   ideas: TradeIdea[];
   hero: HeroData;
-  onLinkToDaily?: (ideaId: string) => void;
   onCreateTradeNote?: (ideaId: string) => void;
 };
 
-export default function TradeIdeasTable({ ideas, hero, onLinkToDaily, onCreateTradeNote }: TradeIdeasTableProps) {
+export default function TradeIdeasTable({ ideas, hero, onCreateTradeNote }: TradeIdeasTableProps) {
   const sortedIdeas = [...ideas].sort((a, b) => {
     if (hero.bias === 'BUY') {
       if (a.side === '買い' && b.side !== '買い') return -1;
@@ -52,9 +51,6 @@ export default function TradeIdeasTable({ ideas, hero, onLinkToDaily, onCreateTr
               </td>
               <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', fontSize: 13, color: 'var(--ink)' }}>{idea.confidence}</td>
               <td style={{ padding: '8px 10px', borderBottom: '1px solid var(--border)', textAlign: 'right' }}>
-                <button className="btn" style={{ marginRight: 4, fontSize: 12 }} onClick={() => onLinkToDaily?.(idea.id)}>
-                  日次ノートへ
-                </button>
                 <button className="btn" style={{ fontSize: 12 }} onClick={() => onCreateTradeNote?.(idea.id)}>
                   取引ノートを作成
                 </button>

@@ -24,7 +24,6 @@ export default function AiProposalPage({
   onGenerate,
   onRegenerate,
   onFix,
-  onLinkToDaily,
   onCreateTradeNote,
 }: AiProposalPageProps) {
   const todaysPlan = [
@@ -48,7 +47,6 @@ export default function AiProposalPage({
           <TradeIdeasTable
             ideas={ideas}
             hero={hero}
-            onLinkToDaily={onLinkToDaily}
             onCreateTradeNote={onCreateTradeNote}
           />
           <RiskNotes risks={risks} />

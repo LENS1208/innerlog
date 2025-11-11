@@ -58,6 +58,5 @@ export type AiProposalHandlers = {
   onGenerate?: (payload: any) => void;
   onRegenerate?: () => void;
   onFix?: () => void;
-  onLinkToDaily?: (ideaId: string) => void;
   onCreateTradeNote?: (ideaId: string) => void;
 };

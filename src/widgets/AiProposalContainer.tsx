@@ -1,0 +1,171 @@
+import React, { useEffect, useState } from 'react';
+import AiProposalPage from '../pages/AiProposalPage';
+import {
+  getProposal,
+  saveProposal,
+  updateProposal,
+  mapProposalToData,
+  type AiProposal,
+} from '../services/aiProposal.service';
+import type { AiProposalData } from '../types/ai-proposal.types';
+import { showToast } from '../lib/toast';
+
+type AiProposalContainerProps = {
+  proposalId?: string;
+  onBack: () => void;
+  onNavigateToTradeNote: (ideaId: string) => void;
+};
+
+const MOCK_DATA: AiProposalData = {
+  hero: {
+    pair: 'USD/JPY',
+    bias: 'SELL',
+    confidence: 72,
+    nowYen: 147.25,
+    buyEntry: '148.00',
+    sellEntry: '147.00',
+  },
+  daily: {
+    stance: '戻り売り優先',
+    session: '東京・欧州前場',
+    anchor: '147.00',
+    riskNote: 'イベント待機',
+  },
+  scenario: {
+    strong: '146.50 → 145.80 → 145.00（雇用統計ネガティブなら）',
+    base: '147.20 → 146.80 → 146.20（様子見継続）',
+    weak: '147.80 → 148.20 → 148.80（サプライズ高なら損切り）',
+  },
+  ideas: [
+    {
+      id: 'idea-1',
+      side: '売り',
+      entry: '147.00–147.20',
+      slPips: -30,
+      tpPips: 50,
+      expected: 1.67,
+      confidence: '◎',
+    },
+    {
+      id: 'idea-2',
+      side: '売り',
+      entry: '147.50–147.70',
+      slPips: -25,
+      tpPips: 40,
+      expected: 1.60,
+      confidence: '○',
+    },
+  ],
+  factors: {
+    technical: [
+      '4H足：147.50 レジスタンス反応',
+      '日足：陰線継続、下降トレンド維持',
+      'RSI：55 → やや過熱感',
+    ],
+    fundamental: [
+      '米雇用統計・金曜発表控え',
+      'FRB タカ派後退観測',
+      '日銀：据え置き濃厚',
+    ],
+    sentiment: [
+      'ポジション：円売り過多（巻き戻しリスク）',
+      'ドル高一服感、材料待ち',
+    ],
+  },
+  notes: {
+    memo: [
+      '147.00 で 4H足陰線確定なら売り増し検討',
+      '148.00 超えは損切りライン',
+      'イベント前は玉を軽めに',
+    ],
+  },
+};
+
+export default function AiProposalContainer({
+  proposalId,
+  onBack,
+  onNavigateToTradeNote,
+}: AiProposalContainerProps) {
+  const [proposalData, setProposalData] = useState<AiProposalData>(MOCK_DATA);
+  const [currentProposal, setCurrentProposal] = useState<AiProposal | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [prompt, setPrompt] = useState('');
+  const [pair, setPair] = useState('USD/JPY');
+  const [timeframe, setTimeframe] = useState('4H');
+
+  useEffect(() => {
+    if (proposalId) {
+      loadProposal(proposalId);
+    }
+  }, [proposalId]);
+
+  async function loadProposal(id: string) {
+    setLoading(true);
+    const proposal = await getProposal(id);
+    if (proposal) {
+      setCurrentProposal(proposal);
+      setProposalData(mapProposalToData(proposal));
+      setPrompt(proposal.prompt);
+      setPair(proposal.pair);
+      setTimeframe(proposal.timeframe);
+    }
+    setLoading(false);
+  }
+
+  async function handleGenerate(payload: any) {
+    setPrompt(payload.prompt);
+    setPair(payload.pair);
+    setTimeframe(payload.timeframe);
+    showToast('予想を生成中...');
+  }
+
+  async function handleRegenerate() {
+    showToast('予想を再生成中...');
+  }
+
+  async function handleFix() {
+    setLoading(true);
+    try {
+      if (currentProposal) {
+        const updated = await updateProposal(currentProposal.id, proposalData);
+        if (updated) {
+          setCurrentProposal(updated);
+          showToast('予想を更新しました');
+        }
+      } else {
+        const saved = await saveProposal(proposalData, prompt, pair, timeframe);
+        if (saved) {
+          setCurrentProposal(saved);
+          showToast('予想を保存しました');
+        }
+      }
+    } catch (error) {
+      showToast('保存に失敗しました');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading && !proposalData) {
+    return (
+      <div style={{ width: '100%', padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
+
+  return (
+    <AiProposalPage
+      hero={proposalData.hero}
+      daily={proposalData.daily}
+      scenario={proposalData.scenario}
+      ideas={proposalData.ideas}
+      factors={proposalData.factors}
+      notes={proposalData.notes}
+      onGenerate={handleGenerate}
+      onRegenerate={handleRegenerate}
+      onFix={handleFix}
+      onCreateTradeNote={onNavigateToTradeNote}
+    />
+  );
+}

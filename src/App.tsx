@@ -17,8 +17,10 @@ import AiProposalPage from "./pages/AiProposalPage";
 import AiEvaluationPage from "./pages/AiEvaluationPage";
 import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
+import AiProposalListPage from "./widgets/AiProposalListPage";
+import AiProposalContainer from "./widgets/AiProposalContainer";
 
-type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | "/ai-evaluation";
+type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | `/ai-proposal/${string}` | "/ai-evaluation";
 
 function parseHashToNewRoute(): NewRoute {
   const h = location.hash.replace(/^#/, "");
@@ -47,7 +49,8 @@ function parseHashToNewRoute(): NewRoute {
   if (h === "/notebook" || h.startsWith("/notebook/")) return h as NewRoute;
   if (h.startsWith("/settings")) return "/settings";
   if (h === "/journal-v0") return "/journal-v0";
-  if (h.startsWith("/ai-proposal")) return "/ai-proposal";
+  if (h.startsWith("/ai-proposal/")) return h as NewRoute;
+  if (h === "/ai-proposal") return "/ai-proposal";
   if (h.startsWith("/ai-evaluation")) return "/ai-evaluation";
 
   return "/dashboard";
@@ -99,74 +102,30 @@ export default function App() {
   }
   else if (route === "/settings") Page = <SettingsPage />;
   else if (route === "/ai-proposal") {
-    const mockData = {
-      hero: {
-        pair: 'USD/JPY',
-        bias: 'BUY' as const,
-        confidence: 82,
-        nowYen: 153.77,
-        buyEntry: '153.45円',
-        sellEntry: '154.20円',
-      },
-      daily: {
-        stance: '戻り売り優先',
-        session: '10:00–12:00 / 16:00–17:30',
-        anchor: 'R:148.20 / S:147.00',
-        riskNote: '要人発言・雇用ヘッドライン',
-      },
-      scenario: {
-        strong: '147.0 反発 → 148.5 ブレイクで追随',
-        base: '147.0–148.2 レンジ。方向感出るまでロット抑制',
-        weak: '146.9 明確割れで戻り売り。ターゲット 146.2',
-      },
-      ideas: [
-        {
-          id: '1',
-          side: '売り' as const,
-          entry: '147.80 抵抗戻り',
-          slPips: 15,
-          tpPips: -35,
-          expected: 0.42,
-          confidence: '◎' as const,
-        },
-        {
-          id: '2',
-          side: '買い' as const,
-          entry: '147.05 押し目',
-          slPips: -15,
-          tpPips: 30,
-          expected: 0.25,
-          confidence: '○' as const,
-        },
-      ],
-      factors: {
-        technical: [
-          'MA：短期 ＞ 長期（強気）',
-          'RSI：54（中立→やや強気）',
-          'ATR(20)：0.65%（低下傾向）',
-          '価格帯：R=148.20 / S=147.00',
-        ],
-        fundamental: [
-          'NFP 予想 +17万人（前回 +18万人）',
-          '金利据置確率：72%',
-          'Core CPI：0.2% m/m（鈍化）',
-          '日銀：据置トーン',
-        ],
-        sentiment: [
-          'ポジション：CFTC 円ショート増加',
-          '1W RR：+0.3（コール優位）',
-          'ニュース／SNS：やや強気',
-        ],
-      },
-      notes: {
-        memo: [
-          '米金利とDXYが同方向に上昇。USD買い優勢の地合い。',
-          '直近ニュース：原油下落でインフレ圧力やや低下。',
-          'オプション市場で上方向のヘッジ需要が増加。',
-        ],
-      },
-    };
-    Page = <AiProposalPage {...mockData} />;
+    Page = (
+      <AiProposalListPage
+        onSelectProposal={(id) => {
+          location.hash = `/ai-proposal/${id}`;
+        }}
+        onCreateNew={() => {
+          location.hash = '/ai-proposal/new';
+        }}
+      />
+    );
+  }
+  else if (route.startsWith("/ai-proposal/")) {
+    const proposalId = route.split("/")[2];
+    Page = (
+      <AiProposalContainer
+        proposalId={proposalId === 'new' ? undefined : proposalId}
+        onBack={() => {
+          location.hash = '/ai-proposal';
+        }}
+        onNavigateToTradeNote={(ideaId) => {
+          console.log('Navigate to trade note with idea:', ideaId);
+        }}
+      />
+    );
   }
   else if (route === "/ai-evaluation") {
     Page = <AiEvaluationPage />;
