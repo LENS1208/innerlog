@@ -32,9 +32,17 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [dataset, setDataset] = React.useState<DS>("A");
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
-  const [useDatabase, setUseDatabase] = React.useState<boolean>(false);
+  const [useDatabase, setUseDatabaseState] = React.useState<boolean>(() => {
+    const stored = localStorage.getItem('useDatabase');
+    return stored === 'true';
+  });
   const [loading, setLoading] = React.useState<boolean>(false);
   const previousFiltersRef = React.useRef<Filters>({});
+
+  const setUseDatabase = React.useCallback((value: boolean) => {
+    setUseDatabaseState(value);
+    localStorage.setItem('useDatabase', value.toString());
+  }, []);
 
   const debouncedApplyFilters = React.useMemo(
     () => debounce(async (newFilters: Filters) => {
