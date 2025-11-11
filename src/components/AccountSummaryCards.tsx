@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAccountSummary, type DbAccountSummary } from '../lib/db.service';
 import { useDataset } from '../lib/dataset.context';
+import { HelpIcon } from './common/HelpIcon';
 
 export default function AccountSummaryCards() {
   const [summary, setSummary] = useState<DbAccountSummary | null>(null);
@@ -99,7 +100,10 @@ export default function AccountSummaryCards() {
   return (
     <>
       <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>入金総額</div>
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+          入金総額
+          <HelpIcon text="口座に入金した総額です。取引資金の元手を把握するための指標です。" />
+        </div>
         <div className="kpi-value" style={{ color: '#10b981' }}>
           {summaryData.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
@@ -107,7 +111,10 @@ export default function AccountSummaryCards() {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>出金総額</div>
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+          出金総額
+          <HelpIcon text="口座から出金した総額です。利益の引き出しや資金移動の記録です。" />
+        </div>
         <div className="kpi-value" style={{ color: '#ef4444' }}>
           {summaryData.total_withdrawals.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
@@ -115,7 +122,10 @@ export default function AccountSummaryCards() {
       </div>
 
       <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>累計スワップ</div>
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+          累計スワップ
+          <HelpIcon text="ポジションを保有したことで発生したスワップポイントの総額です。プラスなら収入になります。" />
+        </div>
         <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? '#10b981' : '#ef4444' }}>
           {summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
@@ -133,7 +143,10 @@ export default function AccountSummaryCards() {
       {hasXmPoints && (
         <>
           <div className="kpi-card">
-            <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>XMポイント獲得</div>
+            <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+              XMポイント獲得
+              <HelpIcon text="XMのロイヤルティプログラムで獲得したポイントを現金化した金額です。取引に応じて貯まります。" />
+            </div>
             <div className="kpi-value" style={{ color: '#3b82f6' }}>
               {summaryData.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
             </div>
@@ -141,7 +154,10 @@ export default function AccountSummaryCards() {
           </div>
 
           <div className="kpi-card">
-            <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>XMポイント利用</div>
+            <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+              XMポイント利用
+              <HelpIcon text="獲得したXMポイントを取引口座に移して使用した金額です。ボーナスとして活用できます。" />
+            </div>
             <div className="kpi-value" style={{ color: '#8b5cf6' }}>
               {summaryData.xm_points_used.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
             </div>

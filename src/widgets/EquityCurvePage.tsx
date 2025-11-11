@@ -5,6 +5,7 @@ import { filterTrades } from "../lib/filterTrades";
 import type { Trade as FilteredTrade } from "../lib/types";
 import { parseCsvText } from "../lib/csv";
 import DashboardKPI from "./DashboardKPI";
+import { HelpIcon } from '../components/common/HelpIcon';
 import {
   EquityChart,
   DrawdownChart,
@@ -110,11 +111,17 @@ const EquityCurvePage: React.FC = () => {
             {/* 1. 累積損益とドローダウン（最重要：全体のパフォーマンス推移） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>累積損益（Equity）</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  累積損益（Equity）
+                  <HelpIcon text="取引ごとに利益や損失を積み上げたグラフです。右肩上がりなら口座残高が増えています。" />
+                </h3>
                 <EquityChart trades={filteredTrades as any} />
               </div>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>ドローダウン</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  ドローダウン
+                  <HelpIcon text="資産のピークからの下落幅を示します。リスク管理に重要な指標です。" />
+                </h3>
                 <DrawdownChart trades={filteredTrades as any} />
               </div>
             </section>
@@ -122,11 +129,17 @@ const EquityCurvePage: React.FC = () => {
             {/* 2. 日次損益と今月のトレード（時系列パフォーマンス） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>日次損益</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  日次損益
+                  <HelpIcon text="日ごとの損益合計を棒グラフで表示します。日々の成績を一目で確認できます。" />
+                </h3>
                 <DailyProfitChart trades={filteredTrades as any} />
               </div>
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>今月のトレード</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  今月のトレード
+                  <HelpIcon text="カレンダー形式で今月の取引状況を表示します。日ごとの損益と取引回数が分かります。" />
+                </h3>
                 <MonthCalendar trades={filteredTrades as any} />
               </div>
             </section>
@@ -172,7 +185,10 @@ const EquityCurvePage: React.FC = () => {
                 }}
               />
               <div className="dash-card">
-                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>直近の取引（上位/下位）</h3>
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  直近の取引（上位/下位）
+                  <HelpIcon text="損益の絶対値が大きい取引トップ5を表示します。勝ちトレードと負けトレードの傾向を把握できます。" />
+                </h3>
                 <RecentTradesTable trades={filteredTrades as any} />
               </div>
             </section>

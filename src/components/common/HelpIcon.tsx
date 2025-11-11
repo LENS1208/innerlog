@@ -60,8 +60,9 @@ export function HelpIcon({ text }: HelpIconProps) {
             maxWidth: 320,
             fontSize: 13,
             lineHeight: 1.5,
-            color: 'var(--ink)',
+            color: 'var(--muted)',
             whiteSpace: 'normal',
+            fontFamily: 'inherit',
           }}
         >
           <div

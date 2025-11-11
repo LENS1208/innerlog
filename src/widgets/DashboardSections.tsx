@@ -990,7 +990,10 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
 
   return (
     <div className="dash-card">
-      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別</h3>
+      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        セットアップ別
+        <HelpIcon text="取引のセットアップ（戦略パターン）ごとに損益を分類したグラフです。どの戦略が有効か確認できます。" />
+      </h3>
       <div style={{ height: 240, cursor: onSetupClick ? 'pointer' : 'default' }}>
         <Bar
           data={{
