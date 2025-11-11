@@ -21,11 +21,13 @@ import { computeMetrics } from '../utils/evaluation-metrics';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
-  const { dataset, useDatabase } = useDataset();
+  const { dataset, useDatabase, isInitialized } = useDataset();
   const [dataRows, setDataRows] = useState<TradeRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isInitialized) return;
+
     setLoading(true);
     (async () => {
       try {
@@ -37,7 +39,7 @@ export default function AiEvaluationPage() {
         setLoading(false);
       }
     })();
-  }, [dataset, useDatabase]);
+  }, [dataset, useDatabase, isInitialized]);
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
     if (dataRows.length === 0) {
@@ -58,6 +60,21 @@ export default function AiEvaluationPage() {
   const scoreData = useMemo(() => {
     return scoreFromMetrics(baseMetrics, 'capital', INIT_CAPITAL);
   }, [baseMetrics]);
+
+  if (!isInitialized || loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '400px',
+        fontSize: 16,
+        color: 'var(--muted)'
+      }}>
+        データを読み込んでいます...
+      </div>
+    );
+  }
 
   return (
     <div style={{ width: '100%' }}>
