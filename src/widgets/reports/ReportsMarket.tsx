@@ -8,6 +8,7 @@ import SummaryCard from "../../components/SummaryCard";
 import { supabase } from "../../lib/supabase";
 import { analyzeMarketConditions } from "../../lib/marketCondition";
 import { HelpIcon } from "../../components/common/HelpIcon";
+import Card from "../../components/common/Card";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 

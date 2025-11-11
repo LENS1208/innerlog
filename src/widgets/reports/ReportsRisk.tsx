@@ -6,6 +6,7 @@ import type { Trade } from "../../lib/types";
 import { filterTrades, getTradeProfit, getTradePair } from "../../lib/filterTrades";
 import { supabase } from "../../lib/supabase";
 import { HelpIcon } from "../../components/common/HelpIcon";
+import Card from "../../components/common/Card";
 
 type UnitType = "yen" | "r";
 
