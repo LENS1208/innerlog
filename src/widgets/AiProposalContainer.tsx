@@ -162,6 +162,10 @@ export default function AiProposalContainer({
       ideas={proposalData.ideas}
       factors={proposalData.factors}
       notes={proposalData.notes}
+      prompt={prompt}
+      pair={pair}
+      timeframe={timeframe}
+      targetDate={currentProposal?.created_at ? new Date(currentProposal.created_at).toISOString().split('T')[0] : undefined}
       onGenerate={handleGenerate}
       onRegenerate={handleRegenerate}
       onFix={handleFix}

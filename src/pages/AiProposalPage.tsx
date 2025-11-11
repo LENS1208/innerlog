@@ -12,7 +12,12 @@ import AiAdvice from '../components/ai/AiAdvice';
 import type { AiProposalData, AiProposalHandlers } from '../types/ai-proposal.types';
 import '../styles/journal-notebook.css';
 
-type AiProposalPageProps = AiProposalData & AiProposalHandlers;
+type AiProposalPageProps = AiProposalData & AiProposalHandlers & {
+  prompt?: string;
+  pair?: string;
+  timeframe?: string;
+  targetDate?: string;
+};
 
 export default function AiProposalPage({
   hero,
@@ -21,6 +26,10 @@ export default function AiProposalPage({
   ideas,
   factors,
   notes,
+  prompt,
+  pair,
+  timeframe,
+  targetDate,
   onGenerate,
   onRegenerate,
   onFix,
@@ -37,6 +46,62 @@ export default function AiProposalPage({
   return (
     <div style={{ width: '100%', padding: 16 }}>
       <HeroSummary hero={hero} />
+
+      {prompt && (
+        <div
+          style={{
+            marginTop: 12,
+            padding: 12,
+            background: 'var(--surface)',
+            border: '1px solid var(--line)',
+            borderRadius: 12,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>入力プロンプト</span>
+            {pair && (
+              <span style={{
+                padding: '2px 6px',
+                background: 'rgba(59, 130, 246, 0.1)',
+                color: 'rgb(59, 130, 246)',
+                borderRadius: 4,
+                fontSize: 11,
+                fontWeight: 600,
+              }}>
+                {pair}
+              </span>
+            )}
+            {timeframe && (
+              <span style={{
+                padding: '2px 6px',
+                background: 'rgba(59, 130, 246, 0.1)',
+                color: 'rgb(59, 130, 246)',
+                borderRadius: 4,
+                fontSize: 11,
+                fontWeight: 600,
+              }}>
+                {timeframe}
+              </span>
+            )}
+            {targetDate && (
+              <span style={{
+                padding: '2px 6px',
+                background: 'rgba(107, 114, 128, 0.1)',
+                color: 'rgb(107, 114, 128)',
+                borderRadius: 4,
+                fontSize: 11,
+                fontWeight: 600,
+              }}>
+                {targetDate}
+              </span>
+            )}
+          </div>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--ink)', lineHeight: 1.6 }}>
+            {prompt}
+          </p>
+        </div>
+      )}
+
       <PromptBar onGenerate={onGenerate} onRegenerate={onRegenerate} onFix={onFix} />
 
       <section className="grid-ai" style={{ marginTop: 12 }}>
