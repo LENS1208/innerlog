@@ -51,9 +51,23 @@ Deno.serve(async (req: Request) => {
 
     const currentDate = new Date().toISOString().split('T')[0];
 
+    let currentRate = null;
+    try {
+      const rateResponse = await fetch(`https://api.exchangerate-api.com/v4/latest/USD`);
+      if (rateResponse.ok) {
+        const rateData = await rateResponse.json();
+        if (pair === 'USD/JPY' && rateData.rates?.JPY) {
+          currentRate = rateData.rates.JPY;
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to fetch current rate:', error);
+    }
+
     const systemPrompt = `あなたはプロのFXトレーダーです。ユーザーの入力から、構造化された相場予想を生成してください。
 
 今日の日付: ${currentDate}
+${currentRate ? `現在の${pair}レート: ${currentRate.toFixed(2)}` : ''}
 
 以下のJSON形式で回答してください：
 
@@ -107,11 +121,12 @@ Deno.serve(async (req: Request) => {
 分析足: ${timeframe}
 予想期間: ${period}
 日付: ${currentDate}
+${currentRate ? `\n現在の実際の市場レート: ${currentRate.toFixed(2)}円` : ''}
 
 ユーザーの要望:
 ${prompt}
 
-注意：必ず現在の実際の市場レート（${pair}の実勢価格）を調べて、nowYenフィールドに正確な値を設定してください。`;
+注意：${currentRate ? `nowYenフィールドには上記の現在レート ${currentRate.toFixed(2)} を使用してください。` : 'nowYenフィールドには現在の実際の市場レート（${pair}の実勢価格）を設定してください。'}エントリー価格やシナリオの価格も、この現在レートを基準に現実的な値を設定してください。`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
