@@ -165,22 +165,56 @@ export default function ReportsTimeAxis() {
   }, [filteredTrades]);
 
   const weeklyData = useMemo(() => {
-    const map = new Map<string, { profit: number; count: number }>();
+    const map = new Map<string, { profit: number; count: number; wins: number }>();
     filteredTrades.forEach((t) => {
       const date = new Date(getTradeTime(t));
       const weekStart = new Date(date);
       weekStart.setDate(date.getDate() - date.getDay());
       const weekKey = weekStart.toISOString().split("T")[0];
       const profit = getTradeProfit(t);
-      const current = map.get(weekKey) || { profit: 0, count: 0 };
+      const current = map.get(weekKey) || { profit: 0, count: 0, wins: 0 };
       map.set(weekKey, {
         profit: current.profit + profit,
         count: current.count + 1,
+        wins: current.wins + (profit > 0 ? 1 : 0)
       });
     });
     return Array.from(map.entries())
       .sort((a, b) => a[0].localeCompare(b[0]))
       .slice(-12);
+  }, [filteredTrades]);
+
+  const weeklyDataForTable = useMemo(() => {
+    const map = new Map<string, { profit: number; count: number; wins: number }>();
+    filteredTrades.forEach((t) => {
+      const date = new Date(getTradeTime(t));
+      const weekStart = new Date(date);
+      weekStart.setDate(date.getDate() - date.getDay());
+      const weekKey = weekStart.toISOString().split("T")[0];
+      const profit = getTradeProfit(t);
+      const current = map.get(weekKey) || { profit: 0, count: 0, wins: 0 };
+      map.set(weekKey, {
+        profit: current.profit + profit,
+        count: current.count + 1,
+        wins: current.wins + (profit > 0 ? 1 : 0)
+      });
+    });
+    return Array.from(map.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([week, data]) => {
+        const winRate = data.count > 0 ? (data.wins / data.count) * 100 : 0;
+        const weekTrades = filteredTrades.filter(t => {
+          const date = new Date(getTradeTime(t));
+          const weekStart = new Date(date);
+          weekStart.setDate(date.getDate() - date.getDay());
+          return weekStart.toISOString().split("T")[0] === week;
+        });
+        const grossProfit = weekTrades.filter(t => getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
+        const grossLoss = Math.abs(weekTrades.filter(t => getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
+        const pf = grossLoss > 0 ? grossProfit / grossLoss : grossProfit > 0 ? 999 : 0;
+        const avgProfit = data.count > 0 ? data.profit / data.count : 0;
+        return { week, ...data, winRate, pf, avgProfit };
+      });
   }, [filteredTrades]);
 
   const monthlyData = useMemo(() => {
@@ -1006,6 +1040,39 @@ export default function ReportsTimeAxis() {
                   </td>
                 </tr>
               ))}
+              {weeklyDataForTable.map((w) => (
+                <tr
+                  key={w.week}
+                  style={{
+                    borderBottom: "1px solid var(--line)",
+                    height: 44,
+                    cursor: "pointer",
+                    background: "rgba(34, 197, 94, 0.05)",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(34, 197, 94, 0.1)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(34, 197, 94, 0.05)")}
+                >
+                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>週別</td>
+                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{w.week}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{w.count}</td>
+                  <td
+                    style={{
+                      padding: 10,
+                      textAlign: "right",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      color: w.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                    }}
+                  >
+                    {Math.round(w.profit).toLocaleString("ja-JP")}円
+                  </td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{w.winRate.toFixed(0)}%</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{w.pf.toFixed(2)}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
+                    {Math.round(w.avgProfit).toLocaleString("ja-JP")}円
+                  </td>
+                </tr>
+              ))}
               {monthlyData.map((m) => (
                 <tr
                   key={m.month}
@@ -1055,7 +1122,7 @@ export default function ReportsTimeAxis() {
               color: "var(--muted)",
             }}
           >
-            曜日・時間帯・月別の詳細統計
+            曜日・時間帯・週別・月別の詳細統計
           </span>
         </div>
       </Card>
