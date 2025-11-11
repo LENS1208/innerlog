@@ -25,7 +25,7 @@ import SetupBreakdownPanel from "../components/SetupBreakdownPanel";
 import "../lib/dashboard.css";
 const EquityCurvePage: React.FC = () => {
   console.log("🔄 EquityCurvePage render");
-  const { filters, useDatabase, dataset: contextDataset } = useDataset();
+  const { filters, useDatabase, dataset: contextDataset, isInitialized } = useDataset();
 
   const [trades, setTrades] = useState<FilteredTrade[]>([]);
   const [breakdownPanel, setBreakdownPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
@@ -36,6 +36,11 @@ const EquityCurvePage: React.FC = () => {
   const [setupPanel, setSetupPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
+    if (!isInitialized) {
+      console.log("⏳ EquityCurvePage: Waiting for initialization...");
+      return;
+    }
+
     const loadTrades = async () => {
       try {
         if (useDatabase) {
@@ -80,7 +85,7 @@ const EquityCurvePage: React.FC = () => {
     };
 
     loadTrades();
-  }, [useDatabase, contextDataset]);
+  }, [useDatabase, contextDataset, isInitialized]);
   // フィルタ適用（filterTradesを使用）
   const filteredTrades = useMemo(() => {
     return filterTrades(trades, filters);

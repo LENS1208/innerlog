@@ -212,28 +212,19 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-        <label style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          cursor: 'pointer',
-          padding: '8px 12px',
-          background: 'var(--muted-bg)',
-          borderRadius: 8,
-          border: '1px solid var(--line)',
-          width: 'fit-content',
-        }}>
-          <input
-            type="checkbox"
-            checked={useDatabase}
-            onChange={(e) => onToggleDatabase(e.target.checked)}
-            style={{ width: 18, height: 18, cursor: 'pointer' }}
-          />
-          <span style={{ fontSize: 14, fontWeight: 500 }}>データベースから読み込む</span>
-          <span style={{ fontSize: 13, color: 'var(--muted)', marginLeft: 8 }}>
-            {loading ? '読み込み中...' : `${dataCount}件`}
-          </span>
-        </label>
+        {dataCount > 0 && (
+          <div style={{
+            padding: '10px 14px',
+            background: '#f0fdf4',
+            border: '1px solid #86efac',
+            borderRadius: 8,
+            fontSize: 14,
+            color: '#166534',
+            fontWeight: 500,
+          }}>
+            ✅ データベースに {dataCount} 件の取引データがあります
+          </div>
+        )}
 
         <label style={{
           display: 'inline-block',

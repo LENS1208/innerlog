@@ -16,6 +16,7 @@ type Ctx = {
   uiFilters: Filters;
   useDatabase: boolean;
   loading: boolean;
+  isInitialized: boolean;
   setDataset: (d:DS)=>void;
   setUiFilters: (p:Partial<Filters>)=>void;
   resetFilters: ()=>void;
@@ -35,6 +36,7 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
   const [useDatabase, setUseDatabaseState] = React.useState<boolean>(() => loadUseDatabaseMode());
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [hasCheckedDatabase, setHasCheckedDatabase] = React.useState<boolean>(false);
   const previousFiltersRef = React.useRef<Filters>({});
 
   const setUseDatabase = React.useCallback((value: boolean) => {
@@ -92,12 +94,44 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  React.useEffect(() => {
+    if (hasCheckedDatabase) return;
+
+    const checkDatabaseForData = async () => {
+      try {
+        const { getTradesCount } = await import('./db.service');
+        const count = await getTradesCount();
+
+        console.log('🔍 Checking database for existing data:', count, 'trades');
+
+        if (count > 0) {
+          console.log('✅ Found', count, 'trades in database, forcing database mode');
+          if (!useDatabase) {
+            console.log('⚠️ useDatabase was false, overriding to true');
+          }
+          setUseDatabaseState(true);
+          saveUseDatabaseMode(true);
+        } else {
+          console.log('ℹ️ No trades in database, using demo data mode');
+        }
+
+        setHasCheckedDatabase(true);
+      } catch (error) {
+        console.error('Error checking database:', error);
+        setHasCheckedDatabase(true);
+      }
+    };
+
+    checkDatabaseForData();
+  }, [hasCheckedDatabase, useDatabase]);
+
   const v: Ctx = {
     dataset,
     filters,
     uiFilters,
     useDatabase,
     loading,
+    isInitialized: hasCheckedDatabase,
     setDataset,
     setUiFilters,
     resetFilters,
