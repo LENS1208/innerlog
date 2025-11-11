@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import type { TradeMetrics } from '../../types/evaluation.types';
+import { HelpIcon } from '../common/HelpIcon';
 
 type Props = {
   metrics?: TradeMetrics;
@@ -32,10 +33,10 @@ export default function DataStatusSection({ metrics }: Props) {
   return (
     <section className="panel" id="sec11">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid var(--line)' }}>
-        <div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>データの状態</div>
-          <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>入力健全性、検証ステータス</div>
-        </div>
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          データの状態
+          <HelpIcon text="入力健全性、検証ステータスを表示します。" />
+        </h3>
       </div>
       <div style={{ padding: 16 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, minWidth: 0 }}>

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import type { TradeRow } from '../../types/evaluation.types';
 import { computeEquityCurve, computeLossStreakProbabilities, findLongestLossStreak } from '../../utils/risk-analysis';
+import { HelpIcon } from '../common/HelpIcon';
 
 type Props = {
   trades?: TradeRow[];
@@ -32,12 +33,10 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
             borderBottom: '1px solid var(--line)',
           }}
         >
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>リスクのようす（DD/連敗）</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
-              エクイティカーブ、ドローダウン、連敗確率
-            </div>
-          </div>
+          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+            リスクのようす（DD/連敗）
+            <HelpIcon text="エクイティカーブ、ドローダウン、連敗確率を分析します。" />
+          </h3>
         </div>
         <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
           データがありません

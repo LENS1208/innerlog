@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import type { TradeMetrics } from '../../types/evaluation.types';
 import { generateAlerts } from '../../utils/recommendations';
+import { HelpIcon } from '../common/HelpIcon';
 
 type Props = {
   metrics?: TradeMetrics;
@@ -31,10 +32,10 @@ export default function AlertsRulesSection({ metrics }: Props) {
     return (
       <section className="panel" id="sec10">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid var(--line)' }}>
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>注意・ルール（アラート&目標）</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>アラート、目標進捗</div>
-          </div>
+          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+            注意・ルール（アラート&目標）
+            <HelpIcon text="アラート、目標進捗を表示します。" />
+          </h3>
         </div>
         <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>データがありません</div>
       </section>

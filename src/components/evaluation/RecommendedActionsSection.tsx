@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { TradeMetrics } from '../../types/evaluation.types';
 import { generateRecommendations } from '../../utils/recommendations';
+import { HelpIcon } from '../common/HelpIcon';
 
 type Props = {
   metrics?: TradeMetrics;
@@ -33,12 +34,10 @@ export default function RecommendedActionsSection({ metrics }: Props) {
             borderBottom: '1px solid var(--line)',
           }}
         >
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>おすすめ行動（3件＋理由）</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
-              優先度付き施策リスト
-            </div>
-          </div>
+          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+            おすすめ行動（3件＋理由）
+            <HelpIcon text="優先度付き施策リストです。" />
+          </h3>
         </div>
         <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
           データがありません

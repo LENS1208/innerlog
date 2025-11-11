@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import type { TradeMetrics } from '../../types/evaluation.types';
+import { HelpIcon } from '../common/HelpIcon';
 
 type Props = {
   metrics?: TradeMetrics;
@@ -47,12 +48,10 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
             borderBottom: '1px solid var(--line)',
           }}
         >
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>利確と損切りの見直し（TP/SL評価）</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
-              ストップ妥当性、利確最適化
-            </div>
-          </div>
+          <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+            利確と損切りの見直し（TP/SL評価）
+            <HelpIcon text="ストップ妥当性、利確最適化を評価します。" />
+          </h3>
         </div>
         <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
           データがありません
