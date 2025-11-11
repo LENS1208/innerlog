@@ -6,14 +6,16 @@ type Row = Record<string, any>;
 export default function TradesTable({rows}:{rows:Row[]}){
   return (
     <div style={{
-      maxHeight:"70vh",
-      overflowY:"auto",
-      overflowX:"auto",
       border:"1px solid var(--line)",
       borderRadius:12,
       background:"var(--surface)",
-      scrollbarGutter: "stable"
+      overflow:"hidden"
     }}>
+      <div style={{
+        maxHeight:"70vh",
+        overflowY:"auto",
+        overflowX:"auto"
+      }}>
       <table style={{width:"100%",borderCollapse:"separate",borderSpacing:0}}>
         <thead>
           <tr>
@@ -47,6 +49,7 @@ export default function TradesTable({rows}:{rows:Row[]}){
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
