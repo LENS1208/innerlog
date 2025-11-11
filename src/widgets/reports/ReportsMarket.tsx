@@ -7,6 +7,7 @@ import { filterTrades, getTradeProfit, getTradePair, getTradeSide } from "../../
 import SummaryCard from "../../components/SummaryCard";
 import { supabase } from "../../lib/supabase";
 import { analyzeMarketConditions } from "../../lib/marketCondition";
+import { HelpIcon } from "../../components/common/HelpIcon";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 
@@ -202,7 +203,10 @@ export default function ReportsMarket() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も稼げている通貨ペアです。得意な銘柄を見つけて取引を集中できます。">通貨ペア Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            通貨ペア Top
+            <HelpIcon text="最も稼げている通貨ペアです。得意な銘柄を見つけて取引を集中できます。" />
+          </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSymbol.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topSymbol.symbol}：{formatValue(topSymbol.profit, "profit")}
           </div>
@@ -211,7 +215,10 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も損失が出ている通貨ペアです。苦手な銘柄を避ける判断材料になります。">通貨ペア Bottom</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            通貨ペア Bottom
+            <HelpIcon text="最も損失が出ている通貨ペアです。苦手な銘柄を避ける判断材料になります。" />
+          </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSymbol.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomSymbol.symbol}：{formatValue(bottomSymbol.profit, "profit")}
           </div>
@@ -220,7 +227,10 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も稼げているpips範囲です。どのくらいの値動きが得意か把握できます。">価格帯 Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            価格帯 Top
+            <HelpIcon text="最も稼げているpips範囲です。どのくらいの値動きが得意か把握できます。" />
+          </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topPipsRange.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topPipsRange.label}：{formatValue(topPipsRange.profit, "profit")}
           </div>
@@ -229,7 +239,10 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="メジャー通貨ペアとマイナー通貨ペアの比較です。どちらが得意か確認できます。">主要通貨 vs クロス</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            主要通貨 vs クロス
+            <HelpIcon text="メジャー通貨ペアとマイナー通貨ペアの比較です。どちらが得意か確認できます。" />
+          </h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
             <span style={{ color: majorVsCrossData.major.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
               主要：{formatValue(majorVsCrossData.major.profit, "profit")}
@@ -254,7 +267,10 @@ export default function ReportsMarket() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="主要6銘柄の損益を比較したグラフです。どの銘柄を優先すべきか見えてきます。">通貨ペア別（上位6）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            通貨ペア別（上位6）
+            <HelpIcon text="主要6銘柄の損益を比較したグラフです。どの銘柄を優先すべきか見えてきます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -283,7 +299,10 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="値動きの幅ごとの損益分布です。どのくらいのボラティリティが適しているか分かります。">価格帯（pipsビン）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            価格帯（pipsビン）
+            <HelpIcon text="値動きの幅ごとの損益分布です。どのくらいのボラティリティが適しているか分かります。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -312,7 +331,10 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="基軸通貨と決済通貨ごとの損益です。通貨別の得意不得意を把握できます。">通貨（ベース/クオート別）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            通貨（ベース/クオート別）
+            <HelpIcon text="基軸通貨と決済通貨ごとの損益です。通貨別の得意不得意を把握できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -351,7 +373,10 @@ export default function ReportsMarket() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="メジャーとマイナーの損益を棒グラフで比較します。視覚的に収益性を評価できます。">主要通貨 vs クロス</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            主要通貨 vs クロス
+            <HelpIcon text="メジャーとマイナーの損益を棒グラフで比較します。視覚的に収益性を評価できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
@@ -374,7 +399,10 @@ export default function ReportsMarket() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="トレンドやレンジなど市場環境別の損益です。どの相場が得意か確認できます。">相場状態（β）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            相場状態（β）
+            <HelpIcon text="トレンドやレンジなど市場環境別の損益です。どの相場が得意か確認できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -405,7 +433,10 @@ export default function ReportsMarket() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="全通貨ペアと価格帯の詳細データテーブルです。細かい数値を確認して戦略を調整できます。">市場・銘柄 明細</h3>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+          市場・銘柄 明細
+          <HelpIcon text="全通貨ペアと価格帯の詳細データテーブルです。細かい数値を確認して戦略を調整できます。" />
+        </h3>
         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
