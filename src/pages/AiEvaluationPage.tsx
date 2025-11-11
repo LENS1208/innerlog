@@ -100,19 +100,69 @@ export default function AiEvaluationPage() {
         .panel > div {
           min-width: 0;
         }
+
+        .overall-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+          align-items: start;
+        }
+
+        @media (min-width: 640px) {
+          .overall-grid {
+            grid-template-columns: 140px 1fr;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .overall-grid {
+            grid-template-columns: 140px 280px 1fr 1fr;
+          }
+        }
+
+        .overall-section {
+          padding-left: 0;
+          border-left: none;
+        }
+
+        @media (min-width: 1024px) {
+          .overall-section {
+            padding-left: 16px;
+            border-left: 1px solid var(--line);
+          }
+        }
+
+        @media (max-width: 639px) {
+          .overall-grid > div:first-child {
+            max-width: 200px;
+            margin: 0 auto;
+          }
+        }
+
+        .panel-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 16px;
+          border-bottom: 1px solid var(--line);
+          gap: 12px;
+        }
+
+        @media (max-width: 640px) {
+          .panel-header {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .panel-header .badge {
+            align-self: flex-start;
+          }
+        }
       `}</style>
 
       <div style={{ display: 'grid', gap: 16, minWidth: 0 }}>
         <section className="panel">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '10px 16px',
-              borderBottom: '1px solid var(--line)',
-            }}
-          >
+          <div className="panel-header">
             <div>
               <div style={{ fontSize: 16, fontWeight: 700 }}>総合評価</div>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
@@ -122,21 +172,16 @@ export default function AiEvaluationPage() {
             <div className="badge ok">分析の信頼度: 高め</div>
           </div>
           <div style={{ padding: '12px 16px', minWidth: 0 }}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '140px 280px 1fr 1fr',
-              gap: 16,
-              alignItems: 'start'
-            }}>
+            <div className="overall-grid">
               <div>
                 <OverallScore score={scoreData.overall} rank={scoreData.rank} />
               </div>
 
-              <div style={{ borderLeft: '1px solid var(--line)', paddingLeft: 16 }}>
+              <div className="overall-section">
                 <RadarChart parts={scoreData.parts} />
               </div>
 
-              <div style={{ borderLeft: '1px solid var(--line)', paddingLeft: 16, minWidth: 0 }}>
+              <div className="overall-section" style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 12, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 6 }}>サマリー</div>
                 {baseMetrics.equity && baseMetrics.equity.length > 1 && (
                   <div style={{ marginBottom: 6, height: 36 }}>
@@ -150,7 +195,7 @@ export default function AiEvaluationPage() {
                 </div>
               </div>
 
-              <div style={{ borderLeft: '1px solid var(--line)', paddingLeft: 16, minWidth: 0 }}>
+              <div className="overall-section" style={{ minWidth: 0 }}>
                 <div style={{ fontSize: 12, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 6 }}>
                   まずやると良いこと
                 </div>
@@ -168,15 +213,7 @@ export default function AiEvaluationPage() {
         </section>
 
         <section className="panel" id="sec2">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '10px 16px',
-              borderBottom: '1px solid var(--line)',
-            }}
-          >
+          <div className="panel-header">
             <div>
               <div style={{ fontSize: 16, fontWeight: 700 }}>大事な数字（KPI）</div>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
@@ -195,15 +232,7 @@ export default function AiEvaluationPage() {
         </section>
 
         <section className="panel" id="sec4">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '10px 16px',
-              borderBottom: '1px solid var(--line)',
-            }}
-          >
+          <div className="panel-header">
             <div>
               <div style={{ fontSize: 16, fontWeight: 700 }}>シミュレーション（利確/損切り）</div>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
