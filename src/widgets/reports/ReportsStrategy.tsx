@@ -363,7 +363,7 @@ export default function ReportsStrategy() {
       </div>
 
       {setupData.length > 0 && setupData.every(s => s.setup === "未登録") && (
-        <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>
+        <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 8 }}>
           トレード日記に「取引ごとの戦略」を記録すると分析データが反映されます。
         </div>
       )}
