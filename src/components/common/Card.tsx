@@ -35,11 +35,12 @@ export default function Card({ title, helpText, annotation, children, className 
               padding: '4px 8px',
               borderRadius: 6,
               border: '1px solid var(--line)',
-              whiteSpace: 'pre-line',
               textAlign: 'right',
               lineHeight: 1.4
             }}>
-              {annotation}
+              {annotation.split('\n').map((line, i) => (
+                <div key={i}>{line}</div>
+              ))}
             </div>
           )}
         </div>
