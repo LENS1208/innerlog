@@ -81,6 +81,16 @@ export type DbNoteLink = {
 };
 
 export async function getAllTrades(): Promise<DbTrade[]> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
+
+  console.log('📥 getAllTrades: user=', user?.id || 'no user', 'session=', !!session);
+
+  if (!user) {
+    console.warn('⚠️ No authenticated user, returning empty trades');
+    return [];
+  }
+
   const PAGE_SIZE = 1000;
   let allTrades: DbTrade[] = [];
   let currentPage = 0;
@@ -93,10 +103,14 @@ export async function getAllTrades(): Promise<DbTrade[]> {
     const { data, error } = await supabase
       .from('trades')
       .select('*')
+      .eq('user_id', user.id)
       .order('close_time', { ascending: false })
       .range(start, end);
 
-    if (error) throw error;
+    if (error) {
+      console.error('❌ Error loading trades:', error);
+      throw error;
+    }
 
     if (data && data.length > 0) {
       allTrades = [...allTrades, ...data];
@@ -107,12 +121,13 @@ export async function getAllTrades(): Promise<DbTrade[]> {
     }
   }
 
-  console.log(`✅ Loaded from database: ${allTrades.length} trades`);
+  console.log(`✅ Loaded from database: ${allTrades.length} trades for user ${user.id}`);
   return allTrades;
 }
 
 export async function getTradesCount(): Promise<number> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
 
   if (!user) {
     return 0;
@@ -132,7 +147,8 @@ export async function getTradesCount(): Promise<number> {
 }
 
 export async function deleteAllTrades(): Promise<void> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
 
   if (!user) {
     throw new Error('User must be authenticated to delete trades');
@@ -149,7 +165,8 @@ export async function deleteAllTrades(): Promise<void> {
 }
 
 export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
 
   const query = supabase
     .from('trades')
@@ -169,7 +186,8 @@ export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> 
 }
 
 export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>[]): Promise<void> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
 
   if (!user) {
     throw new Error('User must be authenticated to insert trades');

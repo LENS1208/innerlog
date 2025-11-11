@@ -24,7 +24,8 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
     try {
       console.log('📊 Calculating account summary from existing trades...');
 
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
       if (!user) {
         setMessage('認証が必要です');
         return;
