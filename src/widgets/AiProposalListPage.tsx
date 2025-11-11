@@ -116,9 +116,25 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
     try {
       showToast('予想を生成中...');
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
+      const headers = {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      };
 
-      const newProposal = await saveProposal(MOCK_PROPOSAL_DATA, prompt, pair, timeframe);
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ prompt, pair, timeframe, period }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'API request failed');
+      }
+
+      const proposalData = await response.json();
+      const newProposal = await saveProposal(proposalData, prompt, pair, timeframe);
 
       if (newProposal) {
         showToast('予想を生成しました');
@@ -133,7 +149,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
       }
     } catch (error) {
       console.error('Error generating proposal:', error);
-      showToast('予想の生成に失敗しました');
+      showToast('予想の生成に失敗しました: ' + (error instanceof Error ? error.message : '不明なエラー'));
     } finally {
       setGenerating(false);
     }
