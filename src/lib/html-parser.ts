@@ -340,7 +340,7 @@ function parseAccountSummary(htmlText: string, trades: ParsedTrade[]): AccountSu
 }
 
 export function convertHtmlTradesToCsvFormat(trades: ParsedTrade[]): string {
-  const headers = ['Ticket', 'Open Time', 'Type', 'Size', 'Item', 'Price', 'Close Time', 'Price', 'Commission', 'Swap', 'Profit', 'Pips'];
+  const headers = ['Ticket', 'Open Time', 'Type', 'Size', 'Item', 'Open Price', 'Close Time', 'Close Price', 'Commission', 'Swap', 'Profit', 'Pips'];
 
   const rows = trades.map(trade => [
     trade.ticket,
