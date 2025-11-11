@@ -10,6 +10,14 @@ export default function AccountSummaryCards() {
 
   useEffect(() => {
     loadSummary();
+
+    const handleTradesUpdated = () => {
+      console.log('🔄 Trades updated, reloading summary...');
+      loadSummary();
+    };
+
+    window.addEventListener('fx:tradesUpdated', handleTradesUpdated);
+    return () => window.removeEventListener('fx:tradesUpdated', handleTradesUpdated);
   }, [useDatabase, dataset]);
 
   const loadSummary = async () => {

@@ -57,8 +57,9 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
           setUseDatabaseState(true);
           localStorage.setItem('useDatabase', 'true');
         } else {
-          const stored = localStorage.getItem('useDatabase');
-          setUseDatabaseState(stored === 'true');
+          console.log('📭 No trades in database, using demo data');
+          setUseDatabaseState(false);
+          localStorage.setItem('useDatabase', 'false');
         }
       } catch (error) {
         console.error('Error checking database:', error);
@@ -70,6 +71,15 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
     };
 
     checkDatabase();
+
+    const handleTradesUpdated = () => {
+      console.log('🔄 Trades updated, rechecking database...');
+      setIsInitialized(false);
+      checkDatabase();
+    };
+
+    window.addEventListener('fx:tradesUpdated', handleTradesUpdated);
+    return () => window.removeEventListener('fx:tradesUpdated', handleTradesUpdated);
   }, []);
 
   const debouncedApplyFilters = React.useMemo(

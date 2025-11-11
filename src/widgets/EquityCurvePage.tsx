@@ -36,15 +36,16 @@ const EquityCurvePage: React.FC = () => {
   const [setupPanel, setSetupPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
-    if (!isInitialized) {
-      console.log('⏳ Waiting for initialization...');
-      return;
-    }
-
     const loadTrades = async () => {
+      if (!isInitialized) {
+        console.log('⏳ Waiting for initialization...');
+        return;
+      }
+
       try {
         if (useDatabase) {
           // データベースから読み込む
+          console.log('📊 Loading trades from database...');
           const { getAllTrades } = await import('../lib/db.service');
           const data = await getAllTrades();
 
@@ -65,17 +66,21 @@ const EquityCurvePage: React.FC = () => {
             comment: t.comment || '',
           }));
 
+          console.log(`✅ Loaded ${dbTrades.length} trades from database`);
           setTrades(dbTrades);
         } else {
           // CSVから読み込む
+          console.log(`📄 Loading demo data ${contextDataset}...`);
           const cacheBuster = `?t=${Date.now()}`;
           const res = await fetch(`/demo/${contextDataset}.csv${cacheBuster}`, { cache: "no-store" });
           if (!res.ok) {
+            console.log('❌ Failed to load CSV');
             setTrades([]);
             return;
           }
           const text = await res.text();
           const parsedTrades = parseCsvText(text);
+          console.log(`✅ Loaded ${parsedTrades.length} trades from CSV`);
           setTrades(parsedTrades);
         }
       } catch (e) {

@@ -29,11 +29,11 @@ export default function FiltersBar() {
   const [loadingSymbols, setLoadingSymbols] = React.useState(false);
 
   React.useEffect(() => {
-    if (!isInitialized) {
-      return;
-    }
-
     const loadSymbols = async () => {
+      if (!isInitialized) {
+        return;
+      }
+
       setLoadingSymbols(true);
       try {
         let trades: Trade[] = [];
