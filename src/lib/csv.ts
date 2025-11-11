@@ -174,6 +174,7 @@ export function parseCsvText(text: string): Trade[] {
       ticket: get(iTicket),
       openTime,
       openPrice: entry || undefined,
+      closeTime,
       closePrice: exit || undefined,
       stopPrice: toNumLoose(get(iSL)) || undefined,
       targetPrice: toNumLoose(get(iTP)) || undefined,

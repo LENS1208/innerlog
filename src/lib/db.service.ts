@@ -495,7 +495,7 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
     size: trade.volume,
     open_time: normalizeDateTime(trade.openTime || trade.datetime),
     open_price: openPrice,
-    close_time: normalizeDateTime(trade.datetime),
+    close_time: normalizeDateTime(trade.closeTime || trade.datetime),
     close_price: closePrice,
     commission: trade.commission || 0,
     swap: trade.swap || 0,
