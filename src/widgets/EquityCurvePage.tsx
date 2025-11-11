@@ -10,6 +10,7 @@ import {
   EquityChart,
   DrawdownChart,
   DailyProfitChart,
+  MonthlyProfitChart,
   RecentTradesTable,
   MonthCalendar,
   SegmentCharts,
@@ -126,8 +127,15 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 2. 日次損益と今月のトレード（時系列パフォーマンス） */}
+            {/* 2. 月別・日次損益と今月のトレード（時系列パフォーマンス） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
+              <div className="dash-card">
+                <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  月別損益
+                  <HelpIcon text="月ごとの損益合計を棒グラフで表示します。長期トレンドと月次パフォーマンスを確認できます。" />
+                </h3>
+                <MonthlyProfitChart trades={filteredTrades as any} />
+              </div>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   日次損益
@@ -135,6 +143,10 @@ const EquityCurvePage: React.FC = () => {
                 </h3>
                 <DailyProfitChart trades={filteredTrades as any} />
               </div>
+            </section>
+
+            {/* 3. 今月のトレードカレンダー */}
+            <section style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   今月のトレード
@@ -144,7 +156,7 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 3. 損益分布と保有時間分布（トレードの特性分析） */}
+            {/* 4. 損益分布と保有時間分布（トレードの特性分析） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <ProfitDistributionChart
                 trades={filteredTrades as any}
@@ -160,7 +172,7 @@ const EquityCurvePage: React.FC = () => {
               />
             </section>
 
-            {/* 4. セグメント分析（市場条件別の詳細分析） */}
+            {/* 5. セグメント分析（市場条件別の詳細分析） */}
             <section style={{ marginBottom: 16 }}>
               <SegmentCharts
                 trades={filteredTrades as any}
@@ -176,7 +188,7 @@ const EquityCurvePage: React.FC = () => {
               />
             </section>
 
-            {/* 5. セットアップ別とベスト/ワーストトレード（戦略分析と個別取引） */}
+            {/* 6. セットアップ別とベスト/ワーストトレード（戦略分析と個別取引） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <SetupChart
                 trades={filteredTrades as any}
