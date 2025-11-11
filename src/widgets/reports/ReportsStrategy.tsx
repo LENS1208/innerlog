@@ -303,7 +303,7 @@ export default function ReportsStrategy() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も稼げている取引パターンです。この戦略を増やすことで収益を伸ばせます。">セットアップ Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topSetup.setup}：{formatValue(topSetup.profit, "profit")}
           </div>
@@ -312,7 +312,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ Bottom</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も損失が出ている取引パターンです。このパターンを避けるか改善する必要があります。">セットアップ Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomSetup.setup}：{formatValue(bottomSetup.profit, "profit")}
           </div>
@@ -321,7 +321,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向比較</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="買いと売りの損益比較です。どちらの方向が得意か確認できます。">方向比較</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 18, fontWeight: 700, color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
               買い：{formatValue(sideData.long.profit, "profit")}
@@ -335,7 +335,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="全戦略の平均損益です。利益と損失のバランスを総合的に評価できます。">平均勝ち / 平均負け</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
               勝ち：{formatValue(avgWinLoss.avgWin, "profit")}
@@ -357,7 +357,7 @@ export default function ReportsStrategy() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別（上位6）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="主要6戦略の損益を比較したグラフです。どの戦略を優先すべきか判断できます。">セットアップ別（上位6）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -386,7 +386,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>買い vs 売り</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="ロングとショートの損益比較です。方向性の得意不得意が分かります。">買い vs 売り</h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
@@ -409,7 +409,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別 平均保有時間</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="戦略ごとの平均ポジション保有期間です。どの戦略が時間効率が良いか分かります。">セットアップ別 平均保有時間</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -446,7 +446,7 @@ export default function ReportsStrategy() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別 勝率</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="戦略ごとの勝率を比較したグラフです。確率論的にどの戦略が優れているか把握できます。">セットアップ別 勝率</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -474,7 +474,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ別 PF</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="戦略ごとのプロフィットファクター（総利益÷総損失）です。1.0以上なら利益が損失を上回っています。">セットアップ別 PF</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -503,7 +503,7 @@ export default function ReportsStrategy() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向×セットアップ（クロス）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="売買方向と戦略の組み合わせ分析です。最適な組み合わせを見つけられます。">方向×セットアップ（クロス）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -583,7 +583,7 @@ export default function ReportsStrategy() {
           }}
         >
           <div>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>決済効率分布</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="決済タイミングの良し悪しの分布です。利確・損切りの改善余地を確認できます。">決済効率分布</h4>
             <div style={{ height: 180 }}>
               <Bar
                 data={{
@@ -612,7 +612,7 @@ export default function ReportsStrategy() {
           </div>
 
           <div>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>決済戦略ランキング（損失大）</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="早期決済で損失を拡大した取引リストです。決済ルールを見直すポイントが分かります。">決済戦略ランキング（損失大）</h4>
             <div style={{ maxHeight: 180, overflowY: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
                 <thead>
@@ -642,7 +642,7 @@ export default function ReportsStrategy() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>戦略・行動 明細</h3>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="全戦略と方向の詳細データテーブルです。細かい数値を確認して改善点を見つけられます。">戦略・行動 明細</h3>
         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>

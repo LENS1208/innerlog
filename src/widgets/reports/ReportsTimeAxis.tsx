@@ -519,7 +519,7 @@ export default function ReportsTimeAxis() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>曜日 Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も稼げている曜日です。この曜日に集中的に取引することで効率を上げられます。">曜日 Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topDayOfWeek.day}曜日：{formatValue(topDayOfWeek.profit, "profit")}
           </div>
@@ -552,7 +552,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>曜日 Bottom</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も損失が出ている曜日です。この曜日は取引を控える判断材料になります。">曜日 Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomDayOfWeek.day}曜日：{formatValue(bottomDayOfWeek.profit, "profit")}
           </div>
@@ -585,7 +585,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>時間帯 Top</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も稼げている時間帯です。この時間に取引することで勝率を上げられます。">時間帯 Top</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topHour.label.replace('-', '時-')}時：{formatValue(topHour.profit, "profit")}
           </div>
@@ -616,7 +616,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>時間帯 Bottom</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="最も損失が出ている時間帯です。この時間は取引を避けるべきです。">時間帯 Bottom</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomHour.label.replace('-', '時-')}時：{formatValue(bottomHour.profit, "profit")}
           </div>
@@ -657,7 +657,7 @@ export default function ReportsTimeAxis() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>曜日別</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="曜日ごとの損益を比較したグラフです。週間パターンを視覚的に把握できます。">曜日別</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -686,7 +686,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>時間帯別</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="時間帯ごとの損益を比較したグラフです1日の中で有利な時間が分かります。">時間帯別</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -713,7 +713,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>日別推移</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="日ごとの累積損益の推移グラフです。短期的な成績の変動を追跡できます。">日別推移</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -752,7 +752,7 @@ export default function ReportsTimeAxis() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>週別推移</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="週ごとの累積損益の推移グラフです。中期的なパフォーマンストレンドを確認できます。">週別推移</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -781,7 +781,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>保有時間分布</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="勝ち負け別のポジション保有時間を比較します。損切りと利確のタイミングを分析できます。">保有時間分布</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -803,7 +803,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>日別勝率</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="日ごとの勝率の推移グラフです。勝率の安定性を評価できます。">日別勝率</h3>
           <div style={{ height: 180 }}>
             <Line
               data={{
@@ -844,7 +844,7 @@ export default function ReportsTimeAxis() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>散布図：時刻×損益</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="エントリー時刻と損益の関係を点で表したグラフです。時間帯別の収益性が見えてきます。">散布図：時刻×損益</h3>
           <div style={{ height: 180 }}>
             <Scatter
               data={{
@@ -871,7 +871,7 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>散布図：保有時間×損益</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="保有期間と損益の関係を点で表したグラフです。最適な保有時間を特定できます。">散布図：保有時間×損益</h3>
           <div style={{ height: 180 }}>
             <Scatter
               data={{
@@ -898,13 +898,13 @@ export default function ReportsTimeAxis() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>連敗ヒート（時間帯）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="曜日×時間帯ごとの連敗発生頻度をヒートマップで表示します。危険な時間枠が一目で分かります。">連敗ヒート（時間帯）</h3>
           <LossStreakHeatmap trades={filteredTrades} />
         </div>
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セグメント別明細</h3>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="全曜日・時間帯の詳細データテーブルです。細かい数値を確認して取引時間を最適化できます。">セグメント別明細</h3>
         <div>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>

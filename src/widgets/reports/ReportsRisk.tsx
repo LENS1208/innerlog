@@ -363,7 +363,7 @@ export default function ReportsRisk() {
         </div>
 
         <div>
-          <h4 style={{ margin: "0 0 12px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>ロット分布（四分位点）</h4>
+          <h4 style={{ margin: "0 0 12px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="ポジションサイズの分布です。ロット管理が一貫しているか確認できます。">ロット分布（四分位点）</h4>
           <div style={{ display: "flex", gap: 16, alignItems: "center", justifyContent: "space-around", padding: "16px 0" }}>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Min</div>
@@ -402,42 +402,42 @@ export default function ReportsRisk() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>最大ドローダウン</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="資金が最も減った金額です。この数値が大きいほど、大きな含み損に耐える必要があります。">最大ドローダウン</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
             最大DD：{Math.round(drawdownData.maxDD).toLocaleString("ja-JP")}円
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>ピーク→ボトムの最大下落</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>連敗（最大）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="連続で負けた最大回数です。メンタル面の耐久力と資金管理の見直しに使います。">連敗（最大）</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
             連敗：{streakData.maxLossStreak}回
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での負け数</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>連勝（最大）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="連続で勝った最大回数です。調子が良い時期を知り、過信を防ぐ目安になります。">連勝（最大）</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
             連勝：{streakData.maxWinStreak}回
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での勝ち数</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>単取引の最大損失</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="1回の取引で出た最大の損失額です。最悪のケースを把握して損切りルールを見直せます。">単取引の最大損失</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
             最大損失：{Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")}円
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最悪1件の損失</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>単取引の最大利益</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="1回の取引で出た最大の利益額です。ベストケースを知ることで期待値を調整できます。">単取引の最大利益</h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
             最大利益：+{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")}円
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最高1件の利益</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="勝ちトレードと負けトレードの平均額です。利益と損失のバランスを確認できます。">平均勝ち / 平均負け</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
               勝ち：+{Math.round(riskMetrics.avgWin).toLocaleString()}円
@@ -449,14 +449,14 @@ export default function ReportsRisk() {
           <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>分布の歪み把握</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>R-multiple 平均</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="リスク1単位あたりのリターンです。1.0以上なら損失より利益が大きいことを示します。">R-multiple 平均</h3>
           <div style={{ fontSize: 18, fontWeight: 700 }}>
             {riskMetrics.rMultipleAvg.toFixed(2)} R/件
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>損益をRで正規化</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引数</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="分析対象の取引件数です。数が多いほど統計的に信頼できる分析になります。">取引数</h3>
           <div style={{ fontSize: 18, fontWeight: 700 }}>
             {filteredTrades.length} 件
           </div>
@@ -473,7 +473,7 @@ export default function ReportsRisk() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>損益分布（ヒストグラム）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="取引の損益を金額帯別に分類したグラフです。損益の偏りや傾向を把握できます。">損益分布（ヒストグラム）</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -504,7 +504,7 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>R-multiple 分布</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="損益をリスク単位で分類したグラフです。標準化された損益パターンを分析できます。">R-multiple 分布</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -535,7 +535,7 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>ドローダウン推移（小）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="時間経過に伴うドローダウンの変化です。資金の回復力を視覚的に確認できます。">ドローダウン推移（小）</h3>
           <div style={{ height: 180 }}>
             <Line
               data={{
@@ -578,7 +578,7 @@ export default function ReportsRisk() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>DD寄与：曜日</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="曜日別のドローダウンへの影響度です。どの曜日がリスクが高いか把握できます。">DD寄与：曜日</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -605,7 +605,7 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>DD寄与：通貨ペア</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="通貨ペア別のドローダウンへの影響度です。リスクの高い銘柄を特定できます。">DD寄与：通貨ペア</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -632,7 +632,7 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>DD寄与：セットアップ</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="戦略別のドローダウンへの影響度です。どの戦略がリスクが高いか分析できます。">DD寄与：セットアップ</h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -661,7 +661,7 @@ export default function ReportsRisk() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>テールイベント（Top/Bottom）</h3>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", cursor: "help" }} title="極端に大きな損益を記録した取引リストです。異常なケースを振り返り対策を考えられます。">テールイベント（Top/Bottom）</h3>
         <div style={{ maxHeight: "40vh", overflowY: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
