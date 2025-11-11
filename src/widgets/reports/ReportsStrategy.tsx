@@ -322,27 +322,29 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向比較</h3>
-          <div style={{ fontSize: 14, fontWeight: 600 }}>
-            <span style={{ color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
               買い：{formatValue(sideData.long.profit, "profit")}
-            </span>
-            {" / "}
-            <span style={{ color: sideData.short.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: sideData.short.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
               売り：{formatValue(sideData.short.profit, "profit")}
-            </span>
+            </div>
           </div>
-          <div style={{ fontSize: 12, color: "var(--muted)" }}>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
             PF {sideData.long.pf.toFixed(2)} / {sideData.short.pf.toFixed(2)}
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
-          <div style={{ fontSize: 14, fontWeight: 600 }}>
-            <span style={{ color: "var(--gain)" }}>勝ち：{formatValue(avgWinLoss.avgWin, "profit")}</span>
-            {" / "}
-            <span style={{ color: "var(--loss)" }}>負け：{formatValue(avgWinLoss.avgLoss, "profit")}</span>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
+              勝ち：{formatValue(avgWinLoss.avgWin, "profit")}
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
+              負け：{formatValue(avgWinLoss.avgLoss, "profit")}
+            </div>
           </div>
-          <div style={{ fontSize: 12, color: "var(--muted)" }}>各セットアップ横断の平均</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>各セットアップ横断の平均</div>
         </div>
       </div>
 
