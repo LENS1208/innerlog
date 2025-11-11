@@ -246,25 +246,11 @@ function Header({
 
 // 常時バナー（右カラム上：ヘッダーの下）
 function Banner() {
-  const { dataset, setDataset } = useDataset();
-  const [tradesCount, setTradesCount] = useState(0);
+  const { dataset, setDataset, useDatabase, dataCount } = useDataset();
 
-  useEffect(() => {
-    const checkTradesCount = async () => {
-      try {
-        const count = await getTradesCount();
-        setTradesCount(count);
-      } catch (error) {
-        console.error('取引履歴の件数取得に失敗:', error);
-      }
-    };
-
-    checkTradesCount();
-
-    const handler = () => checkTradesCount();
-    window.addEventListener('fx:tradesUpdated', handler);
-    return () => window.removeEventListener('fx:tradesUpdated', handler);
-  }, []);
+  if (useDatabase && dataCount > 0) {
+    return null;
+  }
 
   return (
     <section
@@ -284,8 +270,9 @@ function Banner() {
       aria-label="データ操作"
       className="banner-section"
     >
-      <strong>{tradesCount > 0 ? "デモデータを切り替え" : "MT4/MT5の取引履歴を追加してください"}</strong>
+      <strong>MT4/MT5の取引履歴を追加してください</strong>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <span style={{ fontSize: 13, color: '#92400e' }}>デモデータ:</span>
         <div style={{ display: "inline-flex", border: "1px solid var(--line)", borderRadius: 999, overflow: "hidden" }}>
           {(["A", "B", "C"] as const).map((d) => (
             <button

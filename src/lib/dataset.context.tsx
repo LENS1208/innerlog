@@ -2,6 +2,7 @@ import React from "react";
 import { debounce } from './debounce';
 import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './urlSync';
 import { showToast } from './toast';
+import { getTradesCount } from './db.service';
 
 type DS = "A"|"B"|"C";
 export type Filters = {
@@ -15,6 +16,8 @@ type Ctx = {
   uiFilters: Filters;
   useDatabase: boolean;
   loading: boolean;
+  isInitialized: boolean;
+  dataCount: number;
   setDataset: (d:DS)=>void;
   setUiFilters: (p:Partial<Filters>)=>void;
   resetFilters: ()=>void;
@@ -32,16 +35,41 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [dataset, setDataset] = React.useState<DS>("A");
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
-  const [useDatabase, setUseDatabaseState] = React.useState<boolean>(() => {
-    const stored = localStorage.getItem('useDatabase');
-    return stored === 'true';
-  });
+  const [useDatabase, setUseDatabaseState] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = React.useState<boolean>(false);
+  const [dataCount, setDataCount] = React.useState<number>(0);
   const previousFiltersRef = React.useRef<Filters>({});
 
   const setUseDatabase = React.useCallback((value: boolean) => {
     setUseDatabaseState(value);
     localStorage.setItem('useDatabase', value.toString());
+  }, []);
+
+  React.useEffect(() => {
+    const checkDatabase = async () => {
+      try {
+        const count = await getTradesCount();
+        setDataCount(count);
+
+        if (count > 0) {
+          console.log(`📊 Database has ${count} trades, switching to database mode`);
+          setUseDatabaseState(true);
+          localStorage.setItem('useDatabase', 'true');
+        } else {
+          const stored = localStorage.getItem('useDatabase');
+          setUseDatabaseState(stored === 'true');
+        }
+      } catch (error) {
+        console.error('Error checking database:', error);
+        const stored = localStorage.getItem('useDatabase');
+        setUseDatabaseState(stored === 'true');
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+
+    checkDatabase();
   }, []);
 
   const debouncedApplyFilters = React.useMemo(
@@ -100,6 +128,8 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
     uiFilters,
     useDatabase,
     loading,
+    isInitialized,
+    dataCount,
     setDataset,
     setUiFilters,
     resetFilters,

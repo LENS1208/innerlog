@@ -20,7 +20,7 @@ function loadData(ds: "A" | "B" | "C"): Promise<Trade[]> {
 }
 
 export default function FiltersBar() {
-  const { uiFilters, setUiFilters, dataset, useDatabase } = useDataset();
+  const { uiFilters, setUiFilters, dataset, useDatabase, isInitialized } = useDataset();
   const [datePreset, setDatePreset] = React.useState<DatePreset>("all");
   const [showModal, setShowModal] = React.useState(false);
   const [tempFrom, setTempFrom] = React.useState("");
@@ -29,6 +29,10 @@ export default function FiltersBar() {
   const [loadingSymbols, setLoadingSymbols] = React.useState(false);
 
   React.useEffect(() => {
+    if (!isInitialized) {
+      return;
+    }
+
     const loadSymbols = async () => {
       setLoadingSymbols(true);
       try {
@@ -94,7 +98,7 @@ export default function FiltersBar() {
     };
 
     loadSymbols();
-  }, [dataset, useDatabase]);
+  }, [dataset, useDatabase, isInitialized]);
 
   const getPresetLabel = () => {
     switch(datePreset) {
