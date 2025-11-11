@@ -20,6 +20,17 @@ export default function ReportsStrategy() {
           const { getAllTrades } = await import('../../lib/db.service');
           const data = await getAllTrades();
 
+          const { data: notesData } = await supabase
+            .from('trade_notes')
+            .select('ticket, entry_basis');
+
+          const notesMap = new Map(
+            (notesData || []).map((n: any) => [
+              n.ticket,
+              n.entry_basis?.setup || ''
+            ])
+          );
+
           const normalizeSide = (side: string): 'LONG' | 'SHORT' => {
             const s = side?.toUpperCase();
             if (s === 'BUY' || s === 'LONG') return 'LONG';
@@ -40,28 +51,31 @@ export default function ReportsStrategy() {
             return undefined;
           };
 
-          const mapped: Trade[] = (data || []).map((t: any) => ({
-            id: t.ticket,
-            datetime: t.close_time,
-            pair: t.item,
-            side: normalizeSide(t.side),
-            volume: Number(t.size),
-            profitYen: Number(t.profit),
-            pips: Number(t.pips || 0),
-            openTime: t.open_time,
-            openPrice: Number(t.open_price),
-            closePrice: Number(t.close_price),
-            stopPrice: t.sl ? Number(t.sl) : undefined,
-            targetPrice: t.tp ? Number(t.tp) : undefined,
-            commission: Number(t.commission || 0),
-            swap: Number(t.swap || 0),
-            symbol: t.item,
-            action: normalizeSide(t.side),
-            profit: Number(t.profit),
-            comment: t.comment || '',
-            memo: t.memo || '',
-            holdTimeMin: calculateHoldTime(t.open_time, t.close_time),
-          }));
+          const mapped: Trade[] = (data || []).map((t: any) => {
+            const setup = notesMap.get(t.ticket) || '';
+            return {
+              id: t.ticket,
+              datetime: t.close_time,
+              pair: t.item,
+              side: normalizeSide(t.side),
+              volume: Number(t.size),
+              profitYen: Number(t.profit),
+              pips: Number(t.pips || 0),
+              openTime: t.open_time,
+              openPrice: Number(t.open_price),
+              closePrice: Number(t.close_price),
+              stopPrice: t.sl ? Number(t.sl) : undefined,
+              targetPrice: t.tp ? Number(t.tp) : undefined,
+              commission: Number(t.commission || 0),
+              swap: Number(t.swap || 0),
+              symbol: t.item,
+              action: normalizeSide(t.side),
+              profit: Number(t.profit),
+              comment: setup ? setup : (t.comment || ''),
+              memo: t.memo || '',
+              holdTimeMin: calculateHoldTime(t.open_time, t.close_time),
+            };
+          });
           setTrades(mapped);
         } else {
           const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: "no-store" });
@@ -87,7 +101,7 @@ export default function ReportsStrategy() {
     if (text.includes("trend") || text.includes("トレンド")) return "Trend";
     if (text.includes("range") || text.includes("レンジ")) return "Range";
     if (text.includes("scalp") || text.includes("スキャルプ")) return "Scalp";
-    return "Other";
+    return "デフォルト";
   };
 
   const setupData = useMemo(() => {
