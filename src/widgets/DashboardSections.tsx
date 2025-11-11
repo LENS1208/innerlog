@@ -3,6 +3,7 @@ import { Line, Bar } from 'react-chartjs-2'
 import { ja } from 'date-fns/locale'
 import type { Trade } from '../lib/types'
 import '../lib/dashboard.css'
+import { HelpIcon } from '../components/common/HelpIcon'
 
 type TradeWithProfit = {
   profitYen?: number
@@ -894,15 +895,24 @@ export function SegmentCharts({ trades, onWeekdayClick, onTimeClick, onPairClick
   return (
     <div className="dash-row-3">
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>曜日別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          曜日別
+          <HelpIcon text="曜日ごとの損益を比較したグラフです。週間パターンを視覚的に把握できます。" />
+        </h3>
         <WeekdayChart trades={trades} onWeekdayClick={onWeekdayClick} />
       </div>
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>時間帯別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          時間帯別
+          <HelpIcon text="時間帯ごとの損益を比較したグラフです1日の中で有利な時間が分かります。" />
+        </h3>
         <TimeOfDayChart trades={trades} onTimeClick={onTimeClick} />
       </div>
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>通貨ペア別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+          通貨ペア別
+          <HelpIcon text="通貨ペアごとの損益を比較したグラフです。どの銘柄が得意か確認できます。" />
+        </h3>
         <CurrencyPairChart trades={trades} onPairClick={onPairClick} />
       </div>
     </div>
@@ -1121,7 +1131,10 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
 
   return (
     <div className="dash-card" style={{ cursor: onRangeClick ? 'pointer' : 'default' }}>
-      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>損益分布</h3>
+      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+        損益分布
+        <HelpIcon text="取引の損益を金額帯別に分類したグラフです。損益の偏りや傾向を把握できます。" />
+      </h3>
       <div style={{ height: 360, minWidth: 0, width: '100%' }}>
         {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
       </div>
@@ -1238,7 +1251,10 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
 
   return (
     <div className="dash-card" style={{ cursor: onRangeClick ? 'pointer' : 'default' }}>
-      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>保有時間分布</h3>
+      <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+        保有時間分布
+        <HelpIcon text="勝ち負け別のポジション保有時間を比較します。損切りと利確のタイミングを分析できます。" />
+      </h3>
       <div style={{ height: 360, minWidth: 0, width: '100%' }}>
         {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
       </div>
