@@ -222,78 +222,165 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 12,
+          gap: 20,
           marginBottom: 20,
-          padding: 16,
-          background: 'var(--surface)',
-          border: '1px solid var(--line)',
-          borderRadius: 16,
+          padding: 24,
+          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
+          border: '2px solid var(--accent)',
+          borderRadius: 20,
+          boxShadow: '0 4px 20px rgba(59, 130, 246, 0.08)',
         }}
       >
-        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--ink)' }}>
-          新しい予想を生成
-        </h3>
-
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', width: '100%' }}>
-          <input
-            className="btn"
-            style={{ flex: 1, minWidth: 220, boxSizing: 'border-box' }}
-            placeholder="例）イベント控え、ややドル高のアイデア"
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            disabled={generating}
-          />
-          <select
-            className="btn"
-            value={pair}
-            onChange={(e) => setPair(e.target.value)}
-            style={{ boxSizing: 'border-box', minWidth: 120 }}
-            disabled={generating}
-          >
-            <option value="" disabled>銘柄</option>
-            <option>USD/JPY</option>
-            <option>EUR/USD</option>
-            <option>GBP/JPY</option>
-            <option>EUR/JPY</option>
-            <option>GBP/USD</option>
-          </select>
-          <select
-            className="btn"
-            value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value)}
-            style={{ boxSizing: 'border-box', minWidth: 100 }}
-            disabled={generating}
-          >
-            <option value="" disabled>分析足</option>
-            <option>1H</option>
-            <option>4H</option>
-            <option>1D</option>
-          </select>
-          <select
-            className="btn"
-            value={period}
-            onChange={(e) => setPeriod(e.target.value)}
-            style={{ boxSizing: 'border-box', minWidth: 140 }}
-            disabled={generating}
-          >
-            <option value="" disabled>予想期間</option>
-            <option value="短期">短期（24時間）</option>
-            <option value="中期">中期（1週間）</option>
-            <option value="長期">長期（1ヶ月）</option>
-          </select>
-          <button
-            className="btn"
-            onClick={handleGenerate}
-            disabled={generating}
-            style={{
-              background: generating ? 'var(--muted)' : 'var(--accent)',
-              color: '#fff',
-              fontWeight: 600,
-            }}
-          >
-            {generating ? '生成中...' : '提案を生成'}
-          </button>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 16px',
+            background: 'rgba(59, 130, 246, 0.08)',
+            borderRadius: 12,
+            marginBottom: 8,
+          }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 1v6m0 6v6"></path>
+              <path d="M16.24 7.76l-2.12 2.12m-4.24 4.24l-2.12 2.12"></path>
+              <path d="M21 12h-6m-6 0H3"></path>
+              <path d="M16.24 16.24l-2.12-2.12m-4.24-4.24l-2.12-2.12"></path>
+            </svg>
+            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 'bold', color: 'var(--accent)' }}>
+              新しい予想を生成
+            </h3>
+          </div>
+          <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>
+            相場状況やトレードアイデアを入力してAIに分析を依頼できます
+          </p>
         </div>
+
+        <div style={{ display: 'grid', gap: 12 }}>
+          <div>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+              分析内容・トレードアイデア
+            </label>
+            <textarea
+              className="btn"
+              style={{
+                width: '100%',
+                minHeight: 80,
+                boxSizing: 'border-box',
+                resize: 'vertical',
+                fontFamily: 'inherit',
+                fontSize: 14,
+                lineHeight: 1.5,
+              }}
+              placeholder="例）USDJPY、イベント控えでボラが低い。147.00近辺でレジスタンス確認。戻り売りのシナリオを検討したい。"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              disabled={generating}
+            />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+                銘柄
+              </label>
+              <select
+                className="btn"
+                value={pair}
+                onChange={(e) => setPair(e.target.value)}
+                style={{ width: '100%', boxSizing: 'border-box' }}
+                disabled={generating}
+              >
+                <option value="" disabled>選択してください</option>
+                <option>USD/JPY</option>
+                <option>EUR/USD</option>
+                <option>GBP/JPY</option>
+                <option>EUR/JPY</option>
+                <option>GBP/USD</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+                分析足
+              </label>
+              <select
+                className="btn"
+                value={timeframe}
+                onChange={(e) => setTimeframe(e.target.value)}
+                style={{ width: '100%', boxSizing: 'border-box' }}
+                disabled={generating}
+              >
+                <option value="" disabled>選択してください</option>
+                <option>1H</option>
+                <option>4H</option>
+                <option>1D</option>
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+                予想期間
+              </label>
+              <select
+                className="btn"
+                value={period}
+                onChange={(e) => setPeriod(e.target.value)}
+                style={{ width: '100%', boxSizing: 'border-box' }}
+                disabled={generating}
+              >
+                <option value="" disabled>選択してください</option>
+                <option value="短期">短期（24時間）</option>
+                <option value="中期">中期（1週間）</option>
+                <option value="長期">長期（1ヶ月）</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button
+          className="btn"
+          onClick={handleGenerate}
+          disabled={generating}
+          style={{
+            width: '100%',
+            padding: '14px 24px',
+            background: generating ? 'var(--muted)' : 'var(--accent)',
+            color: '#fff',
+            fontWeight: 700,
+            fontSize: 15,
+            borderRadius: 12,
+            boxShadow: generating ? 'none' : '0 2px 8px rgba(59, 130, 246, 0.3)',
+            transition: 'all 0.2s',
+          }}
+        >
+          {generating ? (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <span style={{
+                width: 16,
+                height: 16,
+                border: '2px solid rgba(255,255,255,0.3)',
+                borderTopColor: '#fff',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }}></span>
+              生成中...
+            </span>
+          ) : (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 1v6m0 6v6"></path>
+                <path d="M16.24 7.76l-2.12 2.12m-4.24 4.24l-2.12 2.12"></path>
+                <path d="M21 12h-6m-6 0H3"></path>
+                <path d="M16.24 16.24l-2.12-2.12m-4.24-4.24l-2.12-2.12"></path>
+              </svg>
+              AIに予想を生成してもらう
+            </span>
+          )}
+        </button>
+        <style>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
       </section>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
