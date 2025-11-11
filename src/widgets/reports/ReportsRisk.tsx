@@ -337,17 +337,19 @@ export default function ReportsRisk() {
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>リスクリワード比（設計）</h4>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
-              {designedRR.toFixed(2)}
+              {designedRR > 0 ? designedRR.toFixed(2) : '—'}
             </div>
-            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>SL/TP設定から算出</div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>
+              {designedRR > 0 ? 'SL/TP設定から算出' : 'SL/TPデータなし'}
+            </div>
           </div>
 
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>シャープレシオ</h4>
-            <div style={{ fontSize: 20, fontWeight: 700, color: sharpeRatio >= 1 ? "var(--gain)" : "var(--loss)" }}>
-              {sharpeRatio.toFixed(2)}
+            <div style={{ fontSize: 20, fontWeight: 700, color: sharpeRatio >= 1 ? "var(--gain)" : sharpeRatio >= 0.5 ? "var(--accent)" : "var(--loss)" }}>
+              {sharpeRatio.toFixed(3)}
             </div>
-            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>リターン/リスク比率</div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>リターン/リスク比率（1.0以上が良好）</div>
           </div>
 
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
