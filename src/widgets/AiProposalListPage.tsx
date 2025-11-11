@@ -1,16 +1,87 @@
 import React, { useEffect, useState } from 'react';
-import { getAllProposals, deleteProposal, type AiProposal } from '../services/aiProposal.service';
+import { getAllProposals, deleteProposal, saveProposal, type AiProposal } from '../services/aiProposal.service';
 import { showToast } from '../lib/toast';
+import type { AiProposalData } from '../types/ai-proposal.types';
 
 type AiProposalListPageProps = {
   onSelectProposal: (id: string) => void;
-  onCreateNew: () => void;
 };
 
-export default function AiProposalListPage({ onSelectProposal, onCreateNew }: AiProposalListPageProps) {
+const MOCK_PROPOSAL_DATA: AiProposalData = {
+  hero: {
+    pair: 'USD/JPY',
+    bias: 'SELL',
+    confidence: 72,
+    nowYen: 147.25,
+    buyEntry: '148.00',
+    sellEntry: '147.00',
+  },
+  daily: {
+    stance: '戻り売り優先',
+    session: '東京・欧州前場',
+    anchor: '147.00',
+    riskNote: 'イベント待機',
+  },
+  scenario: {
+    strong: '146.50 → 145.80 → 145.00（雇用統計ネガティブなら）',
+    base: '147.20 → 146.80 → 146.20（様子見継続）',
+    weak: '147.80 → 148.20 → 148.80（サプライズ高なら損切り）',
+  },
+  ideas: [
+    {
+      id: 'idea-1',
+      side: '売り',
+      entry: '147.00–147.20',
+      slPips: -30,
+      tpPips: 50,
+      expected: 1.67,
+      confidence: '◎',
+    },
+    {
+      id: 'idea-2',
+      side: '売り',
+      entry: '147.50–147.70',
+      slPips: -25,
+      tpPips: 40,
+      expected: 1.60,
+      confidence: '○',
+    },
+  ],
+  factors: {
+    technical: [
+      '4H足：147.50 レジスタンス反応',
+      '日足：陰線継続、下降トレンド維持',
+      'RSI：55 → やや過熱感',
+    ],
+    fundamental: [
+      '米雇用統計・金曜発表控え',
+      'FRB タカ派後退観測',
+      '日銀：据え置き濃厚',
+    ],
+    sentiment: [
+      'ポジション：円売り過多（巻き戻しリスク）',
+      'ドル高一服感、材料待ち',
+    ],
+  },
+  notes: {
+    memo: [
+      '147.00 で 4H足陰線確定なら売り増し検討',
+      '148.00 超えは損切りライン',
+      'イベント前は玉を軽めに',
+    ],
+  },
+};
+
+export default function AiProposalListPage({ onSelectProposal }: AiProposalListPageProps) {
   const [proposals, setProposals] = useState<AiProposal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
   const [filter, setFilter] = useState({ pair: 'all', bias: 'all' });
+
+  const [prompt, setPrompt] = useState('');
+  const [pair, setPair] = useState('USD/JPY');
+  const [timeframe, setTimeframe] = useState('4H');
+  const [targetDate, setTargetDate] = useState(new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
     loadProposals();
@@ -21,6 +92,36 @@ export default function AiProposalListPage({ onSelectProposal, onCreateNew }: Ai
     const data = await getAllProposals();
     setProposals(data);
     setLoading(false);
+  }
+
+  async function handleGenerate() {
+    if (!prompt.trim()) {
+      showToast('予想内容を入力してください');
+      return;
+    }
+
+    setGenerating(true);
+    try {
+      showToast('予想を生成中...');
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const newProposal = await saveProposal(MOCK_PROPOSAL_DATA, prompt, pair, timeframe);
+
+      if (newProposal) {
+        showToast('予想を生成しました');
+        setPrompt('');
+        await loadProposals();
+        onSelectProposal(newProposal.id);
+      } else {
+        showToast('予想の生成に失敗しました');
+      }
+    } catch (error) {
+      console.error('Error generating proposal:', error);
+      showToast('予想の生成に失敗しました');
+    } finally {
+      setGenerating(false);
+    }
   }
 
   async function handleDelete(id: string, e: React.MouseEvent) {
@@ -46,12 +147,82 @@ export default function AiProposalListPage({ onSelectProposal, onCreateNew }: Ai
 
   return (
     <div style={{ width: '100%', padding: 16 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 'bold', color: 'var(--ink)' }}>相場予想一覧</h2>
-        <button className="btn" onClick={onCreateNew} style={{ fontSize: 14, fontWeight: 600 }}>
-          新規予想を作成
-        </button>
-      </div>
+      <h2 style={{ margin: '0 0 16px 0', fontSize: 20, fontWeight: 'bold', color: 'var(--ink)' }}>
+        相場予想
+      </h2>
+
+      <section
+        className="card"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 12,
+          marginBottom: 20,
+          padding: 16,
+          background: 'var(--surface)',
+          border: '1px solid var(--line)',
+          borderRadius: 16,
+        }}
+      >
+        <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--ink)' }}>
+          新しい予想を生成
+        </h3>
+
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', width: '100%' }}>
+          <input
+            className="btn"
+            style={{ flex: 1, minWidth: 220, boxSizing: 'border-box' }}
+            placeholder="例）USD/JPY 4H、イベント控え、ややドル高のアイデア"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+            disabled={generating}
+          />
+          <select
+            className="btn"
+            value={pair}
+            onChange={(e) => setPair(e.target.value)}
+            style={{ boxSizing: 'border-box' }}
+            disabled={generating}
+          >
+            <option>USD/JPY</option>
+            <option>EUR/USD</option>
+            <option>GBP/JPY</option>
+            <option>EUR/JPY</option>
+            <option>GBP/USD</option>
+          </select>
+          <select
+            className="btn"
+            value={timeframe}
+            onChange={(e) => setTimeframe(e.target.value)}
+            style={{ boxSizing: 'border-box' }}
+            disabled={generating}
+          >
+            <option>1H</option>
+            <option>4H</option>
+            <option>1D</option>
+          </select>
+          <input
+            type="date"
+            className="btn"
+            value={targetDate}
+            onChange={(e) => setTargetDate(e.target.value)}
+            style={{ boxSizing: 'border-box' }}
+            disabled={generating}
+          />
+          <button
+            className="btn"
+            onClick={handleGenerate}
+            disabled={generating}
+            style={{
+              background: generating ? 'var(--muted)' : 'var(--accent)',
+              color: '#fff',
+              fontWeight: 600,
+            }}
+          >
+            {generating ? '生成中...' : '提案を生成'}
+          </button>
+        </div>
+      </section>
 
       <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
         <select
@@ -89,12 +260,9 @@ export default function AiProposalListPage({ onSelectProposal, onCreateNew }: Ai
           border: '1px solid var(--line)',
           borderRadius: 16
         }}>
-          <p style={{ fontSize: 16, color: 'var(--muted)', marginBottom: 16 }}>
-            まだ予想がありません
+          <p style={{ fontSize: 16, color: 'var(--muted)', marginBottom: 0 }}>
+            まだ予想がありません。上のフォームから最初の予想を生成してください。
           </p>
-          <button className="btn" onClick={onCreateNew} style={{ fontSize: 14 }}>
-            最初の予想を作成
-          </button>
         </div>
       ) : (
         <div style={{ display: 'grid', gap: 12 }}>

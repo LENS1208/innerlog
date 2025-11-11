@@ -107,9 +107,6 @@ export default function App() {
         onSelectProposal={(id) => {
           location.hash = `/ai-proposal/${id}`;
         }}
-        onCreateNew={() => {
-          location.hash = '/ai-proposal/new';
-        }}
       />
     );
   }
@@ -117,7 +114,7 @@ export default function App() {
     const proposalId = route.split("/")[2];
     Page = (
       <AiProposalContainer
-        proposalId={proposalId === 'new' ? undefined : proposalId}
+        proposalId={proposalId}
         onBack={() => {
           location.hash = '/ai-proposal';
         }}
