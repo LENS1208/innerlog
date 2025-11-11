@@ -352,7 +352,10 @@ export default function ReportsTimeAxis() {
     <div style={{ width: "100%" }}>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>トレードスタイル別統計</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+          保有時間別の統計
+          <HelpIcon text="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたのトレードスタイルを分析できます。" />
+        </h3>
 
         <div style={{ display: "flex", gap: 16, alignItems: "stretch", flexWrap: "wrap", marginBottom: 12 }}>
           <div style={{ flex: "1 1 400px", minWidth: 0, maxHeight: "60vh", overflowY: "auto" }}>

@@ -320,7 +320,10 @@ export default function ReportsRisk() {
     <div style={{ width: "100%" }}>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>ロット設計とリスク指標</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+          ロット設計とリスク指標
+          <HelpIcon text="取引ロット数とリスク指標の関係を分析します。適切なポジションサイズを設計するために重要な情報です。" />
+        </h3>
 
         <div
           style={{

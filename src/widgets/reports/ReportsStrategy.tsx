@@ -570,7 +570,10 @@ export default function ReportsStrategy() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 12px 0", fontSize: 17, fontWeight: "bold", color: "var(--ink)" }}>決済効率分析</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+          決済タイミングの分析
+          <HelpIcon text="エントリーから決済までの価格変動を分析します。利確・損切りのタイミングが適切かを評価できます。" />
+        </h3>
 
         <div
           style={{
