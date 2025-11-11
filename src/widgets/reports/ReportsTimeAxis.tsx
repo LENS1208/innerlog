@@ -6,6 +6,7 @@ import type { Trade } from "../../lib/types";
 import { filterTrades, getTradeProfit, getTradeTime } from "../../lib/filterTrades";
 import { supabase } from "../../lib/supabase";
 import { HelpIcon } from "../../components/common/HelpIcon";
+import Card from "../../components/common/Card";
 
 type DayOfWeek = "日" | "月" | "火" | "水" | "木" | "金" | "土";
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
@@ -351,11 +352,11 @@ export default function ReportsTimeAxis() {
   return (
     <div style={{ width: "100%" }}>
 
-      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-          保有時間別の統計
-          <HelpIcon text="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたのトレードスタイルを分析できます。" />
-        </h3>
+      <Card
+        title="保有時間別の統計"
+        helpText="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたのトレードスタイルを分析できます。"
+        style={{ marginBottom: 16 }}
+      >
 
         <div style={{ display: "flex", gap: 16, alignItems: "stretch", flexWrap: "wrap", marginBottom: 12 }}>
           <div style={{ flex: "1 1 400px", minWidth: 0, maxHeight: "60vh", overflowY: "auto" }}>
@@ -512,7 +513,7 @@ export default function ReportsTimeAxis() {
             </div>
           </div>
         </div>
-      </div>
+      </Card>
 
       <div
         style={{
@@ -522,11 +523,7 @@ export default function ReportsTimeAxis() {
           marginBottom: 16,
         }}
       >
-        <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            曜日 Top
-            <HelpIcon text="最も稼げている曜日です。この曜日に集中的に取引することで効率を上げられます。" />
-          </h3>
+        <Card title="曜日 Top" helpText="最も稼げている曜日です。この曜日に集中的に取引することで効率を上げられます。">
           <div style={{ fontSize: 18, fontWeight: 700, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topDayOfWeek.day}曜日：{formatValue(topDayOfWeek.profit, "profit")}
           </div>
@@ -557,12 +554,8 @@ export default function ReportsTimeAxis() {
               }}
             />
           </div>
-        </div>
-        <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            曜日 Bottom
-            <HelpIcon text="最も損失が出ている曜日です。この曜日は取引を控える判断材料になります。" />
-          </h3>
+        </Card>
+        <Card title="曜日 Bottom" helpText="最も損失が出ている曜日です。この曜日は取引を控える判断材料になります。">
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomDayOfWeek.day}曜日：{formatValue(bottomDayOfWeek.profit, "profit")}
           </div>
