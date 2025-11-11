@@ -286,12 +286,33 @@ export default function SettingsPage() {
 
     setSaving(true);
     try {
-      const { error } = await supabase
+      const { error: tradesError } = await supabase
         .from('trades')
         .delete()
         .neq('id', '00000000-0000-0000-0000-000000000000');
 
-      if (error) throw error;
+      if (tradesError) throw tradesError;
+
+      const { error: summaryError } = await supabase
+        .from('account_summary')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (summaryError) throw summaryError;
+
+      const { error: notesError } = await supabase
+        .from('trade_notes')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (notesError) throw notesError;
+
+      const { error: dailyNotesError } = await supabase
+        .from('daily_notes')
+        .delete()
+        .neq('id', '00000000-0000-0000-0000-000000000000');
+
+      if (dailyNotesError) throw dailyNotesError;
 
       alert('取引履歴を削除しました');
       window.dispatchEvent(new CustomEvent('fx:tradesUpdated'));

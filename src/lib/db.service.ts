@@ -488,7 +488,7 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
     pips = +(diff * mult).toFixed(1);
   }
 
-  return {
+  const result = {
     ticket: trade.ticket || trade.id,
     item: pair,
     side: trade.side,
@@ -504,6 +504,29 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
     sl: trade.stopPrice || null,
     tp: trade.targetPrice || null,
   };
+
+  if (trade.ticket === '100017023') {
+    console.log(`💾 DB Service - Converting trade to DB format:`, {
+      input: {
+        ticket: trade.ticket,
+        openPrice: trade.openPrice,
+        closePrice: trade.closePrice,
+        pips: trade.pips,
+        openTime: trade.openTime,
+        closeTime: trade.closeTime
+      },
+      output: {
+        ticket: result.ticket,
+        open_price: result.open_price,
+        close_price: result.close_price,
+        pips: result.pips,
+        open_time: result.open_time,
+        close_time: result.close_time
+      }
+    });
+  }
+
+  return result;
 }
 
 export function dbToTrade(dbTrade: DbTrade): Trade {
