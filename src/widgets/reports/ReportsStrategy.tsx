@@ -362,6 +362,12 @@ export default function ReportsStrategy() {
         </div>
       </div>
 
+      {setupData.length > 0 && setupData.every(s => s.setup === "未登録") && (
+        <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>
+          トレード日記に「取引ごとの戦略」を記録すると分析データが反映されます。
+        </div>
+      )}
+
       <div
         style={{
           display: "grid",
@@ -375,11 +381,6 @@ export default function ReportsStrategy() {
             戦略別（上位6）
             <HelpIcon text="主要6戦略の損益を比較したグラフです。どの戦略を優先すべきか判断できます。" />
           </h3>
-          {setupData.length > 0 && setupData.every(s => s.setup === "未登録") && (
-            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 8 }}>
-              トレード日記に「取引ごとの戦略」を記録すると分析データが反映されます。
-            </div>
-          )}
           <div style={{ height: 180 }}>
             <Bar
               data={{
