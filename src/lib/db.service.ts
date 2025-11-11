@@ -112,31 +112,57 @@ export async function getAllTrades(): Promise<DbTrade[]> {
 }
 
 export async function getTradesCount(): Promise<number> {
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return 0;
+  }
+
   const { count, error } = await supabase
     .from('trades')
-    .select('*', { count: 'exact', head: true });
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id);
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error getting trades count:', error);
+    return 0;
+  }
+
   return count || 0;
 }
 
 export async function deleteAllTrades(): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
 
+  if (!user) {
+    throw new Error('User must be authenticated to delete trades');
+  }
+
   const { error } = await supabase
     .from('trades')
     .delete()
-    .neq('id', '00000000-0000-0000-0000-000000000000');
+    .eq('user_id', user.id);
 
   if (error) throw error;
+
+  window.dispatchEvent(new Event('fx:tradesUpdated'));
 }
 
 export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> {
-  const { data, error } = await supabase
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const query = supabase
     .from('trades')
     .select('*')
-    .eq('ticket', ticket)
-    .maybeSingle();
+    .eq('ticket', ticket);
+
+  if (user) {
+    query.eq('user_id', user.id);
+  } else {
+    query.is('user_id', null);
+  }
+
+  const { data, error } = await query.maybeSingle();
 
   if (error) throw error;
   return data;

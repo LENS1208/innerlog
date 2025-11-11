@@ -401,10 +401,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     loadTrade();
   }, [entryId, useDatabase]);
 
-  const trades = useMemo(() => makeDummyTrades(), []);
   const allTrades = useMemo(() => {
-    return useDatabase ? trades : csvTrades;
-  }, [useDatabase, trades, csvTrades]);
+    return useDatabase ? [] : csvTrades;
+  }, [useDatabase, csvTrades]);
 
   const row = useMemo(() => {
     if (dbTrade) {
