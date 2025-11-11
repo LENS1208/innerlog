@@ -12,6 +12,7 @@ interface RequestBody {
   pair: string;
   timeframe: string;
   period: string;
+  apiKey: string;
 }
 
 Deno.serve(async (req: Request) => {
@@ -23,13 +24,8 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const apiKey = Deno.env.get("OPENAI_API_KEY");
-    if (!apiKey) {
-      throw new Error("OPENAI_API_KEY is not set");
-    }
-
     const body: RequestBody = await req.json();
-    const { prompt, pair, timeframe, period } = body;
+    const { prompt, pair, timeframe, period, apiKey } = body;
 
     if (!prompt || !pair || !timeframe || !period) {
       return new Response(
@@ -41,9 +37,23 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({ error: "OpenAI API key is not provided" }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
     const openai = new OpenAI({ apiKey });
 
+    const currentDate = new Date().toISOString().split('T')[0];
+
     const systemPrompt = `あなたはプロのFXトレーダーです。ユーザーの入力から、構造化された相場予想を生成してください。
+
+今日の日付: ${currentDate}
 
 以下のJSON形式で回答してください：
 
@@ -52,7 +62,7 @@ Deno.serve(async (req: Request) => {
     "pair": "通貨ペア",
     "bias": "BUY" | "SELL" | "NEUTRAL",
     "confidence": 0-100の数値,
-    "nowYen": 現在価格(数値),
+    "nowYen": 現在の実際の市場価格(数値) - 必ず最新の実勢レートを反映してください,
     "buyEntry": "買いエントリー価格",
     "sellEntry": "売りエントリー価格"
   },
@@ -88,9 +98,20 @@ Deno.serve(async (req: Request) => {
   }
 }
 
-必ずJSON形式のみで回答し、他のテキストは含めないでください。`;
+重要：
+- nowYenには必ず現在の実際の市場レートを入れてください（例：USD/JPYなら現在の実勢レート）
+- エントリー価格やシナリオの価格も、現在の実際の市場状況を反映した現実的な値にしてください
+- 必ずJSON形式のみで回答し、他のテキストは含めないでください。`;
 
-    const userPrompt = `通貨ペア: ${pair}\n分析足: ${timeframe}\n予想期間: ${period}\n\nユーザーの要望:\n${prompt}`;
+    const userPrompt = `通貨ペア: ${pair}
+分析足: ${timeframe}
+予想期間: ${period}
+日付: ${currentDate}
+
+ユーザーの要望:
+${prompt}
+
+注意：必ず現在の実際の市場レート（${pair}の実勢価格）を調べて、nowYenフィールドに正確な値を設定してください。`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
