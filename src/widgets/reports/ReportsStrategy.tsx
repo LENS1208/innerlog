@@ -27,6 +27,19 @@ export default function ReportsStrategy() {
             return 'LONG';
           };
 
+          const calculateHoldTime = (openTime: string, closeTime: string): number | undefined => {
+            try {
+              const openMs = new Date(openTime).getTime();
+              const closeMs = new Date(closeTime).getTime();
+              if (!isNaN(openMs) && !isNaN(closeMs)) {
+                return Math.round((closeMs - openMs) / 60000);
+              }
+            } catch {
+              return undefined;
+            }
+            return undefined;
+          };
+
           const mapped: Trade[] = (data || []).map((t: any) => ({
             id: t.ticket,
             datetime: t.close_time,
@@ -47,6 +60,7 @@ export default function ReportsStrategy() {
             profit: Number(t.profit),
             comment: t.comment || '',
             memo: t.memo || '',
+            holdTimeMin: calculateHoldTime(t.open_time, t.close_time),
           }));
           setTrades(mapped);
         } else {
