@@ -195,8 +195,7 @@ export default function AiProposalContainer({
       pair={pair}
       timeframe={timeframe}
       targetDate={currentProposal?.created_at ? new Date(currentProposal.created_at).toISOString().split('T')[0] : undefined}
-      version={currentProposal?.version}
-      parentId={currentProposal?.parent_id}
+      onBackToList={onBack}
       onGenerate={handleGenerate}
       onRegenerate={handleRegenerate}
       onFix={handleFix}

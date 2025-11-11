@@ -1,6 +1,5 @@
 import React from 'react';
 import HeroSummary from '../components/ai/HeroSummary';
-import PromptBar from '../components/ai/PromptBar';
 import DailyActions from '../components/ai/DailyActions';
 import TodaysPlanCard from '../components/ai/TodaysPlanCard';
 import ScenarioCard from '../components/ai/ScenarioCard';
@@ -17,8 +16,7 @@ type AiProposalPageProps = AiProposalData & AiProposalHandlers & {
   pair?: string;
   timeframe?: string;
   targetDate?: string;
-  version?: number;
-  parentId?: string | null;
+  onBackToList?: () => void;
 };
 
 export default function AiProposalPage({
@@ -32,8 +30,7 @@ export default function AiProposalPage({
   pair,
   timeframe,
   targetDate,
-  version,
-  parentId,
+  onBackToList,
   onGenerate,
   onRegenerate,
   onFix,
@@ -99,39 +96,6 @@ export default function AiProposalPage({
                 {targetDate}
               </span>
             )}
-            {version && version > 1 && (
-              <span style={{
-                padding: '2px 6px',
-                background: 'rgba(168, 85, 247, 0.1)',
-                color: 'rgb(168, 85, 247)',
-                borderRadius: 4,
-                fontSize: 11,
-                fontWeight: 600,
-              }}>
-                再生成 v{version}
-              </span>
-            )}
-            {parentId && (
-              <a
-                href={`#/ai-proposal/${parentId}`}
-                style={{
-                  padding: '2px 6px',
-                  background: 'rgba(168, 85, 247, 0.1)',
-                  color: 'rgb(168, 85, 247)',
-                  borderRadius: 4,
-                  fontSize: 11,
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  location.hash = `/ai-proposal/${parentId}`;
-                }}
-              >
-                ← 元の予想
-              </a>
-            )}
           </div>
           <p style={{ margin: 0, fontSize: 13, color: 'var(--ink)', lineHeight: 1.6 }}>
             {prompt}
@@ -139,7 +103,19 @@ export default function AiProposalPage({
         </div>
       )}
 
-      <PromptBar onGenerate={onGenerate} onRegenerate={onRegenerate} onFix={onFix} />
+      <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+        <button
+          className="btn"
+          onClick={onBackToList}
+          style={{
+            background: 'var(--accent)',
+            color: '#fff',
+            fontWeight: 600,
+          }}
+        >
+          新しい予想を生成
+        </button>
+      </div>
 
       <section className="grid-ai" style={{ marginTop: 12 }}>
         <div className="list">
