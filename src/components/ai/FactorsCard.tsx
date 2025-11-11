@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '../common/Card';
 import SectionTag from '../common/SectionTag';
+import { HelpIcon } from '../common/HelpIcon';
 import type { Factors } from '../../types/ai-proposal.types';
 
 type FactorsCardProps = {
@@ -11,7 +12,10 @@ export default function FactorsCard({ factors }: FactorsCardProps) {
   return (
     <Card>
       <SectionTag>分析要因（根拠の内訳）</SectionTag>
-      <h4>テクニカル / ファンダメンタルズ / センチメント</h4>
+      <h4 style={{ display: 'flex', alignItems: 'center' }}>
+        分析要因？
+        <HelpIcon text="根拠の内訳をテクニカル、ファンダメンタルズ、センチメントの3軸で表示します。" />
+      </h4>
       <div className="analysis-vertical">
         <div>
           <h5>テクニカル（チャートの動き）</h5>

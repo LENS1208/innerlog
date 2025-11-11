@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '../common/Card';
 import SectionTag from '../common/SectionTag';
+import { HelpIcon } from '../common/HelpIcon';
 import type { TradeIdea, HeroData } from '../../types/ai-proposal.types';
 
 type TradeIdeasTableProps = {
@@ -25,7 +26,10 @@ export default function TradeIdeasTable({ ideas, hero, onLinkToDaily, onCreateTr
   return (
     <Card data-testid="trade-ideas">
       <SectionTag>エントリープラン</SectionTag>
-      <h4>セットアップ（最大3件）</h4>
+      <h4 style={{ display: 'flex', alignItems: 'center' }}>
+        エントリープラン？
+        <HelpIcon text="セットアップ（最大3件）を表示します。各プランのエントリーポイント、損切り・利確、期待リターン、信頼度を確認できます。" />
+      </h4>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>

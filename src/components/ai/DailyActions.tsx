@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from '../common/Card';
 import SectionTag from '../common/SectionTag';
+import { HelpIcon } from '../common/HelpIcon';
 import type { DailyActions as DailyActionsType } from '../../types/ai-proposal.types';
 
 type DailyActionsProps = {
@@ -11,7 +12,10 @@ export default function DailyActions({ daily }: DailyActionsProps) {
   return (
     <Card data-testid="daily-actions">
       <SectionTag>本日のアクション</SectionTag>
-      <h4>まずはここを見て判断</h4>
+      <h4 style={{ display: 'flex', alignItems: 'center' }}>
+        本日のアクション？
+        <HelpIcon text="まずはここを見て判断してください。今日の想定方針と主戦場、基準価格を確認できます。" />
+      </h4>
       <div className="kpi-quick">
         <div className="mini">
           <div className="label">想定方針</div>
