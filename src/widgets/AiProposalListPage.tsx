@@ -79,8 +79,8 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
   const [filter, setFilter] = useState({ pair: 'all', bias: 'all' });
 
   const [prompt, setPrompt] = useState('');
-  const [pair, setPair] = useState('USD/JPY');
-  const [timeframe, setTimeframe] = useState('4H');
+  const [pair, setPair] = useState('');
+  const [timeframe, setTimeframe] = useState('');
   const [targetDate, setTargetDate] = useState(new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
@@ -99,6 +99,14 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
       showToast('予想内容を入力してください');
       return;
     }
+    if (!pair) {
+      showToast('銘柄を選択してください');
+      return;
+    }
+    if (!timeframe) {
+      showToast('分析足を選択してください');
+      return;
+    }
 
     setGenerating(true);
     try {
@@ -111,6 +119,8 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
       if (newProposal) {
         showToast('予想を生成しました');
         setPrompt('');
+        setPair('');
+        setTimeframe('');
         await loadProposals();
         onSelectProposal(newProposal.id);
       } else {
@@ -145,6 +155,25 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
 
   const uniquePairs = Array.from(new Set(proposals.map((p) => p.pair)));
 
+  const groupedProposals = filteredProposals.reduce((groups, proposal) => {
+    const date = new Date(proposal.created_at).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+    if (!groups[date]) {
+      groups[date] = [];
+    }
+    groups[date].push(proposal);
+    return groups;
+  }, {} as Record<string, AiProposal[]>);
+
+  const sortedDates = Object.keys(groupedProposals).sort((a, b) => {
+    const dateA = new Date(groupedProposals[a][0].created_at);
+    const dateB = new Date(groupedProposals[b][0].created_at);
+    return dateB.getTime() - dateA.getTime();
+  });
+
   return (
     <div style={{ width: '100%', padding: 16 }}>
       <h2 style={{ margin: '0 0 16px 0', fontSize: 20, fontWeight: 'bold', color: 'var(--ink)' }}>
@@ -172,43 +201,54 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           <input
             className="btn"
             style={{ flex: 1, minWidth: 220, boxSizing: 'border-box' }}
-            placeholder="例）USD/JPY 4H、イベント控え、ややドル高のアイデア"
+            placeholder="例）イベント控え、ややドル高のアイデア"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             disabled={generating}
           />
-          <select
-            className="btn"
-            value={pair}
-            onChange={(e) => setPair(e.target.value)}
-            style={{ boxSizing: 'border-box' }}
-            disabled={generating}
-          >
-            <option>USD/JPY</option>
-            <option>EUR/USD</option>
-            <option>GBP/JPY</option>
-            <option>EUR/JPY</option>
-            <option>GBP/USD</option>
-          </select>
-          <select
-            className="btn"
-            value={timeframe}
-            onChange={(e) => setTimeframe(e.target.value)}
-            style={{ boxSizing: 'border-box' }}
-            disabled={generating}
-          >
-            <option>1H</option>
-            <option>4H</option>
-            <option>1D</option>
-          </select>
-          <input
-            type="date"
-            className="btn"
-            value={targetDate}
-            onChange={(e) => setTargetDate(e.target.value)}
-            style={{ boxSizing: 'border-box' }}
-            disabled={generating}
-          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', paddingLeft: 4 }}>銘柄</label>
+            <select
+              className="btn"
+              value={pair}
+              onChange={(e) => setPair(e.target.value)}
+              style={{ boxSizing: 'border-box', minWidth: 120 }}
+              disabled={generating}
+            >
+              <option value="" disabled>銘柄</option>
+              <option>USD/JPY</option>
+              <option>EUR/USD</option>
+              <option>GBP/JPY</option>
+              <option>EUR/JPY</option>
+              <option>GBP/USD</option>
+            </select>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', paddingLeft: 4 }}>分析足</label>
+            <select
+              className="btn"
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              style={{ boxSizing: 'border-box', minWidth: 100 }}
+              disabled={generating}
+            >
+              <option value="" disabled>分析足</option>
+              <option>1H</option>
+              <option>4H</option>
+              <option>1D</option>
+            </select>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <label style={{ fontSize: 11, fontWeight: 600, color: 'var(--muted)', paddingLeft: 4 }}>予想期間</label>
+            <input
+              type="date"
+              className="btn"
+              value={targetDate}
+              onChange={(e) => setTargetDate(e.target.value)}
+              style={{ boxSizing: 'border-box', minWidth: 140 }}
+              disabled={generating}
+            />
+          </div>
           <button
             className="btn"
             onClick={handleGenerate}
@@ -217,6 +257,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
               background: generating ? 'var(--muted)' : 'var(--accent)',
               color: '#fff',
               fontWeight: 600,
+              alignSelf: 'flex-end',
             }}
           >
             {generating ? '生成中...' : '提案を生成'}
@@ -265,88 +306,101 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           </p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gap: 12 }}>
-          {filteredProposals.map((proposal) => (
-            <div
-              key={proposal.id}
-              onClick={() => onSelectProposal(proposal.id)}
-              style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--line)',
-                borderRadius: 16,
-                padding: 16,
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--accent)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--line)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <h3 style={{ margin: 0, fontSize: 16, fontWeight: 'bold', color: 'var(--ink)' }}>
-                      {proposal.pair} / {proposal.timeframe}
-                    </h3>
-                    <span
-                      style={{
-                        padding: '2px 8px',
-                        borderRadius: 4,
-                        fontSize: 12,
-                        fontWeight: 600,
-                        background: proposal.bias === 'BUY' ? 'rgba(22, 163, 74, 0.1)' :
-                                   proposal.bias === 'SELL' ? 'rgba(239, 68, 68, 0.1)' :
-                                   'rgba(107, 114, 128, 0.1)',
-                        color: proposal.bias === 'BUY' ? 'rgb(22, 163, 74)' :
-                               proposal.bias === 'SELL' ? 'rgb(239, 68, 68)' :
-                               'rgb(107, 114, 128)',
-                      }}
-                    >
-                      {proposal.bias === 'BUY' ? '買い' : proposal.bias === 'SELL' ? '売り' : '中立'}
-                    </span>
-                    <span
-                      style={{
-                        padding: '2px 8px',
-                        borderRadius: 4,
-                        fontSize: 12,
-                        fontWeight: 600,
-                        background: 'rgba(59, 130, 246, 0.1)',
-                        color: 'rgb(59, 130, 246)',
-                      }}
-                    >
-                      信頼度 {proposal.confidence}%
-                    </span>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          {sortedDates.map((date) => (
+            <div key={date}>
+              <h3 style={{
+                margin: '0 0 12px 0',
+                fontSize: 14,
+                fontWeight: 600,
+                color: 'var(--muted)',
+                paddingLeft: 4,
+              }}>
+                {date}
+              </h3>
+              <div style={{ display: 'grid', gap: 12 }}>
+                {groupedProposals[date].map((proposal) => (
+                  <div
+                    key={proposal.id}
+                    onClick={() => onSelectProposal(proposal.id)}
+                    style={{
+                      background: 'var(--surface)',
+                      border: '1px solid var(--line)',
+                      borderRadius: 16,
+                      padding: 16,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--accent)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--line)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 'bold', color: 'var(--ink)' }}>
+                            {proposal.pair} / {proposal.timeframe}
+                          </h3>
+                          <span
+                            style={{
+                              padding: '2px 8px',
+                              borderRadius: 4,
+                              fontSize: 12,
+                              fontWeight: 600,
+                              background: proposal.bias === 'BUY' ? 'rgba(22, 163, 74, 0.1)' :
+                                         proposal.bias === 'SELL' ? 'rgba(239, 68, 68, 0.1)' :
+                                         'rgba(107, 114, 128, 0.1)',
+                              color: proposal.bias === 'BUY' ? 'rgb(22, 163, 74)' :
+                                     proposal.bias === 'SELL' ? 'rgb(239, 68, 68)' :
+                                     'rgb(107, 114, 128)',
+                            }}
+                          >
+                            {proposal.bias === 'BUY' ? '買い' : proposal.bias === 'SELL' ? '売り' : '中立'}
+                          </span>
+                          <span
+                            style={{
+                              padding: '2px 8px',
+                              borderRadius: 4,
+                              fontSize: 12,
+                              fontWeight: 600,
+                              background: 'rgba(59, 130, 246, 0.1)',
+                              color: 'rgb(59, 130, 246)',
+                            }}
+                          >
+                            信頼度 {proposal.confidence}%
+                          </span>
+                          <span style={{ fontSize: 12, color: 'var(--muted)', marginLeft: 'auto' }}>
+                            {new Date(proposal.created_at).toLocaleTimeString('ja-JP', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)', lineHeight: 1.5 }}>
+                          {proposal.prompt || '予想を生成しました'}
+                        </p>
+                      </div>
+                      <button
+                        className="btn"
+                        onClick={(e) => handleDelete(proposal.id, e)}
+                        style={{
+                          fontSize: 12,
+                          padding: '4px 12px',
+                          background: 'rgba(239, 68, 68, 0.1)',
+                          color: 'rgb(239, 68, 68)',
+                          marginLeft: 12,
+                        }}
+                      >
+                        削除
+                      </button>
+                    </div>
                   </div>
-                  <p style={{ margin: '0 0 8px 0', fontSize: 13, color: 'var(--muted)', lineHeight: 1.5 }}>
-                    {proposal.prompt || '予想を生成しました'}
-                  </p>
-                  <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)' }}>
-                    作成日: {new Date(proposal.created_at).toLocaleDateString('ja-JP', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </p>
-                </div>
-                <button
-                  className="btn"
-                  onClick={(e) => handleDelete(proposal.id, e)}
-                  style={{
-                    fontSize: 12,
-                    padding: '4px 12px',
-                    background: 'rgba(239, 68, 68, 0.1)',
-                    color: 'rgb(239, 68, 68)',
-                  }}
-                >
-                  削除
-                </button>
+                ))}
               </div>
             </div>
           ))}
