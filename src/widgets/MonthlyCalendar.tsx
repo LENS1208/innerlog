@@ -232,49 +232,6 @@ export default function MonthlyCalendar() {
 
   const monthName = currentDate.toLocaleDateString("ja-JP", { year: "numeric", month: "long" });
 
-  const monthlyStats = useMemo(() => {
-    const filteredTrades = trades.filter((t) => {
-      const tradeDate = parseDateSafe(t.datetime);
-      return !isNaN(tradeDate.getTime()) && tradeDate.getFullYear() === year && tradeDate.getMonth() === month;
-    });
-
-    const totalTrades = filteredTrades.length;
-    const winTrades = filteredTrades.filter(t => t.profitYen > 0).length;
-    const winRate = totalTrades > 0 ? (winTrades / totalTrades) * 100 : 0;
-
-    const totalProfit = filteredTrades.reduce((sum, t) => sum + (t.profitYen > 0 ? t.profitYen : 0), 0);
-    const totalLoss = Math.abs(filteredTrades.reduce((sum, t) => sum + (t.profitYen < 0 ? t.profitYen : 0), 0));
-    const pf = totalLoss > 0 ? totalProfit / totalLoss : totalProfit > 0 ? Infinity : 0;
-
-    const avgProfit = totalTrades > 0 ? monthTotal / totalTrades : 0;
-
-    let maxDD = 0;
-    let peak = 0;
-    let cumulative = 0;
-    filteredTrades
-      .sort((a, b) => parseDateSafe(a.datetime).getTime() - parseDateSafe(b.datetime).getTime())
-      .forEach(t => {
-        cumulative += t.profitYen;
-        if (cumulative > peak) {
-          peak = cumulative;
-        }
-        const dd = peak - cumulative;
-        if (dd > maxDD) {
-          maxDD = dd;
-        }
-      });
-
-    return {
-      totalTrades,
-      winRate,
-      pf,
-      avgProfit,
-      maxDD,
-      totalProfit,
-      totalLoss
-    };
-  }, [trades, year, month, monthTotal]);
-
   const insightsData = useMemo(() => {
     const filteredTrades = trades.filter((t) => {
       const tradeDate = parseDateSafe(t.datetime);
@@ -601,33 +558,6 @@ export default function MonthlyCalendar() {
           >
             今月
           </button>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: 16, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8, padding: 12 }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>取引回数</div>
-          <div style={{ fontSize: 20, fontWeight: 700 }}>{monthlyStats.totalTrades}回</div>
-        </div>
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8, padding: 12 }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>勝率</div>
-          <div style={{ fontSize: 20, fontWeight: 700 }}>{monthlyStats.winRate.toFixed(1)}%</div>
-        </div>
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8, padding: 12 }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>PF</div>
-          <div style={{ fontSize: 20, fontWeight: 700 }}>{monthlyStats.pf === Infinity ? '∞' : monthlyStats.pf.toFixed(2)}</div>
-        </div>
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8, padding: 12 }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>平均損益</div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: monthlyStats.avgProfit >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
-            {monthlyStats.avgProfit >= 0 ? '+' : ''}{Math.round(monthlyStats.avgProfit).toLocaleString()}円
-          </div>
-        </div>
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8, padding: 12 }}>
-          <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>最大DD</div>
-          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--loss)' }}>
-            {Math.round(monthlyStats.maxDD).toLocaleString()}円
-          </div>
         </div>
       </div>
 
