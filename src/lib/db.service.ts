@@ -199,6 +199,17 @@ export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | '
     dataset: null,
   }));
 
+  if (trades.length > 0 && trades[0].ticket === '100017023') {
+    console.log(`💾 insertTrades - First trade:`, {
+      ticket: trades[0].ticket,
+      open_price: trades[0].open_price,
+      close_price: trades[0].close_price,
+      pips: trades[0].pips,
+      open_time: trades[0].open_time,
+      close_time: trades[0].close_time
+    });
+  }
+
   const tickets = trades.map(t => t.ticket);
 
   console.log(`🔍 Checking for existing trades with ${tickets.length} tickets...`);

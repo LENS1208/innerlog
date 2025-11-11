@@ -177,6 +177,22 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       }
 
       const dbTrades = trades.map(tradeToDb);
+
+      if (trades.length > 0 && trades[0].ticket === '100017023') {
+        console.log(`🔄 CsvUpload - Before tradeToDb:`, {
+          ticket: trades[0].ticket,
+          openPrice: trades[0].openPrice,
+          closePrice: trades[0].closePrice,
+          pips: trades[0].pips
+        });
+        console.log(`🔄 CsvUpload - After tradeToDb:`, {
+          ticket: dbTrades[0].ticket,
+          open_price: dbTrades[0].open_price,
+          close_price: dbTrades[0].close_price,
+          pips: dbTrades[0].pips
+        });
+      }
+
       await insertTrades(dbTrades);
 
       setMessage(`${trades.length}件の取引データをアップロードしました`);

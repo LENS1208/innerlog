@@ -288,7 +288,7 @@ function Banner() {
       aria-label="データ操作"
       className="banner-section"
     >
-      <strong>{tradesCount > 0 ? "デモデータを切り替え" : "MT4/MT5の取引履歴を追加してください"}</strong>
+      <strong>{tradesCount > 0 ? "データセットを切り替え" : "デモデータを読み込む、またはMT4/MT5の取引履歴を追加してください"}</strong>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
         <div style={{ display: "inline-flex", border: "1px solid var(--line)", borderRadius: 999, overflow: "hidden" }}>
           {(["A", "B", "C"] as const).map((d) => (

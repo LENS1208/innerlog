@@ -187,7 +187,7 @@ export function parseCsvText(text: string): Trade[] {
       }
     }
 
-    return {
+    const trade = {
       id: `csv-${n}-${closeTime}-${pair}`,
       datetime: closeTime,
       pair,
@@ -215,5 +215,18 @@ export function parseCsvText(text: string): Trade[] {
       action: side,
       profit: profitYen,
     } as Trade;
+
+    if (n === 0) {
+      console.log(`✅ CSV Parser - Final trade object:`, {
+        ticket: trade.ticket,
+        openPrice: trade.openPrice,
+        closePrice: trade.closePrice,
+        pips: trade.pips,
+        openTime: trade.openTime,
+        closeTime: trade.closeTime
+      });
+    }
+
+    return trade;
   });
 }
