@@ -130,18 +130,24 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
         'Content-Type': 'application/json',
       };
 
+      console.log('🔥 API呼び出し開始:', { apiUrl, prompt, pair, timeframe, period });
+
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers,
         body: JSON.stringify({ prompt, pair, timeframe, period, apiKey }),
       });
 
+      console.log('📡 レスポンスステータス:', response.status, response.statusText);
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        console.error('❌ API呼び出しエラー:', errorData);
         throw new Error(errorData.error || 'API request failed');
       }
 
       const proposalData = await response.json();
+      console.log('✅ AI生成データを受信:', proposalData);
       const newProposal = await saveProposal(proposalData, prompt, pair, timeframe);
 
       if (newProposal) {

@@ -152,6 +152,7 @@ export default function AiProposalContainer({
       }
 
       const generatedData = await response.json();
+      console.log('AI生成データ:', generatedData);
       setProposalData(generatedData);
 
       const saved = await saveProposal(generatedData, payload.prompt, payload.pair, payload.timeframe);
