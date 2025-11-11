@@ -45,7 +45,7 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
           </div>
         </div>
       </div>
-      <div style={{ padding: '20px 16px' }}>
+      <div style={{ padding: '12px 16px' }}>
         <style>{`
           .ai-insights-grid {
             display: grid;

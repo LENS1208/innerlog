@@ -59,7 +59,7 @@ export default function NotesReflectionSection() {
           </div>
         </div>
       </div>
-      <div style={{ padding: '20px 16px' }}>
+      <div style={{ padding: '12px 16px' }}>
         <style>{`
           .notes-grid {
             display: grid;

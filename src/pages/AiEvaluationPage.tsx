@@ -102,68 +102,67 @@ export default function AiEvaluationPage() {
         }
       `}</style>
 
-      <div style={{ display: 'grid', gap: 24, minWidth: 0 }}>
+      <div style={{ display: 'grid', gap: 16, minWidth: 0 }}>
         <section className="panel">
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '14px 16px',
+              padding: '10px 16px',
               borderBottom: '1px solid var(--line)',
             }}
           >
             <div>
-              <div style={{ fontSize: 18, fontWeight: 700 }}>総合評価</div>
-              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
+              <div style={{ fontSize: 16, fontWeight: 700 }}>総合評価</div>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
                 取引データから総合点とバランスを自動評価
               </div>
             </div>
             <div className="badge ok">分析の信頼度: 高め</div>
           </div>
-          <div style={{ padding: '12px 16px 16px', minWidth: 0 }}>
+          <div style={{ padding: '12px 16px', minWidth: 0 }}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'auto 1fr auto',
-              gap: 20,
-              alignItems: 'start',
-              marginBottom: 16
+              gridTemplateColumns: '140px 280px 1fr 1fr',
+              gap: 16,
+              alignItems: 'start'
             }}>
-              <div style={{ minWidth: 140 }}>
+              <div>
                 <OverallScore score={scoreData.overall} rank={scoreData.rank} />
               </div>
 
-              <div style={{ borderLeft: '1px solid var(--line)', borderRight: '1px solid var(--line)', paddingLeft: 20, paddingRight: 20, minWidth: 0 }}>
+              <div style={{ borderLeft: '1px solid var(--line)', paddingLeft: 16 }}>
                 <RadarChart parts={scoreData.parts} />
               </div>
 
-              <div style={{ minWidth: 200 }}>
-                <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>サマリー</div>
+              <div style={{ borderLeft: '1px solid var(--line)', paddingLeft: 16, minWidth: 0 }}>
+                <div style={{ fontSize: 12, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 6 }}>サマリー</div>
                 {baseMetrics.equity && baseMetrics.equity.length > 1 && (
-                  <div style={{ marginBottom: 8, height: 40 }}>
+                  <div style={{ marginBottom: 6, height: 36 }}>
                     <Sparkline data={baseMetrics.equity} />
                   </div>
                 )}
-                <div style={{ display: 'grid', gap: 4 }}>
-                  <div className="badge ok" style={{ fontSize: 11, padding: '3px 6px' }}>改善見込み: PF +0.18</div>
-                  <div className="badge warn" style={{ fontSize: 11, padding: '3px 6px' }}>DD -12%（見込み）</div>
-                  <div className="badge" style={{ fontSize: 11, padding: '3px 6px' }}>得意: EURUSD × LDN</div>
+                <div style={{ display: 'grid', gap: 3 }}>
+                  <div className="badge ok" style={{ fontSize: 10, padding: '2px 5px' }}>改善見込み: PF +0.18</div>
+                  <div className="badge warn" style={{ fontSize: 10, padding: '2px 5px' }}>DD -12%（見込み）</div>
+                  <div className="badge" style={{ fontSize: 10, padding: '2px 5px' }}>得意: EURUSD × LDN</div>
                 </div>
               </div>
-            </div>
 
-            <div style={{ borderTop: '1px solid var(--line)', paddingTop: 12 }}>
-              <div style={{ fontSize: 13, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
-                まずやると良いこと
+              <div style={{ borderLeft: '1px solid var(--line)', paddingLeft: 16, minWidth: 0 }}>
+                <div style={{ fontSize: 12, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 6 }}>
+                  まずやると良いこと
+                </div>
+                <ol style={{ margin: '0 0 4px 18px', lineHeight: 1.5, fontSize: 12, color: 'var(--ink)' }}>
+                  <li>利確/損切りの比率 1.2 → 1.6（PF +0.18）</li>
+                  <li>NY開始前30分は取引を控える（DD -8%）</li>
+                  <li>1回のリスク上限を 1.8% → 1.2% に見直す</li>
+                </ol>
+                <a href="#sec4" style={{ color: 'var(--accent)', fontSize: 11 }}>
+                  → シナリオで検証
+                </a>
               </div>
-              <ol style={{ margin: '0 0 6px 20px', lineHeight: 1.6, fontSize: 13, color: 'var(--ink)' }}>
-                <li>利確/損切りの比率 1.2 → 1.6（PF +0.18）</li>
-                <li>NY開始前30分は取引を控える（DD -8%）</li>
-                <li>1回のリスク上限を 1.8% → 1.2% に見直す（連敗に強く）</li>
-              </ol>
-              <a href="#sec4" style={{ color: 'var(--accent)', fontSize: 12 }}>
-                → シナリオで検証
-              </a>
             </div>
           </div>
         </section>
@@ -174,21 +173,21 @@ export default function AiEvaluationPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '14px 16px',
+              padding: '10px 16px',
               borderBottom: '1px solid var(--line)',
             }}
           >
             <div>
-              <div style={{ fontSize: 18, fontWeight: 700 }}>大事な数字（KPI）</div>
-              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
+              <div style={{ fontSize: 16, fontWeight: 700 }}>大事な数字（KPI）</div>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
                 成績をざっくりつかむための指標
               </div>
             </div>
           </div>
-          <div style={{ padding: '20px 16px' }}>
+          <div style={{ padding: '12px 16px' }}>
             <KPICards metrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
             {baseMetrics.equity && baseMetrics.equity.length > 1 && (
-              <div style={{ marginTop: 16 }}>
+              <div style={{ marginTop: 12 }}>
                 <Sparkline data={baseMetrics.equity} />
               </div>
             )}
@@ -201,18 +200,18 @@ export default function AiEvaluationPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '14px 16px',
+              padding: '10px 16px',
               borderBottom: '1px solid var(--line)',
             }}
           >
             <div>
-              <div style={{ fontSize: 18, fontWeight: 700 }}>シミュレーション（利確/損切り）</div>
-              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
+              <div style={{ fontSize: 16, fontWeight: 700 }}>シミュレーション（利確/損切り）</div>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>
                 比率やルールを変えたら、成績はどう変わる？
               </div>
             </div>
           </div>
-          <div style={{ padding: '20px 16px' }}>
+          <div style={{ padding: '12px 16px' }}>
             <WhatIfSimulator baseMetrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
           </div>
         </section>

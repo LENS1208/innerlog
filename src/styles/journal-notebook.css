@@ -228,21 +228,21 @@
 .kpi .card {
   border: 1px solid var(--line, #e5e7eb);
   border-radius: 12px;
-  padding: 16px;
+  padding: 10px 12px;
   background: var(--surface, #ffffff);
   box-shadow: none;
 }
 
 .kpi .label {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: bold;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .kpi .value {
   font-weight: 800;
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 2px;
 }
 

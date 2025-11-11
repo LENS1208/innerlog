@@ -70,7 +70,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
         </div>
         <div className="badge warn">最大DD: {maxDD.toLocaleString()}円</div>
       </div>
-      <div style={{ padding: '20px 16px' }}>
+      <div style={{ padding: '12px 16px' }}>
         <style>{`
           .risk-grid {
             display: grid;

@@ -73,7 +73,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
           </div>
         </div>
       </div>
-      <div style={{ padding: '20px 16px' }}>
+      <div style={{ padding: '12px 16px' }}>
         <style>{`
           .timing-grid {
             display: grid;
