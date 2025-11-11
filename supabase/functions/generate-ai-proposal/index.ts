@@ -56,8 +56,19 @@ Deno.serve(async (req: Request) => {
       const rateResponse = await fetch(`https://api.exchangerate-api.com/v4/latest/USD`);
       if (rateResponse.ok) {
         const rateData = await rateResponse.json();
+
         if (pair === 'USD/JPY' && rateData.rates?.JPY) {
           currentRate = rateData.rates.JPY;
+        } else if (pair === 'EUR/JPY' && rateData.rates?.EUR && rateData.rates?.JPY) {
+          currentRate = rateData.rates.JPY / rateData.rates.EUR;
+        } else if (pair === 'GBP/JPY' && rateData.rates?.GBP && rateData.rates?.JPY) {
+          currentRate = rateData.rates.JPY / rateData.rates.GBP;
+        } else if (pair === 'AUD/JPY' && rateData.rates?.AUD && rateData.rates?.JPY) {
+          currentRate = rateData.rates.JPY / rateData.rates.AUD;
+        } else if (pair === 'EUR/USD' && rateData.rates?.EUR) {
+          currentRate = 1 / rateData.rates.EUR;
+        } else if (pair === 'GBP/USD' && rateData.rates?.GBP) {
+          currentRate = 1 / rateData.rates.GBP;
         }
       }
     } catch (error) {
