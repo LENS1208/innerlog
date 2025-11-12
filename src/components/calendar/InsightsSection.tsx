@@ -2,7 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
 import { HelpIcon } from "../common/HelpIcon";
-import { getLossColor } from "../../lib/chartColors";
+import { getLossColor, getAccentColor } from "../../lib/chartColors";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -92,8 +92,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
     datasets: [
       {
         data: data.map((d) => d.pnl),
-        backgroundColor: data.map((d) => (d.pnl >= 0 ? "rgba(34, 197, 94, 1)" : getLossColor())),
-        borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
+        backgroundColor: data.map((d) => (d.pnl >= 0 ? getAccentColor() : getLossColor())),
       },
     ],
   });
