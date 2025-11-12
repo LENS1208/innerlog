@@ -337,7 +337,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         callback: (value: any, index: number) => {
                           return index % 2 === 0 ? `${index}時` : '';
@@ -353,7 +353,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
                         callback: (value: any) => `${value}件`,
                         stepSize: Math.max(1, Math.ceil(Math.max(...stats.hourCounts) / 5)),
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}
@@ -379,7 +379,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                     y: {
                       beginAtZero: true,
@@ -387,7 +387,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
                         callback: (value: any) => `${value}件`,
                         stepSize: Math.max(1, Math.ceil(Math.max(...stats.weekdayCounts) / 5)),
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}
@@ -413,7 +413,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: { display: false },
                     },
                     y: {
@@ -421,7 +421,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
                       ticks: {
                         callback: (value: any) => `${Math.round(value).toLocaleString('ja-JP')}円`,
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}

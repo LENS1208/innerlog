@@ -5,7 +5,7 @@ import { supabase } from "../lib/supabase";
 import type { Trade } from "../lib/types";
 import { parseCsvText } from "../lib/csv";
 
-const box: React.CSSProperties = { height: 36, border: "1px solid var(--line)", borderRadius: 12, background: "var(--surface)", padding: "0 10px" };
+const box: React.CSSProperties = { height: 36, border: "1px solid var(--line)", borderRadius: 12, background: "var(--input-bg)", color: "#000", padding: "0 10px" };
 
 type DatePreset = "all"|"today"|"yesterday"|"last7"|"last30"|"thisMonth"|"lastMonth"|"last12"|"lastYear"|"ytd"|"custom";
 

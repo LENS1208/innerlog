@@ -388,7 +388,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                     y: {
                       beginAtZero: true,
@@ -396,7 +396,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                         callback: (value: any) => `${value}件`,
                         stepSize: 1,
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}
@@ -427,7 +427,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                   scales: {
                     x: {
                       stacked: false,
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         maxRotation: 45,
                         minRotation: 45,
@@ -440,7 +440,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                       ticks: {
                         callback: (value: any) => `${value}件`,
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}
@@ -466,7 +466,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         callback: (value: any) => `#${value}`,
                       },
@@ -476,7 +476,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                       ticks: {
                         callback: (value: any) => `${Math.round(value).toLocaleString('ja-JP')}円`,
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}

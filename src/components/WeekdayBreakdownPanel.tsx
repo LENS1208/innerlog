@@ -358,7 +358,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         callback: (value: any, index: number) => {
                           return index % 2 === 0 ? `${index}時` : '';
@@ -374,7 +374,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                         callback: (value: any) => `${value}件`,
                         stepSize: Math.max(1, Math.ceil(Math.max(...stats.hourCounts) / 5)),
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}
@@ -405,7 +405,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                   scales: {
                     x: {
                       stacked: false,
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         maxRotation: 45,
                         minRotation: 45,
@@ -418,7 +418,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                       ticks: {
                         callback: (value: any) => `${value}件`,
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}
@@ -444,7 +444,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         callback: (value: any) => `#${value}`,
                       },
@@ -454,7 +454,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                       ticks: {
                         callback: (value: any) => `${Math.round(value).toLocaleString('ja-JP')}円`,
                       },
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                   },
                 }}

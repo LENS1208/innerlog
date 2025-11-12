@@ -369,7 +369,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                       position: 'left',
                       title: { display: true, text: '勝率（%）' },
                       max: 100,
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                     },
                     y1: {
                       type: 'linear',
@@ -461,13 +461,13 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                   },
                   scales: {
                     x: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         callback: (value: any) => `#${value}`,
                       },
                     },
                     y: {
-                      grid: { color: '#f3f4f6' },
+                      grid: { color: 'var(--grid-line)' },
                       ticks: {
                         callback: (value: any) => `${Math.round(value).toLocaleString('ja-JP')}円`,
                       },
