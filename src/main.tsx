@@ -4,6 +4,8 @@ import ReactDOM from "react-dom/client";
 import "./lib/tokens.css";
 import "./index.css";
 import App from "./App";
+
+console.log('App initialized');
 import "./scripts/migrate-demo-data";
 import { ThemeProvider } from "./lib/theme.context";
 
