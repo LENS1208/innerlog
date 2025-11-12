@@ -4,8 +4,8 @@
   { "key": "reports/market",    "label": "市場・銘柄" },
   { "key": "reports/risk",    "label": "リスク・分布" },
   { "key": "reports/strategy",    "label": "戦略・行動" },
-  { "key": "ai-evaluation",   "label": "AI評価" },
   { "key": "calendar",   "label": "カレンダー" },
+  { "key": "ai-evaluation",   "label": "AI評価" },
   { "key": "notebook",   "label": "トレード日記" },
   { "key": "ai-proposal",   "label": "相場予想" },
   { "key": "trades",     "label": "取引一覧" }
