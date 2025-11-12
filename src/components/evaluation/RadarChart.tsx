@@ -107,8 +107,9 @@ export default function RadarChart({ parts }: RadarChartProps) {
         ))}
         <polygon
           points={dataPoints}
-          fill="rgba(107,177,255,0.25)"
-          stroke="#6bb1ff"
+          fill="var(--accent)"
+          fillOpacity="0.25"
+          stroke="var(--accent)"
           strokeWidth="2"
         />
       </svg>

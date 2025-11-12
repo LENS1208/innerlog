@@ -133,7 +133,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
                       })
                       .join(' ')}
                     fill="none"
-                    stroke="#0284c7"
+                    stroke="#0084c7"
                     strokeWidth="2"
                   />
                 </>
@@ -158,7 +158,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
                       style={{
                         width: `${Math.min(d.prob, 100)}%`,
                         height: '100%',
-                        background: d.prob > 5 ? '#ef4444' : '#0284c7',
+                        background: d.prob > 5 ? '#ef4444' : '#0084c7',
                       }}
                     />
                   </div>

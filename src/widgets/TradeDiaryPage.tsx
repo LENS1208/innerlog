@@ -288,7 +288,7 @@ function AIAdviceSection({ tradeData, kpi, diaryData }: AIAdviceSectionProps) {
           disabled={!advice}
           style={{
             minWidth: 60,
-            backgroundColor: isPinned ? "var(--accent-2, #0284c7)" : undefined,
+            backgroundColor: isPinned ? "var(--accent-2, #0084c7)" : undefined,
             color: isPinned ? "white" : undefined,
           }}
         >
@@ -659,7 +659,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                   },
                   segment: {
                     borderColor: (ctx: any) => {
-                      return ctx.p1.parsed.y >= 0 ? '#0284c7' : '#ef4444';
+                      return ctx.p1.parsed.y >= 0 ? '#0084c7' : '#ef4444';
                     }
                   }
                 },
@@ -763,7 +763,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                   backgroundColor: (ctx: any) => {
                     const v = ctx.raw.v;
                     const a = 0.15 + 0.007 * v;
-                    return `rgba(14,165,233,${a})`;
+                    return `rgba(1,161,255,${a})`;
                   },
                   borderWidth: 1,
                   borderColor: "rgba(0,0,0,0.08)",
@@ -1116,7 +1116,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
       {/* KPI */}
       <div className="kpi">
-        <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #0284c7)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
+        <div className="i"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #0084c7)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
         <div className="i"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
         <div className="i"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
       </div>

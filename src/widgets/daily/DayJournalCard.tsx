@@ -84,7 +84,7 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
           <polyline
             points="0,40 30,35 60,38 90,25 120,30 150,20 180,28 210,15 240,22 270,18 300,12"
             fill="none"
-            stroke="rgba(14,165,233,0.8)"
+            stroke="rgba(1,161,255,0.8)"
             strokeWidth="2"
           />
         </svg>

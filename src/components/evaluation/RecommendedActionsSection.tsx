@@ -17,8 +17,8 @@ export default function RecommendedActionsSection({ metrics }: Props) {
   const displayActions = expanded ? actions : actions.slice(0, 3);
 
   const difficultyColor = (difficulty: string) => {
-    if (difficulty === 'Low') return '#0284c7';
-    if (difficulty === 'Mid') return '#0284c7';
+    if (difficulty === 'Low') return '#0084c7';
+    if (difficulty === 'Mid') return '#0084c7';
     return '#ef4444';
   };
 

@@ -96,7 +96,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>現在のR:R比</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
-              <span style={{ fontSize: 32, fontWeight: 700, color: '#0284c7' }}>
+              <span style={{ fontSize: 32, fontWeight: 700, color: '#0084c7' }}>
                 {analysis.currentRR.toFixed(2)}
               </span>
               <span style={{ fontSize: 14, color: 'var(--muted)' }}>: 1</span>
@@ -110,7 +110,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>推奨R:R比</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
-              <span style={{ fontSize: 32, fontWeight: 700, color: '#0284c7' }}>
+              <span style={{ fontSize: 32, fontWeight: 700, color: '#0084c7' }}>
                 {analysis.optimalRR.toFixed(2)}
               </span>
               <span style={{ fontSize: 14, color: 'var(--muted)' }}>: 1</span>
@@ -137,7 +137,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
                 <span style={{ fontWeight: 600 }}>{(analysis.tpHitRate * 100).toFixed(0)}%</span>
               </div>
               <div style={{ height: 8, background: 'var(--chip)', borderRadius: 4, overflow: 'hidden' }}>
-                <div style={{ width: `${analysis.tpHitRate * 100}%`, height: '100%', background: '#0284c7' }} />
+                <div style={{ width: `${analysis.tpHitRate * 100}%`, height: '100%', background: '#0084c7' }} />
               </div>
             </div>
           </div>

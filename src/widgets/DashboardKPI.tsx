@@ -131,7 +131,7 @@ function Gauge({ winRate, profitFactor }: { winRate: number; profitFactor: numbe
           <circle
             cx="40" cy="40" r="32"
             fill="none"
-            stroke="var(--accent-2, #0284c7)"
+            stroke="var(--accent-2, #0084c7)"
             strokeWidth="9"
             strokeLinecap="round"
             strokeDasharray={`${winPct * 2.01} ${201 - winPct * 2.01}`}
@@ -152,7 +152,7 @@ function Gauge({ winRate, profitFactor }: { winRate: number; profitFactor: numbe
           <circle
             cx="40" cy="40" r="32"
             fill="none"
-            stroke="var(--accent, #0ea5e9)"
+            stroke="var(--accent, #01a1ff)"
             strokeWidth="9"
             strokeLinecap="round"
             strokeDasharray={`${pfPct * 2.01} ${201 - pfPct * 2.01}`}
@@ -172,12 +172,12 @@ function SemiGauge({ winRate, wins, draws, losses }: { winRate: number; wins: nu
       <div style={{ position: 'relative', width: '100%', maxWidth: 120, height: 70 }}>
         <svg viewBox="0 0 120 70" style={{ width: '100%', height: 70 }}>
           <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--line)" strokeWidth="12" pathLength="100" />
-          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--accent-2, #0284c7)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`${winPct} ${100 - winPct}`} />
+          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--accent-2, #0084c7)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`${winPct} ${100 - winPct}`} />
           <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--danger, #ef4444)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`0 ${winPct} ${lossPct}`} />
         </svg>
       </div>
       <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(2,132,199,.35)', background: 'rgba(2,132,199,.12)', color: 'var(--accent-2, #0284c7)' }}>{wins}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(0,132,199,.35)', background: 'rgba(0,132,199,.12)', color: 'var(--accent-2, #0084c7)' }}>{wins}</span>
         <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--muted)' }}>{draws}</span>
         <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(239,68,68,.35)', background: 'rgba(239,68,68,.12)', color: 'var(--danger, #ef4444)' }}>{losses}</span>
       </div>
@@ -193,11 +193,11 @@ function BarSplit({ avgProfit, avgLoss }: { avgProfit: number; avgLoss: number }
   return (
     <div>
       <div style={{ height: 10, borderRadius: 999, background: 'var(--chip)', border: '1px solid var(--line)', display: 'flex', overflow: 'hidden', marginTop: 6 }}>
-        <div style={{ width: `${profitPct}%`, background: 'rgba(2,132,199,.35)' }} />
+        <div style={{ width: `${profitPct}%`, background: 'rgba(0,132,199,.35)' }} />
         <div style={{ width: `${lossPct}%`, background: 'rgba(239,68,68,.35)' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6, fontWeight: 600 }}>
-        <span style={{ color: 'var(--accent-2, #0284c7)' }}>+{Math.round(avgProfit).toLocaleString('ja-JP')} <span style={{ fontSize: 12, color: 'var(--muted)' }}>円</span></span>
+        <span style={{ color: 'var(--accent-2, #0084c7)' }}>+{Math.round(avgProfit).toLocaleString('ja-JP')} <span style={{ fontSize: 12, color: 'var(--muted)' }}>円</span></span>
         <span style={{ color: 'var(--danger, #ef4444)' }}>-{Math.round(avgLoss).toLocaleString('ja-JP')} <span style={{ fontSize: 12, color: 'var(--muted)' }}>円</span></span>
       </div>
     </div>
@@ -332,7 +332,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
               <circle
                 cx="40" cy="40" r="32"
                 fill="none"
-                stroke="var(--accent-2, #0284c7)"
+                stroke="var(--accent-2, #0084c7)"
                 strokeWidth="9"
                 strokeLinecap="round"
                 strokeDasharray={`${Math.min(Math.round(dash.profitFactor * 100), 201)} 201`}
@@ -400,7 +400,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           シャープレシオ
           <HelpIcon text="リスク1単位あたりのリターンを示す指標です。1.0以上で良好、1.5以上で優秀とされます。" />
         </div>
-        <div className="kpi-value" style={{ color: dash.sharpeRatio >= 1 ? 'var(--accent-2, #0284c7)' : 'inherit' }}>
+        <div className="kpi-value" style={{ color: dash.sharpeRatio >= 1 ? 'var(--accent-2, #0084c7)' : 'inherit' }}>
           {dash.sharpeRatio.toFixed(2)}
         </div>
         <div className="kpi-desc">リターン / リスク</div>

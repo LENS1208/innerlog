@@ -13,7 +13,7 @@ export function showToast(message: string, type: ToastType = 'info') {
     bottom: 24px;
     right: 24px;
     padding: 12px 20px;
-    background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#0284c7' : '#3b82f6'};
+    background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#0084c7' : '#0084c7'};
     color: white;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);

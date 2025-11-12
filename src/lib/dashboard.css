@@ -296,7 +296,7 @@
 
 .dash-pill.pos {
   background: rgba(34, 197, 94, 0.15);
-  color: var(--accent-2, #0284c7);
+  color: var(--accent-2, #0084c7);
 }
 
 .dash-pill.neg {
@@ -310,7 +310,7 @@
 }
 
 .accent-2 {
-  color: var(--accent-2, #0284c7);
+  color: var(--accent-2, #0084c7);
 }
 
 .danger {

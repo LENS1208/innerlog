@@ -39,7 +39,7 @@ export default function NotesReflectionSection() {
   const severityColor = (severity: string) => {
     if (severity === 'High') return '#ef4444';
     if (severity === 'Mid') return '#f59e0b';
-    return '#0284c7';
+    return '#0084c7';
   };
 
   return (
@@ -95,7 +95,7 @@ export default function NotesReflectionSection() {
                     style={{
                       width: '100%',
                       height: `${day.score * 10}%`,
-                      background: day.score >= 7 ? '#0284c7' : day.score >= 5 ? '#0284c7' : '#ef4444',
+                      background: day.score >= 7 ? '#0084c7' : day.score >= 5 ? '#0084c7' : '#ef4444',
                       borderRadius: 4,
                     }}
                   />

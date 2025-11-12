@@ -272,7 +272,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
             disabled={uploading}
             style={{
               padding: '10px 20px',
-              background: '#0284c7',
+              background: '#0084c7',
               color: '#fff',
               border: 'none',
               borderRadius: 8,

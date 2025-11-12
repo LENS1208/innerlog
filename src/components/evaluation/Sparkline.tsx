@@ -35,7 +35,7 @@ export default function Sparkline({ data, width = 280, height = 44 }: SparklineP
         stroke="#e5e7eb"
         strokeWidth="1"
       />
-      <path d={pathData} stroke="#6bb1ff" fill="none" strokeWidth="2" />
+      <path d={pathData} stroke="var(--accent)" fill="none" strokeWidth="2" />
     </svg>
   );
 }

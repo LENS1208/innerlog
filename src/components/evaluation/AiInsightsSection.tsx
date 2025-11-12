@@ -101,7 +101,7 @@ export default function AiInsightsSection({ topFeatures, clusters }: AiInsightsP
                     style={{
                       height: '100%',
                       width: `${(feature.value / maxValue) * 100}%`,
-                      background: 'linear-gradient(90deg, var(--accent), #0284c7)',
+                      background: 'var(--accent)',
                       transition: 'width 0.3s ease',
                     }}
                   />

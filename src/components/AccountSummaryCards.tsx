@@ -104,7 +104,7 @@ export default function AccountSummaryCards() {
           入金総額
           <HelpIcon text="口座に入金した総額です。取引資金の元手を把握するための指標です。" />
         </div>
-        <div className="kpi-value" style={{ color: '#0284c7' }}>
+        <div className="kpi-value" style={{ color: '#0084c7' }}>
           {summaryData.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
         <div className="kpi-desc">累計入金額の合計</div>
@@ -126,12 +126,12 @@ export default function AccountSummaryCards() {
           累計スワップ
           <HelpIcon text="ポジションを保有したことで発生したスワップポイントの総額です。プラスなら収入になります。" />
         </div>
-        <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? '#0284c7' : '#ef4444' }}>
+        <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? '#0084c7' : '#ef4444' }}>
           {summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
         </div>
         {hasSwapBreakdown ? (
           <div className="kpi-desc" style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
-            <span style={{ color: '#0284c7' }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')}円</span>
+            <span style={{ color: '#0084c7' }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')}円</span>
             {' / '}
             <span style={{ color: '#ef4444' }}>-{(summaryData.swap_negative || 0).toLocaleString('ja-JP')}円</span>
           </div>
@@ -147,7 +147,7 @@ export default function AccountSummaryCards() {
               XMポイント獲得
               <HelpIcon text="XMのロイヤルティプログラムで獲得したポイントを現金化した金額です。取引に応じて貯まります。" />
             </div>
-            <div className="kpi-value" style={{ color: '#0284c7' }}>
+            <div className="kpi-value" style={{ color: '#0084c7' }}>
               {summaryData.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
             </div>
             <div className="kpi-desc">XMPで獲得した金額</div>

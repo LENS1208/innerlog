@@ -91,7 +91,7 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 .fh-mt10{margin-top:10px}
 
 .fh-input{flex:1;min-width:140px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;outline:none;font-size:14px}
-.fh-input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.fh-input:focus{border-color:#0084c7;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
 .fh-btn{padding:9px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#111827;color:#fff;cursor:pointer;font-size:13px}
 .fh-btn--ghost{background:#fff;color:#111827}
 .fh-pill-group{display:flex;background:#f3f4f6;border-radius:999px;padding:4px}
@@ -103,7 +103,7 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 .fh-badge--outline{background:transparent}
 
 .fh-bar{ width:100%; height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden }
-.fh-bar__fill{ height:100%; background:#2563eb }   /* fill の高さが 100% 必須 */
+.fh-bar__fill{ height:100%; background:#0084c7 }   /* fill の高さが 100% 必須 */
 
 .fh-grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:720px){.fh-grid{grid-template-columns:repeat(3,1fr)}}
