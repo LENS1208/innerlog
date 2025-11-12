@@ -253,20 +253,24 @@ export default function ReportsMarket() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            主要通貨 vs クロス
-            <HelpIcon text="メジャー通貨ペアとマイナー通貨ペアの比較です。どちらが得意か確認できます。" />
+            通貨タイプ別
+            <HelpIcon text="JPY関連、USD関連、その他クロスの通貨タイプ別の損益比較です。" />
           </h3>
           <div style={{ fontSize: 14, fontWeight: 600 }}>
-            <span style={{ color: majorVsCrossData.major.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              主要：{formatValue(majorVsCrossData.major.profit, "profit")}
+            <span style={{ color: majorVsCrossData.jpy.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              JPY：{formatValue(majorVsCrossData.jpy.profit, "profit")}
             </span>
             {" / "}
-            <span style={{ color: majorVsCrossData.cross.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              クロス：{formatValue(majorVsCrossData.cross.profit, "profit")}
+            <span style={{ color: majorVsCrossData.usd.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              USD：{formatValue(majorVsCrossData.usd.profit, "profit")}
+            </span>
+            {" / "}
+            <span style={{ color: majorVsCrossData.other.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              他：{formatValue(majorVsCrossData.other.profit, "profit")}
             </span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
-            主要 {majorVsCrossData.major.count}件 / クロス {majorVsCrossData.cross.count}件
+            JPY {majorVsCrossData.jpy.count}件 / USD {majorVsCrossData.usd.count}件 / 他 {majorVsCrossData.other.count}件
           </div>
         </div>
       </div>
