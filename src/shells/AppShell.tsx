@@ -105,7 +105,7 @@ function Header({
                 display: "none",
                 justifyContent: "center",
                 alignItems: "center",
-                background: showFilters ? "var(--accent)" : "var(--surface)",
+                background: showFilters ? "var(--accent)" : "var(--button-bg)",
                 color: showFilters ? "#fff" : "var(--ink)",
                 border: "1px solid var(--line)",
                 borderRadius: 8,

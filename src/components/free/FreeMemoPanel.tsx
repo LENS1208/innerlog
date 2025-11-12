@@ -119,7 +119,7 @@ export default function FreeMemoPanel({
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               style={{
-                background: 'var(--chip)',
+                background: 'var(--button-bg)',
                 border: '1px solid var(--line)',
                 borderRadius: 8,
                 padding: '8px 12px',
