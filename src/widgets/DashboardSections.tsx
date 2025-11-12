@@ -4,7 +4,7 @@ import { ja } from 'date-fns/locale'
 import type { Trade } from '../lib/types'
 import '../lib/dashboard.css'
 import { HelpIcon } from '../components/common/HelpIcon'
-import { getGridLineColor } from '../lib/chartColors'
+import { getGridLineColor, getAccentColor, getLossColor } from '../lib/chartColors'
 
 type TradeWithProfit = {
   profitYen?: number
@@ -79,16 +79,16 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
         const dataIndex = context.dataIndex;
         if (dataIndex === undefined) return '#0084c7';
         const value = context.chart.data.datasets[0].data[dataIndex] as number;
-        return value >= 0 ? '#0084c7' : '#ef4444';
+        return value >= 0 ? getAccentColor(1) : getLossColor(1);
       },
       backgroundColor: (context: any) => {
         const chart = context.chart;
         const {ctx, chartArea} = chart;
-        if (!chartArea) return 'rgba(0, 132, 199, 0.1)';
+        if (!chartArea) return getAccentColor(0.1);
         const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-        gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
+        gradient.addColorStop(0, getLossColor(0.4));
         gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
-        gradient.addColorStop(1, 'rgba(0, 132, 199, 0.4)');
+        gradient.addColorStop(1, getAccentColor(0.4));
         return gradient;
       },
       pointRadius: 0,
@@ -247,8 +247,8 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '月次損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1.5,
     }]
   }
@@ -324,8 +324,8 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '日次損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
   }
@@ -576,16 +576,16 @@ export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
           const hasTradesValue = day.isCurrentMonth && day.count > 0
           const bgColor = hasTradesValue
             ? day.profit >= 0
-              ? 'rgba(0, 132, 199, 0.1)'
-              : 'rgba(239, 68, 68, 0.1)'
+              ? getAccentColor(0.1)
+              : getLossColor(0.1)
             : day.isCurrentMonth
             ? 'var(--surface)'
             : '#f9fafb'
 
           const borderColor = hasTradesValue
             ? day.profit >= 0
-              ? 'rgba(0, 132, 199, 0.3)'
-              : 'rgba(239, 68, 68, 0.3)'
+              ? getAccentColor(0.3)
+              : getLossColor(0.3)
             : 'var(--line)'
 
           return (
@@ -767,8 +767,8 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
   }
@@ -847,8 +847,8 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
   }
@@ -929,8 +929,8 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
-      borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
   }
@@ -1091,7 +1091,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
                 label: '損益',
                 data: setupData.items.map(s => s.profit),
                 backgroundColor: setupData.items.map(s =>
-                  s.profit >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'
+                  s.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
                 ),
               },
             ],
@@ -1173,7 +1173,7 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
       label: '取引回数',
       data: distributionData.counts,
       backgroundColor: distributionData.ranges.map((r, i) =>
-        r.max <= 0 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(0, 132, 199, 0.8)'
+        r.max <= 0 ? getLossColor(0.8) : getAccentColor(0.8)
       ),
     }]
   }
@@ -1283,7 +1283,7 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
       {
         label: '勝ちトレード',
         data: distributionData.winCounts,
-        backgroundColor: 'rgba(0, 132, 199, 0.8)',
+        backgroundColor: getAccentColor(0.8),
       },
       {
         label: '負けトレード',

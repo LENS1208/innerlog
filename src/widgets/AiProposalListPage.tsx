@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { getGridLineColor, getAccentColor, getLossColor } from "../lib/chartColors";
 import { getAllProposals, deleteProposal, saveProposal, type AiProposal } from '../services/aiProposal.service';
 import { showToast } from '../lib/toast';
 import type { AiProposalData } from '../types/ai-proposal.types';

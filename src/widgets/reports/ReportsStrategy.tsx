@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../../lib/chartColors";
 import { Bar, Doughnut, Scatter } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
@@ -389,7 +390,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map(getMetricValue),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      s.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
                     ),
                   },
                 ],
@@ -420,7 +421,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: [sideData.long.count, sideData.short.count],
-                    backgroundColor: ["rgba(0, 132, 199, 0.8)", "rgba(0, 132, 199, 0.8)"],
+                    backgroundColor: [getAccentColor(0.8), getAccentColor(0.8)],
                   },
                 ],
               }}
@@ -446,7 +447,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: setupData.slice(0, 6).map((s) => s.avgHoldTime),
-                    backgroundColor: "rgba(0, 132, 199, 0.8)",
+                    backgroundColor: getAccentColor(0.8),
                   },
                 ],
               }}
@@ -486,7 +487,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: setupData.slice(0, 6).map((s) => s.winRate),
-                    backgroundColor: "rgba(0, 132, 199, 0.8)",
+                    backgroundColor: getAccentColor(0.8),
                   },
                 ],
               }}
@@ -518,7 +519,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map((s) => Math.min(s.pf, 5)),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.pf >= 1 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      s.pf >= 1 ? getAccentColor(0.8) : getLossColor(0.8)
                     ),
                   },
                 ],
@@ -550,12 +551,12 @@ export default function ReportsStrategy() {
                   {
                     label: "買い",
                     data: setupCrossData.slice(0, 5).map((d) => d.long),
-                    backgroundColor: "rgba(0, 132, 199, 0.8)",
+                    backgroundColor: getAccentColor(0.8),
                   },
                   {
                     label: "売り",
                     data: setupCrossData.slice(0, 5).map((d) => d.short),
-                    backgroundColor: "rgba(0, 132, 199, 0.8)",
+                    backgroundColor: getAccentColor(0.8),
                   },
                 ],
               }}
@@ -636,9 +637,9 @@ export default function ReportsStrategy() {
                     {
                       data: exitEfficiencyData.distribution.map(d => d.count),
                       backgroundColor: exitEfficiencyData.distribution.map((d, idx) =>
-                        idx < 2 ? "rgba(239, 68, 68, 0.8)" :
-                        idx < 4 ? "rgba(245, 158, 11, 0.8)" :
-                        "rgba(0, 132, 199, 0.8)"
+                        idx < 2 ? getLossColor(0.8) :
+                        idx < 4 ? getWarningColor(0.8) :
+                        getAccentColor(0.8)
                       ),
                     },
                   ],

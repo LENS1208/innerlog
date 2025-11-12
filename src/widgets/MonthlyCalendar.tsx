@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { getGridLineColor, getAccentColor, getLossColor } from "../lib/chartColors";
 import type { Trade } from "../lib/types";
 import { parseCsvText } from "../lib/csv";
 import { useDataset } from "../lib/dataset.context";
@@ -665,7 +666,7 @@ export default function MonthlyCalendar() {
                   const hasTradesValue = day.isCurrentMonth && day.tradeCount > 0;
                   const bgColor = hasTradesValue
                     ? day.profitYen >= 0
-                      ? "rgba(0, 132, 199, 0.1)"
+                      ? getAccentColor(0.1)
                       : "rgba(239, 68, 68, 0.1)"
                     : day.isCurrentMonth
                     ? "var(--surface)"

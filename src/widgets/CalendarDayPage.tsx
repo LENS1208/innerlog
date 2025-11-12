@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { getGridLineColor, getAccentColor, getLossColor } from "../lib/chartColors";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 import { useDataset } from "../lib/dataset.context";

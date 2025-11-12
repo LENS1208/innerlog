@@ -1,4 +1,5 @@
 import React from 'react';
+import { getAccentColor, getLossColor } from "../lib/chartColors";
 import HeroSummary from '../components/ai/HeroSummary';
 import DailyActions from '../components/ai/DailyActions';
 import TodaysPlanCard from '../components/ai/TodaysPlanCard';

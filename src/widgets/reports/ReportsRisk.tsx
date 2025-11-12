@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../../lib/chartColors";
 import { Bar, Line } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
@@ -520,8 +521,8 @@ export default function ReportsRisk() {
                     data: profitDistribution.counts,
                     backgroundColor: profitDistribution.labels.map((label) =>
                       label.includes("~0") || label.includes("以下") || label.startsWith("-")
-                        ? "rgba(239, 68, 68, 0.8)"
-                        : "rgba(0, 132, 199, 0.8)"
+                        ? getLossColor(0.8)
+                        : getAccentColor(0.8)
                     ),
                   },
                 ],
@@ -554,8 +555,8 @@ export default function ReportsRisk() {
                     data: rMultipleDistribution.counts,
                     backgroundColor: rMultipleDistribution.labels.map((label) =>
                       label.includes("~0R") || label.includes("以下") || label.startsWith("-")
-                        ? "rgba(239, 68, 68, 0.8)"
-                        : "rgba(0, 132, 199, 0.8)"
+                        ? getLossColor(0.8)
+                        : getAccentColor(0.8)
                     ),
                   },
                 ],
@@ -632,7 +633,7 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionByDay.slice(0, 7).map((d) => d.loss),
-                    backgroundColor: "rgba(239, 68, 68, 0.8)",
+                    backgroundColor: getLossColor(0.8),
                   },
                 ],
               }}
@@ -662,7 +663,7 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionByPair.slice(0, 6).map((d) => d.loss),
-                    backgroundColor: "rgba(239, 68, 68, 0.8)",
+                    backgroundColor: getLossColor(0.8),
                   },
                 ],
               }}
@@ -692,7 +693,7 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionBySetup.slice(0, 6).map((d) => d.loss),
-                    backgroundColor: "rgba(239, 68, 68, 0.8)",
+                    backgroundColor: getLossColor(0.8),
                   },
                 ],
               }}

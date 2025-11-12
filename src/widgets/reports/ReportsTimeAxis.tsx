@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../../lib/chartColors";
 import { Bar, Line, Scatter } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
@@ -606,7 +607,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dayOfWeekData.map((d) => d.profit),
                     backgroundColor: dayOfWeekData.map((d) =>
-                      d.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
                     ),
                   },
                 ],
@@ -638,7 +639,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dayOfWeekData.map((d) => d.profit),
                     backgroundColor: dayOfWeekData.map((d) =>
-                      d.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
                     ),
                   },
                 ],
@@ -669,7 +670,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: hourData.map((h) => h.profit),
-                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8))),
                   },
                 ],
               }}
@@ -699,7 +700,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: hourData.map((h) => h.profit),
-                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8))),
                   },
                 ],
               }}
@@ -734,7 +735,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dayOfWeekData.map(getMetricValue),
                     backgroundColor: dayOfWeekData.map((d) =>
-                      d.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
                     ),
                   },
                 ],
@@ -761,7 +762,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: hourData.map(getMetricValue),
-                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8))),
                   },
                 ],
               }}
@@ -788,7 +789,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dailyData.map(([_, d]) => d.profit),
                     backgroundColor: dailyData.map(([_, d]) =>
-                      d.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
                     ),
                   },
                 ],
@@ -826,7 +827,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: weeklyData.map(([_, d]) => d.profit),
                     backgroundColor: weeklyData.map(([_, d]) =>
-                      d.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
                     ),
                   },
                 ],
@@ -853,7 +854,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: holdTimeDistribution.map((h) => h.count),
-                    backgroundColor: "rgba(0, 132, 199, 0.8)",
+                    backgroundColor: getAccentColor(0.8),
                   },
                 ],
               }}
@@ -874,8 +875,8 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: dailyData.map(([_, d]) => (d.count > 0 ? (d.wins / d.count) * 100 : 0)),
-                    borderColor: "rgba(0, 132, 199, 1)",
-                    backgroundColor: "rgba(0, 132, 199, 0.1)",
+                    borderColor: getAccentColor(1),
+                    backgroundColor: getAccentColor(0.1),
                     fill: true,
                     tension: 0.3,
                   },
@@ -914,7 +915,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: scatterTimeProfit,
                     backgroundColor: scatterTimeProfit.map((p) =>
-                      p.y >= 0 ? "rgba(0, 132, 199, 0.6)" : "rgba(239, 68, 68, 0.6)"
+                      p.y >= 0 ? getAccentColor(0.6) : getLossColor(0.6)
                     ),
                     pointRadius: 4,
                   },
@@ -940,7 +941,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: scatterHoldTimeProfit,
                     backgroundColor: scatterHoldTimeProfit.map((p) =>
-                      p.y >= 0 ? "rgba(0, 132, 199, 0.6)" : "rgba(239, 68, 68, 0.6)"
+                      p.y >= 0 ? getAccentColor(0.6) : getLossColor(0.6)
                     ),
                     pointRadius: 4,
                   },
@@ -1082,7 +1083,7 @@ export default function ReportsTimeAxis() {
                     cursor: "pointer",
                     background: "rgba(0, 132, 199, 0.05)",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0, 132, 199, 0.1)")}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = getAccentColor(0.1))}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(0, 132, 199, 0.05)")}
                 >
                   <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>月別</td>
@@ -1233,7 +1234,7 @@ function LossStreakHeatmap({ trades }: { trades: Trade[] }) {
           <span style={{ fontSize: 10 }}>なし</span>
           <div style={{ width: 12, height: 12, background: "rgba(239, 68, 68, 0.4)", border: "1px solid var(--line)", marginLeft: 4 }}></div>
           <span style={{ fontSize: 10 }}>中</span>
-          <div style={{ width: 12, height: 12, background: "rgba(239, 68, 68, 0.8)", border: "1px solid var(--line)", marginLeft: 4 }}></div>
+          <div style={{ width: 12, height: 12, background: getLossColor(0.8), border: "1px solid var(--line)", marginLeft: 4 }}></div>
           <span style={{ fontSize: 10 }}>高</span>
         </div>
       </div>
