@@ -7,9 +7,30 @@ interface TradeExampleCardProps {
 
 export function TradeExampleCard({ ex }: TradeExampleCardProps) {
   const isProfit = ex.pnlJPY >= 0;
-  const isGoodExample = ex.note?.includes('良い') || ex.note?.includes('好例') || ex.note?.includes('成功');
-  const isOverLotOrCounter = ex.note?.includes('過大') || ex.note?.includes('逆張り');
-  const isBadExample = ex.note?.includes('改善') || ex.note?.includes('課題');
+  const note = ex.note || '';
+
+  const isGoodExample =
+    note.includes('良い') ||
+    note.includes('好例') ||
+    note.includes('成功') ||
+    note.includes('綺麗') ||
+    note.includes('理想') ||
+    note.includes('完璧') ||
+    note.includes('適切') ||
+    (isProfit && (note.includes('利確') || note.includes('勝ち') || note.includes('プラス')));
+
+  const isOverLotOrCounter =
+    note.includes('過大') ||
+    note.includes('逆張り') ||
+    note.includes('大きすぎ') ||
+    note.includes('ロット大');
+
+  const isBadExample =
+    note.includes('改善') ||
+    note.includes('課題') ||
+    note.includes('注意') ||
+    note.includes('反省') ||
+    (!isProfit && (note.includes('損切り') || note.includes('負け') || note.includes('マイナス')));
 
   let iconType: 'good' | 'warning' | 'bad' | null = null;
   let iconSymbol = '';
@@ -27,6 +48,16 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
     iconBg = '#FEF3C7';
     iconColor = '#D97706';
   } else if (isBadExample) {
+    iconType = 'bad';
+    iconSymbol = '!';
+    iconBg = 'var(--loss-bg)';
+    iconColor = 'var(--loss)';
+  } else if (isProfit && ex.pnlJPY > 10000) {
+    iconType = 'good';
+    iconSymbol = '✓';
+    iconBg = 'var(--gain-bg)';
+    iconColor = 'var(--gain)';
+  } else if (!isProfit && ex.pnlJPY < -10000) {
     iconType = 'bad';
     iconSymbol = '!';
     iconBg = 'var(--loss-bg)';
