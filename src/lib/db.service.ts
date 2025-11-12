@@ -401,7 +401,7 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
 
   return {
     ticket: trade.ticket || trade.id,
-    item: trade.pair || trade.symbol || '',
+    item: (trade.pair || trade.symbol || '').toUpperCase(),
     side: trade.side,
     size: trade.volume,
     open_time: normalizeDateTime(trade.openTime || trade.datetime),

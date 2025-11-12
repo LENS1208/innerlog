@@ -80,7 +80,7 @@ export default function FiltersBar() {
 
         const symbolSet = new Set<string>();
         trades.forEach(trade => {
-          const symbol = trade.pair || trade.symbol;
+          const symbol = (trade.pair || trade.symbol || (trade as any).item || '').toUpperCase();
           if (symbol) {
             symbolSet.add(symbol);
           }

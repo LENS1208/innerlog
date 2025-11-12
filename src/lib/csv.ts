@@ -36,7 +36,7 @@ export async function parseCsv(file: File): Promise<Trade[]> {
     return {
       id: `csv-${n}-${pick("datetime")}-${pick("pair")}`,
       datetime: pick("datetime"),
-      pair: pick("pair") || "UNKNOWN",
+      pair: (pick("pair") || "UNKNOWN").toUpperCase(),
       side: sideRaw.includes("SHORT") || sideRaw === "S" ? "SHORT" : "LONG",
       volume: Number(pick("volume")) || 0,
       profitYen: Number(pick("profitYen")) || 0,
@@ -127,7 +127,7 @@ export function parseCsvText(text: string): Trade[] {
     // 必須の補完（日時優先順）
     const openTime  = get(iOpenTime);
     const closeTime = get(iCloseTime) || openTime;
-    const pair      = get(iPair) || "USDJPY";
+    const pair      = (get(iPair) || "USDJPY").toUpperCase();
     const sideRaw   = get(iType).toLowerCase();
     const side: "LONG" | "SHORT" =
       /short|sell|\bs\b/.test(sideRaw) ? "SHORT" :
@@ -183,7 +183,7 @@ export function parseCsvText(text: string): Trade[] {
       holdTimeMin,
 
       // エイリアス（後方互換）
-      symbol: pair,
+      symbol: pair.toUpperCase(),
       action: side,
       profit: profitYen,
     } as Trade;
