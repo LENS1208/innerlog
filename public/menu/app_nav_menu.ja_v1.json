@@ -8,5 +8,6 @@
   { "key": "ai-evaluation",   "label": "AI評価" },
   { "key": "notebook",   "label": "トレード日記" },
   { "key": "ai-proposal",   "label": "相場予想" },
-  { "key": "trades",     "label": "取引一覧" }
+  { "key": "trades",     "label": "取引一覧" },
+  { "key": "settings",   "label": "設定" }
 ]
