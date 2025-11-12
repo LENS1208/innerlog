@@ -334,14 +334,25 @@ export default function MonthlyCalendar() {
       .filter((t) => {
         const openTime = parseDateSafe(t.openTime || t.datetime);
         const closeTime = parseDateSafe(t.datetime);
+
         const openDow = openTime.getDay();
+        const closeDow = closeTime.getDay();
 
-        if (openDow !== 5) return false;
+        if (closeDow === 0 || closeDow === 6) return false;
 
-        if (openTime.toDateString() === closeTime.toDateString()) return false;
+        let currentDate = new Date(openTime);
+        let crossedWeekend = false;
 
-        const daysDiff = Math.floor((closeTime.getTime() - openTime.getTime()) / (1000 * 60 * 60 * 24));
-        return daysDiff >= 2;
+        while (currentDate < closeTime) {
+          const dow = currentDate.getDay();
+          if (dow === 6 || dow === 0) {
+            crossedWeekend = true;
+            break;
+          }
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return crossedWeekend;
       })
       .slice(0, 50)
       .map((t) => ({
