@@ -650,11 +650,11 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                   backgroundColor: (context: any) => {
                     const chart = context.chart;
                     const {ctx, chartArea} = chart;
-                    if (!chartArea) return 'rgba(59, 130, 246, 0.1)';
+                    if (!chartArea) return 'rgba(0, 132, 199, 0.1)';
                     const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
                     gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
                     gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
-                    gradient.addColorStop(1, 'rgba(2, 132, 199, 0.4)');
+                    gradient.addColorStop(1, 'rgba(0, 132, 199, 0.4)');
                     return gradient;
                   },
                   segment: {

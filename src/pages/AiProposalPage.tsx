@@ -67,7 +67,7 @@ export default function AiProposalPage({
             {pair && (
               <span style={{
                 padding: '2px 6px',
-                background: 'rgba(59, 130, 246, 0.1)',
+                background: 'rgba(0, 132, 199, 0.1)',
                 color: 'rgb(59, 130, 246)',
                 borderRadius: 4,
                 fontSize: 11,
@@ -79,7 +79,7 @@ export default function AiProposalPage({
             {timeframe && (
               <span style={{
                 padding: '2px 6px',
-                background: 'rgba(59, 130, 246, 0.1)',
+                background: 'rgba(0, 132, 199, 0.1)',
                 color: 'rgb(59, 130, 246)',
                 borderRadius: 4,
                 fontSize: 11,

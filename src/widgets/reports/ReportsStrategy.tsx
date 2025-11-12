@@ -389,7 +389,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map(getMetricValue),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      s.profit >= 0 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -420,7 +420,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: [sideData.long.count, sideData.short.count],
-                    backgroundColor: ["rgba(59, 130, 246, 0.8)", "rgba(168, 85, 247, 0.8)"],
+                    backgroundColor: ["rgba(0, 132, 199, 0.8)", "rgba(0, 132, 199, 0.8)"],
                   },
                 ],
               }}
@@ -446,7 +446,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: setupData.slice(0, 6).map((s) => s.avgHoldTime),
-                    backgroundColor: "rgba(59, 130, 246, 0.8)",
+                    backgroundColor: "rgba(0, 132, 199, 0.8)",
                   },
                 ],
               }}
@@ -486,7 +486,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: setupData.slice(0, 6).map((s) => s.winRate),
-                    backgroundColor: "rgba(2, 132, 199, 0.8)",
+                    backgroundColor: "rgba(0, 132, 199, 0.8)",
                   },
                 ],
               }}
@@ -518,7 +518,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map((s) => Math.min(s.pf, 5)),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.pf >= 1 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      s.pf >= 1 ? "rgba(0, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -550,12 +550,12 @@ export default function ReportsStrategy() {
                   {
                     label: "買い",
                     data: setupCrossData.slice(0, 5).map((d) => d.long),
-                    backgroundColor: "rgba(59, 130, 246, 0.8)",
+                    backgroundColor: "rgba(0, 132, 199, 0.8)",
                   },
                   {
                     label: "売り",
                     data: setupCrossData.slice(0, 5).map((d) => d.short),
-                    backgroundColor: "rgba(168, 85, 247, 0.8)",
+                    backgroundColor: "rgba(0, 132, 199, 0.8)",
                   },
                 ],
               }}
@@ -638,7 +638,7 @@ export default function ReportsStrategy() {
                       backgroundColor: exitEfficiencyData.distribution.map((d, idx) =>
                         idx < 2 ? "rgba(239, 68, 68, 0.8)" :
                         idx < 4 ? "rgba(245, 158, 11, 0.8)" :
-                        "rgba(2, 132, 199, 0.8)"
+                        "rgba(0, 132, 199, 0.8)"
                       ),
                     },
                   ],

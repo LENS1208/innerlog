@@ -60,7 +60,7 @@ export default function AlertsRulesSection({ metrics }: Props) {
               ) : (
                 alerts.map((alert, idx) => {
                   const borderColor = alert.type === 'danger' ? '#ef4444' : '#0084c7';
-                  const bgColor = alert.type === 'danger' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(59, 130, 246, 0.1)';
+                  const bgColor = alert.type === 'danger' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(0, 132, 199, 0.1)';
                   const icon = alert.type === 'danger' ? '🔴' : '⚠️';
                   return (
                     <div key={idx} style={{ padding: 12, border: `1px solid ${borderColor}`, borderRadius: 8, background: bgColor, fontSize: 13 }}>

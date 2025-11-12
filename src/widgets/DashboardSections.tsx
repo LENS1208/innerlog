@@ -84,11 +84,11 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       backgroundColor: (context: any) => {
         const chart = context.chart;
         const {ctx, chartArea} = chart;
-        if (!chartArea) return 'rgba(59, 130, 246, 0.1)';
+        if (!chartArea) return 'rgba(0, 132, 199, 0.1)';
         const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
         gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
         gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
-        gradient.addColorStop(1, 'rgba(2, 132, 199, 0.4)');
+        gradient.addColorStop(1, 'rgba(0, 132, 199, 0.4)');
         return gradient;
       },
       pointRadius: 0,
@@ -247,7 +247,7 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '月次損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(2, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
       borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
       borderWidth: 1.5,
     }]
@@ -324,7 +324,7 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '日次損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(2, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
       borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
       borderWidth: 1,
     }]
@@ -576,7 +576,7 @@ export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
           const hasTradesValue = day.isCurrentMonth && day.count > 0
           const bgColor = hasTradesValue
             ? day.profit >= 0
-              ? 'rgba(2, 132, 199, 0.1)'
+              ? 'rgba(0, 132, 199, 0.1)'
               : 'rgba(239, 68, 68, 0.1)'
             : day.isCurrentMonth
             ? 'var(--surface)'
@@ -584,7 +584,7 @@ export function MonthCalendar({ trades }: { trades: TradeWithProfit[] }) {
 
           const borderColor = hasTradesValue
             ? day.profit >= 0
-              ? 'rgba(2, 132, 199, 0.3)'
+              ? 'rgba(0, 132, 199, 0.3)'
               : 'rgba(239, 68, 68, 0.3)'
             : 'var(--line)'
 
@@ -767,7 +767,7 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(2, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
       borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
       borderWidth: 1,
     }]
@@ -847,7 +847,7 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(2, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
       borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
       borderWidth: 1,
     }]
@@ -929,7 +929,7 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? 'rgba(2, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: profits.map(p => p >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
       borderColor: profits.map(p => p >= 0 ? '#0084c7' : '#ef4444'),
       borderWidth: 1,
     }]
@@ -1091,7 +1091,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
                 label: '損益',
                 data: setupData.items.map(s => s.profit),
                 backgroundColor: setupData.items.map(s =>
-                  s.profit >= 0 ? 'rgba(2, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'
+                  s.profit >= 0 ? 'rgba(0, 132, 199, 0.8)' : 'rgba(239, 68, 68, 0.8)'
                 ),
               },
             ],
@@ -1173,7 +1173,7 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
       label: '取引回数',
       data: distributionData.counts,
       backgroundColor: distributionData.ranges.map((r, i) =>
-        r.max <= 0 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(2, 132, 199, 0.8)'
+        r.max <= 0 ? 'rgba(239, 68, 68, 0.8)' : 'rgba(0, 132, 199, 0.8)'
       ),
     }]
   }
@@ -1283,7 +1283,7 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
       {
         label: '勝ちトレード',
         data: distributionData.winCounts,
-        backgroundColor: 'rgba(2, 132, 199, 0.8)',
+        backgroundColor: 'rgba(0, 132, 199, 0.8)',
       },
       {
         label: '負けトレード',

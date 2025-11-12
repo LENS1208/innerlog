@@ -526,7 +526,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                                   borderRadius: 4,
                                   fontSize: 12,
                                   fontWeight: 600,
-                                  background: 'rgba(59, 130, 246, 0.1)',
+                                  background: 'rgba(0, 132, 199, 0.1)',
                                   color: 'rgb(59, 130, 246)',
                                 }}
                               >

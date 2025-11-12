@@ -114,7 +114,7 @@ export default function UserMenu() {
               borderBottom: '1px solid var(--line)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(59, 130, 246, 0.08)';
+              e.currentTarget.style.background = 'rgba(0, 132, 199, 0.08)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = 'transparent';

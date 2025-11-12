@@ -213,7 +213,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
       {
         label: '勝率（%）',
         data: [stats.winRate, 0, 0],
-        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+        backgroundColor: 'rgba(0, 132, 199, 0.8)',
         yAxisID: 'y',
       },
       {
@@ -236,11 +236,11 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
     datasets: [{
       label: '累積損益',
       data: stats.cumulativePnL,
-      borderColor: 'rgba(59, 130, 246, 0.8)',
+      borderColor: 'rgba(0, 132, 199, 0.8)',
       backgroundColor: (context: any) => {
         const chart = context.chart;
         const { ctx, chartArea } = chart;
-        if (!chartArea) return 'rgba(59, 130, 246, 0.1)';
+        if (!chartArea) return 'rgba(0, 132, 199, 0.1)';
         const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
         gradient.addColorStop(0, 'rgba(239, 68, 68, 0.2)');
         gradient.addColorStop(0.5, 'rgba(156, 163, 175, 0.1)');
@@ -566,7 +566,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>改善提案</h3>
-            <div style={{ padding: 20, background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: 12 }}>
+            <div style={{ padding: 20, background: 'rgba(0, 132, 199, 0.05)', border: '1px solid rgba(0, 132, 199, 0.2)', borderRadius: 12 }}>
               {stats.recommendations.length > 0 ? (
                 <ul style={{ margin: 0, paddingLeft: 20, fontSize: 14, color: 'var(--ink)', lineHeight: 1.8 }}>
                   {stats.recommendations.map((rec, i) => (

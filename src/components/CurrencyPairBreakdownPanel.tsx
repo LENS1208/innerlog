@@ -171,7 +171,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: ['rgba(59, 130, 246, 0.8)', 'rgba(168, 85, 247, 0.8)'],
+      backgroundColor: ['rgba(0, 132, 199, 0.8)', 'rgba(0, 132, 199, 0.8)'],
     }],
   };
 
@@ -215,11 +215,11 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       label: '損益',
       data: stats.sortedTrades.map(t => getProfit(t)),
       borderColor: (context: any) => {
-        if (!context.raw) return 'rgba(59, 130, 246, 0.8)';
+        if (!context.raw) return 'rgba(0, 132, 199, 0.8)';
         return context.raw >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)';
       },
       backgroundColor: (context: any) => {
-        if (!context.raw) return 'rgba(59, 130, 246, 0.3)';
+        if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
         return context.raw >= 0 ? 'rgba(22, 163, 74, 0.3)' : 'rgba(239, 68, 68, 0.3)';
       },
       borderWidth: 2,
