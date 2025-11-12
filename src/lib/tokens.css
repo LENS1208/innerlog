@@ -1,50 +1,181 @@
-:root{
-  --bg:#f3f4f6; --surface:#ffffff; --ink:#0b1220; --muted:#6b7280;
-  --line:#e5e7eb; --accent:#3b82f6; --gain:#16a34a; --loss:#ef4444;
-  --warning:#f59e0b; --danger:#ef4444; --chip:#f1f3f8; --panel-2:#ffffff;
-  --radius:14px; --header-h:56px; --row-h:44px;
-  --space-1:8px; --space-2:12px; --space-3:16px; --space-4:20px;
-  --sidenav-w:240px;
-  --bp-sm:640px; --bp-md:768px; --bp-lg:1024px; --bp-xl:1280px; --bp-2xl:1536px;
-  --px-mobile:16px; --px-desktop:24px;
+/* ライトモード（デフォルト） - ハイセンスで都会的 */
+:root,
+:root[data-theme="light"] {
+  --bg: #fafbfc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --accent: #2563eb;
+  --gain: #10b981;
+  --loss: #ef4444;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --chip: #f1f5f9;
+  --panel-2: #ffffff;
+  --bg-secondary: #f8fafc;
+
+  --radius: 14px;
+  --header-h: 56px;
+  --row-h: 44px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 20px;
+  --sidenav-w: 240px;
+
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+  --px-mobile: 16px;
+  --px-desktop: 24px;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font:14px/1.6 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;min-width:360px;margin:0;overflow-x:hidden}
-.pnl-pos{color:var(--gain);font-weight:700}.pnl-neg{color:var(--loss);font-weight:700}
+
+/* ダークモード - ハイセンスで都会的 */
+:root[data-theme="dark"] {
+  --bg: linear-gradient(135deg, #0f1117 0%, #1a1b23 100%);
+  --surface: #1e1f2b;
+  --ink: #f1f5f9;
+  --muted: #94a3b8;
+  --line: #2d2e3a;
+  --accent: #3b82f6;
+  --gain: #10b981;
+  --loss: #f87171;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --chip: #252630;
+  --panel-2: #252630;
+  --bg-secondary: #181923;
+
+  --radius: 14px;
+  --header-h: 56px;
+  --row-h: 44px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 20px;
+  --sidenav-w: 240px;
+
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+  --px-mobile: 16px;
+  --px-desktop: 24px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.6 system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  min-width: 360px;
+  margin: 0;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:root[data-theme="dark"] body {
+  background: linear-gradient(135deg, #0f1117 0%, #1a1b23 100%);
+  background-attachment: fixed;
+}
+
+.pnl-pos {
+  color: var(--gain);
+  font-weight: 700;
+}
+
+.pnl-neg {
+  color: var(--loss);
+  font-weight: 700;
+}
 
 @media (min-width: 768px) {
-  :root { --px-mobile: 24px; }
-  .header-inner { padding: 0 var(--px-desktop) !important; }
-  .main-container { padding: var(--px-desktop) !important; }
-  .banner-section { margin-left: var(--px-desktop) !important; margin-right: var(--px-desktop) !important; }
+  :root {
+    --px-mobile: 24px;
+  }
+  .header-inner {
+    padding: 0 var(--px-desktop) !important;
+  }
+  .main-container {
+    padding: var(--px-desktop) !important;
+  }
+  .banner-section {
+    margin-left: var(--px-desktop) !important;
+    margin-right: var(--px-desktop) !important;
+  }
 }
 
 /* 大画面: 1行レイアウト (1280px以上 = xl) */
 @media (min-width: 1280px) {
-  .desktop-sidenav { display: block !important; }
-  .mobile-only { display: none !important; }
-  .main-content { margin-left: var(--sidenav-w) !important; }
-  .header-oneline { display: flex !important; }
-  .header-twoline { display: none !important; }
-  .mobile-filters { display: none !important; }
+  .desktop-sidenav {
+    display: block !important;
+  }
+  .mobile-only {
+    display: none !important;
+  }
+  .main-content {
+    margin-left: var(--sidenav-w) !important;
+  }
+  .header-oneline {
+    display: flex !important;
+  }
+  .header-twoline {
+    display: none !important;
+  }
+  .mobile-filters {
+    display: none !important;
+  }
 }
 
 /* 中画面: 2行レイアウト (1024px-1279px = lg) */
 @media (min-width: 1024px) and (max-width: 1279px) {
-  .desktop-sidenav { display: block !important; }
-  .mobile-only { display: none !important; }
-  .main-content { margin-left: var(--sidenav-w) !important; }
-  .header-oneline { display: none !important; }
-  .header-twoline { display: flex !important; }
-  .mobile-filters { display: none !important; }
+  .desktop-sidenav {
+    display: block !important;
+  }
+  .mobile-only {
+    display: none !important;
+  }
+  .main-content {
+    margin-left: var(--sidenav-w) !important;
+  }
+  .header-oneline {
+    display: none !important;
+  }
+  .header-twoline {
+    display: flex !important;
+  }
+  .mobile-filters {
+    display: none !important;
+  }
 }
 
 /* 小画面: モバイルレイアウト (1023px以下 = <lg) */
 @media (max-width: 1023px) {
-  .desktop-sidenav { display: none !important; }
-  .mobile-only { display: flex !important; }
-  .main-content { margin-left: 0 !important; }
-  .header-oneline { display: none !important; }
-  .header-twoline { display: none !important; }
-  .mobile-filters { display: flex !important; }
+  .desktop-sidenav {
+    display: none !important;
+  }
+  .mobile-only {
+    display: flex !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+  }
+  .header-oneline {
+    display: none !important;
+  }
+  .header-twoline {
+    display: none !important;
+  }
+  .mobile-filters {
+    display: flex !important;
+  }
 }

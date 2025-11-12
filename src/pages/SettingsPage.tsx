@@ -63,6 +63,12 @@ export default function SettingsPage() {
     loadImportHistory();
   }, []);
 
+  const handleThemeChange = (newTheme: string) => {
+    setSettings({ ...settings, theme: newTheme });
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
   const loadUserAndSettings = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -81,9 +87,11 @@ export default function SettingsPage() {
 
         if (error) throw error;
 
+        const localTheme = localStorage.getItem('theme');
+
         if (data) {
           setSettings({
-            theme: data.theme || 'light',
+            theme: localTheme || data.theme || 'light',
             timezone: data.timezone || 'Asia/Tokyo',
             time_format: data.time_format || '24h',
             date_format: data.date_format || 'yyyy-MM-dd',
@@ -95,6 +103,11 @@ export default function SettingsPage() {
             ai_evaluation_enabled: data.ai_evaluation_enabled ?? true,
             ai_proposal_enabled: data.ai_proposal_enabled ?? true,
             ai_advice_enabled: data.ai_advice_enabled ?? true,
+          });
+        } else {
+          setSettings({
+            ...settings,
+            theme: localTheme || 'light',
           });
         }
       }
@@ -709,13 +722,15 @@ export default function SettingsPage() {
                 </label>
                 <select
                   value={settings.theme}
-                  onChange={(e) => setSettings({ ...settings, theme: e.target.value })}
+                  onChange={(e) => handleThemeChange(e.target.value)}
                   style={{
                     width: '100%',
                     padding: '8px 12px',
                     border: '1px solid var(--line)',
                     borderRadius: 4,
                     fontSize: 14,
+                    backgroundColor: 'var(--surface)',
+                    color: 'var(--ink)',
                   }}
                 >
                   <option value="light">ライトモード</option>
