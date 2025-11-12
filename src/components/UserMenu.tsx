@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import defaultAvatar from '../assets/image copy copy copy copy copy copy copy.png';
+import defaultAvatar from '../assets/inner-log-logo.png';
 
 export default function UserMenu() {
   const [user, setUser] = useState<any>(null);
