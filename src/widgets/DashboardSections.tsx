@@ -1068,7 +1068,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
       <div className="dash-card">
         <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別</h3>
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
-          セットアップタグが見つかりません<br/>
+          戦略タグが見つかりません<br/>
           <span style={{ fontSize: 12 }}>メモに「ブレイクアウト」「トレンド」などを記載してください</span>
         </div>
       </div>

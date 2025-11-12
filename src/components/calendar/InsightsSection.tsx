@@ -357,8 +357,8 @@ export default function InsightsSection(props: InsightsSectionProps) {
         {/* 8) タグ / Mini Expectation */}
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
-            タグ別期待値
-            <HelpIcon text="各タグごとの損益と勝率を表示します。どの戦略が効果的かを確認できます。" />
+            戦略タグ別期待値
+            <HelpIcon text="各戦略タグごとの損益と勝率を表示します。どの戦略タグが効果的かを確認できます。" />
           </div>
           <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
           <div
@@ -374,7 +374,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               minWidth: "400px",
             }}
           >
-            <div>タグ</div>
+            <div>戦略タグ</div>
             <div style={{ textAlign: "right" }}>損益</div>
             <div style={{ textAlign: "right" }}>勝率</div>
             <div style={{ textAlign: "right" }}>注目</div>
