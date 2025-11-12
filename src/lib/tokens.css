@@ -5,7 +5,7 @@
   --surface: #ffffff;
   --ink: #0f172a;
   --muted: #64748b;
-  --line: #e2e8f0;
+  --line: #cbd5e1;
   --accent: #2563eb;
   --gain: #10b981;
   --loss: #ef4444;
@@ -15,7 +15,7 @@
   --panel-2: #ffffff;
   --bg-secondary: #f8fafc;
   --input-bg: #ffffff;
-  --grid-line: rgba(226, 232, 240, 0.5);
+  --grid-line: rgba(203, 213, 225, 0.6);
 
   --radius: 14px;
   --header-h: 56px;
