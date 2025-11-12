@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
+import { getGridLineColor } from '../lib/chartColors';
 
 type TradeWithProfit = {
   profitYen?: number;
@@ -369,7 +370,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                       position: 'left',
                       title: { display: true, text: '勝率（%）' },
                       max: 100,
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                     },
                     y1: {
                       type: 'linear',
@@ -461,13 +462,13 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                   },
                   scales: {
                     x: {
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                       ticks: {
                         callback: (value: any) => `#${value}`,
                       },
                     },
                     y: {
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                       ticks: {
                         callback: (value: any) => `${Math.round(value).toLocaleString('ja-JP')}円`,
                       },

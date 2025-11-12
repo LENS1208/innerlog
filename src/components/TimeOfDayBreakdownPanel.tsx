@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
+import { getGridLineColor } from '../lib/chartColors';
 
 type TradeWithProfit = {
   profitYen?: number;
@@ -388,7 +389,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                   },
                   scales: {
                     x: {
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                     },
                     y: {
                       beginAtZero: true,
@@ -396,7 +397,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                         callback: (value: any) => `${value}件`,
                         stepSize: 1,
                       },
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                     },
                   },
                 }}
@@ -427,7 +428,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                   scales: {
                     x: {
                       stacked: false,
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                       ticks: {
                         maxRotation: 45,
                         minRotation: 45,
@@ -440,7 +441,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                       ticks: {
                         callback: (value: any) => `${value}件`,
                       },
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                     },
                   },
                 }}
@@ -466,7 +467,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                   },
                   scales: {
                     x: {
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                       ticks: {
                         callback: (value: any) => `#${value}`,
                       },
@@ -476,7 +477,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
                       ticks: {
                         callback: (value: any) => `${Math.round(value).toLocaleString('ja-JP')}円`,
                       },
-                      grid: { color: 'var(--grid-line)' },
+                      grid: { color: getGridLineColor() },
                     },
                   },
                 }}
