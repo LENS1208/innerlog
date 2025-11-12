@@ -1363,3 +1363,151 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
     </div>
   )
 }
+
+
+export function BasicStatisticsCards({ trades }: { trades: TradeWithProfit[] }) {
+  const stats = useMemo(() => {
+    if (!trades || trades.length === 0) {
+      return {
+        totalTrades: 0,
+        winTrades: 0,
+        lossTrades: 0,
+        winRate: 0,
+        totalProfit: 0,
+        avgProfit: 0,
+        avgWin: 0,
+        avgLoss: 0,
+        profitFactor: 0,
+        expectancy: 0,
+        largestWin: 0,
+        largestLoss: 0
+      }
+    }
+
+    const winTrades = trades.filter(t => getProfit(t) > 0)
+    const lossTrades = trades.filter(t => getProfit(t) <= 0)
+
+    const totalProfit = trades.reduce((sum, t) => sum + getProfit(t), 0)
+    const totalWins = winTrades.reduce((sum, t) => sum + getProfit(t), 0)
+    const totalLosses = Math.abs(lossTrades.reduce((sum, t) => sum + getProfit(t), 0))
+
+    const avgWin = winTrades.length > 0 ? totalWins / winTrades.length : 0
+    const avgLoss = lossTrades.length > 0 ? totalLosses / lossTrades.length : 0
+    const profitFactor = totalLosses > 0 ? totalWins / totalLosses : totalWins > 0 ? Infinity : 0
+
+    const winRate = trades.length > 0 ? (winTrades.length / trades.length) * 100 : 0
+    const avgProfit = trades.length > 0 ? totalProfit / trades.length : 0
+    const expectancy = avgProfit
+
+    const largestWin = winTrades.length > 0 ? Math.max(...winTrades.map(t => getProfit(t))) : 0
+    const largestLoss = lossTrades.length > 0 ? Math.min(...lossTrades.map(t => getProfit(t))) : 0
+
+    return {
+      totalTrades: trades.length,
+      winTrades: winTrades.length,
+      lossTrades: lossTrades.length,
+      winRate,
+      totalProfit,
+      avgProfit,
+      avgWin,
+      avgLoss,
+      profitFactor,
+      expectancy,
+      largestWin,
+      largestLoss
+    }
+  }, [trades])
+
+  return (
+    <div className="dash-card">
+      <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 'bold', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 6 }}>
+        基本統計
+        <HelpIcon text="取引の基本的な統計情報です。勝率、平均損益、期待値などを確認できます。" />
+      </h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>総取引数</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--ink)' }}>
+            {stats.totalTrades}
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>回</span>
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
+            勝 {stats.winTrades} / 負 {stats.lossTrades}
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>勝率</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: stats.winRate >= 50 ? 'var(--gain)' : 'var(--loss)' }}>
+            {stats.winRate.toFixed(1)}
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>%</span>
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>総損益</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: stats.totalProfit >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
+            {stats.totalProfit >= 0 ? '+' : ''}{formatJPY(stats.totalProfit)}
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>平均損益</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: stats.avgProfit >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
+            {stats.avgProfit >= 0 ? '+' : ''}{formatJPY(stats.avgProfit)}
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>平均利益</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--gain)' }}>
+            +{formatJPY(stats.avgWin)}
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>平均損失</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--loss)' }}>
+            {formatJPY(stats.avgLoss)}
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>プロフィットファクター</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: stats.profitFactor >= 1.5 ? 'var(--gain)' : stats.profitFactor >= 1.0 ? 'var(--ink)' : 'var(--loss)' }}>
+            {stats.profitFactor === Infinity ? '∞' : stats.profitFactor.toFixed(2)}
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>期待値</div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: stats.expectancy >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
+            {stats.expectancy >= 0 ? '+' : ''}{formatJPY(stats.expectancy)}
+            <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>最大利益</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--gain)' }}>
+            +{formatJPY(stats.largestWin)}
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>
+          </div>
+        </div>
+
+        <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>最大損失</div>
+          <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--loss)' }}>
+            {formatJPY(stats.largestLoss)}
+            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+

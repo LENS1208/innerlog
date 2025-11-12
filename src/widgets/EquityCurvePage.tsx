@@ -16,8 +16,10 @@ import {
   SegmentCharts,
   SetupChart,
   ProfitDistributionChart,
-  HoldingTimeDistributionChart
+  HoldingTimeDistributionChart,
+  BasicStatisticsCards
 } from "./DashboardSections";
+import { RiskManagementCards } from "./RiskManagementCards";
 import ProfitBreakdownPanel from "../components/ProfitBreakdownPanel";
 import HoldingTimeBreakdownPanel from "../components/HoldingTimeBreakdownPanel";
 import WeekdayBreakdownPanel from "../components/WeekdayBreakdownPanel";
@@ -108,6 +110,12 @@ const EquityCurvePage: React.FC = () => {
           <div>
             {/* ダッシュボードKPI */}
             <DashboardKPI trades={filteredTrades} />
+
+            {/* 基本統計とリスク管理 */}
+            <section className="dash-row-2" style={{ marginBottom: 16 }}>
+              <BasicStatisticsCards trades={filteredTrades as any} />
+              <RiskManagementCards trades={filteredTrades as any} />
+            </section>
 
             {/* 1. 累積損益とドローダウン（最重要：全体のパフォーマンス推移） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
