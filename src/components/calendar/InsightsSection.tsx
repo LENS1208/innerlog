@@ -91,7 +91,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
     datasets: [
       {
         data: data.map((d) => d.pnl),
-        backgroundColor: data.map((d) => (d.pnl >= 0 ? "rgba(34, 197, 94, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+        backgroundColor: data.map((d) => (d.pnl >= 0 ? "rgba(34, 197, 94, 1)" : getLossColor())),
         borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 0, bottomRight: 0 },
       },
     ],

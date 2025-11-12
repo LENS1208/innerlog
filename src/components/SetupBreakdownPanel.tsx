@@ -213,19 +213,19 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
       {
         label: '勝率（%）',
         data: [stats.winRate, 0, 0],
-        backgroundColor: 'rgba(0, 132, 199, 0.8)',
+        backgroundColor: getAccentColor(),
         yAxisID: 'y',
       },
       {
         label: 'R:R比',
         data: [0, stats.riskRewardRatio, 0],
-        backgroundColor: 'rgba(22, 163, 74, 0.8)',
+        backgroundColor: 'rgba(22, 163, 74, 1)',
         yAxisID: 'y1',
       },
       {
         label: '最大連勝数',
         data: [0, 0, stats.maxConsecutiveWins],
-        backgroundColor: 'rgba(251, 146, 60, 0.8)',
+        backgroundColor: 'rgba(251, 146, 60, 1)',
         yAxisID: 'y2',
       },
     ],
@@ -236,11 +236,11 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
     datasets: [{
       label: '累積損益',
       data: stats.cumulativePnL,
-      borderColor: 'rgba(0, 132, 199, 0.8)',
+      borderColor: getAccentColor(),
       backgroundColor: (context: any) => {
         const chart = context.chart;
         const { ctx, chartArea } = chart;
-        if (!chartArea) return 'rgba(0, 132, 199, 0.1)';
+        if (!chartArea) return getAccentColor(0.1);
         const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
         gradient.addColorStop(0, 'rgba(239, 68, 68, 0.2)');
         gradient.addColorStop(0.5, 'rgba(156, 163, 175, 0.1)');

@@ -480,6 +480,7 @@ export default function ReportsTimeAxis() {
                     backgroundColor: getAccentColor(),
                     yAxisID: 'y',
                     stack: 'stack1',
+                    order: 2,
                   },
                   {
                     type: 'bar' as const,
@@ -488,6 +489,7 @@ export default function ReportsTimeAxis() {
                     backgroundColor: getLossColor(),
                     yAxisID: 'y',
                     stack: 'stack1',
+                    order: 2,
                   },
                   {
                     type: 'line' as const,
@@ -499,6 +501,7 @@ export default function ReportsTimeAxis() {
                     tension: 0.3,
                     pointRadius: 5,
                     pointBackgroundColor: getAccentColor(),
+                    order: 1,
                   },
                 ],
               }}

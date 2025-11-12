@@ -171,7 +171,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: ['rgba(0, 132, 199, 0.8)', 'rgba(0, 132, 199, 0.8)'],
+      backgroundColor: [getAccentColor(), getAccentColor()],
     }],
   };
 
@@ -180,7 +180,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
-      backgroundColor: stats.hourProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: stats.hourProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor()),
     }],
   };
 
@@ -189,7 +189,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)'),
+      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor()),
     }],
   };
 
@@ -199,12 +199,12 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       {
         label: '勝ちトレード',
         data: stats.holdingTimeWinCounts,
-        backgroundColor: 'rgba(22, 163, 74, 0.8)',
+        backgroundColor: 'rgba(22, 163, 74, 1)',
       },
       {
         label: '負けトレード',
         data: stats.holdingTimeLossCounts,
-        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+        backgroundColor: getLossColor(),
       }
     ]
   };
@@ -215,8 +215,8 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       label: '損益',
       data: stats.sortedTrades.map(t => getProfit(t)),
       borderColor: (context: any) => {
-        if (!context.raw) return 'rgba(0, 132, 199, 0.8)';
-        return context.raw >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)';
+        if (!context.raw) return getAccentColor();
+        return context.raw >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor();
       },
       backgroundColor: (context: any) => {
         if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
@@ -227,7 +227,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       pointHoverRadius: 6,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? 'rgba(22, 163, 74, 0.8)' : 'rgba(239, 68, 68, 0.8)';
+          return ctx.p1.parsed.y >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor();
         }
       }
     }]
