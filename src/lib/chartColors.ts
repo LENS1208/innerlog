@@ -13,6 +13,13 @@ export function getAccentColor(alpha: number = 1): string {
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
+  if (alpha === 1) {
+    if (isDark) {
+      return '#01a1ff'
+    }
+    return '#0084c7'
+  }
+
   if (isDark) {
     return `rgba(1, 161, 255, ${alpha})`
   }
@@ -22,10 +29,16 @@ export function getAccentColor(alpha: number = 1): string {
 export function getLossColor(alpha: number = 1): string {
   if (typeof window === 'undefined') return `rgba(239, 68, 68, ${alpha})`
 
-  const root = document.documentElement
-  const theme = root.getAttribute('data-theme')
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
-  if (theme === 'dark') {
+  if (alpha === 1) {
+    if (isDark) {
+      return '#f87171'
+    }
+    return '#ef4444'
+  }
+
+  if (isDark) {
     return `rgba(248, 113, 113, ${alpha})`
   }
   return `rgba(239, 68, 68, ${alpha})`
