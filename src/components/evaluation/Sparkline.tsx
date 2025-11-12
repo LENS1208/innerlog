@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 
 type SparklineProps = {
   data: number[];

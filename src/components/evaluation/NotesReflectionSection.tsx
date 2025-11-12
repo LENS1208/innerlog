@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import { HelpIcon } from '../common/HelpIcon';
 
 type Bias = {
@@ -39,7 +40,7 @@ export default function NotesReflectionSection() {
   const severityColor = (severity: string) => {
     if (severity === 'High') return '#ef4444';
     if (severity === 'Mid') return '#f59e0b';
-    return '#0084c7';
+    return getAccentColor();
   };
 
   return (
@@ -95,7 +96,7 @@ export default function NotesReflectionSection() {
                     style={{
                       width: '100%',
                       height: `${day.score * 10}%`,
-                      background: day.score >= 7 ? '#0084c7' : day.score >= 5 ? '#0084c7' : '#ef4444',
+                      background: day.score >= 7 ? getAccentColor() : day.score >= 5 ? getAccentColor() : '#ef4444',
                       borderRadius: 4,
                     }}
                   />

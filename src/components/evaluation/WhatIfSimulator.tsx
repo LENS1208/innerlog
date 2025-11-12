@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import type { TradeMetrics, TPSLParams, DDBasic, Recommendation } from '../../types/evaluation.types';
 import { applyTPSL, recomputeFromPnls, calculateDDPercent, recommendTPSL } from '../../utils/evaluation-metrics';
 

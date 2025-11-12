@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import type { TradeRow } from '../../types/evaluation.types';
 import { computeEquityCurve, computeLossStreakProbabilities, findLongestLossStreak } from '../../utils/risk-analysis';
 import { HelpIcon } from '../common/HelpIcon';
@@ -133,7 +134,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
                       })
                       .join(' ')}
                     fill="none"
-                    stroke="#0084c7"
+                    stroke={getAccentColor()}
                     strokeWidth="2"
                   />
                 </>
@@ -158,7 +159,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
                       style={{
                         width: `${Math.min(d.prob, 100)}%`,
                         height: '100%',
-                        background: d.prob > 5 ? '#ef4444' : '#0084c7',
+                        background: d.prob > 5 ? '#ef4444' : getAccentColor(),
                       }}
                     />
                   </div>

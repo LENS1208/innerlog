@@ -527,8 +527,8 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                                   borderRadius: 4,
                                   fontSize: 12,
                                   fontWeight: 600,
-                                  background: 'rgba(0, 132, 199, 0.1)',
-                                  color: 'rgb(59, 130, 246)',
+                                  background: getAccentColor(0.1),
+                                  color: getAccentColor(),
                                 }}
                               >
                                 信頼度 {proposal.confidence}%

@@ -331,20 +331,20 @@ export default function CalendarDayPage() {
                     label: "累積損益",
                     data: equityCurve.map((d) => d.y),
                     borderColor: (context) => {
-                      if (!context.chart.data.datasets[0].data) return '#0084c7';
+                      if (!context.chart.data.datasets[0].data) return getAccentColor();
                       const dataIndex = context.dataIndex;
-                      if (dataIndex === undefined) return '#0084c7';
+                      if (dataIndex === undefined) return getAccentColor();
                       const value = context.chart.data.datasets[0].data[dataIndex] as number;
-                      return value >= 0 ? '#0084c7' : '#ef4444';
+                      return value >= 0 ? getAccentColor() : '#ef4444';
                     },
                     backgroundColor: (context) => {
                       const chart = context.chart;
                       const {ctx, chartArea} = chart;
-                      if (!chartArea) return 'rgba(0, 132, 199, 0.1)';
+                      if (!chartArea) return getAccentColor(0.1);
                       const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
                       gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
                       gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
-                      gradient.addColorStop(1, 'rgba(0, 132, 199, 0.4)');
+                      gradient.addColorStop(1, getAccentColor(0.4));
                       return gradient;
                     },
                     fill: 'origin',
@@ -352,7 +352,7 @@ export default function CalendarDayPage() {
                     pointRadius: 3,
                     pointBackgroundColor: (context) => {
                       const value = context.parsed.y;
-                      return value >= 0 ? '#0084c7' : '#ef4444';
+                      return value >= 0 ? getAccentColor() : '#ef4444';
                     },
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
@@ -360,7 +360,7 @@ export default function CalendarDayPage() {
                     borderWidth: 2.5,
                     segment: {
                       borderColor: (ctx) => {
-                        return ctx.p1.parsed.y >= 0 ? '#0084c7' : '#ef4444';
+                        return ctx.p1.parsed.y >= 0 ? getAccentColor() : '#ef4444';
                       }
                     }
                   },

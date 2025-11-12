@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getAccentColor, getLossColor } from '../lib/chartColors';
 import { parseCsvText } from '../lib/csv';
 import { insertTrades, tradeToDb, upsertAccountSummary } from '../lib/db.service';
 import { parseHtmlStatement, convertHtmlTradesToCsvFormat, parseFullHtmlStatement } from '../lib/html-parser';
@@ -272,7 +273,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
             disabled={uploading}
             style={{
               padding: '10px 20px',
-              background: '#0084c7',
+              background: getAccentColor(),
               color: '#fff',
               border: 'none',
               borderRadius: 8,

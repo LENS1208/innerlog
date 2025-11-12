@@ -68,8 +68,8 @@ export default function AiProposalPage({
             {pair && (
               <span style={{
                 padding: '2px 6px',
-                background: 'rgba(0, 132, 199, 0.1)',
-                color: 'rgb(59, 130, 246)',
+                background: getAccentColor(0.1),
+                color: getAccentColor(),
                 borderRadius: 4,
                 fontSize: 11,
                 fontWeight: 600,
@@ -80,8 +80,8 @@ export default function AiProposalPage({
             {timeframe && (
               <span style={{
                 padding: '2px 6px',
-                background: 'rgba(0, 132, 199, 0.1)',
-                color: 'rgb(59, 130, 246)',
+                background: getAccentColor(0.1),
+                color: getAccentColor(),
                 borderRadius: 4,
                 fontSize: 11,
                 fontWeight: 600,

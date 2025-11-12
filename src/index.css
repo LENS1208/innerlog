@@ -60,7 +60,7 @@
 .fh-badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;background:#f3f4f6;border:1px solid #e5e7eb;transition:background-color 0.3s ease, border-color 0.3s ease}
 .fh-chip{display:inline-block;border:1px solid #d1d5db;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700;transition:border-color 0.3s ease, color 0.3s ease}
 .fh-bar{width:100%;height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden;transition:background-color 0.3s ease}
-.fh-bar__fill{height:100%;background:#0084c7}
+.fh-bar__fill{height:100%;background:var(--accent)}
 .fh-grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:720px){.fh-grid{grid-template-columns:repeat(3,1fr)}}
 
@@ -104,7 +104,7 @@
 
 /* --- バー --- */
 .fh-bar{ width:100%; height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden }
-.fh-bar__fill{ height:100%; background:#0084c7 }
+.fh-bar__fill{ height:100%; background:var(--accent) }
 
 /* --- 見出し/文字 --- */
 .fh-title{ margin:0 0 4px; font-size:16px; font-weight:700 }
@@ -124,7 +124,7 @@
 
 /* --- 入力/ボタン --- */
 .fh-input{ flex:1; min-width:160px; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; outline:none; font-size:14px }
-.fh-input:focus{ border-color:#0084c7; box-shadow:0 0 0 3px rgba(37,99,235,.12) }
+.fh-input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12) }
 .fh-btn{ padding:9px 12px; border-radius:10px; border:1px solid #e5e7eb; background:#111827; color:#fff; cursor:pointer; font-size:13px }
 .fh-btn--ghost{ background:#fff; color:#111827 }
 .fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:#f3f4f6; border:1px solid #e5e7eb }
@@ -172,7 +172,7 @@
 .fh-time.right{ text-align:right }
 
 /* タイトルリンク（チャット内） */
-.fh-link{ all:unset; color:#0084c7; cursor:pointer; }
+.fh-link{ all:unset; color:var(--accent); cursor:pointer; }
 .fh-link:hover{ text-decoration:underline; }
 
 /* タイムライン・パネル */
@@ -389,8 +389,8 @@
 }
 .fh-rate__btn:hover{ background:#f3f4f6; }
 .fh-rate__btn.is-on{ color:#fff; border-color:transparent; }
-.fh-rate__btn.is-on.adopted{ background:#0084c7; }
-.fh-rate__btn.is-on.reference{ background:#0084c7; }
+.fh-rate__btn.is-on.adopted{ background:var(--accent); }
+.fh-rate__btn.is-on.reference{ background:var(--accent); }
 .fh-rate__btn.is-on.rejected{ background:#dc2626; }
 
 /* 1口メモ */
@@ -400,7 +400,7 @@
   border:1px solid #e5e7eb; border-radius:10px; outline:none; background:#fff;
   font-size:13px;
 }
-.fh-memo__input:focus{ border-color:#0084c7; box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+.fh-memo__input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
 .fh-memo__save{
   height:36px; padding:0 12px; border-radius:10px; cursor:pointer;
   border:1px solid #e5e7eb; background:#111827; color:#fff; font-size:12px;
@@ -448,7 +448,7 @@
 .fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; }
 .fh-msg--me .fh-msg__bubble{ background:#111827; color:#fff; border-color:#111827; }
 .fh-time{ font-size:11px; color:#9ca3af; margin-top:4px; }
-.fh-link{ all:unset; color:#0084c7; cursor:pointer; }
+.fh-link{ all:unset; color:var(--accent); cursor:pointer; }
 .fh-link:hover{ text-decoration:underline; }
 
 /* Composer */
@@ -473,18 +473,18 @@
 .fh-rate__btn{ border:1px solid #e5e7eb; background:#fff; color:#374151; border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer; }
 .fh-rate__btn:hover{ background:#f3f4f6; }
 .fh-rate__btn.is-on{ color:#fff; border-color:transparent; }
-.fh-rate__btn.is-on.adopted{ background:#0084c7; }
-.fh-rate__btn.is-on.reference{ background:#0084c7; }
+.fh-rate__btn.is-on.adopted{ background:var(--accent); }
+.fh-rate__btn.is-on.reference{ background:var(--accent); }
 .fh-rate__btn.is-on.rejected{ background:#dc2626; }
 
 .fh-memo{ display:flex; gap:8px; align-items:center; margin:10px 0 6px; }
 .fh-memo__input{ flex:1 1 auto; height:36px; padding:0 10px; border:1px solid #e5e7eb; border-radius:10px; outline:none; background:#fff; font-size:13px; }
-.fh-memo__input:focus{ border-color:#0084c7; box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+.fh-memo__input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
 .fh-memo__save{ height:36px; padding:0 12px; border-radius:10px; cursor:pointer; border:1px solid #e5e7eb; background:#111827; color:#fff; font-size:12px; }
 
 /* ===== Bars / tags / trades ===== */
 .fh-bar{ width:100%; height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden }
-.fh-bar__fill{ height:100%; background:#0084c7 }
+.fh-bar__fill{ height:100%; background:var(--accent) }
 
 .fh-tags{ display:flex; gap:6px; flex-wrap:wrap; }
 .fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:#eef2ff; color:#374151; border:1px solid #e5e7eb; }
@@ -492,7 +492,7 @@
 .fh-trades{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
 .fh-trade{ display:flex; gap:8px; align-items:center; font-size:12px; }
 .fh-trade__side{ display:inline-block; min-width:46px; text-align:center; padding:2px 6px; border-radius:6px; color:#fff; }
-.fh-trade__side.long{ background:#0084c7; }
+.fh-trade__side.long{ background:var(--accent); }
 .fh-trade__side.short{ background:#dc2626; }
 .fh-trade__time{ color:#374151; }
 .fh-trade__pips{ color:#374151; }
@@ -542,7 +542,7 @@
 .fh-msg--me .fh-msg__bubble{ background:#111827; color:#fff; border-color:#111827; }
 .fh-msg__bubble.is-trade{ border-color:#c7d2fe; background:#eef2ff; }
 .fh-time{ font-size:11px; color:#9ca3af; margin-top:4px; }
-.fh-link{ color:#0084c7; text-decoration:none; }
+.fh-link{ color:var(--accent); text-decoration:none; }
 .fh-link:hover{ text-decoration:underline; }
 
 /* Composer */
@@ -558,7 +558,7 @@
 
 /* ===== Bars / tags ===== */
 .fh-bar{ width:100%; height:14px; background:#e5e7eb; border-radius:6px; overflow:hidden } /* ← 高さUP */
-.fh-bar__fill{ height:100%; background:#0084c7 }
+.fh-bar__fill{ height:100%; background:var(--accent) }
 .fh-gauge__label{ display:flex; align-items:center; justify-content:space-between; font-size:14px; margin-bottom:6px }
 .fh-gauge__pct{ font-weight:800; font-size:18px } /* ← ％大きく */
 .fh-tags{ display:flex; gap:6px; flex-wrap:wrap; }
@@ -570,7 +570,7 @@
   --v: 56%;
   width:42px; height:42px; border-radius:50%;
   background:
-    conic-gradient(#0084c7 var(--v), #e5e7eb 0);
+    conic-gradient(var(--accent) var(--v), #e5e7eb 0);
 }
 .fh-topprob__meta{ display:flex; gap:6px; align-items:baseline }
 .fh-topprob__num{ font-size:28px; font-weight:800; line-height:1 }
@@ -581,13 +581,13 @@
 .fh-rate__btn{ border:1px solid #e5e7eb; background:#fff; color:#374151; border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer; }
 .fh-rate__btn:hover{ background:#f3f4f6; }
 .fh-rate__btn.is-on{ color:#fff; border-color:transparent; }
-.fh-rate__btn.is-on.adopted{ background:#0084c7; }
-.fh-rate__btn.is-on.reference{ background:#0084c7; }
+.fh-rate__btn.is-on.adopted{ background:var(--accent); }
+.fh-rate__btn.is-on.reference{ background:var(--accent); }
 .fh-rate__btn.is-on.rejected{ background:#dc2626; }
 
 .fh-memo{ display:flex; gap:8px; align-items:center; margin:10px 0 6px; }
 .fh-memo__input{ flex:1 1 auto; height:36px; padding:0 10px; border:1px solid #e5e7eb; border-radius:10px; outline:none; background:#fff; font-size:13px; }
-.fh-memo__input:focus{ border-color:#0084c7; box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+.fh-memo__input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
 .fh-memo__save{ height:36px; padding:0 12px; border-radius:10px; cursor:pointer; border:1px solid #e5e7eb; background:#111827; color:#fff; font-size:12px; }
 
 /* ===== Timeline（予想一覧） ===== */
@@ -783,7 +783,7 @@
 :root{
   --c-bg:#fff; --c-surface:#f7f7f8; --c-border:#e5e7eb;
   --c-text:#111; --c-muted:#6b7280;
-  --c-pos:#059669; --c-neg:#dc2626; --c-accent:#0084c7;
+  --c-pos:#059669; --c-neg:#dc2626; --c-accent:var(--accent);
 
   --radii:12px;
   --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.06);

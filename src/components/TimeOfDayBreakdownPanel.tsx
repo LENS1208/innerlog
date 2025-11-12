@@ -270,7 +270,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
 
         <div style={{ padding: '24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'rgb(59, 130, 246)', margin: 0 }}>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: getAccentColor(), margin: 0 }}>
               {rangeLabel} 詳細分析
             </h2>
             <button

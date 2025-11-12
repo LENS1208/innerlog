@@ -1,4 +1,5 @@
 import React from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 
 type OverallScoreProps = {
   score: number;

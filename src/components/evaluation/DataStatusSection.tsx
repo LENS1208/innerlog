@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import type { TradeMetrics } from '../../types/evaluation.types';
 import { HelpIcon } from '../common/HelpIcon';
 
@@ -42,7 +43,7 @@ export default function DataStatusSection({ metrics }: Props) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, minWidth: 0 }}>
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>入力健全性</div>
-            <div style={{ padding: 16, border: '1px solid #0084c7', borderRadius: 8, background: 'rgba(0, 132, 199, 0.1)', fontSize: 13 }}>✓ 問題なし</div>
+            <div style={{ padding: 16, border: '1px solid var(--accent)', borderRadius: 8, background: getAccentColor(0.1), fontSize: 13 }}>✓ 問題なし</div>
           </div>
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>検証ステータス</div>
@@ -51,7 +52,7 @@ export default function DataStatusSection({ metrics }: Props) {
                 <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 8, border: '1px solid var(--line)', borderRadius: 6, background: 'var(--surface)' }}>
                   <span style={{ fontSize: 13 }}>{status.metric}</span>
                   <span style={{ fontSize: 13, color: 'var(--muted)' }}>{status.value} ({status.threshold})</span>
-                  <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700, background: status.status === 'OK' ? '#0084c7' : '#ef4444', color: '#fff' }}>{status.status}</span>
+                  <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700, background: status.status === 'OK' ? getAccentColor() : '#ef4444', color: '#fff' }}>{status.status}</span>
                 </div>
               ))}
             </div>

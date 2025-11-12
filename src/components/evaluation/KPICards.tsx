@@ -1,4 +1,5 @@
 import React from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import type { TradeMetrics, DDBasic } from '../../types/evaluation.types';
 import { calculateDDPercent } from '../../utils/evaluation-metrics';
 

@@ -177,7 +177,7 @@ function SemiGauge({ winRate, wins, draws, losses }: { winRate: number; wins: nu
         </svg>
       </div>
       <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(0,132,199,.35)', background: 'rgba(0,132,199,.12)', color: 'var(--accent-2, #0084c7)' }}>{wins}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--accent-border)', background: 'var(--accent-bg)', color: 'var(--accent-2, #0084c7)' }}>{wins}</span>
         <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--muted)' }}>{draws}</span>
         <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(239,68,68,.35)', background: 'rgba(239,68,68,.12)', color: 'var(--danger, #ef4444)' }}>{losses}</span>
       </div>
@@ -193,7 +193,7 @@ function BarSplit({ avgProfit, avgLoss }: { avgProfit: number; avgLoss: number }
   return (
     <div>
       <div style={{ height: 10, borderRadius: 999, background: 'var(--chip)', border: '1px solid var(--line)', display: 'flex', overflow: 'hidden', marginTop: 6 }}>
-        <div style={{ width: `${profitPct}%`, background: 'rgba(0,132,199,.35)' }} />
+        <div style={{ width: `${profitPct}%`, background: 'var(--accent-border)' }} />
         <div style={{ width: `${lossPct}%`, background: 'rgba(239,68,68,.35)' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6, fontWeight: 600 }}>

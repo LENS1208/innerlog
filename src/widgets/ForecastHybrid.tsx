@@ -1,4 +1,5 @@
 // src/widgets/ForecastHybrid.tsx
+import { getAccentColor, getLossColor } from '../lib/chartColors';
 import React, { useMemo, useRef, useState, useEffect } from "react";
 
 /* ================== 型 ================== */
@@ -52,7 +53,7 @@ type HistoryItem = {
 
 /* ================== 表示用メタ ================== */
 const kindMeta: Record<ScenarioKind, { label: string; color: string }> = {
-  bull:  { label: "上昇トレンド", color: "#0084c7" },
+  bull:  { label: "上昇トレンド", color: getAccentColor() },
   range: { label: "レンジ",       color: "#6b7280" },
   bear:  { label: "下降トレンド", color: "#dc2626" },
 };

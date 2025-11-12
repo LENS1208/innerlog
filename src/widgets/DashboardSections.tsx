@@ -77,9 +77,9 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       data: equity,
       borderWidth: 2.5,
       borderColor: (context: any) => {
-        if (!context.chart.data.datasets[0].data) return '#0084c7';
+        if (!context.chart.data.datasets[0].data) return getAccentColor();
         const dataIndex = context.dataIndex;
-        if (dataIndex === undefined) return '#0084c7';
+        if (dataIndex === undefined) return getAccentColor();
         const value = context.chart.data.datasets[0].data[dataIndex] as number;
         return value >= 0 ? getAccentColor(1) : getLossColor(1);
       },
@@ -98,7 +98,7 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       tension: 0.4,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? '#0084c7' : '#ef4444';
+          return ctx.p1.parsed.y >= 0 ? getAccentColor() : '#ef4444';
         }
       }
     }]

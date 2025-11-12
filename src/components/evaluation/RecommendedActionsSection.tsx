@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import type { TradeMetrics } from '../../types/evaluation.types';
 import { generateRecommendations } from '../../utils/recommendations';
 import { HelpIcon } from '../common/HelpIcon';
@@ -17,8 +18,8 @@ export default function RecommendedActionsSection({ metrics }: Props) {
   const displayActions = expanded ? actions : actions.slice(0, 3);
 
   const difficultyColor = (difficulty: string) => {
-    if (difficulty === 'Low') return '#0084c7';
-    if (difficulty === 'Mid') return '#0084c7';
+    if (difficulty === 'Low') return getAccentColor();
+    if (difficulty === 'Mid') return getAccentColor();
     return '#ef4444';
   };
 

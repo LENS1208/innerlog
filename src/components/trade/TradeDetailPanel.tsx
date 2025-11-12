@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import '../../tradeDiary.css';
 import { getTradeNote, saveTradeNote } from '../../lib/db.service';
 
@@ -912,7 +913,7 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
           <button
             onClick={savePayload}
             style={{
-              background: '#0084c7',
+              background: getAccentColor(),
               border: 'none',
               borderRadius: 8,
               padding: '10px 24px',

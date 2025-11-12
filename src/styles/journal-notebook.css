@@ -196,9 +196,9 @@
 }
 
 .note .link-btn:hover {
-  background: var(--accent, #3b82f6);
+  background: var(--accent, var(--accent));
   color: #ffffff;
-  border-color: var(--accent, #3b82f6);
+  border-color: var(--accent, var(--accent));
 }
 
 @media (max-width: 1023px) {
@@ -421,7 +421,7 @@ textarea.input {
 .bar > i {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #0084c7, #01a1ff);
+  background: linear-gradient(90deg, var(--accent), var(--accent));
   transition: width 0.3s ease;
 }
 
