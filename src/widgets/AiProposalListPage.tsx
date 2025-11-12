@@ -228,7 +228,6 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
             background: 'var(--surface)',
             border: '1px solid var(--line)',
             borderRadius: 16,
-            minHeight: 'calc(150vh - 180px)',
           }}
         >
         <div>
@@ -354,6 +353,9 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
             border: 'none',
             cursor: generating ? 'not-allowed' : 'pointer',
             transition: 'all 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           {generating ? '生成中...' : 'AIに予想を生成してもらう'}
@@ -367,11 +369,15 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           className="btn"
           value={filter.pair}
           onChange={(e) => setFilter({ ...filter, pair: e.target.value })}
-          style={{ fontSize: 13 }}
+          style={{
+            fontSize: 14,
+            padding: '8px 12px',
+            color: '#111827',
+          }}
         >
-          <option value="all">全通貨ペア</option>
+          <option value="all" style={{ color: '#111827' }}>全通貨ペア</option>
           {uniquePairs.map((pair) => (
-            <option key={pair} value={pair}>{pair}</option>
+            <option key={pair} value={pair} style={{ color: '#111827' }}>{pair}</option>
           ))}
         </select>
 
@@ -379,12 +385,16 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           className="btn"
           value={filter.bias}
           onChange={(e) => setFilter({ ...filter, bias: e.target.value })}
-          style={{ fontSize: 13 }}
+          style={{
+            fontSize: 14,
+            padding: '8px 12px',
+            color: '#111827',
+          }}
         >
-          <option value="all">全バイアス</option>
-          <option value="BUY">買い</option>
-          <option value="SELL">売り</option>
-          <option value="NEUTRAL">中立</option>
+          <option value="all" style={{ color: '#111827' }}>全バイアス</option>
+          <option value="BUY" style={{ color: '#111827' }}>買い</option>
+          <option value="SELL" style={{ color: '#111827' }}>売り</option>
+          <option value="NEUTRAL" style={{ color: '#111827' }}>中立</option>
         </select>
       </div>
 
