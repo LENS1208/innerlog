@@ -413,7 +413,7 @@ function SideNav({ menu, activeKey, onUploadClick }: { menu: MenuItem[]; activeK
                   textDecoration: "none",
                   padding: "10px 12px",
                   borderRadius: 10,
-                  color: "#111827",
+                  color: "var(--ink)",
                   background: activeKey === m.key ? "rgba(59,130,246,.12)" : "transparent",
                 }}
                 onClick={(e) => {
