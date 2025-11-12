@@ -147,16 +147,27 @@ export default function ReportsMarket() {
   }, [filteredTrades]);
 
   const majorVsCrossData = useMemo(() => {
-    const majors = ["USD/JPY", "EUR/USD", "GBP/USD", "USD/CHF", "AUD/USD", "NZD/USD", "USD/CAD"];
-    const majorTrades = filteredTrades.filter((t) => majors.includes(getTradePair(t)));
-    const crossTrades = filteredTrades.filter((t) => !majors.includes(getTradePair(t)));
+    const jpyTrades = filteredTrades.filter((t) => {
+      const pair = getTradePair(t).toUpperCase();
+      return pair.includes('JPY');
+    });
+    const usdTrades = filteredTrades.filter((t) => {
+      const pair = getTradePair(t).toUpperCase();
+      return pair.includes('USD') && !pair.includes('JPY');
+    });
+    const otherTrades = filteredTrades.filter((t) => {
+      const pair = getTradePair(t).toUpperCase();
+      return !pair.includes('JPY') && !pair.includes('USD');
+    });
 
-    const majorProfit = majorTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
-    const crossProfit = crossTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
+    const jpyProfit = jpyTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
+    const usdProfit = usdTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
+    const otherProfit = otherTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
 
     return {
-      major: { count: majorTrades.length, profit: majorProfit, winRate: majorTrades.length > 0 ? (majorTrades.filter((t) => getTradeProfit(t) > 0).length / majorTrades.length) * 100 : 0 },
-      cross: { count: crossTrades.length, profit: crossProfit, winRate: crossTrades.length > 0 ? (crossTrades.filter((t) => getTradeProfit(t) > 0).length / crossTrades.length) * 100 : 0 },
+      jpy: { count: jpyTrades.length, profit: jpyProfit, winRate: jpyTrades.length > 0 ? (jpyTrades.filter((t) => getTradeProfit(t) > 0).length / jpyTrades.length) * 100 : 0 },
+      usd: { count: usdTrades.length, profit: usdProfit, winRate: usdTrades.length > 0 ? (usdTrades.filter((t) => getTradeProfit(t) > 0).length / usdTrades.length) * 100 : 0 },
+      other: { count: otherTrades.length, profit: otherProfit, winRate: otherTrades.length > 0 ? (otherTrades.filter((t) => getTradeProfit(t) > 0).length / otherTrades.length) * 100 : 0 },
     };
   }, [filteredTrades]);
 
@@ -376,17 +387,17 @@ export default function ReportsMarket() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            主要通貨 vs クロス
-            <HelpIcon text="メジャーとマイナーの損益を棒グラフで比較します。視覚的に収益性を評価できます。" />
+            通貨タイプ別
+            <HelpIcon text="JPY関連（円絡み）、USD関連（ドル絡み）、その他クロスの3つに分類した取引分布です。" />
           </h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
-                labels: ["主要通貨", "クロス"],
+                labels: ["JPY関連", "USD関連", "その他"],
                 datasets: [
                   {
-                    data: [majorVsCrossData.major.count, majorVsCrossData.cross.count],
-                    backgroundColor: [getAccentColor(), getPurpleColor()],
+                    data: [majorVsCrossData.jpy.count, majorVsCrossData.usd.count, majorVsCrossData.other.count],
+                    backgroundColor: [getAccentColor(), getWarningColor(), getPurpleColor()],
                     borderWidth: 0,
                   },
                 ],
@@ -454,6 +465,41 @@ export default function ReportsMarket() {
               </tr>
             </thead>
             <tbody>
+              {[
+                { label: 'JPY関連', data: majorVsCrossData.jpy },
+                { label: 'USD関連', data: majorVsCrossData.usd },
+                { label: 'その他', data: majorVsCrossData.other }
+              ].map((item) => (
+                <tr
+                  key={item.label}
+                  style={{
+                    borderBottom: "1px solid var(--line)",
+                    height: 44,
+                    cursor: "pointer",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                >
+                  <td style={{ padding: 10, fontSize: 13 }}>通貨タイプ</td>
+                  <td style={{ padding: 10, fontSize: 13 }}>{item.label}</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.data.count}</td>
+                  <td
+                    style={{
+                      padding: 10,
+                      textAlign: "right",
+                      fontSize: 13,
+                      color: item.data.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                    }}
+                  >
+                    {Math.round(item.data.profit).toLocaleString("ja-JP")}円
+                  </td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.data.winRate.toFixed(0)}%</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>-</td>
+                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
+                    {item.data.count > 0 ? Math.round(item.data.profit / item.data.count).toLocaleString("ja-JP") : '0'}円
+                  </td>
+                </tr>
+              ))}
               {symbolData.map((s) => (
                 <tr
                   key={s.symbol}
