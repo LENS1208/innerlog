@@ -49,3 +49,57 @@ export function getWarningColor(alpha: number = 1): string {
 
   return `rgba(245, 158, 11, ${alpha})`
 }
+
+export function getPurpleColor(alpha: number = 1): string {
+  if (typeof window === 'undefined') return `rgba(147, 51, 234, ${alpha})`
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+
+  if (alpha === 1) {
+    if (isDark) {
+      return '#a78bfa'
+    }
+    return '#9333ea'
+  }
+
+  if (isDark) {
+    return `rgba(167, 139, 250, ${alpha})`
+  }
+  return `rgba(147, 51, 234, ${alpha})`
+}
+
+export function getOrangeColor(alpha: number = 1): string {
+  if (typeof window === 'undefined') return `rgba(249, 115, 22, ${alpha})`
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+
+  if (alpha === 1) {
+    if (isDark) {
+      return '#fb923c'
+    }
+    return '#f97316'
+  }
+
+  if (isDark) {
+    return `rgba(251, 146, 60, ${alpha})`
+  }
+  return `rgba(249, 115, 22, ${alpha})`
+}
+
+export function getGreenColor(alpha: number = 1): string {
+  if (typeof window === 'undefined') return `rgba(34, 197, 94, ${alpha})`
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+
+  if (alpha === 1) {
+    if (isDark) {
+      return '#4ade80'
+    }
+    return '#22c55e'
+  }
+
+  if (isDark) {
+    return `rgba(74, 222, 128, ${alpha})`
+  }
+  return `rgba(34, 197, 94, ${alpha})`
+}

@@ -143,7 +143,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getAccentColor(), getAccentColor()],
+      backgroundColor: [getAccentColor(), getOrangeColor()],
     }],
   };
 

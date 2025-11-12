@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getGreenColor } from "../../lib/chartColors";
 import { Bar, Line, Scatter } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
@@ -495,12 +495,12 @@ export default function ReportsTimeAxis() {
                     type: 'line' as const,
                     label: '勝率(%)',
                     data: tradeStyleData.map((s) => s.winRate),
-                    borderColor: getAccentColor(),
-                    backgroundColor: getAccentColor(0.1),
+                    borderColor: getGreenColor(),
+                    backgroundColor: getGreenColor(0.1),
                     yAxisID: 'y1',
                     tension: 0.3,
                     pointRadius: 5,
-                    pointBackgroundColor: getAccentColor(),
+                    pointBackgroundColor: getGreenColor(),
                     order: 1,
                   },
                 ],

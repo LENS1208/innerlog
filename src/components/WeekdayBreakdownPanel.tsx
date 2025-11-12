@@ -148,7 +148,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getAccentColor(), getAccentColor()],
+      backgroundColor: [getAccentColor(), getOrangeColor()],
     }],
   };
 

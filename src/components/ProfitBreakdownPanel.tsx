@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getOrangeColor } from "../lib/chartColors";
 import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -151,7 +151,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getAccentColor(), getAccentColor()],
+      backgroundColor: [getAccentColor(), getOrangeColor()],
     }],
   };
 

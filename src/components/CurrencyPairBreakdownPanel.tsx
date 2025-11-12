@@ -171,7 +171,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getAccentColor(), getAccentColor()],
+      backgroundColor: [getAccentColor(), getOrangeColor()],
     }],
   };
 

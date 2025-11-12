@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getPurpleColor } from "../../lib/chartColors";
 import { Bar, Doughnut } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
@@ -386,7 +386,7 @@ export default function ReportsMarket() {
                 datasets: [
                   {
                     data: [majorVsCrossData.major.count, majorVsCrossData.cross.count],
-                    backgroundColor: [getAccentColor(), getAccentColor()],
+                    backgroundColor: [getAccentColor(), getPurpleColor()],
                   },
                 ],
               }}
