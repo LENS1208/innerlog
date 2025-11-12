@@ -578,7 +578,7 @@ export default function MonthlyCalendar() {
             onClick={goToPrevMonth}
             className="nav-button"
             style={{
-              background: "var(--surface)",
+              background: "var(--chip)",
               border: "1px solid var(--line)",
               borderRadius: 8,
               padding: "8px 12px",
@@ -593,7 +593,7 @@ export default function MonthlyCalendar() {
             onClick={goToNextMonth}
             className="nav-button"
             style={{
-              background: "var(--surface)",
+              background: "var(--chip)",
               border: "1px solid var(--line)",
               borderRadius: 8,
               padding: "8px 12px",
@@ -618,7 +618,7 @@ export default function MonthlyCalendar() {
           <button
             onClick={goToThisMonth}
             style={{
-              background: "var(--surface)",
+              background: "var(--chip)",
               border: "1px solid var(--line)",
               borderRadius: 8,
               padding: "8px 14px",
