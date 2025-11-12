@@ -54,16 +54,22 @@ function formatDateLocal(year: number, month: number, day: number): string {
 }
 
 function parseDateSafe(dateStr: string): Date {
-  // "2025.09.18 08:06:00" => Date(2025, 8, 18) [month is 0-based]
   const normalized = dateStr.replace(/\./g, "-").trim();
-  const datePart = normalized.split(" ")[0];
+  const parts = normalized.split(" ");
+  const datePart = parts[0];
+  const timePart = parts[1] || "00:00:00";
+
   const [yearStr, monthStr, dayStr] = datePart.split("-");
+  const [hourStr, minuteStr, secondStr] = timePart.split(":");
 
   const year = parseInt(yearStr, 10);
-  const month = parseInt(monthStr, 10) - 1; // Convert to 0-based
+  const month = parseInt(monthStr, 10) - 1;
   const day = parseInt(dayStr, 10);
+  const hour = parseInt(hourStr, 10) || 0;
+  const minute = parseInt(minuteStr, 10) || 0;
+  const second = parseInt(secondStr, 10) || 0;
 
-  return new Date(year, month, day);
+  return new Date(year, month, day, hour, minute, second);
 }
 
 export default function MonthlyCalendar() {
