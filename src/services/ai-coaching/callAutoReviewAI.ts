@@ -84,6 +84,7 @@ export function generateMockCoachingSheet(): AIResponse {
         'また、ロットサイズの変化が激しく、気持ちの波がそのまま取引サイズに現れている点が課題です。',
         '感覚と技術はすでに備わっていますので、「サイズとリズム」を整える段階に入っています。',
       ],
+      summaryComment: '最近のトレードは、勢いのある相場ではしっかりと波に乗れており、方向感を読む力は安定しています。一方で、利確をやや早める傾向があり、大きく取れる場面でも途中で離脱してしまうことが多いようです。また、ロットサイズの変化が激しく、気持ちの波がそのまま取引サイズに現れている点が課題です。感覚と技術はすでに備わっていますので、「サイズとリズム」を整える段階に入っています。',
       examples: [
         {
           date: '2024-10-03',
@@ -116,6 +117,7 @@ export function generateMockCoachingSheet(): AIResponse {
           note: '上昇再開のブレイクで綺麗に利確',
         },
       ],
+      strengthsWeaknessesComment: 'あなたのトレードには、瞬間的な判断力と相場の呼吸を読む感覚がしっかりあります。その反面、「止まる」「待つ」「減らす」といった"守りの判断"が曖昧になる場面があります。いくつかの取引を例に、強みと改善のバランスを整理してみましょう。',
       strengthsWeaknesses: [
         {
           item: '方向感',
@@ -148,6 +150,7 @@ export function generateMockCoachingSheet(): AIResponse {
           coachNote: '"どの位置でどう感じたか"をスクショにメモすると再現性が高まります。',
         },
       ],
+      rulesComment: 'ルールは、自分を縛るためではなく、冷静でいられる環境を作るためのものです。あなたの強みを活かすために、次の5つを意識的に実践していきましょう。',
       rules: [
         {
           ruleId: 'rule1',
@@ -180,6 +183,7 @@ export function generateMockCoachingSheet(): AIResponse {
           coachNote: '「見る」だけの時間も、成長のための投資です。',
         },
       ],
+      playbookComment: 'あなたの"勝ちパターン"はすでに明確です。順張りと逆張りの役割を整理して、どちらの型でも落ち着いて実行できる状態を目指しましょう。',
       playbook: {
         trendFollowing: {
           conditions: ['上位足トレンドが明確', '押し目再始動を確認'],
@@ -216,6 +220,7 @@ export function generateMockCoachingSheet(): AIResponse {
         },
       },
       diaryGuide: {
+        comment: '日記は反省ではなく、"次の自分の設計図"です。短い一文でも良いので、トレード直後に「なぜそう思ったか」を残してみましょう。',
         rows: [
           {
             item: '🎯 根拠',
@@ -239,6 +244,7 @@ export function generateMockCoachingSheet(): AIResponse {
           },
         ],
       },
+      kpisComment: '数字は冷静さを取り戻す道具です。感覚が良いあなただからこそ、「数字で整える」ことを意識していきましょう。',
       kpis: [
         {
           metric: 'RR遵守率',
@@ -266,6 +272,7 @@ export function generateMockCoachingSheet(): AIResponse {
           coachNote: 'サイズの安定がメンタルの安定につながります。',
         },
       ],
+      fourWeekPlanComment: '4週間は、リズムを整えるための最適なサイクルです。まずは「守る→磨く→伸ばす→安定させる」の流れでいきましょう。',
       fourWeekPlan: [
         {
           week: 'Week 1',

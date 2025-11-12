@@ -57,27 +57,27 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         </Section>
       )}
 
-      <Section title="強みと課題">
+      <Section title="強みと課題" comment={sheet.strengthsWeaknessesComment}>
         <StrengthsWeaknessesTable rows={sheet.strengthsWeaknesses} />
       </Section>
 
-      <Section title="改善のための5ルール">
+      <Section title="改善のための5ルール" comment={sheet.rulesComment}>
         <RulesTable rules={sheet.rules} />
       </Section>
 
-      <Section title="プレイブック（戦略型）">
+      <Section title="プレイブック（戦略型）" comment={sheet.playbookComment}>
         <PlaybookView playbook={sheet.playbook} />
       </Section>
 
-      <Section title="オンライン日記の活用法">
+      <Section title="オンライン日記の活用法" comment={sheet.diaryGuide.comment}>
         <DiaryGuideTable rows={sheet.diaryGuide.rows} />
       </Section>
 
-      <Section title="KPI（数値で見る改善指標）">
+      <Section title="KPI（数値で見る改善指標）" comment={sheet.kpisComment}>
         <KPITable kpis={sheet.kpis} />
       </Section>
 
-      <Section title="4週間リセットプラン">
+      <Section title="4週間リセットプラン" comment={sheet.fourWeekPlanComment}>
         <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
       </Section>
 
@@ -107,10 +107,11 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
 interface SectionProps {
   title: string;
+  comment?: string;
   children: React.ReactNode;
 }
 
-function Section({ title, children }: SectionProps) {
+function Section({ title, comment, children }: SectionProps) {
   return (
     <section
       style={{
@@ -130,6 +131,20 @@ function Section({ title, children }: SectionProps) {
       >
         {title}
       </h2>
+      {comment && (
+        <p
+          style={{
+            margin: '0 0 16px 0',
+            fontSize: '14px',
+            lineHeight: 1.6,
+            color: 'var(--ink)',
+            paddingBottom: '12px',
+            borderBottom: '1px solid var(--line)',
+          }}
+        >
+          {comment}
+        </p>
+      )}
       {children}
     </section>
   );

@@ -62,13 +62,19 @@ export type DiaryGuideRow = {
 
 export type CoachingSheet = {
   summary: string[];
+  summaryComment?: string;
   examples: TradeExample[];
   strengthsWeaknesses: StrengthWeaknessRow[];
+  strengthsWeaknessesComment?: string;
   rules: RuleRow[];
+  rulesComment?: string;
   playbook: Playbook;
-  diaryGuide: { rows: DiaryGuideRow[] };
+  playbookComment?: string;
+  diaryGuide: { rows: DiaryGuideRow[]; comment?: string };
   kpis: KPIRow[];
+  kpisComment?: string;
   fourWeekPlan: FourWeekPlanRow[];
+  fourWeekPlanComment?: string;
   coachingMessage: string[];
   nextSteps: string[];
 };
