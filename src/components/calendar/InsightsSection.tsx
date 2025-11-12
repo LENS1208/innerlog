@@ -246,168 +246,6 @@ export default function InsightsSection(props: InsightsSectionProps) {
             <Bar data={createBarChartData(durationPerformance)} options={barOptions} />
           </div>
         </div>
-
-        {/* 5) ロールオーバーしたポジション一覧（週またぎ / 日またぎ） full width */}
-        <div className="insights-grid-full-width insight-card">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>
-              ロールオーバーしたポジション一覧（週またぎ / 日またぎ）
-              <HelpIcon text="週末や翌日にまたがってポジションを保有した取引の一覧です。" />
-            </div>
-            <div
-              role="tablist"
-              aria-label="週またぎ/日またぎ切替"
-              style={{ display: "inline-flex", borderRadius: 8, border: "1px solid var(--line)", overflow: "hidden" }}
-            >
-              <button
-                role="tab"
-                aria-selected={activeTab === "weekend"}
-                onClick={() => handleTabChange("weekend")}
-                style={{
-                  padding: "6px 12px",
-                  fontSize: 13,
-                  border: "none",
-                  background: activeTab === "weekend" ? "var(--accent)" : "transparent",
-                  color: activeTab === "weekend" ? "#fff" : "var(--ink)",
-                  cursor: "pointer",
-                }}
-              >
-                週またぎ
-              </button>
-              <button
-                role="tab"
-                aria-selected={activeTab === "overnight"}
-                onClick={() => handleTabChange("overnight")}
-                style={{
-                  padding: "6px 12px",
-                  fontSize: 13,
-                  border: "none",
-                  background: activeTab === "overnight" ? "var(--accent)" : "transparent",
-                  color: activeTab === "overnight" ? "#fff" : "var(--ink)",
-                  cursor: "pointer",
-                }}
-              >
-                日またぎ
-              </button>
-            </div>
-          </div>
-
-          <div style={{ marginBottom: 12, display: "flex", flexWrap: "wrap", gap: 12, fontSize: 13, alignItems: "center" }}>
-            <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
-              件数 <span style={{ fontWeight: 600 }}>{tradesStats.count}</span>
-            </div>
-            <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
-              合計損益 <span style={{ fontWeight: 600 }}>{currencyJPY(tradesStats.sumPnl)}</span>
-            </div>
-            <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
-              平均保有 <span style={{ fontWeight: 600 }}>{tradesStats.avgHrs.toFixed(1)}</span>h
-            </div>
-            <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-              <button
-                onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
-                disabled={currentPage === 0}
-                style={{
-                  padding: "4px 8px",
-                  border: "1px solid var(--line)",
-                  borderRadius: 4,
-                  background: "var(--surface)",
-                  cursor: currentPage === 0 ? "not-allowed" : "pointer",
-                  fontSize: 12,
-                  opacity: currentPage === 0 ? 0.5 : 1,
-                }}
-                aria-label="前のページ"
-              >
-                前へ
-              </button>
-              <span style={{ fontSize: 12, color: "var(--muted)" }}>
-                {currentPage + 1} / {totalPages || 1}
-              </span>
-              <button
-                onClick={() => setCurrentPage((p) => Math.min(totalPages - 1, p + 1))}
-                disabled={currentPage >= totalPages - 1}
-                style={{
-                  padding: "4px 8px",
-                  border: "1px solid var(--line)",
-                  borderRadius: 4,
-                  background: "var(--surface)",
-                  cursor: currentPage >= totalPages - 1 ? "not-allowed" : "pointer",
-                  fontSize: 12,
-                  opacity: currentPage >= totalPages - 1 ? 0.5 : 1,
-                }}
-                aria-label="次のページ"
-              >
-                次へ
-              </button>
-            </div>
-          </div>
-
-          <div style={{ overflowX: "auto", width: "100%" }}>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
-                gap: 8,
-                fontSize: 15,
-                color: "var(--muted)",
-                fontWeight: "bold",
-                paddingBottom: 8,
-                borderBottom: "1px solid var(--line)",
-                minWidth: "600px",
-              }}
-            >
-              <div>通貨</div>
-              <div>方向</div>
-              <div>Entry → 決済 (UTC)</div>
-              <div style={{ textAlign: "right" }}>保有h</div>
-              <div style={{ textAlign: "right" }}>損益</div>
-            </div>
-            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
-              {paginatedTrades.length === 0 ? (
-                <div style={{ padding: 16, textAlign: "center", color: "var(--muted)", fontSize: 13 }}>
-                  データがありません
-                </div>
-              ) : (
-                paginatedTrades.map((t, idx) => {
-                  const entryMs = new Date(t.entry).getTime();
-                  const exitMs = new Date(t.exit).getTime();
-                  const hrs = ((exitMs - entryMs) / (1000 * 60 * 60)).toFixed(1);
-                  return (
-                    <div
-                      key={idx}
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
-                        gap: 8,
-                        fontSize: 13,
-                        color: "var(--ink)",
-                        alignItems: "center",
-                        padding: "8px 0",
-                        borderBottom: "1px solid #f3f4f6",
-                        minWidth: "600px",
-                      }}
-                    >
-                      <div>{t.symbol}</div>
-                      <div>{t.side}</div>
-                      <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                        {t.entry.replace("T", " ").substring(0, 16)} → {t.exit.replace("T", " ").substring(0, 16)}
-                      </div>
-                      <div style={{ textAlign: "right" }}>{hrs}</div>
-                      <div
-                        style={{
-                          textAlign: "right",
-                          fontWeight: 600,
-                          color: t.pnl >= 0 ? "var(--gain)" : "var(--loss)",
-                        }}
-                      >
-                        {currencyJPY(t.pnl)}
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className="insights-grid-secondary">
@@ -633,6 +471,168 @@ export default function InsightsSection(props: InsightsSectionProps) {
               </div>
             ))}
           </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ロールオーバーしたポジション一覧（週またぎ / 日またぎ） full width */}
+      <div className="insight-card" style={{ marginTop: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>
+            ロールオーバーしたポジション一覧（週またぎ / 日またぎ）
+            <HelpIcon text="週末や翌日にまたがってポジションを保有した取引の一覧です。" />
+          </div>
+          <div
+            role="tablist"
+            aria-label="週またぎ/日またぎ切替"
+            style={{ display: "inline-flex", borderRadius: 8, border: "1px solid var(--line)", overflow: "hidden" }}
+          >
+            <button
+              role="tab"
+              aria-selected={activeTab === "weekend"}
+              onClick={() => handleTabChange("weekend")}
+              style={{
+                padding: "6px 12px",
+                fontSize: 13,
+                border: "none",
+                background: activeTab === "weekend" ? "var(--accent)" : "transparent",
+                color: activeTab === "weekend" ? "#fff" : "var(--ink)",
+                cursor: "pointer",
+              }}
+            >
+              週またぎ
+            </button>
+            <button
+              role="tab"
+              aria-selected={activeTab === "overnight"}
+              onClick={() => handleTabChange("overnight")}
+              style={{
+                padding: "6px 12px",
+                fontSize: 13,
+                border: "none",
+                background: activeTab === "overnight" ? "var(--accent)" : "transparent",
+                color: activeTab === "overnight" ? "#fff" : "var(--ink)",
+                cursor: "pointer",
+              }}
+            >
+              日またぎ
+            </button>
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 12, display: "flex", flexWrap: "wrap", gap: 12, fontSize: 13, alignItems: "center" }}>
+          <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
+            件数 <span style={{ fontWeight: 600 }}>{tradesStats.count}</span>
+          </div>
+          <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
+            合計損益 <span style={{ fontWeight: 600 }}>{currencyJPY(tradesStats.sumPnl)}</span>
+          </div>
+          <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
+            平均保有 <span style={{ fontWeight: 600 }}>{tradesStats.avgHrs.toFixed(1)}</span>h
+          </div>
+          <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
+              disabled={currentPage === 0}
+              style={{
+                padding: "4px 8px",
+                border: "1px solid var(--line)",
+                borderRadius: 4,
+                background: "var(--surface)",
+                cursor: currentPage === 0 ? "not-allowed" : "pointer",
+                fontSize: 12,
+                opacity: currentPage === 0 ? 0.5 : 1,
+              }}
+              aria-label="前のページ"
+            >
+              前へ
+            </button>
+            <span style={{ fontSize: 12, color: "var(--muted)" }}>
+              {currentPage + 1} / {totalPages || 1}
+            </span>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages - 1, p + 1))}
+              disabled={currentPage >= totalPages - 1}
+              style={{
+                padding: "4px 8px",
+                border: "1px solid var(--line)",
+                borderRadius: 4,
+                background: "var(--surface)",
+                cursor: currentPage >= totalPages - 1 ? "not-allowed" : "pointer",
+                fontSize: 12,
+                opacity: currentPage >= totalPages - 1 ? 0.5 : 1,
+              }}
+              aria-label="次のページ"
+            >
+              次へ
+            </button>
+          </div>
+        </div>
+
+        <div style={{ overflowX: "auto", width: "100%" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
+              gap: 8,
+              fontSize: 15,
+              color: "var(--muted)",
+              fontWeight: "bold",
+              paddingBottom: 8,
+              borderBottom: "1px solid var(--line)",
+              minWidth: "600px",
+            }}
+          >
+            <div>通貨</div>
+            <div>方向</div>
+            <div>Entry → 決済 (UTC)</div>
+            <div style={{ textAlign: "right" }}>保有h</div>
+            <div style={{ textAlign: "right" }}>損益</div>
+          </div>
+          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
+            {paginatedTrades.length === 0 ? (
+              <div style={{ padding: 16, textAlign: "center", color: "var(--muted)", fontSize: 13 }}>
+                データがありません
+              </div>
+            ) : (
+              paginatedTrades.map((t, idx) => {
+                const entryMs = new Date(t.entry).getTime();
+                const exitMs = new Date(t.exit).getTime();
+                const hrs = ((exitMs - entryMs) / (1000 * 60 * 60)).toFixed(1);
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
+                      gap: 8,
+                      fontSize: 13,
+                      color: "var(--ink)",
+                      alignItems: "center",
+                      padding: "8px 0",
+                      borderBottom: "1px solid #f3f4f6",
+                      minWidth: "600px",
+                    }}
+                  >
+                    <div>{t.symbol}</div>
+                    <div>{t.side}</div>
+                    <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                      {t.entry.replace("T", " ").substring(0, 16)} → {t.exit.replace("T", " ").substring(0, 16)}
+                    </div>
+                    <div style={{ textAlign: "right" }}>{hrs}</div>
+                    <div
+                      style={{
+                        textAlign: "right",
+                        fontWeight: 600,
+                        color: t.pnl >= 0 ? "var(--gain)" : "var(--loss)",
+                      }}
+                    >
+                      {currencyJPY(t.pnl)}
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
