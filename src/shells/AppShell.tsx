@@ -654,7 +654,10 @@ export default function AppShell({ children }: Props) {
   }, []);
 
   useEffect(() => {
-    const sync = () => setActiveKey(location.hash.replace(/^#\//, "") || "dashboard");
+    const sync = () => {
+      setActiveKey(location.hash.replace(/^#\//, "") || "dashboard");
+      window.scrollTo(0, 0);
+    };
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
