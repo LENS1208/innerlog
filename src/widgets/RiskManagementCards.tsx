@@ -28,6 +28,8 @@ function parseDateTime(datetime: string | number | undefined): Date {
 }
 
 export function RiskManagementCards({ trades }: { trades: TradeWithProfit[] }) {
+  console.log('⚠️ RiskManagementCards rendered with', trades?.length, 'trades');
+
   const stats = useMemo(() => {
     if (!trades || trades.length === 0) {
       return {

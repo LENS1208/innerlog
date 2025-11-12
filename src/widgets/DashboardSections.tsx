@@ -1366,6 +1366,8 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
 
 
 export function BasicStatisticsCards({ trades }: { trades: TradeWithProfit[] }) {
+  console.log('📊 BasicStatisticsCards rendered with', trades?.length, 'trades');
+
   const stats = useMemo(() => {
     if (!trades || trades.length === 0) {
       return {
