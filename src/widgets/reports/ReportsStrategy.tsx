@@ -390,7 +390,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map(getMetricValue),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
+                      s.profit >= 0 ? getAccentColor() : getLossColor()
                     ),
                   },
                 ],
@@ -421,7 +421,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: [sideData.long.count, sideData.short.count],
-                    backgroundColor: [getAccentColor(0.8), getAccentColor(0.8)],
+                    backgroundColor: [getAccentColor(), getAccentColor()],
                   },
                 ],
               }}
@@ -447,7 +447,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: setupData.slice(0, 6).map((s) => s.avgHoldTime),
-                    backgroundColor: getAccentColor(0.8),
+                    backgroundColor: getAccentColor(),
                   },
                 ],
               }}
@@ -487,7 +487,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: setupData.slice(0, 6).map((s) => s.winRate),
-                    backgroundColor: getAccentColor(0.8),
+                    backgroundColor: getAccentColor(),
                   },
                 ],
               }}
@@ -519,7 +519,7 @@ export default function ReportsStrategy() {
                   {
                     data: setupData.slice(0, 6).map((s) => Math.min(s.pf, 5)),
                     backgroundColor: setupData.slice(0, 6).map((s) =>
-                      s.pf >= 1 ? getAccentColor(0.8) : getLossColor(0.8)
+                      s.pf >= 1 ? getAccentColor() : getLossColor()
                     ),
                   },
                 ],
@@ -551,12 +551,12 @@ export default function ReportsStrategy() {
                   {
                     label: "買い",
                     data: setupCrossData.slice(0, 5).map((d) => d.long),
-                    backgroundColor: getAccentColor(0.8),
+                    backgroundColor: getAccentColor(),
                   },
                   {
                     label: "売り",
                     data: setupCrossData.slice(0, 5).map((d) => d.short),
-                    backgroundColor: getAccentColor(0.8),
+                    backgroundColor: getAccentColor(),
                   },
                 ],
               }}
@@ -637,9 +637,9 @@ export default function ReportsStrategy() {
                     {
                       data: exitEfficiencyData.distribution.map(d => d.count),
                       backgroundColor: exitEfficiencyData.distribution.map((d, idx) =>
-                        idx < 2 ? getLossColor(0.8) :
-                        idx < 4 ? getWarningColor(0.8) :
-                        getAccentColor(0.8)
+                        idx < 2 ? getLossColor() :
+                        idx < 4 ? getWarningColor() :
+                        getAccentColor()
                       ),
                     },
                   ],

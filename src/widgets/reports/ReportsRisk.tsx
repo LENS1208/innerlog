@@ -521,8 +521,8 @@ export default function ReportsRisk() {
                     data: profitDistribution.counts,
                     backgroundColor: profitDistribution.labels.map((label) =>
                       label.includes("~0") || label.includes("以下") || label.startsWith("-")
-                        ? getLossColor(0.8)
-                        : getAccentColor(0.8)
+                        ? getLossColor()
+                        : getAccentColor()
                     ),
                   },
                 ],
@@ -555,8 +555,8 @@ export default function ReportsRisk() {
                     data: rMultipleDistribution.counts,
                     backgroundColor: rMultipleDistribution.labels.map((label) =>
                       label.includes("~0R") || label.includes("以下") || label.startsWith("-")
-                        ? getLossColor(0.8)
-                        : getAccentColor(0.8)
+                        ? getLossColor()
+                        : getAccentColor()
                     ),
                   },
                 ],
@@ -633,7 +633,7 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionByDay.slice(0, 7).map((d) => d.loss),
-                    backgroundColor: getLossColor(0.8),
+                    backgroundColor: getLossColor(),
                   },
                 ],
               }}
@@ -663,7 +663,7 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionByPair.slice(0, 6).map((d) => d.loss),
-                    backgroundColor: getLossColor(0.8),
+                    backgroundColor: getLossColor(),
                   },
                 ],
               }}
@@ -693,7 +693,7 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionBySetup.slice(0, 6).map((d) => d.loss),
-                    backgroundColor: getLossColor(0.8),
+                    backgroundColor: getLossColor(),
                   },
                 ],
               }}

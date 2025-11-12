@@ -251,7 +251,7 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '月次損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
       borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1.5,
     }]
@@ -329,7 +329,7 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: '日次損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
       borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
@@ -773,7 +773,7 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
       borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
@@ -854,7 +854,7 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
       borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
@@ -937,7 +937,7 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
     datasets: [{
       label: '損益（円）',
       data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? getAccentColor(0.8) : getLossColor(0.8)),
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
       borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
@@ -1099,7 +1099,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
                 label: '損益',
                 data: setupData.items.map(s => s.profit),
                 backgroundColor: setupData.items.map(s =>
-                  s.profit >= 0 ? getAccentColor(0.8) : getLossColor(0.8)
+                  s.profit >= 0 ? getAccentColor() : getLossColor()
                 ),
               },
             ],
@@ -1181,7 +1181,7 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
       label: '取引回数',
       data: distributionData.counts,
       backgroundColor: distributionData.ranges.map((r, i) =>
-        r.max <= 0 ? getLossColor(0.8) : getAccentColor(0.8)
+        r.max <= 0 ? getLossColor() : getAccentColor()
       ),
     }]
   }
@@ -1291,12 +1291,12 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
       {
         label: '勝ちトレード',
         data: distributionData.winCounts,
-        backgroundColor: getAccentColor(0.8),
+        backgroundColor: getAccentColor(),
       },
       {
         label: '負けトレード',
         data: distributionData.lossCounts,
-        backgroundColor: 'rgba(239, 68, 68, 0.8)',
+        backgroundColor: getLossColor(),
       }
     ]
   }

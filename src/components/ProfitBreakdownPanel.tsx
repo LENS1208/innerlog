@@ -135,14 +135,14 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       data: topPairs.map(([, count]) => count),
       backgroundColor: [
-        getAccentColor(0.8),
-        getLossColor(0.8),
-        'rgba(22, 163, 74, 0.8)',
-        getWarningColor(0.8),
-        'rgba(139, 92, 246, 0.8)',
-        'rgba(6, 182, 212, 0.8)',
-        getAccentColor(0.8),
-        'rgba(236, 72, 153, 0.8)',
+        getAccentColor(),
+        getLossColor(),
+        'rgba(22, 163, 74)',
+        getWarningColor(),
+        'rgba(139, 92, 246)',
+        'rgba(6, 182, 212)',
+        getAccentColor(),
+        'rgba(236, 72, 153)',
       ],
     }],
   };
@@ -151,7 +151,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getAccentColor(0.8), getAccentColor(0.8)],
+      backgroundColor: [getAccentColor(), getAccentColor()],
     }],
   };
 
@@ -160,7 +160,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
-      backgroundColor: getAccentColor(0.8),
+      backgroundColor: getAccentColor(),
     }],
   };
 
@@ -169,7 +169,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: 'rgba(22, 163, 74, 0.8)',
+      backgroundColor: 'rgba(22, 163, 74)',
     }],
   };
 
