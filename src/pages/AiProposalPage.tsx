@@ -16,6 +16,8 @@ type AiProposalPageProps = AiProposalData & AiProposalHandlers & {
   pair?: string;
   timeframe?: string;
   targetDate?: string;
+  rating?: number | null;
+  onRatingChange?: (rating: number) => void;
   onBackToList?: () => void;
 };
 
@@ -30,6 +32,8 @@ export default function AiProposalPage({
   pair,
   timeframe,
   targetDate,
+  rating,
+  onRatingChange,
   onBackToList,
   onGenerate,
   onRegenerate,
@@ -46,7 +50,7 @@ export default function AiProposalPage({
 
   return (
     <div style={{ width: '100%', padding: 16 }}>
-      <HeroSummary hero={hero} />
+      <HeroSummary hero={hero} rating={rating} onRatingChange={onRatingChange} />
 
       {prompt && (
         <div

@@ -1,11 +1,14 @@
 import React from 'react';
 import type { HeroData } from '../../types/ai-proposal.types';
+import StarRating from './StarRating';
 
 type HeroSummaryProps = {
   hero: HeroData;
+  rating?: number | null;
+  onRatingChange?: (rating: number) => void;
 };
 
-export default function HeroSummary({ hero }: HeroSummaryProps) {
+export default function HeroSummary({ hero, rating, onRatingChange }: HeroSummaryProps) {
   const biasClass = hero.bias === 'BUY' ? 'good' : hero.bias === 'SELL' ? 'bad' : '';
   const biasLabel = hero.bias === 'BUY' ? 'BUY（買い寄り）' : hero.bias === 'SELL' ? 'SELL（売り寄り）' : 'NEUTRAL（中立）';
 
@@ -15,7 +18,15 @@ export default function HeroSummary({ hero }: HeroSummaryProps) {
         <h3>
           AIサマリー：{hero.pair}｜<span className={`status ${biasClass}`}>{biasLabel}</span>
         </h3>
-        <div className="tag">信頼度 {hero.confidence}%</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {onRatingChange && (
+            <StarRating
+              rating={rating || null}
+              onChange={onRatingChange}
+            />
+          )}
+          <div className="tag">信頼度 {hero.confidence}%</div>
+        </div>
       </div>
       <div className="bar" aria-label="AI信頼度">
         <i style={{ width: `${hero.confidence}%` }}></i>

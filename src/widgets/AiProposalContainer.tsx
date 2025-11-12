@@ -94,6 +94,7 @@ export default function AiProposalContainer({
   const [prompt, setPrompt] = useState('');
   const [pair, setPair] = useState('USD/JPY');
   const [timeframe, setTimeframe] = useState('4H');
+  const [rating, setRating] = useState<number | null>(null);
 
   useEffect(() => {
     if (proposalId) {
@@ -110,6 +111,7 @@ export default function AiProposalContainer({
       setPrompt(proposal.prompt);
       setPair(proposal.pair);
       setTimeframe(proposal.timeframe);
+      setRating(proposal.user_rating || null);
     }
     setLoading(false);
   }
@@ -266,6 +268,29 @@ export default function AiProposalContainer({
     }
   }
 
+  async function handleRatingChange(newRating: number) {
+    if (!currentProposal) return;
+
+    setRating(newRating);
+
+    try {
+      const { error } = await supabase
+        .from('ai_proposals')
+        .update({ user_rating: newRating })
+        .eq('id', currentProposal.id);
+
+      if (error) {
+        throw error;
+      }
+
+      showToast('評価を保存しました');
+    } catch (error) {
+      console.error('Error saving rating:', error);
+      showToast('評価の保存に失敗しました');
+      setRating(currentProposal.user_rating || null);
+    }
+  }
+
   if (loading && !proposalData) {
     return (
       <div style={{ width: '100%', padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
@@ -286,6 +311,8 @@ export default function AiProposalContainer({
       pair={pair}
       timeframe={timeframe}
       targetDate={currentProposal?.created_at ? new Date(currentProposal.created_at).toISOString().split('T')[0] : undefined}
+      rating={rating}
+      onRatingChange={handleRatingChange}
       onBackToList={onBack}
       onGenerate={handleGenerate}
       onRegenerate={handleRegenerate}

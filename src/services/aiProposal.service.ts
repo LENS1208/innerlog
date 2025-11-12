@@ -18,6 +18,7 @@ export type AiProposal = {
   prompt: string;
   parent_id: string | null;
   version: number;
+  user_rating: number | null;
   created_at: string;
   updated_at: string;
 };
