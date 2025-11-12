@@ -5,6 +5,7 @@ import type { Trade } from '../lib/types'
 import '../lib/dashboard.css'
 import { HelpIcon } from '../components/common/HelpIcon'
 import { getGridLineColor, getAccentColor, getLossColor } from '../lib/chartColors'
+import { useTheme } from '../lib/theme.context'
 
 type TradeWithProfit = {
   profitYen?: number
@@ -52,6 +53,7 @@ function formatDateSafe(date: Date): string {
 }
 
 export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { theme } = useTheme()
   const { labels, equity } = useMemo(() => {
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
@@ -142,6 +144,7 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
 }
 
 export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { theme } = useTheme()
   const { labels, dd } = useMemo(() => {
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
@@ -215,6 +218,7 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
 }
 
 export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { theme } = useTheme()
   const { labels, profits, tradesCounts, winRates } = useMemo(() => {
     const monthlyMap = new Map<string, { profit: number; count: number; wins: number }>()
 
@@ -302,6 +306,7 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
 }
 
 export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
+  const { theme } = useTheme()
   const { labels, profits } = useMemo(() => {
     const dailyMap = new Map<string, number>()
 
@@ -736,6 +741,7 @@ export function WeekCalendar({ trades }: { trades: TradeWithProfit[] }) {
 }
 
 export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProfit[], onWeekdayClick?: (weekdayLabel: string, weekdayTrades: TradeWithProfit[]) => void }) {
+  const { theme } = useTheme()
   const { labels, profits, counts, tradesPerDay } = useMemo(() => {
     const weekdayMap = new Map<number, { profit: number; count: number; trades: TradeWithProfit[] }>()
 
@@ -817,6 +823,7 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
 }
 
 export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfit[], onTimeClick?: (timeLabel: string, timeTrades: TradeWithProfit[]) => void }) {
+  const { theme } = useTheme()
   const { labels, profits, counts, tradesPerHour } = useMemo(() => {
     const hourMap = new Map<number, { profit: number; count: number; trades: TradeWithProfit[] }>()
 
@@ -900,6 +907,7 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
 }
 
 export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithProfit[], onPairClick?: (pairLabel: string, pairTrades: TradeWithProfit[]) => void }) {
+  const { theme } = useTheme()
   const { labels, profits, counts, tradesPerPair } = useMemo(() => {
     const pairMap = new Map<string, { profit: number; count: number; trades: TradeWithProfit[] }>()
 
