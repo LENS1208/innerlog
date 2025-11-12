@@ -76,8 +76,8 @@ export default function RadarChart({ parts }: RadarChartProps) {
             key={`web-${idx}`}
             points={points}
             fill="none"
-            stroke="#e5e7eb"
-            strokeWidth="1"
+            stroke={idx === 4 ? "#9ca3af" : "#e5e7eb"}
+            strokeWidth={idx === 4 ? "1.5" : "1"}
           />
         ))}
         {axisLines.map((line, idx) => (
@@ -87,8 +87,8 @@ export default function RadarChart({ parts }: RadarChartProps) {
             y1={line.y1}
             x2={line.x2}
             y2={line.y2}
-            stroke="#e5e7eb"
-            strokeWidth="1"
+            stroke="#d1d5db"
+            strokeWidth="1.5"
           />
         ))}
         {labelPositions.map((pos, idx) => (
@@ -96,9 +96,10 @@ export default function RadarChart({ parts }: RadarChartProps) {
             key={`label-${idx}`}
             x={pos.x}
             y={pos.y}
-            fontSize="11"
+            fontSize="12"
+            fontWeight="600"
             textAnchor="middle"
-            fill="#9fb1c1"
+            fill="var(--ink)"
           >
             {pos.label}
           </text>

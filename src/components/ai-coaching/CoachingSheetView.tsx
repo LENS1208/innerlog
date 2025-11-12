@@ -40,7 +40,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
       </div>
 
       {sheet.examples && sheet.examples.length > 0 && (
-        <Section title="実例ハイライト">
+        <Section title="あなたの注目トレード">
           <div
             style={{
               display: 'grid',
