@@ -120,6 +120,7 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
         }
       });
 
+      console.log('🔍 Filter update:', { input: p, prev, newFilters });
       debouncedApplyFilters(newFilters);
       return newFilters;
     });

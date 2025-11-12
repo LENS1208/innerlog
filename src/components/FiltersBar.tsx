@@ -193,7 +193,7 @@ export default function FiltersBar() {
     <>
       <div className="filters-container" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
         {/* 銘柄 */}
-        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }} disabled={loadingSymbols}>
+        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }} disabled={loadingSymbols}>
           <option value="">{loadingSymbols ? '読み込み中...' : UI_TEXT.symbol}</option>
           {availableSymbols.map(symbol => (
             <option key={symbol} value={symbol}>{symbol}</option>
@@ -201,14 +201,14 @@ export default function FiltersBar() {
         </select>
 
         {/* ポジション */}
-        <select value={uiFilters.side || ""} onChange={(e) => setUiFilters({ side: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.side || ""} onChange={(e) => setUiFilters({ side: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">{UI_TEXT.position}</option>
           <option value="LONG">{UI_TEXT.long}</option>
           <option value="SHORT">{UI_TEXT.short}</option>
         </select>
 
         {/* 損益 */}
-        <select value={uiFilters.pnl || ""} onChange={(e) => setUiFilters({ pnl: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.pnl || ""} onChange={(e) => setUiFilters({ pnl: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">{UI_TEXT.profit}</option>
           <option value="win">{UI_TEXT.winOnly}</option>
           <option value="loss">{UI_TEXT.lossOnly}</option>
@@ -321,7 +321,7 @@ export default function FiltersBar() {
         </div>
 
         {/* 曜日 */}
-        <select value={uiFilters.weekday || ""} onChange={(e) => setUiFilters({ weekday: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.weekday || ""} onChange={(e) => setUiFilters({ weekday: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">曜日</option>
           <option value="weekdays">平日のみ</option>
           <option value="weekend">週末のみ</option>
@@ -331,7 +331,7 @@ export default function FiltersBar() {
         </select>
 
         {/* 時間帯 */}
-        <select value={uiFilters.session || ""} onChange={(e) => setUiFilters({ session: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.session || ""} onChange={(e) => setUiFilters({ session: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">時間帯</option>
           <option value="asia">アジア</option>
           <option value="london">ロンドン</option>
