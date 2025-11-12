@@ -665,7 +665,7 @@ export default function MonthlyCalendar() {
                   const hasTradesValue = day.isCurrentMonth && day.tradeCount > 0;
                   const bgColor = hasTradesValue
                     ? day.profitYen >= 0
-                      ? "rgba(14, 165, 233, 0.1)"
+                      ? "rgba(2, 132, 199, 0.1)"
                       : "rgba(239, 68, 68, 0.1)"
                     : day.isCurrentMonth
                     ? "var(--surface)"
@@ -673,7 +673,7 @@ export default function MonthlyCalendar() {
 
                   const borderColor = hasTradesValue
                     ? day.profitYen >= 0
-                      ? "rgba(14, 165, 233, 0.3)"
+                      ? "rgba(2, 132, 199, 0.3)"
                       : "rgba(239, 68, 68, 0.3)"
                     : "var(--line)";
 

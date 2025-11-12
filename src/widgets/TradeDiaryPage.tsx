@@ -654,12 +654,12 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                     const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
                     gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
                     gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
-                    gradient.addColorStop(1, 'rgba(14, 165, 233, 0.4)');
+                    gradient.addColorStop(1, 'rgba(2, 132, 199, 0.4)');
                     return gradient;
                   },
                   segment: {
                     borderColor: (ctx: any) => {
-                      return ctx.p1.parsed.y >= 0 ? '#0ea5e9' : '#ef4444';
+                      return ctx.p1.parsed.y >= 0 ? '#0284c7' : '#ef4444';
                     }
                   }
                 },

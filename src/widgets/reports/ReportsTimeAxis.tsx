@@ -606,7 +606,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dayOfWeekData.map((d) => d.profit),
                     backgroundColor: dayOfWeekData.map((d) =>
-                      d.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -638,7 +638,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dayOfWeekData.map((d) => d.profit),
                     backgroundColor: dayOfWeekData.map((d) =>
-                      d.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -669,7 +669,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: hourData.map((h) => h.profit),
-                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)")),
                   },
                 ],
               }}
@@ -699,7 +699,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: hourData.map((h) => h.profit),
-                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)")),
                   },
                 ],
               }}
@@ -734,7 +734,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dayOfWeekData.map(getMetricValue),
                     backgroundColor: dayOfWeekData.map((d) =>
-                      d.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -761,7 +761,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     data: hourData.map(getMetricValue),
-                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)")),
+                    backgroundColor: hourData.map((h) => (h.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)")),
                   },
                 ],
               }}
@@ -788,7 +788,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: dailyData.map(([_, d]) => d.profit),
                     backgroundColor: dailyData.map(([_, d]) =>
-                      d.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -826,7 +826,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: weeklyData.map(([_, d]) => d.profit),
                     backgroundColor: weeklyData.map(([_, d]) =>
-                      d.profit >= 0 ? "rgba(22, 163, 74, 0.8)" : "rgba(239, 68, 68, 0.8)"
+                      d.profit >= 0 ? "rgba(2, 132, 199, 0.8)" : "rgba(239, 68, 68, 0.8)"
                     ),
                   },
                 ],
@@ -914,7 +914,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: scatterTimeProfit,
                     backgroundColor: scatterTimeProfit.map((p) =>
-                      p.y >= 0 ? "rgba(22, 163, 74, 0.6)" : "rgba(239, 68, 68, 0.6)"
+                      p.y >= 0 ? "rgba(2, 132, 199, 0.6)" : "rgba(239, 68, 68, 0.6)"
                     ),
                     pointRadius: 4,
                   },
@@ -940,7 +940,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: scatterHoldTimeProfit,
                     backgroundColor: scatterHoldTimeProfit.map((p) =>
-                      p.y >= 0 ? "rgba(22, 163, 74, 0.6)" : "rgba(239, 68, 68, 0.6)"
+                      p.y >= 0 ? "rgba(2, 132, 199, 0.6)" : "rgba(239, 68, 68, 0.6)"
                     ),
                     pointRadius: 4,
                   },

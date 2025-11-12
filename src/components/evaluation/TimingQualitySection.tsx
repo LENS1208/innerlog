@@ -88,7 +88,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
         <div className="timing-grid">
           <div className="panel" style={{ padding: 20 }}>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>MFE（最大含み益）</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: '#22c55e', marginBottom: 4 }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: '#0284c7', marginBottom: 4 }}>
               {(timingMetrics.avgMfe * 100).toFixed(1)}%
             </div>
             <div style={{ fontSize: 12, color: 'var(--muted)' }}>平均的な最大含み益率</div>

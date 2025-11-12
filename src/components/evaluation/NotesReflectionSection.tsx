@@ -95,7 +95,7 @@ export default function NotesReflectionSection() {
                     style={{
                       width: '100%',
                       height: `${day.score * 10}%`,
-                      background: day.score >= 7 ? '#22c55e' : day.score >= 5 ? '#3b82f6' : '#ef4444',
+                      background: day.score >= 7 ? '#0284c7' : day.score >= 5 ? '#3b82f6' : '#ef4444',
                       borderRadius: 4,
                     }}
                   />

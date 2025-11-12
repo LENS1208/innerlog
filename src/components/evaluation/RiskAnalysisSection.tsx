@@ -158,7 +158,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
                       style={{
                         width: `${Math.min(d.prob, 100)}%`,
                         height: '100%',
-                        background: d.prob > 5 ? '#ef4444' : '#22c55e',
+                        background: d.prob > 5 ? '#ef4444' : '#0284c7',
                       }}
                     />
                   </div>

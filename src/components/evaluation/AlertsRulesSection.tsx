@@ -56,7 +56,7 @@ export default function AlertsRulesSection({ metrics }: Props) {
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>アラート</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {alerts.length === 0 ? (
-                <div style={{ padding: 16, border: '1px solid #22c55e', borderRadius: 8, background: 'rgba(22, 163, 74, 0.1)', color: '#22c55e', fontSize: 13 }}>✓ アラートなし</div>
+                <div style={{ padding: 16, border: '1px solid #0284c7', borderRadius: 8, background: 'rgba(2, 132, 199, 0.1)', color: '#0284c7', fontSize: 13 }}>✓ アラートなし</div>
               ) : (
                 alerts.map((alert, idx) => {
                   const borderColor = alert.type === 'danger' ? '#ef4444' : '#3b82f6';
@@ -84,7 +84,7 @@ export default function AlertsRulesSection({ metrics }: Props) {
                       <span style={{ fontWeight: 600 }}>{goal.actual.toFixed(1)}{goal.unit} / {goal.target}{goal.unit}</span>
                     </div>
                     <div style={{ height: 24, background: 'var(--chip)', borderRadius: 12, overflow: 'hidden', position: 'relative' }}>
-                      <div style={{ width: `${Math.abs(progress)}%`, height: '100%', background: achieved ? '#22c55e' : '#3b82f6', transition: 'width 0.3s ease' }} />
+                      <div style={{ width: `${Math.abs(progress)}%`, height: '100%', background: achieved ? '#0284c7' : '#3b82f6', transition: 'width 0.3s ease' }} />
                       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 11, fontWeight: 700, color: progress > 50 ? '#fff' : 'var(--ink)' }}>
                         {Math.abs(progress).toFixed(0)}%
                       </div>

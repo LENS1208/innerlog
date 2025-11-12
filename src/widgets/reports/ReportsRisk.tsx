@@ -521,7 +521,7 @@ export default function ReportsRisk() {
                     backgroundColor: profitDistribution.labels.map((label) =>
                       label.includes("~0") || label.includes("以下") || label.startsWith("-")
                         ? "rgba(239, 68, 68, 0.8)"
-                        : "rgba(22, 163, 74, 0.8)"
+                        : "rgba(2, 132, 199, 0.8)"
                     ),
                   },
                 ],
@@ -555,7 +555,7 @@ export default function ReportsRisk() {
                     backgroundColor: rMultipleDistribution.labels.map((label) =>
                       label.includes("~0R") || label.includes("以下") || label.startsWith("-")
                         ? "rgba(239, 68, 68, 0.8)"
-                        : "rgba(22, 163, 74, 0.8)"
+                        : "rgba(2, 132, 199, 0.8)"
                     ),
                   },
                 ],
