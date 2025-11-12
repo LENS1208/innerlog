@@ -190,15 +190,15 @@ export default function AiEvaluationPage() {
                 )}
                 <button
                   onClick={async () => {
+                    const apiKey = localStorage.getItem('openai_api_key');
+                    if (!apiKey) {
+                      setError('OpenAI APIキーが設定されていません。設定ページで設定してください。');
+                      return;
+                    }
+
                     setGenerating(true);
                     setError(null);
                     try {
-                      const apiKey = localStorage.getItem('openai_api_key');
-                      if (!apiKey) {
-                        setError('OpenAI APIキーが設定されていません。設定ページで設定してください。');
-                        return;
-                      }
-
                       const tradesJson = dataRows.map(row => ({
                         date: row.closeDate,
                         symbol: row.symbol,
