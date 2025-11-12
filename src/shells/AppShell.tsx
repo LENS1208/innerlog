@@ -153,7 +153,7 @@ function Header({
                   border: "none",
                   borderRadius: 12,
                   background: "var(--accent)",
-                  color: "#fff",
+                  color: "white",
                   fontWeight: 600,
                   fontSize: 14,
                   cursor: "pointer",
@@ -203,7 +203,7 @@ function Header({
                     border: "none",
                     borderRadius: 12,
                     background: "var(--accent)",
-                    color: "#fff",
+                    color: "white",
                     fontWeight: 600,
                     fontSize: 14,
                     cursor: "pointer",
@@ -235,7 +235,7 @@ function Header({
                   border: "none",
                   borderRadius: 12,
                   background: "var(--accent)",
-                  color: "#fff",
+                  color: "white",
                   fontWeight: 600,
                   fontSize: 14,
                   cursor: "pointer",
@@ -265,9 +265,9 @@ function Banner() {
       style={{
         display: "flex",
         margin: "var(--space-3) var(--px-mobile)",
-        border: "1px solid #f59e0b",
-        background: "#fff7ed",
-        color: "#7c2d12",
+        border: "1px solid var(--warning)",
+        background: "var(--chip)",
+        color: "var(--ink)",
         borderRadius: 12,
         padding: "12px 14px",
         alignItems: "center",
@@ -280,7 +280,7 @@ function Banner() {
     >
       <strong>MT4/MT5の取引履歴を追加してください</strong>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        <span style={{ fontSize: 13, color: '#92400e' }}>デモデータ:</span>
+        <span style={{ fontSize: 13, color: 'var(--muted)' }}>デモデータ:</span>
         <div style={{ display: "inline-flex", border: "1px solid var(--line)", borderRadius: 999, overflow: "hidden" }}>
           {(["A", "B", "C"] as const).map((d) => (
             <button

@@ -677,8 +677,8 @@ export default function SettingsPage() {
 
             <div>
               <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>取引データ管理</div>
-              <div style={{ padding: 16, backgroundColor: '#fef2f2', borderRadius: 4, marginBottom: 12, border: '1px solid #fecaca' }}>
-                <div style={{ fontSize: 13, color: '#991b1b', marginBottom: 0 }}>
+              <div style={{ padding: 16, backgroundColor: 'var(--chip)', borderRadius: 4, marginBottom: 12, border: '1px solid var(--danger)' }}>
+                <div style={{ fontSize: 13, color: 'var(--danger)', marginBottom: 0 }}>
                   データベースに保存されている取引履歴をすべて削除します。この操作は元に戻せません。
                 </div>
               </div>
@@ -687,8 +687,8 @@ export default function SettingsPage() {
                 disabled={saving}
                 style={{
                   padding: '10px 16px',
-                  backgroundColor: '#dc2626',
-                  color: '#ffffff',
+                  backgroundColor: 'var(--danger)',
+                  color: 'white',
                   border: 'none',
                   borderRadius: 4,
                   fontSize: 14,

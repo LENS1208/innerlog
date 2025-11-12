@@ -35,19 +35,19 @@
 
 /* ダークモード - ハイセンスで都会的 */
 :root[data-theme="dark"] {
-  --bg: #0f1117;
-  --surface: #1e1f2b;
-  --ink: #f1f5f9;
-  --muted: #94a3b8;
-  --line: #2d2e3a;
-  --accent: #3b82f6;
-  --gain: #10b981;
+  --bg: #0a0e14;
+  --surface: #1a1f2e;
+  --ink: #e4e8f0;
+  --muted: #a0aec0;
+  --line: #2d3748;
+  --accent: #4f96ff;
+  --gain: #34d399;
   --loss: #f87171;
   --warning: #fbbf24;
   --danger: #f87171;
-  --chip: #252630;
-  --panel-2: #252630;
-  --bg-secondary: #181923;
+  --chip: #252d3d;
+  --panel-2: #1f2637;
+  --bg-secondary: #151b28;
 
   --radius: 14px;
   --header-h: 56px;
@@ -84,7 +84,7 @@ body {
 }
 
 :root[data-theme="dark"] body {
-  background: linear-gradient(135deg, #0f1117 0%, #1a1b23 100%) fixed;
+  background: #0a0e14;
 }
 
 .pnl-pos {
