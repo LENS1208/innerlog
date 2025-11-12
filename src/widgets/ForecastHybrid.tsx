@@ -52,7 +52,7 @@ type HistoryItem = {
 
 /* ================== 表示用メタ ================== */
 const kindMeta: Record<ScenarioKind, { label: string; color: string }> = {
-  bull:  { label: "上昇トレンド", color: "#16a34a" },
+  bull:  { label: "上昇トレンド", color: "#0ea5e9" },
   range: { label: "レンジ",       color: "#6b7280" },
   bear:  { label: "下降トレンド", color: "#dc2626" },
 };

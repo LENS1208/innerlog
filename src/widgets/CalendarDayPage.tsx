@@ -334,7 +334,7 @@ export default function CalendarDayPage() {
                       const dataIndex = context.dataIndex;
                       if (dataIndex === undefined) return '#3b82f6';
                       const value = context.chart.data.datasets[0].data[dataIndex] as number;
-                      return value >= 0 ? '#16a34a' : '#ef4444';
+                      return value >= 0 ? '#0ea5e9' : '#ef4444';
                     },
                     backgroundColor: (context) => {
                       const chart = context.chart;
@@ -343,7 +343,7 @@ export default function CalendarDayPage() {
                       const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
                       gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
                       gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
-                      gradient.addColorStop(1, 'rgba(22, 163, 74, 0.4)');
+                      gradient.addColorStop(1, 'rgba(14, 165, 233, 0.4)');
                       return gradient;
                     },
                     fill: 'origin',
@@ -351,7 +351,7 @@ export default function CalendarDayPage() {
                     pointRadius: 3,
                     pointBackgroundColor: (context) => {
                       const value = context.parsed.y;
-                      return value >= 0 ? '#16a34a' : '#ef4444';
+                      return value >= 0 ? '#0ea5e9' : '#ef4444';
                     },
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
@@ -359,7 +359,7 @@ export default function CalendarDayPage() {
                     borderWidth: 2.5,
                     segment: {
                       borderColor: (ctx) => {
-                        return ctx.p1.parsed.y >= 0 ? '#16a34a' : '#ef4444';
+                        return ctx.p1.parsed.y >= 0 ? '#0ea5e9' : '#ef4444';
                       }
                     }
                   },
