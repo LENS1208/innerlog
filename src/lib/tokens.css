@@ -37,8 +37,8 @@
 
 /* ダークモード - ハイセンスで都会的 */
 :root[data-theme="dark"] {
-  --bg: #0a0e14;
-  --surface: #1a1f2e;
+  --bg: #1a1f2e;
+  --surface: #0a0e14;
   --ink: #e4e8f0;
   --muted: #a0aec0;
   --line: #2d3748;
@@ -88,7 +88,7 @@ body {
 }
 
 :root[data-theme="dark"] body {
-  background: #0a0e14;
+  background: #1a1f2e;
 }
 
 .pnl-pos {
