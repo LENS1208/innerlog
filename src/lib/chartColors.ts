@@ -103,3 +103,36 @@ export function getGreenColor(alpha: number = 1): string {
   }
   return `rgba(34, 197, 94, ${alpha})`
 }
+
+export function createProfitGradient(
+  ctx: CanvasRenderingContext2D,
+  chartArea: any,
+  scales: any
+): CanvasGradient {
+  const yScale = scales.y
+  const zeroPixel = yScale.getPixelForValue(0)
+  const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top)
+
+  const zeroPosition = (chartArea.bottom - zeroPixel) / (chartArea.bottom - chartArea.top)
+  const clampedZero = Math.max(0, Math.min(1, zeroPosition))
+
+  gradient.addColorStop(0, getLossColor(0.6))
+  gradient.addColorStop(clampedZero * 0.95, getLossColor(0.1))
+  gradient.addColorStop(clampedZero, 'rgba(200, 200, 200, 0)')
+  gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.05, getAccentColor(0.1))
+  gradient.addColorStop(1, getAccentColor(0.6))
+
+  return gradient
+}
+
+export function createDrawdownGradient(
+  ctx: CanvasRenderingContext2D,
+  chartArea: any
+): CanvasGradient {
+  const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
+
+  gradient.addColorStop(0, getLossColor(0.05))
+  gradient.addColorStop(1, getLossColor(0.6))
+
+  return gradient
+}

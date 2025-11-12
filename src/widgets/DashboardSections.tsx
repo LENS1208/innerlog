@@ -4,7 +4,7 @@ import { ja } from 'date-fns/locale'
 import type { Trade } from '../lib/types'
 import '../lib/dashboard.css'
 import { HelpIcon } from '../components/common/HelpIcon'
-import { getGridLineColor, getAccentColor, getLossColor } from '../lib/chartColors'
+import { getGridLineColor, getAccentColor, getLossColor, createProfitGradient, createDrawdownGradient } from '../lib/chartColors'
 import { useTheme } from '../lib/theme.context'
 
 type TradeWithProfit = {
@@ -88,19 +88,7 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
         const {ctx, chartArea, scales} = chart;
         if (!chartArea) return getAccentColor(0.1);
 
-        const yScale = scales.y;
-        const zeroPixel = yScale.getPixelForValue(0);
-
-        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-
-        const zeroPosition = (chartArea.bottom - zeroPixel) / (chartArea.bottom - chartArea.top);
-        const clampedZero = Math.max(0, Math.min(1, zeroPosition));
-
-        gradient.addColorStop(0, getLossColor(0.4));
-        gradient.addColorStop(clampedZero, 'rgba(200, 200, 200, 0)');
-        gradient.addColorStop(1, getAccentColor(0.4));
-
-        return gradient;
+        return createProfitGradient(ctx, chartArea, scales);
       },
       pointRadius: 0,
       fill: 'origin',
@@ -177,11 +165,17 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
     datasets: [{
       label: 'ドローダウン（円）',
       data: dd,
-      borderWidth: 2,
-      borderColor: '#ef4444',
+      borderWidth: 2.5,
+      borderColor: getLossColor(1),
       pointRadius: 0,
       fill: true,
-      backgroundColor: 'rgba(239,68,68,0.1)',
+      backgroundColor: (context: any) => {
+        const chart = context.chart;
+        const {ctx, chartArea} = chart;
+        if (!chartArea) return getLossColor(0.1);
+
+        return createDrawdownGradient(ctx, chartArea);
+      },
       tension: 0.2,
     }]
   }
