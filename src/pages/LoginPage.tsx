@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import logoImg from '../assets/inner-log-logo.png';
+import { useTheme } from '../lib/theme.context';
+import logoImgLight from '../assets/inner-log-logo-l.png';
+import logoImgDark from '../assets/inner-log-logo-d.png';
 
 export default function LoginPage() {
+  const { theme } = useTheme();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  const logoImg = theme === 'dark' ? logoImgDark : logoImgLight;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

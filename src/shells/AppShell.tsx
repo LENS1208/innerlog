@@ -3,7 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { DatasetProvider, useDataset } from "../lib/dataset.context";
 import FiltersBar from "../components/FiltersBar";
 import UserMenu from "../components/UserMenu";
-import logoImg from "../assets/inner-log-logo.png";
+import { useTheme } from "../lib/theme.context";
+import logoImgLight from "../assets/inner-log-logo-l.png";
+import logoImgDark from "../assets/inner-log-logo-d.png";
 import { parseCsvText } from "../lib/csv";
 import { tradeToDb, insertTrades, getTradesCount, deleteAllTrades, upsertAccountSummary } from "../lib/db.service";
 import { parseHtmlStatement, parseFullHtmlStatement, convertHtmlTradesToCsvFormat } from "../lib/html-parser";
@@ -307,7 +309,7 @@ function Banner() {
 }
 
 // 左メニュー（左上に固定）
-function SideNav({ menu, activeKey, onUploadClick }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void }) {
+function SideNav({ menu, activeKey, onUploadClick, logoImg }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void; logoImg: string }) {
   return (
     <aside
       style={{
@@ -463,6 +465,8 @@ function SideNav({ menu, activeKey, onUploadClick }: { menu: MenuItem[]; activeK
 
 export default function AppShell({ children }: Props) {
   console.log("🔄 AppShell render");
+  const { theme } = useTheme();
+  const logoImg = theme === 'dark' ? logoImgDark : logoImgLight;
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>("dashboard");
@@ -635,7 +639,7 @@ export default function AppShell({ children }: Props) {
             zIndex: 10,
           }}
         >
-          <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} />
+          <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} logoImg={logoImg} />
         </div>
 
         {/* モバイルメニュー（ドロワー） */}
@@ -687,7 +691,7 @@ export default function AppShell({ children }: Props) {
                   ✕
                 </button>
               </div>
-              <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} />
+              <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} logoImg={logoImg} />
             </div>
           </>
         )}
