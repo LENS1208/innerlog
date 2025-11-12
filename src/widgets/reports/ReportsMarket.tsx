@@ -146,29 +146,37 @@ export default function ReportsMarket() {
     };
   }, [filteredTrades]);
 
-  const majorVsCrossData = useMemo(() => {
-    const jpyTrades = filteredTrades.filter((t) => {
-      const pair = getTradePair(t).toUpperCase();
-      return pair.includes('JPY');
-    });
-    const usdTrades = filteredTrades.filter((t) => {
-      const pair = getTradePair(t).toUpperCase();
-      return pair.includes('USD') && !pair.includes('JPY');
-    });
-    const otherTrades = filteredTrades.filter((t) => {
-      const pair = getTradePair(t).toUpperCase();
-      return !pair.includes('JPY') && !pair.includes('USD');
+  const categorizeAssetType = (pair: string): string => {
+    const p = pair.toUpperCase();
+
+    if (p.includes('JPY')) return 'jpy';
+    if (p.includes('XAU') || p.includes('XAG') || p.includes('GOLD') || p.includes('SILVER')) return 'metals';
+    if (p.includes('BTC') || p.includes('ETH') || p.includes('XRP') || p.includes('CRYPTO')) return 'crypto';
+    if (p.includes('WTI') || p.includes('BRENT') || p.includes('OIL') || p.includes('CORN') || p.includes('WHEAT') || p.includes('SOYBEAN')) return 'commodities';
+    if ((p.includes('USD') || p.includes('EUR') || p.includes('GBP') || p.includes('AUD') || p.includes('CAD') || p.includes('CHF') || p.includes('NZD')) &&
+        p.match(/^(EUR|GBP|AUD|CAD|CHF|NZD)\/(USD|EUR|GBP|AUD|CAD|CHF|NZD)$/)) return 'usdMajor';
+    if (p.includes('TRY') || p.includes('ZAR') || p.includes('MXN') || p.includes('BRL') || p.includes('INR') || p.includes('CNH')) return 'emerging';
+
+    return 'other';
+  };
+
+  const assetTypeData = useMemo(() => {
+    const categories = ['jpy', 'usdMajor', 'metals', 'crypto', 'commodities', 'emerging', 'other'];
+    const result: Record<string, { count: number; profit: number; winRate: number }> = {};
+
+    categories.forEach(cat => {
+      const trades = filteredTrades.filter(t => categorizeAssetType(getTradePair(t)) === cat);
+      const profit = trades.reduce((sum, t) => sum + getTradeProfit(t), 0);
+      const wins = trades.filter(t => getTradeProfit(t) > 0).length;
+
+      result[cat] = {
+        count: trades.length,
+        profit,
+        winRate: trades.length > 0 ? (wins / trades.length) * 100 : 0
+      };
     });
 
-    const jpyProfit = jpyTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
-    const usdProfit = usdTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
-    const otherProfit = otherTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
-
-    return {
-      jpy: { count: jpyTrades.length, profit: jpyProfit, winRate: jpyTrades.length > 0 ? (jpyTrades.filter((t) => getTradeProfit(t) > 0).length / jpyTrades.length) * 100 : 0 },
-      usd: { count: usdTrades.length, profit: usdProfit, winRate: usdTrades.length > 0 ? (usdTrades.filter((t) => getTradeProfit(t) > 0).length / usdTrades.length) * 100 : 0 },
-      other: { count: otherTrades.length, profit: otherProfit, winRate: otherTrades.length > 0 ? (otherTrades.filter((t) => getTradeProfit(t) > 0).length / otherTrades.length) * 100 : 0 },
-    };
+    return result;
   }, [filteredTrades]);
 
   const marketConditionData = useMemo(() => {
@@ -253,24 +261,33 @@ export default function ReportsMarket() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            通貨タイプ別
-            <HelpIcon text="JPY関連、USD関連、その他クロスの通貨タイプ別の損益比較です。" />
+            資産クラス別
+            <HelpIcon text="JPY、USD、貴金属、仮想通貨、商品、新興国通貨など、資産クラス別の損益比較です。" />
           </h3>
-          <div style={{ fontSize: 14, fontWeight: 600 }}>
-            <span style={{ color: majorVsCrossData.jpy.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              JPY：{formatValue(majorVsCrossData.jpy.profit, "profit")}
+          <div style={{ fontSize: 13, fontWeight: 600, display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            <span style={{ color: assetTypeData.jpy.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              JPY：{formatValue(assetTypeData.jpy.profit, "profit")}({assetTypeData.jpy.count})
             </span>
-            {" / "}
-            <span style={{ color: majorVsCrossData.usd.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              USD：{formatValue(majorVsCrossData.usd.profit, "profit")}
+            <span style={{ color: assetTypeData.usdMajor.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              USD：{formatValue(assetTypeData.usdMajor.profit, "profit")}({assetTypeData.usdMajor.count})
             </span>
-            {" / "}
-            <span style={{ color: majorVsCrossData.other.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              他：{formatValue(majorVsCrossData.other.profit, "profit")}
+            <span style={{ color: assetTypeData.metals.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              貴金属：{formatValue(assetTypeData.metals.profit, "profit")}({assetTypeData.metals.count})
             </span>
-          </div>
-          <div style={{ fontSize: 12, color: "var(--muted)" }}>
-            JPY {majorVsCrossData.jpy.count}件 / USD {majorVsCrossData.usd.count}件 / 他 {majorVsCrossData.other.count}件
+            <span style={{ color: assetTypeData.crypto.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              仮想通貨：{formatValue(assetTypeData.crypto.profit, "profit")}({assetTypeData.crypto.count})
+            </span>
+            <span style={{ color: assetTypeData.commodities.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              商品：{formatValue(assetTypeData.commodities.profit, "profit")}({assetTypeData.commodities.count})
+            </span>
+            <span style={{ color: assetTypeData.emerging.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              新興国：{formatValue(assetTypeData.emerging.profit, "profit")}({assetTypeData.emerging.count})
+            </span>
+            {assetTypeData.other.count > 0 && (
+              <span style={{ color: assetTypeData.other.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                他：{formatValue(assetTypeData.other.profit, "profit")}({assetTypeData.other.count})
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -391,17 +408,50 @@ export default function ReportsMarket() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            通貨タイプ別
-            <HelpIcon text="JPY関連（円絡み）、USD関連（ドル絡み）、その他クロスの3つに分類した取引分布です。" />
+            資産クラス別分布
+            <HelpIcon text="JPY、USD、貴金属、仮想通貨、商品、新興国通貨などの資産クラス別の取引分布です。" />
           </h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
-                labels: ["JPY関連", "USD関連", "その他"],
+                labels: (() => {
+                  const items = [
+                    { label: "JPY", count: assetTypeData.jpy.count },
+                    { label: "USD", count: assetTypeData.usdMajor.count },
+                    { label: "貴金属", count: assetTypeData.metals.count },
+                    { label: "仮想通貨", count: assetTypeData.crypto.count },
+                    { label: "商品", count: assetTypeData.commodities.count },
+                    { label: "新興国", count: assetTypeData.emerging.count },
+                    { label: "その他", count: assetTypeData.other.count },
+                  ];
+                  return items.filter(item => item.count > 0).map(item => item.label);
+                })(),
                 datasets: [
                   {
-                    data: [majorVsCrossData.jpy.count, majorVsCrossData.usd.count, majorVsCrossData.other.count],
-                    backgroundColor: [getAccentColor(), getWarningColor(), getPurpleColor()],
+                    data: (() => {
+                      const items = [
+                        { count: assetTypeData.jpy.count, color: "#3b82f6" },
+                        { count: assetTypeData.usdMajor.count, color: "#10b981" },
+                        { count: assetTypeData.metals.count, color: "#f59e0b" },
+                        { count: assetTypeData.crypto.count, color: "#8b5cf6" },
+                        { count: assetTypeData.commodities.count, color: "#ef4444" },
+                        { count: assetTypeData.emerging.count, color: "#06b6d4" },
+                        { count: assetTypeData.other.count, color: "#6b7280" },
+                      ];
+                      return items.filter(item => item.count > 0).map(item => item.count);
+                    })(),
+                    backgroundColor: (() => {
+                      const items = [
+                        { count: assetTypeData.jpy.count, color: "#3b82f6" },
+                        { count: assetTypeData.usdMajor.count, color: "#10b981" },
+                        { count: assetTypeData.metals.count, color: "#f59e0b" },
+                        { count: assetTypeData.crypto.count, color: "#8b5cf6" },
+                        { count: assetTypeData.commodities.count, color: "#ef4444" },
+                        { count: assetTypeData.emerging.count, color: "#06b6d4" },
+                        { count: assetTypeData.other.count, color: "#6b7280" },
+                      ];
+                      return items.filter(item => item.count > 0).map(item => item.color);
+                    })(),
                     borderWidth: 0,
                   },
                 ],
