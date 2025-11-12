@@ -256,7 +256,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           }}
         >
         <div>
-          <h3 style={{ margin: '0 0 12px 0', fontSize: 18, fontWeight: 600, color: '#111827' }}>
+          <h3 style={{ margin: '0 0 12px 0', fontSize: 18, fontWeight: 600, color: 'var(--ink)' }}>
             新しい予想を生成
           </h3>
           <p style={{ margin: 0, fontSize: 14, color: 'var(--muted)', lineHeight: 1.6 }}>
@@ -266,7 +266,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
 
         <div style={{ display: 'grid', gap: 24 }}>
           <div>
-            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink)', marginBottom: 10 }}>
               分析内容・トレードアイデア
             </label>
             <textarea
@@ -280,6 +280,10 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 fontSize: 14,
                 lineHeight: 1.6,
                 padding: 14,
+                background: 'var(--input-bg)',
+                color: '#000',
+                border: '1px solid var(--line)',
+                borderRadius: 8,
               }}
               placeholder="例）USDJPY、イベント控えでボラが低い。147.00近辺でレジスタンス確認。戻り売りのシナリオを検討したい。"
               value={prompt}
@@ -290,7 +294,7 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
             <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink)', marginBottom: 10 }}>
                 銘柄
               </label>
               <select
@@ -302,22 +306,25 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                   boxSizing: 'border-box',
                   padding: '14px 14px',
                   fontSize: 14,
-                  color: '#111827',
+                  color: '#000',
                   lineHeight: '1.5',
                   height: '48px',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 8,
                 }}
                 disabled={generating}
               >
                 <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
-                <option style={{ color: '#111827' }}>USD/JPY</option>
-                <option style={{ color: '#111827' }}>EUR/USD</option>
-                <option style={{ color: '#111827' }}>GBP/JPY</option>
-                <option style={{ color: '#111827' }}>EUR/JPY</option>
-                <option style={{ color: '#111827' }}>GBP/USD</option>
+                <option style={{ color: '#000' }}>USD/JPY</option>
+                <option style={{ color: '#000' }}>EUR/USD</option>
+                <option style={{ color: '#000' }}>GBP/JPY</option>
+                <option style={{ color: '#000' }}>EUR/JPY</option>
+                <option style={{ color: '#000' }}>GBP/USD</option>
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink)', marginBottom: 10 }}>
                 分析足
               </label>
               <select
@@ -329,20 +336,23 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                   boxSizing: 'border-box',
                   padding: '14px 14px',
                   fontSize: 14,
-                  color: '#111827',
+                  color: '#000',
                   lineHeight: '1.5',
                   height: '48px',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 8,
                 }}
                 disabled={generating}
               >
                 <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
-                <option style={{ color: '#111827' }}>1H</option>
-                <option style={{ color: '#111827' }}>4H</option>
-                <option style={{ color: '#111827' }}>1D</option>
+                <option style={{ color: '#000' }}>1H</option>
+                <option style={{ color: '#000' }}>4H</option>
+                <option style={{ color: '#000' }}>1D</option>
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: 'var(--ink)', marginBottom: 10 }}>
                 予想期間
               </label>
               <select
@@ -354,16 +364,19 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                   boxSizing: 'border-box',
                   padding: '14px 14px',
                   fontSize: 14,
-                  color: '#111827',
+                  color: '#000',
                   lineHeight: '1.5',
                   height: '48px',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 8,
                 }}
                 disabled={generating}
               >
                 <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
-                <option value="短期" style={{ color: '#111827' }}>短期（24時間）</option>
-                <option value="中期" style={{ color: '#111827' }}>中期（1週間）</option>
-                <option value="長期" style={{ color: '#111827' }}>長期（1ヶ月）</option>
+                <option value="短期" style={{ color: '#000' }}>短期（24時間）</option>
+                <option value="中期" style={{ color: '#000' }}>中期（1週間）</option>
+                <option value="長期" style={{ color: '#000' }}>長期（1ヶ月）</option>
               </select>
             </div>
           </div>
@@ -403,12 +416,15 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           style={{
             fontSize: 14,
             padding: '8px 12px',
-            color: '#111827',
+            color: '#000',
+            background: 'var(--input-bg)',
+            border: '1px solid var(--line)',
+            borderRadius: 8,
           }}
         >
-          <option value="all" style={{ color: '#111827' }}>全通貨ペア</option>
+          <option value="all" style={{ color: '#000' }}>全通貨ペア</option>
           {uniquePairs.map((pair) => (
-            <option key={pair} value={pair} style={{ color: '#111827' }}>{pair}</option>
+            <option key={pair} value={pair} style={{ color: '#000' }}>{pair}</option>
           ))}
         </select>
 
@@ -419,13 +435,16 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           style={{
             fontSize: 14,
             padding: '8px 12px',
-            color: '#111827',
+            color: '#000',
+            background: 'var(--input-bg)',
+            border: '1px solid var(--line)',
+            borderRadius: 8,
           }}
         >
-          <option value="all" style={{ color: '#111827' }}>全バイアス</option>
-          <option value="BUY" style={{ color: '#111827' }}>買い</option>
-          <option value="SELL" style={{ color: '#111827' }}>売り</option>
-          <option value="NEUTRAL" style={{ color: '#111827' }}>中立</option>
+          <option value="all" style={{ color: '#000' }}>全バイアス</option>
+          <option value="BUY" style={{ color: '#000' }}>買い</option>
+          <option value="SELL" style={{ color: '#000' }}>売り</option>
+          <option value="NEUTRAL" style={{ color: '#000' }}>中立</option>
         </select>
       </div>
 
