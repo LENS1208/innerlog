@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
 import { HelpIcon } from "../common/HelpIcon";
+import { getLossColor } from "../../lib/chartColors";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
