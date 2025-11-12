@@ -216,24 +216,21 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
   });
 
   return (
-    <div style={{ width: '100%', padding: 16 }}>
-      <section
-        className="card"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 24,
-          marginBottom: 32,
-          padding: 28,
-          background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
-          border: '2px solid var(--accent)',
-          borderRadius: 20,
-          boxShadow: '0 4px 20px rgba(59, 130, 246, 0.08)',
-          width: '40%',
-          maxWidth: 600,
-          minWidth: 480,
-        }}
-      >
+    <div style={{ display: 'flex', gap: 16, padding: 16, height: 'calc(100vh - 120px)' }}>
+      <div style={{ flex: '0 0 50%', display: 'flex', flexDirection: 'column' }}>
+        <section
+          className="card"
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 24,
+            padding: 28,
+            background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
+            border: '2px solid var(--accent)',
+            borderRadius: 20,
+            boxShadow: '0 4px 20px rgba(59, 130, 246, 0.08)',
+          }}
+        >
         <div style={{ textAlign: 'center' }}>
           <div style={{
             display: 'inline-flex',
@@ -387,8 +384,10 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           }
         `}</style>
       </section>
+      </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+      <div style={{ flex: '0 0 50%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
         <select
           className="btn"
           value={filter.pair}
@@ -414,121 +413,124 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
         </select>
       </div>
 
-      {loading ? (
-        <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>読み込み中...</div>
-      ) : filteredProposals.length === 0 ? (
-        <div style={{
-          textAlign: 'center',
-          padding: 60,
-          background: 'var(--surface)',
-          border: '1px solid var(--line)',
-          borderRadius: 16
-        }}>
-          <p style={{ fontSize: 16, color: 'var(--muted)', marginBottom: 0 }}>
-            まだ予想がありません。上のフォームから最初の予想を生成してください。
-          </p>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          {sortedDates.map((date) => (
-            <div key={date}>
-              <h3 style={{
-                margin: '0 0 12px 0',
-                fontSize: 14,
-                fontWeight: 600,
-                color: 'var(--muted)',
-                paddingLeft: 4,
-              }}>
-                {date}
-              </h3>
-              <div style={{ display: 'grid', gap: 12 }}>
-                {groupedProposals[date].map((proposal) => (
-                  <div
-                    key={proposal.id}
-                    onClick={() => onSelectProposal(proposal.id)}
-                    style={{
-                      background: 'var(--surface)',
-                      border: '1px solid var(--line)',
-                      borderRadius: 16,
-                      padding: 16,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--accent)';
-                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'var(--line)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 'bold', color: 'var(--ink)' }}>
-                            {proposal.pair} / {proposal.timeframe}
-                          </h3>
-                          <span
-                            style={{
-                              padding: '2px 8px',
-                              borderRadius: 4,
-                              fontSize: 12,
-                              fontWeight: 600,
-                              background: proposal.bias === 'BUY' ? 'rgba(22, 163, 74, 0.1)' :
-                                         proposal.bias === 'SELL' ? 'rgba(239, 68, 68, 0.1)' :
-                                         'rgba(107, 114, 128, 0.1)',
-                              color: proposal.bias === 'BUY' ? 'rgb(22, 163, 74)' :
-                                     proposal.bias === 'SELL' ? 'rgb(239, 68, 68)' :
-                                     'rgb(107, 114, 128)',
-                            }}
-                          >
-                            {proposal.bias === 'BUY' ? '買い' : proposal.bias === 'SELL' ? '売り' : '中立'}
-                          </span>
-                          <span
-                            style={{
-                              padding: '2px 8px',
-                              borderRadius: 4,
-                              fontSize: 12,
-                              fontWeight: 600,
-                              background: 'rgba(59, 130, 246, 0.1)',
-                              color: 'rgb(59, 130, 246)',
-                            }}
-                          >
-                            信頼度 {proposal.confidence}%
-                          </span>
-                          <span style={{ fontSize: 12, color: 'var(--muted)', marginLeft: 'auto' }}>
-                            {new Date(proposal.created_at).toLocaleTimeString('ja-JP', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </span>
-                        </div>
-                        <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)', lineHeight: 1.5 }}>
-                          {proposal.prompt || '予想を生成しました'}
-                        </p>
-                      </div>
-                      <button
-                        className="btn"
-                        onClick={(e) => handleDelete(proposal.id, e)}
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: 40, color: 'var(--muted)' }}>読み込み中...</div>
+          ) : filteredProposals.length === 0 ? (
+            <div style={{
+              textAlign: 'center',
+              padding: 60,
+              background: 'var(--surface)',
+              border: '1px solid var(--line)',
+              borderRadius: 16
+            }}>
+              <p style={{ fontSize: 16, color: 'var(--muted)', marginBottom: 0 }}>
+                まだ予想がありません。左のフォームから最初の予想を生成してください。
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              {sortedDates.map((date) => (
+                <div key={date}>
+                  <h3 style={{
+                    margin: '0 0 12px 0',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: 'var(--muted)',
+                    paddingLeft: 4,
+                  }}>
+                    {date}
+                  </h3>
+                  <div style={{ display: 'grid', gap: 12 }}>
+                    {groupedProposals[date].map((proposal) => (
+                      <div
+                        key={proposal.id}
+                        onClick={() => onSelectProposal(proposal.id)}
                         style={{
-                          fontSize: 12,
-                          padding: '4px 12px',
-                          background: 'rgba(239, 68, 68, 0.1)',
-                          color: 'rgb(239, 68, 68)',
-                          marginLeft: 12,
+                          background: 'var(--surface)',
+                          border: '1px solid var(--line)',
+                          borderRadius: 16,
+                          padding: 16,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--accent)';
+                          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--line)';
+                          e.currentTarget.style.boxShadow = 'none';
                         }}
                       >
-                        削除
-                      </button>
-                    </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 'bold', color: 'var(--ink)' }}>
+                                {proposal.pair} / {proposal.timeframe}
+                              </h3>
+                              <span
+                                style={{
+                                  padding: '2px 8px',
+                                  borderRadius: 4,
+                                  fontSize: 12,
+                                  fontWeight: 600,
+                                  background: proposal.bias === 'BUY' ? 'rgba(22, 163, 74, 0.1)' :
+                                             proposal.bias === 'SELL' ? 'rgba(239, 68, 68, 0.1)' :
+                                             'rgba(107, 114, 128, 0.1)',
+                                  color: proposal.bias === 'BUY' ? 'rgb(22, 163, 74)' :
+                                         proposal.bias === 'SELL' ? 'rgb(239, 68, 68)' :
+                                         'rgb(107, 114, 128)',
+                                }}
+                              >
+                                {proposal.bias === 'BUY' ? '買い' : proposal.bias === 'SELL' ? '売り' : '中立'}
+                              </span>
+                              <span
+                                style={{
+                                  padding: '2px 8px',
+                                  borderRadius: 4,
+                                  fontSize: 12,
+                                  fontWeight: 600,
+                                  background: 'rgba(59, 130, 246, 0.1)',
+                                  color: 'rgb(59, 130, 246)',
+                                }}
+                              >
+                                信頼度 {proposal.confidence}%
+                              </span>
+                              <span style={{ fontSize: 12, color: 'var(--muted)', marginLeft: 'auto' }}>
+                                {new Date(proposal.created_at).toLocaleTimeString('ja-JP', {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })}
+                              </span>
+                            </div>
+                            <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)', lineHeight: 1.5 }}>
+                              {proposal.prompt || '予想を生成しました'}
+                            </p>
+                          </div>
+                          <button
+                            className="btn"
+                            onClick={(e) => handleDelete(proposal.id, e)}
+                            style={{
+                              fontSize: 12,
+                              padding: '4px 12px',
+                              background: 'rgba(239, 68, 68, 0.1)',
+                              color: 'rgb(239, 68, 68)',
+                              marginLeft: 12,
+                            }}
+                          >
+                            削除
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }
