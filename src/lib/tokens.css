@@ -15,7 +15,7 @@
   --panel-2: #ffffff;
   --bg-secondary: #f8fafc;
   --input-bg: #ffffff;
-  --grid-line: #f3f4f6;
+  --grid-line: rgba(0, 0, 0, 0.05);
 
   --radius: 14px;
   --header-h: 56px;
