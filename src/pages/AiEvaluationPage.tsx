@@ -156,56 +156,6 @@ export default function AiEvaluationPage() {
       `}</style>
 
       <div style={{ display: 'grid', gap: 16, minWidth: 0 }}>
-        <section className="panel">
-          <div className="panel-header">
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
-              総合評価
-              <HelpIcon text="取引データから総合点とバランスを自動評価します。" />
-            </h3>
-            <div className="badge ok">分析の信頼度: 高め</div>
-          </div>
-          <div style={{ padding: '12px 16px', minWidth: 0 }}>
-            <div className="overall-grid">
-              <div>
-                <OverallScore score={scoreData.overall} rank={scoreData.rank} />
-              </div>
-
-              <div className="overall-section">
-                <RadarChart parts={scoreData.parts} />
-              </div>
-
-              <div className="overall-section" style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 6 }}>サマリー</div>
-                {baseMetrics.equity && baseMetrics.equity.length > 1 && (
-                  <div style={{ marginBottom: 6, height: 36 }}>
-                    <Sparkline data={baseMetrics.equity} />
-                  </div>
-                )}
-                <div style={{ display: 'grid', gap: 3 }}>
-                  <div className="badge ok" style={{ fontSize: 10, padding: '2px 5px' }}>改善見込み: PF +0.18</div>
-                  <div className="badge warn" style={{ fontSize: 10, padding: '2px 5px' }}>DD -12%（見込み）</div>
-                  <div className="badge" style={{ fontSize: 10, padding: '2px 5px' }}>得意: EURUSD × LDN</div>
-                </div>
-              </div>
-
-              <div className="overall-section" style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 12, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 6 }}>
-                  まずやると良いこと
-                </div>
-                <ol style={{ margin: '0 0 4px 18px', lineHeight: 1.5, fontSize: 12, color: 'var(--ink)' }}>
-                  <li>利確/損切りの比率 1.2 → 1.6（PF +0.18）</li>
-                  <li>NY開始前30分は取引を控える（DD -8%）</li>
-                  <li>1回のリスク上限を 1.8% → 1.2% に見直す</li>
-                </ol>
-                <a href="#sec4" style={{ color: 'var(--accent)', fontSize: 11 }}>
-                  → シナリオで検証
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-
         {!coachingData ? (
           <section className="panel">
             <div className="panel-header">
@@ -273,7 +223,11 @@ export default function AiEvaluationPage() {
                 再生成
               </button>
             </div>
-            <CoachingSheetView sheet={coachingData.sheet} />
+            <CoachingSheetView
+              sheet={coachingData.sheet}
+              scoreComponent={<OverallScore score={scoreData.overall} rank={scoreData.rank} />}
+              radarComponent={<RadarChart parts={scoreData.parts} />}
+            />
           </>
         )}
       </div>

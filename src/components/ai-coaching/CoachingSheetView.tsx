@@ -10,18 +10,36 @@ import { FourWeekPlanTable } from './FourWeekPlanTable';
 
 interface CoachingSheetViewProps {
   sheet: CoachingSheet;
+  scoreComponent?: React.ReactNode;
+  radarComponent?: React.ReactNode;
 }
 
-export function CoachingSheetView({ sheet }: CoachingSheetViewProps) {
+export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: CoachingSheetViewProps) {
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
-      <Section title="現状サマリー">
-        <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.6 }}>
-          {sheet.summary.map((s, i) => (
-            <li key={i} style={{ fontSize: '14px' }}>{s}</li>
-          ))}
-        </ul>
-      </Section>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: scoreComponent && radarComponent ? 'repeat(auto-fit, minmax(300px, 1fr))' : '1fr', gap: '16px', alignItems: 'start' }}>
+          <Section title="現状サマリー">
+            <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.6 }}>
+              {sheet.summary.map((s, i) => (
+                <li key={i} style={{ fontSize: '14px' }}>{s}</li>
+              ))}
+            </ul>
+          </Section>
+
+          {scoreComponent && (
+            <Section title="総合スコア">
+              {scoreComponent}
+            </Section>
+          )}
+
+          {radarComponent && (
+            <Section title="バランス評価">
+              {radarComponent}
+            </Section>
+          )}
+        </div>
+      </div>
 
       {sheet.examples && sheet.examples.length > 0 && (
         <Section title="実例ハイライト">
