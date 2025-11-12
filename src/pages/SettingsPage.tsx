@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useTheme } from '../lib/theme.context';
 import '../styles/journal-notebook.css';
 
 interface UserSettings {
@@ -28,6 +29,7 @@ interface ImportHistory {
 const STORAGE_KEY = 'csv_import_history';
 
 export default function SettingsPage() {
+  const { theme, setTheme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -65,8 +67,7 @@ export default function SettingsPage() {
 
   const handleThemeChange = (newTheme: string) => {
     setSettings({ ...settings, theme: newTheme });
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+    setTheme(newTheme as 'light' | 'dark');
   };
 
   const loadUserAndSettings = async () => {
@@ -87,11 +88,9 @@ export default function SettingsPage() {
 
         if (error) throw error;
 
-        const localTheme = localStorage.getItem('theme');
-
         if (data) {
           setSettings({
-            theme: localTheme || data.theme || 'light',
+            theme: theme,
             timezone: data.timezone || 'Asia/Tokyo',
             time_format: data.time_format || '24h',
             date_format: data.date_format || 'yyyy-MM-dd',
@@ -107,7 +106,7 @@ export default function SettingsPage() {
         } else {
           setSettings({
             ...settings,
-            theme: localTheme || 'light',
+            theme: theme,
           });
         }
       }

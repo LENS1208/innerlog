@@ -64,9 +64,6 @@ export default function App() {
   console.log("🔄 App render - route:", route);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
-
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
