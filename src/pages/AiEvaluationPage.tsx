@@ -3,28 +3,22 @@ import type { TradeRow, TradeMetrics } from '../types/evaluation.types';
 import { scoreFromMetrics } from '../utils/evaluation-score';
 import OverallScore from '../components/evaluation/OverallScore';
 import RadarChart from '../components/evaluation/RadarChart';
-import KPICards from '../components/evaluation/KPICards';
-import WhatIfSimulator from '../components/evaluation/WhatIfSimulator';
 import Sparkline from '../components/evaluation/Sparkline';
-import AiInsightsSection from '../components/evaluation/AiInsightsSection';
-import TimingQualitySection from '../components/evaluation/TimingQualitySection';
-import RiskAnalysisSection from '../components/evaluation/RiskAnalysisSection';
-import StrengthWeaknessSection from '../components/evaluation/StrengthWeaknessSection';
-import TPSLEvaluationSection from '../components/evaluation/TPSLEvaluationSection';
-import RecommendedActionsSection from '../components/evaluation/RecommendedActionsSection';
-import AlertsRulesSection from '../components/evaluation/AlertsRulesSection';
-import DataStatusSection from '../components/evaluation/DataStatusSection';
-import NotesReflectionSection from '../components/evaluation/NotesReflectionSection';
 import { getDataMetrics, getDataRows, INIT_CAPITAL } from '../services/demoData';
 import { useDataset } from '../lib/dataset.context';
 import { computeMetrics } from '../utils/evaluation-metrics';
 import { HelpIcon } from '../components/common/HelpIcon';
+import { CoachingSheetView } from '../components/ai-coaching/CoachingSheetView';
+import { callAutoReviewAI, generateMockCoachingSheet } from '../services/ai-coaching/callAutoReviewAI';
+import type { AIResponse } from '../services/ai-coaching/types';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
   const { dataset, useDatabase, isInitialized } = useDataset();
   const [dataRows, setDataRows] = useState<TradeRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [coachingData, setCoachingData] = useState<AIResponse | null>(null);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -211,44 +205,77 @@ export default function AiEvaluationPage() {
           </div>
         </section>
 
-        <section className="panel" id="sec2">
+
+        <section className="panel">
           <div className="panel-header">
             <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
-              大事な数字（KPI）
-              <HelpIcon text="成績をざっくりつかむための主要指標です。" />
+              AIコーチング
+              <HelpIcon text="取引データを分析し、AIがパーソナライズされたコーチングを提供します。" />
             </h3>
           </div>
           <div style={{ padding: '12px 16px' }}>
-            <KPICards metrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
-            {baseMetrics.equity && baseMetrics.equity.length > 1 && (
-              <div style={{ marginTop: 12 }}>
-                <Sparkline data={baseMetrics.equity} />
+            {!coachingData ? (
+              <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+                <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>
+                  取引データを分析して、パーソナライズされたコーチングシートを生成します。
+                </p>
+                <button
+                  onClick={async () => {
+                    setGenerating(true);
+                    try {
+                      const tradesJson = dataRows.map(row => ({
+                        date: row.closeDate,
+                        symbol: row.symbol,
+                        side: row.profit >= 0 ? 'BUY' : 'SELL',
+                        lots: row.lots || 0.1,
+                        pnl: row.profit,
+                      }));
+                      const result = generateMockCoachingSheet();
+                      setCoachingData(result);
+                    } catch (error) {
+                      console.error('コーチング生成エラー:', error);
+                    } finally {
+                      setGenerating(false);
+                    }
+                  }}
+                  disabled={generating || dataRows.length === 0}
+                  style={{
+                    padding: '12px 24px',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    color: 'white',
+                    background: generating || dataRows.length === 0 ? 'var(--muted)' : 'var(--accent)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    cursor: generating || dataRows.length === 0 ? 'not-allowed' : 'pointer',
+                  }}
+                >
+                  {generating ? '生成中...' : 'AIコーチングを生成'}
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'flex-end' }}>
+                  <button
+                    onClick={() => setCoachingData(null)}
+                    style={{
+                      padding: '8px 16px',
+                      fontSize: '13px',
+                      color: 'var(--muted)',
+                      background: 'var(--chip)',
+                      border: '1px solid var(--line)',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    再生成
+                  </button>
+                </div>
+                <CoachingSheetView sheet={coachingData.sheet} />
               </div>
             )}
           </div>
         </section>
-
-        <section className="panel" id="sec4">
-          <div className="panel-header">
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
-              シミュレーション（利確/損切り）
-              <HelpIcon text="比率やルールを変えたら、成績はどう変わるかをシミュレーションします。" />
-            </h3>
-          </div>
-          <div style={{ padding: '12px 16px' }}>
-            <WhatIfSimulator baseMetrics={baseMetrics} ddBasis="capital" initCap={INIT_CAPITAL} />
-          </div>
-        </section>
-
-        <AiInsightsSection />
-        <TimingQualitySection trades={dataRows} />
-        <RiskAnalysisSection trades={dataRows} initialCapital={INIT_CAPITAL} />
-        <StrengthWeaknessSection trades={dataRows} />
-        <TPSLEvaluationSection metrics={baseMetrics} />
-        <RecommendedActionsSection metrics={baseMetrics} />
-        <AlertsRulesSection metrics={baseMetrics} />
-        <DataStatusSection metrics={baseMetrics} />
-        <NotesReflectionSection />
       </div>
     </div>
   );
