@@ -309,7 +309,7 @@ function Banner() {
 }
 
 // 左メニュー（左上に固定）
-function SideNav({ menu, activeKey, onUploadClick, logoImg }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void; logoImg: string }) {
+function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void; logoImg: string; theme: 'light' | 'dark'; toggleTheme: () => void }) {
   return (
     <aside
       style={{
@@ -404,29 +404,81 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg }: { menu: MenuItem[]
             }
           };
 
+          const isTrades = m.key === 'trades';
+
           return (
-            <li key={m.key} style={{ listStyle: "none" }}>
-              <a
-                href={`#/${m.key}`}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  textDecoration: "none",
-                  padding: "10px 12px",
-                  borderRadius: 10,
-                  color: "var(--ink)",
-                  background: activeKey === m.key ? "rgba(59,130,246,.12)" : "transparent",
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  location.hash = `/${m.key}`;
-                }}
-              >
-                <span style={{ display: "flex", alignItems: "center", opacity: 0.7 }}>{getIcon(m.key)}</span>
-                <span>{m.label}</span>
-              </a>
-            </li>
+            <React.Fragment key={m.key}>
+              <li style={{ listStyle: "none" }}>
+                <a
+                  href={`#/${m.key}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    textDecoration: "none",
+                    padding: "10px 12px",
+                    borderRadius: 10,
+                    color: "var(--ink)",
+                    background: activeKey === m.key ? "rgba(59,130,246,.12)" : "transparent",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    location.hash = `/${m.key}`;
+                  }}
+                >
+                  <span style={{ display: "flex", alignItems: "center", opacity: 0.7 }}>{getIcon(m.key)}</span>
+                  <span>{m.label}</span>
+                </a>
+              </li>
+              {isTrades && (
+                <>
+                  <li style={{ margin: "8px 0" }}>
+                    <div style={{ height: 1, background: "var(--line)" }} />
+                  </li>
+                  <li style={{ listStyle: "none" }}>
+                    <button
+                      onClick={toggleTheme}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                        textDecoration: "none",
+                        padding: "10px 12px",
+                        borderRadius: 10,
+                        color: "var(--ink)",
+                        background: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: 14,
+                        fontFamily: "inherit",
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", opacity: 0.7 }}>
+                        {theme === 'dark' ? (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                          </svg>
+                        ) : (
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                          </svg>
+                        )}
+                      </span>
+                      <span>カラーテーマ</span>
+                    </button>
+                  </li>
+                </>
+              )}
+            </React.Fragment>
           );
         })}
       </ul>
@@ -465,7 +517,7 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg }: { menu: MenuItem[]
 
 export default function AppShell({ children }: Props) {
   console.log("🔄 AppShell render");
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const logoImg = theme === 'dark' ? logoImgLight : logoImgDark;
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuItem[]>([]);
@@ -639,7 +691,7 @@ export default function AppShell({ children }: Props) {
             zIndex: 10,
           }}
         >
-          <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} logoImg={logoImg} />
+          <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} logoImg={logoImg} theme={theme} toggleTheme={toggleTheme} />
         </div>
 
         {/* モバイルメニュー（ドロワー） */}
@@ -691,7 +743,7 @@ export default function AppShell({ children }: Props) {
                   ✕
                 </button>
               </div>
-              <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} logoImg={logoImg} />
+              <SideNav menu={menu} activeKey={activeKey} onUploadClick={handleUploadClick} logoImg={logoImg} theme={theme} toggleTheme={toggleTheme} />
             </div>
           </>
         )}

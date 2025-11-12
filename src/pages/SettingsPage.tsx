@@ -717,28 +717,6 @@ export default function SettingsPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
-                  カラーテーマ
-                </label>
-                <select
-                  value={settings.theme}
-                  onChange={(e) => handleThemeChange(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    border: '1px solid var(--line)',
-                    borderRadius: 4,
-                    fontSize: 14,
-                    backgroundColor: 'var(--surface)',
-                    color: 'var(--ink)',
-                  }}
-                >
-                  <option value="light">ライトモード</option>
-                  <option value="dark">ダークモード</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
                   タイムゾーン
                 </label>
                 <select
