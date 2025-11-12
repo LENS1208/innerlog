@@ -8,8 +8,7 @@ interface CallHints {
 
 export async function callAutoReviewAI(
   tradesJson: any,
-  hints?: CallHints,
-  apiKey?: string
+  hints?: CallHints
 ): Promise<AIResponse> {
   const userPrompt = buildPrompt({
     tradesJson,
@@ -27,7 +26,6 @@ export async function callAutoReviewAI(
       body: JSON.stringify({
         systemPrompt: SYSTEM_TXT,
         userPrompt,
-        apiKey,
       }),
     });
 

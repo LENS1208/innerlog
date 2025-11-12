@@ -10,7 +10,6 @@ const corsHeaders = {
 interface RequestBody {
   systemPrompt: string;
   userPrompt: string;
-  apiKey?: string;
 }
 
 Deno.serve(async (req: Request) => {
@@ -23,7 +22,7 @@ Deno.serve(async (req: Request) => {
 
   try {
     const body: RequestBody = await req.json();
-    const { systemPrompt, userPrompt, apiKey } = body;
+    const { systemPrompt, userPrompt } = body;
 
     if (!systemPrompt || !userPrompt) {
       return new Response(
@@ -35,11 +34,12 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    const apiKey = Deno.env.get('OPENAI_API_KEY');
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: "OpenAI API key is not provided" }),
+        JSON.stringify({ error: "Server configuration error: OpenAI API key not set" }),
         {
-          status: 400,
+          status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         }
       );

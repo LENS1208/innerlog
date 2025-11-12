@@ -59,14 +59,10 @@ export default function SettingsPage() {
   });
 
   const [importHistory, setImportHistory] = useState<ImportHistory[]>([]);
-  const [openaiApiKey, setOpenaiApiKey] = useState<string>('');
-  const [showApiKey, setShowApiKey] = useState(false);
 
   useEffect(() => {
     loadUserAndSettings();
     loadImportHistory();
-    const savedApiKey = localStorage.getItem('openai_api_key') || '';
-    setOpenaiApiKey(savedApiKey);
   }, []);
 
   const handleThemeChange = (newTheme: string) => {
@@ -842,66 +838,6 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>OpenAI APIキー</div>
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ display: 'block', fontSize: 13, marginBottom: 8, color: 'var(--muted)' }}>
-                  APIキー（AI機能を使用するために必要です）
-                </label>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <input
-                    type={showApiKey ? 'text' : 'password'}
-                    value={openaiApiKey}
-                    onChange={(e) => setOpenaiApiKey(e.target.value)}
-                    placeholder="sk-proj-..."
-                    style={{
-                      flex: 1,
-                      padding: '8px 12px',
-                      border: '1px solid var(--line)',
-                      borderRadius: 4,
-                      fontSize: 14,
-                    }}
-                  />
-                  <button
-                    onClick={() => setShowApiKey(!showApiKey)}
-                    type="button"
-                    style={{
-                      padding: '8px 12px',
-                      border: '1px solid var(--line)',
-                      borderRadius: 4,
-                      background: 'var(--surface)',
-                      cursor: 'pointer',
-                      fontSize: 13,
-                    }}
-                  >
-                    {showApiKey ? '隠す' : '表示'}
-                  </button>
-                  <button
-                    onClick={() => {
-                      localStorage.setItem('openai_api_key', openaiApiKey);
-                      alert('APIキーを保存しました');
-                    }}
-                    type="button"
-                    style={{
-                      padding: '8px 16px',
-                      background: 'var(--accent)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: 4,
-                      cursor: 'pointer',
-                      fontSize: 13,
-                      fontWeight: 600,
-                    }}
-                  >
-                    保存
-                  </button>
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>
-                  APIキーは <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>OpenAI Platform</a> から取得できます
-                </div>
-              </div>
-            </div>
-
-            <div>
               <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>AI機能のON/OFF</div>
               <div style={{ display: 'grid', gap: 12 }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
@@ -954,12 +890,6 @@ export default function SettingsPage() {
               </p>
               <button
                 onClick={async () => {
-                  const apiKey = localStorage.getItem('openai_api_key');
-                  if (!apiKey) {
-                    alert('OpenAI APIキーを先に設定してください');
-                    return;
-                  }
-
                   if (!confirm('デモデータA、B、Cをすべて分析します。この処理には数分かかります。続行しますか？')) {
                     return;
                   }
@@ -982,7 +912,7 @@ export default function SettingsPage() {
 
                       const result = await callAutoReviewAI(tradesJson, {
                         dateRange: `Dataset ${dataset}`,
-                      }, apiKey);
+                      });
 
                       setCoachingCache(dataset, result);
                       console.log(`Dataset ${dataset} analysis completed`);

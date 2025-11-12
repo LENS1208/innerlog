@@ -190,12 +190,6 @@ export default function AiEvaluationPage() {
                 )}
                 <button
                   onClick={async () => {
-                    const apiKey = localStorage.getItem('openai_api_key');
-                    if (!apiKey) {
-                      setError('OpenAI APIキーが設定されていません。設定ページで設定してください。');
-                      return;
-                    }
-
                     setGenerating(true);
                     setError(null);
                     try {
@@ -209,13 +203,13 @@ export default function AiEvaluationPage() {
 
                       const result = await callAutoReviewAI(tradesJson, {
                         dateRange: `Dataset ${dataset}`,
-                      }, apiKey);
+                      });
 
                       setCoachingData(result);
                       setCoachingCache(dataset, result);
                     } catch (error) {
                       console.error('コーチング生成エラー:', error);
-                      setError('AIコーチングの生成中にエラーが発生しました。APIキーを確認してください。');
+                      setError('AIコーチングの生成中にエラーが発生しました。しばらくしてから再度お試しください。');
                     } finally {
                       setGenerating(false);
                     }
