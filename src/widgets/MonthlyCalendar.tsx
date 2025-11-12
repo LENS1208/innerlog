@@ -667,7 +667,7 @@ export default function MonthlyCalendar() {
                   const bgColor = hasTradesValue
                     ? day.profitYen >= 0
                       ? getAccentColor(0.1)
-                      : "rgba(239, 68, 68, 0.1)"
+                      : getLossColor(0.1)
                     : day.isCurrentMonth
                     ? "var(--surface)"
                     : "#f9fafb";
@@ -675,7 +675,7 @@ export default function MonthlyCalendar() {
                   const borderColor = hasTradesValue
                     ? day.profitYen >= 0
                       ? getAccentColor(0.3)
-                      : "rgba(239, 68, 68, 0.3)"
+                      : getLossColor(0.3)
                     : "var(--line)";
 
                   return (

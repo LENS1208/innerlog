@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, createProfitGradient } from "../lib/chartColors";
 import { Bar, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -239,13 +239,9 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
       borderColor: getAccentColor(),
       backgroundColor: (context: any) => {
         const chart = context.chart;
-        const { ctx, chartArea } = chart;
+        const { ctx, chartArea, scales } = chart;
         if (!chartArea) return getAccentColor(0.1);
-        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-        gradient.addColorStop(0, 'rgba(239, 68, 68, 0.2)');
-        gradient.addColorStop(0.5, 'rgba(156, 163, 175, 0.1)');
-        gradient.addColorStop(1, 'rgba(22, 163, 74, 0.2)');
-        return gradient;
+        return createProfitGradient(ctx, chartArea, scales);
       },
       fill: true,
       tension: 0.4,
@@ -434,7 +430,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                     {Math.round(stats.avgWin).toLocaleString('ja-JP')} 円
                   </div>
                 </div>
-                <div style={{ textAlign: 'center', padding: 12, background: 'rgba(239, 68, 68, 0.1)', borderRadius: 8 }}>
+                <div style={{ textAlign: 'center', padding: 12, background: getLossColor(0.1), borderRadius: 8 }}>
                   <div style={{ fontSize: 12, color: 'var(--muted)' }}>平均損失</div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--loss)' }}>
                     {Math.round(stats.avgLoss).toLocaleString('ja-JP')} 円
@@ -511,7 +507,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                             bgColor = `rgba(22, 163, 74, ${intensity * 0.8})`;
                           } else {
                             const intensity = Math.min(Math.abs(avgProfit) / 5000, 1);
-                            bgColor = `rgba(239, 68, 68, ${intensity * 0.8})`;
+                            bgColor = getLossColor(intensity * 0.8);
                           }
                         }
 

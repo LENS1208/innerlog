@@ -512,10 +512,10 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                                   fontSize: 12,
                                   fontWeight: 600,
                                   background: proposal.bias === 'BUY' ? 'rgba(22, 163, 74, 0.1)' :
-                                             proposal.bias === 'SELL' ? 'rgba(239, 68, 68, 0.1)' :
+                                             proposal.bias === 'SELL' ? getLossColor(0.1) :
                                              'rgba(107, 114, 128, 0.1)',
                                   color: proposal.bias === 'BUY' ? 'rgb(22, 163, 74)' :
-                                         proposal.bias === 'SELL' ? 'rgb(239, 68, 68)' :
+                                         proposal.bias === 'SELL' ? getLossColor() :
                                          'rgb(107, 114, 128)',
                                 }}
                               >
@@ -567,8 +567,8 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                             style={{
                               fontSize: 12,
                               padding: '4px 12px',
-                              background: 'rgba(239, 68, 68, 0.1)',
-                              color: 'rgb(239, 68, 68)',
+                              background: getLossColor(0.1),
+                              color: getLossColor(),
                               marginLeft: 12,
                             }}
                           >

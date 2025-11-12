@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getGridLineColor, getAccentColor, getLossColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, createProfitGradient } from "../lib/chartColors";
 import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 import { useDataset } from "../lib/dataset.context";
@@ -335,24 +335,20 @@ export default function CalendarDayPage() {
                       const dataIndex = context.dataIndex;
                       if (dataIndex === undefined) return getAccentColor();
                       const value = context.chart.data.datasets[0].data[dataIndex] as number;
-                      return value >= 0 ? getAccentColor() : '#ef4444';
+                      return value >= 0 ? getAccentColor() : getLossColor();
                     },
                     backgroundColor: (context) => {
                       const chart = context.chart;
-                      const {ctx, chartArea} = chart;
+                      const {ctx, chartArea, scales} = chart;
                       if (!chartArea) return getAccentColor(0.1);
-                      const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                      gradient.addColorStop(0, 'rgba(239, 68, 68, 0.4)');
-                      gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
-                      gradient.addColorStop(1, getAccentColor(0.4));
-                      return gradient;
+                      return createProfitGradient(ctx, chartArea, scales);
                     },
                     fill: 'origin',
                     tension: 0.4,
                     pointRadius: 3,
                     pointBackgroundColor: (context) => {
                       const value = context.parsed.y;
-                      return value >= 0 ? getAccentColor() : '#ef4444';
+                      return value >= 0 ? getAccentColor() : getLossColor();
                     },
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
@@ -360,7 +356,7 @@ export default function CalendarDayPage() {
                     borderWidth: 2.5,
                     segment: {
                       borderColor: (ctx) => {
-                        return ctx.p1.parsed.y >= 0 ? getAccentColor() : '#ef4444';
+                        return ctx.p1.parsed.y >= 0 ? getAccentColor() : getLossColor();
                       }
                     }
                   },

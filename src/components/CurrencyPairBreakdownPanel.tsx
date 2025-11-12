@@ -221,7 +221,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       },
       backgroundColor: (context: any) => {
         if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
-        return context.raw >= 0 ? 'rgba(22, 163, 74, 0.3)' : 'rgba(239, 68, 68, 0.3)';
+        return context.raw >= 0 ? getGreenColor(0.3) : getLossColor(0.3);
       },
       borderWidth: 2,
       pointRadius: 4,

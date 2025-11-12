@@ -95,7 +95,7 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       tension: 0.4,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? getAccentColor() : '#ef4444';
+          return ctx.p1.parsed.y >= 0 ? getAccentColor() : getLossColor();
         }
       }
     }]
