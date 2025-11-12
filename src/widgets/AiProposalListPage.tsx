@@ -222,13 +222,16 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 20,
-          marginBottom: 20,
-          padding: 24,
+          gap: 24,
+          marginBottom: 32,
+          padding: 28,
           background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
           border: '2px solid var(--accent)',
           borderRadius: 20,
           boxShadow: '0 4px 20px rgba(59, 130, 246, 0.08)',
+          width: '40%',
+          maxWidth: 600,
+          minWidth: 480,
         }}
       >
         <div style={{ textAlign: 'center' }}>
@@ -256,21 +259,22 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           </p>
         </div>
 
-        <div style={{ display: 'grid', gap: 12 }}>
+        <div style={{ display: 'grid', gap: 20 }}>
           <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
               分析内容・トレードアイデア
             </label>
             <textarea
               className="btn"
               style={{
                 width: '100%',
-                minHeight: 80,
+                minHeight: 90,
                 boxSizing: 'border-box',
                 resize: 'vertical',
                 fontFamily: 'inherit',
                 fontSize: 14,
-                lineHeight: 1.5,
+                lineHeight: 1.6,
+                padding: 12,
               }}
               placeholder="例）USDJPY、イベント控えでボラが低い。147.00近辺でレジスタンス確認。戻り売りのシナリオを検討したい。"
               value={prompt}
@@ -279,16 +283,16 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
                 銘柄
               </label>
               <select
                 className="btn"
                 value={pair}
                 onChange={(e) => setPair(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box' }}
+                style={{ width: '100%', boxSizing: 'border-box', padding: 12 }}
                 disabled={generating}
               >
                 <option value="" disabled>選択してください</option>
@@ -300,14 +304,14 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
                 分析足
               </label>
               <select
                 className="btn"
                 value={timeframe}
                 onChange={(e) => setTimeframe(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box' }}
+                style={{ width: '100%', boxSizing: 'border-box', padding: 12 }}
                 disabled={generating}
               >
                 <option value="" disabled>選択してください</option>
@@ -317,14 +321,14 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 6 }}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
                 予想期間
               </label>
               <select
                 className="btn"
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box' }}
+                style={{ width: '100%', boxSizing: 'border-box', padding: 12 }}
                 disabled={generating}
               >
                 <option value="" disabled>選択してください</option>
@@ -342,7 +346,8 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           disabled={generating}
           style={{
             width: '100%',
-            padding: '14px 24px',
+            padding: '16px 24px',
+            marginTop: 8,
             background: generating ? 'var(--muted)' : 'var(--accent)',
             color: '#fff',
             fontWeight: 700,
