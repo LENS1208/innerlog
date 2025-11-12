@@ -715,14 +715,6 @@ export default function AppShell({ children }: Props) {
           <main style={{ flex: 1, padding: "var(--px-mobile)", width: "100%" }} className="main-container">{children}</main>
         </div>
 
-        {/* 左下：グローバル新規日記ボタン */}
-        <button
-          className="quick-btn"
-          onClick={() => setQuickOpen(true)}
-        >
-          ＋ 新しい日記をつける
-        </button>
-
         {/* 新規日記モーダル */}
         {quickOpen && (
           <div className="modal" onClick={() => setQuickOpen(false)} aria-hidden={false}>
