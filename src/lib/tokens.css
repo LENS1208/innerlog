@@ -39,7 +39,7 @@
 /* ダークモード - ハイセンスで都会的 */
 :root[data-theme="dark"] {
   --bg: #0a0e14;
-  --surface: #1a1f2e;
+  --surface: #141824;
   --ink: #e4e8f0;
   --muted: #a0aec0;
   --line: #2d3748;
@@ -49,9 +49,9 @@
   --loss: #f87171;
   --warning: #fbbf24;
   --danger: #f87171;
-  --chip: #252d3d;
-  --panel-2: #1f2637;
-  --bg-secondary: #151b28;
+  --chip: #1f2530;
+  --panel-2: #171d2a;
+  --bg-secondary: #0f1420;
   --input-bg: #ffffff;
   --grid-line: rgba(255, 255, 255, 0.08);
 
