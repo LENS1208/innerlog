@@ -378,8 +378,8 @@ export default function ReportsStrategy() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            戦略別（上位6）
-            <HelpIcon text="主要6戦略の損益を比較したグラフです。どの戦略を優先すべきか判断できます。" />
+            戦略タグ別（上位6）
+            <HelpIcon text="主要6戦略タグの損益を比較したグラフです。どの戦略タグを優先すべきか判断できます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -436,8 +436,8 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            戦略別 平均保有時間
-            <HelpIcon text="戦略ごとの平均ポジション保有期間です。どの戦略が時間効率が良いか分かります。" />
+            戦略タグ別 平均保有時間
+            <HelpIcon text="戦略タグごとの平均ポジション保有期間です。どの戦略タグが時間効率が良いか分かります。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -476,8 +476,8 @@ export default function ReportsStrategy() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            戦略別 勝率
-            <HelpIcon text="戦略ごとの勝率を比較したグラフです。確率論的にどの戦略が優れているか把握できます。" />
+            戦略タグ別 勝率
+            <HelpIcon text="戦略タグごとの勝率を比較したグラフです。確率論的にどの戦略タグが優れているか把握できます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -507,8 +507,8 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            戦略別 PF
-            <HelpIcon text="戦略ごとのプロフィットファクター（総利益÷総損失）です。1.0以上なら利益が損失を上回っています。" />
+            戦略タグ別 PF
+            <HelpIcon text="戦略タグごとのプロフィットファクター（総利益÷総損失）です。1.0以上なら利益が損失を上回っています。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar

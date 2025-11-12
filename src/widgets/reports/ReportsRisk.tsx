@@ -683,7 +683,7 @@ export default function ReportsRisk() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             DD寄与：セットアップ
-            <HelpIcon text="戦略別のドローダウンへの影響度です。どの戦略がリスクが高いか分析できます。" />
+            <HelpIcon text="戦略タグ別のドローダウンへの影響度です。どの戦略タグがリスクが高いか分析できます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
