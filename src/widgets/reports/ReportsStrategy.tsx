@@ -306,8 +306,8 @@ export default function ReportsStrategy() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            戦略 Top
-            <HelpIcon text="最も稼げている取引パターンです。この戦略を増やすことで収益を伸ばせます。" />
+            戦略タグ Top
+            <HelpIcon text="最も稼げている取引パターンです。この戦略タグを増やすことで収益を伸ばせます。" />
           </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topSetup.setup}：{formatValue(topSetup.profit, "profit")}
@@ -318,7 +318,7 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            戦略 Bottom
+            戦略タグ Bottom
             <HelpIcon text="最も損失が出ている取引パターンです。このパターンを避けるか改善する必要があります。" />
           </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
