@@ -176,6 +176,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getGreenColor(), getOrangeColor()],
+      borderWidth: 0,
     }],
   };
 

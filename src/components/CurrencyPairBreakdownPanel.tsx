@@ -172,6 +172,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getGreenColor(), getOrangeColor()],
+      borderWidth: 0,
     }],
   };
 

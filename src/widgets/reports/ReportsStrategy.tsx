@@ -422,6 +422,7 @@ export default function ReportsStrategy() {
                   {
                     data: [sideData.long.count, sideData.short.count],
                     backgroundColor: [getGreenColor(), getOrangeColor()],
+                    borderWidth: 0,
                   },
                 ],
               }}

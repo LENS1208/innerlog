@@ -387,6 +387,7 @@ export default function ReportsMarket() {
                   {
                     data: [majorVsCrossData.major.count, majorVsCrossData.cross.count],
                     backgroundColor: [getAccentColor(), getPurpleColor()],
+                    borderWidth: 0,
                   },
                 ],
               }}

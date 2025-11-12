@@ -144,6 +144,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getGreenColor(), getOrangeColor()],
+      borderWidth: 0,
     }],
   };
 

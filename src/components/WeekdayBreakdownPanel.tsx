@@ -149,6 +149,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getGreenColor(), getOrangeColor()],
+      borderWidth: 0,
     }],
   };
 

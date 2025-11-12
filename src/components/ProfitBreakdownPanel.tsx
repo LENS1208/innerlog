@@ -144,6 +144,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
         getAccentColor(),
         'rgba(236, 72, 153)',
       ],
+      borderWidth: 0,
     }],
   };
 
@@ -152,6 +153,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getGreenColor(), getOrangeColor()],
+      borderWidth: 0,
     }],
   };
 
