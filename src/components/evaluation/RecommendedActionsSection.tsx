@@ -18,7 +18,7 @@ export default function RecommendedActionsSection({ metrics }: Props) {
 
   const difficultyColor = (difficulty: string) => {
     if (difficulty === 'Low') return '#0284c7';
-    if (difficulty === 'Mid') return '#3b82f6';
+    if (difficulty === 'Mid') return '#0284c7';
     return '#ef4444';
   };
 

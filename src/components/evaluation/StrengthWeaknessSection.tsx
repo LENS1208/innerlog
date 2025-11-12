@@ -18,7 +18,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
 
   const getColor = (value: number) => {
     if (value > 0.7) return '#0284c7';
-    if (value > 0.5) return '#3b82f6';
+    if (value > 0.5) return '#0284c7';
     if (value > 0.3) return '#f59e0b';
     return '#ef4444';
   };
@@ -118,7 +118,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
             </div>
             <div style={{ marginTop: 8, display: 'flex', gap: 12, fontSize: 11 }}>
               <span><span style={{ display: 'inline-block', width: 12, height: 12, background: '#0284c7', marginRight: 4 }} />良い</span>
-              <span><span style={{ display: 'inline-block', width: 12, height: 12, background: '#3b82f6', marginRight: 4 }} />普通</span>
+              <span><span style={{ display: 'inline-block', width: 12, height: 12, background: '#0284c7', marginRight: 4 }} />普通</span>
               <span><span style={{ display: 'inline-block', width: 12, height: 12, background: '#ef4444', marginRight: 4 }} />注意</span>
             </div>
           </div>

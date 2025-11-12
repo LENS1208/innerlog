@@ -147,7 +147,7 @@ export default function AccountSummaryCards() {
               XMポイント獲得
               <HelpIcon text="XMのロイヤルティプログラムで獲得したポイントを現金化した金額です。取引に応じて貯まります。" />
             </div>
-            <div className="kpi-value" style={{ color: '#3b82f6' }}>
+            <div className="kpi-value" style={{ color: '#0284c7' }}>
               {summaryData.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
             </div>
             <div className="kpi-desc">XMPで獲得した金額</div>

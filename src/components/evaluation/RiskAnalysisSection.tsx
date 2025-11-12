@@ -133,7 +133,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
                       })
                       .join(' ')}
                     fill="none"
-                    stroke="#3b82f6"
+                    stroke="#0284c7"
                     strokeWidth="2"
                   />
                 </>

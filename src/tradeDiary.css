@@ -22,9 +22,9 @@
 .muted{ color:var(--muted); }
 .small{ font-size:12px; }
 .nowrap{ white-space:nowrap; }
-.text-pos{ color: var(--accent-2, #22c55e); }
+.text-pos{ color: var(--accent-2, #0284c7); }
 .text-neg{ color: var(--danger, #ef4444); }
-.accent-2{ color: var(--accent-2, #22c55e); }
+.accent-2{ color: var(--accent-2, #0284c7); }
 .danger{ color: var(--danger, #ef4444); }
 .hr{ height:1px; background: var(--line); margin:12px 0; }
 

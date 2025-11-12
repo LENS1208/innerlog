@@ -330,9 +330,9 @@ export default function CalendarDayPage() {
                     label: "累積損益",
                     data: equityCurve.map((d) => d.y),
                     borderColor: (context) => {
-                      if (!context.chart.data.datasets[0].data) return '#3b82f6';
+                      if (!context.chart.data.datasets[0].data) return '#0284c7';
                       const dataIndex = context.dataIndex;
-                      if (dataIndex === undefined) return '#3b82f6';
+                      if (dataIndex === undefined) return '#0284c7';
                       const value = context.chart.data.datasets[0].data[dataIndex] as number;
                       return value >= 0 ? '#0284c7' : '#ef4444';
                     },

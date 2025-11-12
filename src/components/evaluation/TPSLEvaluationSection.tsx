@@ -96,7 +96,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
           <div>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>現在のR:R比</div>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
-              <span style={{ fontSize: 32, fontWeight: 700, color: '#3b82f6' }}>
+              <span style={{ fontSize: 32, fontWeight: 700, color: '#0284c7' }}>
                 {analysis.currentRR.toFixed(2)}
               </span>
               <span style={{ fontSize: 14, color: 'var(--muted)' }}>: 1</span>

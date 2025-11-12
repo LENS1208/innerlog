@@ -912,7 +912,7 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
           <button
             onClick={savePayload}
             style={{
-              background: '#3b82f6',
+              background: '#0284c7',
               border: 'none',
               borderRadius: 8,
               padding: '10px 24px',

@@ -6,7 +6,8 @@
   --ink: #0f172a;
   --muted: #64748b;
   --line: #cbd5e1;
-  --accent: #2563eb;
+  --accent: #0284c7;
+  --accent-2: #0284c7;
   --gain: #0284c7;
   --loss: #ef4444;
   --warning: #f59e0b;
@@ -42,7 +43,8 @@
   --ink: #e4e8f0;
   --muted: #a0aec0;
   --line: #2d3748;
-  --accent: #4f96ff;
+  --accent: #0ea5e9;
+  --accent-2: #0ea5e9;
   --gain: #0ea5e9;
   --loss: #f87171;
   --warning: #fbbf24;
