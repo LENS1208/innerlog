@@ -275,9 +275,11 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  padding: '12px 14px',
+                  padding: '14px 14px',
                   fontSize: 14,
                   color: '#111827',
+                  lineHeight: '1.5',
+                  height: '48px',
                 }}
                 disabled={generating}
               >
@@ -300,9 +302,11 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  padding: '12px 14px',
+                  padding: '14px 14px',
                   fontSize: 14,
                   color: '#111827',
+                  lineHeight: '1.5',
+                  height: '48px',
                 }}
                 disabled={generating}
               >
@@ -323,9 +327,11 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  padding: '12px 14px',
+                  padding: '14px 14px',
                   fontSize: 14,
                   color: '#111827',
+                  lineHeight: '1.5',
+                  height: '48px',
                 }}
                 disabled={generating}
               >
