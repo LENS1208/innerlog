@@ -335,8 +335,13 @@ export default function MonthlyCalendar() {
         const openTime = parseDateSafe(t.openTime || t.datetime);
         const closeTime = parseDateSafe(t.datetime);
         const openDow = openTime.getDay();
-        const closeDow = closeTime.getDay();
-        return openDow !== closeDow && (openDow === 6 || openDow === 0 || closeDow === 6 || closeDow === 0);
+
+        if (openDow !== 5) return false;
+
+        if (openTime.toDateString() === closeTime.toDateString()) return false;
+
+        const daysDiff = Math.floor((closeTime.getTime() - openTime.getTime()) / (1000 * 60 * 60 * 24));
+        return daysDiff >= 2;
       })
       .slice(0, 50)
       .map((t) => ({
