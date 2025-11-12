@@ -109,7 +109,17 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
 
   const setUiFilters = React.useCallback((p: Partial<Filters>) => {
     setUiFiltersState(prev => {
-      const newFilters = { ...prev, ...p };
+      const newFilters = { ...prev };
+
+      Object.keys(p).forEach(key => {
+        const filterKey = key as keyof Filters;
+        if (p[filterKey] === undefined) {
+          delete newFilters[filterKey];
+        } else {
+          newFilters[filterKey] = p[filterKey];
+        }
+      });
+
       debouncedApplyFilters(newFilters);
       return newFilters;
     });
