@@ -132,29 +132,16 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
         throw new Error('ログインが必要です');
       }
 
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
-      const headers = {
-        'Authorization': `Bearer ${session.access_token}`,
-        'Content-Type': 'application/json',
-      };
+      console.log('🔥 AI生成開始:', { prompt, pair, timeframe, period });
 
-      console.log('🔥 API呼び出し開始:', { apiUrl, prompt, pair, timeframe, period });
-
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ prompt, pair, timeframe, period, apiKey }),
+      const { generateAiProposal } = await import('../services/generateAiProposal');
+      const proposalData = await generateAiProposal({
+        prompt,
+        pair,
+        timeframe,
+        period,
       });
 
-      console.log('📡 レスポンスステータス:', response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('❌ API呼び出しエラー:', errorData);
-        throw new Error(errorData.error || 'API request failed');
-      }
-
-      const proposalData = await response.json();
       console.log('✅ AI生成データを受信:', proposalData);
       const newProposal = await saveProposal(proposalData, prompt, pair, timeframe);
 

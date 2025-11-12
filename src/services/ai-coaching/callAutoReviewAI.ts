@@ -17,23 +17,40 @@ export async function callAutoReviewAI(
   });
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-coaching`, {
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error('OpenAI API key not configured');
+    }
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        systemPrompt: SYSTEM_TXT,
-        userPrompt,
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: SYSTEM_TXT },
+          { role: 'user', content: userPrompt },
+        ],
+        temperature: 0.2,
+        response_format: { type: 'json_object' },
       }),
     });
 
     if (!response.ok) {
-      throw new Error(`AI API error: ${response.status}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`AI API error: ${response.status} - ${JSON.stringify(errorData)}`);
     }
 
-    const result: AIResponse = await response.json();
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) {
+      throw new Error('No response from OpenAI');
+    }
+
+    const result: AIResponse = JSON.parse(content);
     return result;
   } catch (error) {
     console.error('AI呼び出しエラー:', error);

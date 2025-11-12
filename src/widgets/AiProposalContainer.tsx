@@ -130,27 +130,14 @@ export default function AiProposalContainer({
         throw new Error('ログインが必要です');
       }
 
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: payload.prompt,
-          pair: payload.pair,
-          timeframe: payload.timeframe,
-          period: payload.period || '本日',
-        }),
+      const { generateAiProposal } = await import('../services/generateAiProposal');
+      const generatedData = await generateAiProposal({
+        prompt: payload.prompt,
+        pair: payload.pair,
+        timeframe: payload.timeframe,
+        period: payload.period || '本日',
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'API呼び出しに失敗しました');
-      }
-
-      const generatedData = await response.json();
       console.log('AI生成データ:', generatedData);
       setProposalData(generatedData);
 
@@ -185,27 +172,13 @@ export default function AiProposalContainer({
         throw new Error('ログインが必要です');
       }
 
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-ai-proposal`;
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: prompt,
-          pair: pair,
-          timeframe: timeframe,
-          period: '本日',
-        }),
+      const { generateAiProposal } = await import('../services/generateAiProposal');
+      const generatedData = await generateAiProposal({
+        prompt: prompt,
+        pair: pair,
+        timeframe: timeframe,
+        period: '本日',
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'API呼び出しに失敗しました');
-      }
-
-      const generatedData = await response.json();
 
       const regenerated = await regenerateProposal(
         currentProposal.id,
