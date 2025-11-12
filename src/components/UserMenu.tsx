@@ -62,7 +62,7 @@ export default function UserMenu() {
           height: 36,
           borderRadius: '50%',
           border: '2px solid var(--line)',
-          background: 'var(--surface)',
+          background: '#ffffff',
           cursor: 'pointer',
           padding: 0,
           overflow: 'hidden',
@@ -92,7 +92,7 @@ export default function UserMenu() {
             position: 'absolute',
             top: 'calc(100% + 8px)',
             right: 0,
-            background: 'var(--surface)',
+            background: '#ffffff',
             border: '1px solid var(--line)',
             borderRadius: 12,
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
@@ -110,7 +110,7 @@ export default function UserMenu() {
               textAlign: 'left',
               cursor: 'pointer',
               fontSize: 14,
-              color: '#111827',
+              color: '#0f172a',
               borderBottom: '1px solid var(--line)',
             }}
             onMouseEnter={(e) => {
