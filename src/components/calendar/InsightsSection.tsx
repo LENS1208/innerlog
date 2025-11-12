@@ -218,7 +218,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
             曜日別パフォーマンス
-            <HelpIcon text="各曜日ごとの損益を表示します。どの曜日が得意かを確認できます。" />
+            <HelpIcon text="各曜日ごとの損益を表示します（決済時点の曜日）。どの曜日での決済が得意かを確認できます。" />
           </div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(weekdayPerformance)} options={barOptions} />
@@ -229,7 +229,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
             時間帯パフォーマンス
-            <HelpIcon text="24時間の各時間帯ごとの損益を表示します。どの時間帯が得意かを確認できます。" />
+            <HelpIcon text="24時間の各時間帯ごとの損益を表示します（決済時点の時間帯）。どの時間帯での決済が得意かを確認できます。" />
           </div>
           <div style={{ height: 300 }}>
             <Bar data={createBarChartData(hourlyPerformance)} options={barOptions} />
