@@ -258,7 +258,7 @@ export default function TradeListPage() {
               borderRadius: 6,
               background: currentPage === 1 ? "var(--muted-bg)" : "white",
               cursor: currentPage === 1 ? "not-allowed" : "pointer",
-              color: currentPage === 1 ? "var(--muted)" : "var(--text)",
+              color: currentPage === 1 ? "var(--muted)" : "var(--ink)",
             }}
           >
             ←
@@ -285,7 +285,7 @@ export default function TradeListPage() {
                   border: "1px solid var(--line)",
                   borderRadius: 6,
                   background: currentPage === pageNum ? "var(--accent)" : "white",
-                  color: currentPage === pageNum ? "white" : "var(--text)",
+                  color: currentPage === pageNum ? "white" : "var(--ink)",
                   cursor: "pointer",
                   fontWeight: currentPage === pageNum ? 600 : 400,
                 }}
@@ -304,7 +304,7 @@ export default function TradeListPage() {
               borderRadius: 6,
               background: currentPage === totalPages ? "var(--muted-bg)" : "white",
               cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-              color: currentPage === totalPages ? "var(--muted)" : "var(--text)",
+              color: currentPage === totalPages ? "var(--muted)" : "var(--ink)",
             }}
           >
             →
