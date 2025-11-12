@@ -85,12 +85,21 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       },
       backgroundColor: (context: any) => {
         const chart = context.chart;
-        const {ctx, chartArea} = chart;
+        const {ctx, chartArea, scales} = chart;
         if (!chartArea) return getAccentColor(0.1);
+
+        const yScale = scales.y;
+        const zeroPixel = yScale.getPixelForValue(0);
+
         const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+
+        const zeroPosition = (chartArea.bottom - zeroPixel) / (chartArea.bottom - chartArea.top);
+        const clampedZero = Math.max(0, Math.min(1, zeroPosition));
+
         gradient.addColorStop(0, getLossColor(0.4));
-        gradient.addColorStop(0.5, 'rgba(200, 200, 200, 0.05)');
+        gradient.addColorStop(clampedZero, 'rgba(200, 200, 200, 0)');
         gradient.addColorStop(1, getAccentColor(0.4));
+
         return gradient;
       },
       pointRadius: 0,

@@ -113,7 +113,7 @@ const EquityCurvePage: React.FC = () => {
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  累積損益（Equity）
+                  累積損益
                   <HelpIcon text="取引ごとに利益や損失を積み上げたグラフです。右肩上がりなら口座残高が増えています。" />
                 </h3>
                 <EquityChart trades={filteredTrades as any} />
