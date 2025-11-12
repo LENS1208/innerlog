@@ -85,7 +85,6 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const debouncedApplyFilters = React.useMemo(
     () => debounce(async (newFilters: Filters) => {
       const controller = abortPreviousRequest();
-      previousFiltersRef.current = filters;
 
       setLoading(true);
 
@@ -96,7 +95,6 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
         syncFiltersToUrl(newFilters);
       } catch (error) {
         console.error('Filter application failed:', error);
-        setFilters(previousFiltersRef.current);
         showToast('フィルター適用に失敗しました', 'error');
       } finally {
         if (!controller.signal.aborted) {
@@ -104,7 +102,7 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
         }
       }
     }, 200),
-    [filters]
+    []
   );
 
   const setUiFilters = React.useCallback((p: Partial<Filters>) => {

@@ -4,8 +4,15 @@ import type { Filters } from "./dataset.context";
 export function filterTrades(trades: Trade[], filters: Filters): Trade[] {
   let result = [...trades];
 
+  console.log('🔎 filterTrades called:', {
+    totalTrades: trades.length,
+    filters,
+    symbolFilter: filters.symbol
+  });
+
   if (filters.symbol) {
     result = result.filter((t) => (t.pair || t.symbol) === filters.symbol);
+    console.log('  → After symbol filter:', result.length, 'trades');
   }
 
   if (filters.side) {
