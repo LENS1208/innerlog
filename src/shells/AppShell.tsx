@@ -719,12 +719,6 @@ export default function AppShell({ children }: Props) {
         <button
           className="quick-btn"
           onClick={() => setQuickOpen(true)}
-          style={{
-            position: "fixed",
-            bottom: 24,
-            left: 24,
-            zIndex: 1000,
-          }}
         >
           ＋ 新しい日記をつける
         </button>

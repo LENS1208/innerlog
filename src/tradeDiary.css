@@ -157,8 +157,7 @@ td.num{ text-align:right; font-weight:600; }
 .pending-meta{ font-size:12px; color:var(--muted); margin-top:4px; }
 .pending-actions{ display:flex; gap:8px; }
 
-/* 右下ショートカット */
-.quick-btn{ position:fixed; right:20px; bottom:20px; z-index:60; background:var(--accent); color:#fff; border:none; border-radius:999px; padding:12px 16px; font-weight:700; box-shadow:0 6px 16px rgba(0,0,0,.18); cursor:pointer; }
+/* 左下ショートカット（詳細な定義は下部にあります） */
 
 /* メモ欄のグリッド（補強） */
 .note-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
@@ -188,12 +187,28 @@ td.num{ text-align:right; font-weight:600; }
   box-shadow: 0 16px 40px rgba(0,0,0,.30);
 }
 
-/* 右下の「＋ 新しい日記をつける」ボタンが他UIの下に潜らないように */
+/* 左下の「＋ 新しい日記をつける」ボタンが他UIの下に潜らないように */
 .quick-btn{
   position: fixed;
-  right: 20px;
+  left: calc(var(--sidenav-w) + 20px);
   bottom: 20px;
-  z-index: 10000;          /* ← モーダルと同格以上に */
+  z-index: 10000;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(0,0,0,.18);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* モバイルでは左端に配置 */
+@media (max-width: 1024px) {
+  .quick-btn {
+    left: 20px;
+  }
 }
 
 /* ドロップゾーンはクリック可能に（親のflex影響を受けない） */
