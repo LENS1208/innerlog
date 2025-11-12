@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../lib/chartColors";
 import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
-import { getGridLineColor } from '../lib/chartColors';
 
 type TradeWithProfit = {
   profitYen?: number;
@@ -136,13 +135,13 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       data: topPairs.map(([, count]) => count),
       backgroundColor: [
-        'rgba(0, 132, 199, 0.8)',
-        'rgba(239, 68, 68, 0.8)',
+        getAccentColor(0.8),
+        getLossColor(0.8),
         'rgba(22, 163, 74, 0.8)',
-        'rgba(245, 158, 11, 0.8)',
+        getWarningColor(0.8),
         'rgba(139, 92, 246, 0.8)',
         'rgba(6, 182, 212, 0.8)',
-        'rgba(0, 132, 199, 0.8)',
+        getAccentColor(0.8),
         'rgba(236, 72, 153, 0.8)',
       ],
     }],
@@ -152,7 +151,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: ['rgba(0, 132, 199, 0.8)', 'rgba(0, 132, 199, 0.8)'],
+      backgroundColor: [getAccentColor(0.8), getAccentColor(0.8)],
     }],
   };
 
@@ -161,7 +160,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
-      backgroundColor: 'rgba(0, 132, 199, 0.8)',
+      backgroundColor: getAccentColor(0.8),
     }],
   };
 
