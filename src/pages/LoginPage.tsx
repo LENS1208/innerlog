@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
-  const logoImg = theme === 'dark' ? logoImgDark : logoImgLight;
+  const logoImg = theme === 'dark' ? logoImgLight : logoImgDark;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

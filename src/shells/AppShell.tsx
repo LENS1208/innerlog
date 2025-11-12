@@ -466,7 +466,7 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg }: { menu: MenuItem[]
 export default function AppShell({ children }: Props) {
   console.log("🔄 AppShell render");
   const { theme } = useTheme();
-  const logoImg = theme === 'dark' ? logoImgDark : logoImgLight;
+  const logoImg = theme === 'dark' ? logoImgLight : logoImgDark;
   const [open, setOpen] = useState(false);
   const [menu, setMenu] = useState<MenuItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>("dashboard");
