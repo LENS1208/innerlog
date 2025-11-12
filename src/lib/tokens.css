@@ -17,10 +17,6 @@
   --input-bg: #ffffff;
   --grid-line: rgba(203, 213, 225, 0.6);
 
-  --button-bg: #ffffff;
-  --button-bg-secondary: #f1f5f9;
-  --button-bg-hover: #f8fafc;
-
   --radius: 14px;
   --header-h: 56px;
   --row-h: 44px;
@@ -56,10 +52,6 @@
   --bg-secondary: #151b28;
   --input-bg: #ffffff;
   --grid-line: rgba(255, 255, 255, 0.08);
-
-  --button-bg: #252d3d;
-  --button-bg-secondary: #2a3142;
-  --button-bg-hover: #2d3748;
 
   --radius: 14px;
   --header-h: 56px;
@@ -190,4 +182,3 @@ body {
     display: flex !important;
   }
 }
-/* Force reload */
