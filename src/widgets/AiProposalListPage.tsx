@@ -3,6 +3,7 @@ import { getAllProposals, deleteProposal, saveProposal, type AiProposal } from '
 import { showToast } from '../lib/toast';
 import type { AiProposalData } from '../types/ai-proposal.types';
 import { supabase } from '../lib/supabase';
+import StarRating from '../components/ai/StarRating';
 
 type AiProposalListPageProps = {
   onSelectProposal: (id: string) => void;
@@ -185,6 +186,30 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
       loadProposals();
     } else {
       showToast('削除に失敗しました');
+    }
+  }
+
+  async function handleRatingChange(id: string, newRating: number) {
+    try {
+      const { error } = await supabase
+        .from('ai_proposals')
+        .update({ user_rating: newRating })
+        .eq('id', id);
+
+      if (error) {
+        throw error;
+      }
+
+      setProposals((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, user_rating: newRating } : p
+        )
+      );
+
+      showToast('評価を保存しました');
+    } catch (error) {
+      console.error('Error saving rating:', error);
+      showToast('評価の保存に失敗しました');
     }
   }
 
@@ -488,12 +513,29 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                               >
                                 信頼度 {proposal.confidence}%
                               </span>
-                              <span style={{ fontSize: 12, color: 'var(--muted)', marginLeft: 'auto' }}>
-                                {new Date(proposal.created_at).toLocaleTimeString('ja-JP', {
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })}
-                              </span>
+                              <div
+                                style={{
+                                  marginLeft: 'auto',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 12,
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <div style={{ fontSize: 14 }}>
+                                  <StarRating
+                                    rating={proposal.user_rating || null}
+                                    onChange={(rating) => handleRatingChange(proposal.id, rating)}
+                                    showLabel={false}
+                                  />
+                                </div>
+                                <span style={{ fontSize: 12, color: 'var(--muted)' }}>
+                                  {new Date(proposal.created_at).toLocaleTimeString('ja-JP', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                  })}
+                                </span>
+                              </div>
                             </div>
                             <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)', lineHeight: 1.5 }}>
                               {proposal.prompt || '予想を生成しました'}
