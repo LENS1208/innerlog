@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getOrangeColor, getGreenColor } from "../lib/chartColors";
 import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
