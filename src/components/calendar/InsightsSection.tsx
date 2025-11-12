@@ -247,16 +247,16 @@ export default function InsightsSection(props: InsightsSectionProps) {
           </div>
         </div>
 
-        {/* 5) ポジション一覧（週跨ぎ / 日跨ぎ） full width */}
+        {/* 5) ロールオーバーしたポジション一覧（週またぎ / 日またぎ） full width */}
         <div className="insights-grid-full-width insight-card">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>
-              ポジション一覧（週跨ぎ / 日跨ぎ）
+              ロールオーバーしたポジション一覧（週またぎ / 日またぎ）
               <HelpIcon text="週末や翌日にまたがってポジションを保有した取引の一覧です。" />
             </div>
             <div
               role="tablist"
-              aria-label="週跨ぎ/日跨ぎ切替"
+              aria-label="週またぎ/日またぎ切替"
               style={{ display: "inline-flex", borderRadius: 8, border: "1px solid var(--line)", overflow: "hidden" }}
             >
               <button
@@ -272,7 +272,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                   cursor: "pointer",
                 }}
               >
-                週跨ぎ
+                週またぎ
               </button>
               <button
                 role="tab"
@@ -287,7 +287,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                   cursor: "pointer",
                 }}
               >
-                日跨ぎ
+                日またぎ
               </button>
             </div>
           </div>
