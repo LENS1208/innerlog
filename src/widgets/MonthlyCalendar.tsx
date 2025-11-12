@@ -390,13 +390,14 @@ export default function MonthlyCalendar() {
     const worstDay = sortedDays.length > 0 ? { date: sortedDays[sortedDays.length - 1][0], pnl: sortedDays[sortedDays.length - 1][1] } : null;
     const maxDailyDD = worstDay ? worstDay.pnl : null;
 
-    const symbolMap = new Map<string, number>();
+    const symbolMap = new Map<string, { pnl: number; count: number }>();
     filteredTrades.forEach((t) => {
-      symbolMap.set(t.item, (symbolMap.get(t.item) || 0) + t.profitYen);
+      const current = symbolMap.get(t.item) || { pnl: 0, count: 0 };
+      symbolMap.set(t.item, { pnl: current.pnl + t.profitYen, count: current.count + 1 });
     });
-    const sortedSymbols = Array.from(symbolMap.entries()).sort((a, b) => b[1] - a[1]);
-    const topSymbols = sortedSymbols.slice(0, 3).map(([symbol, pnl]) => ({ symbol, pnl }));
-    const bottomSymbols = sortedSymbols.slice(-3).reverse().map(([symbol, pnl]) => ({ symbol, pnl }));
+    const allSymbols = Array.from(symbolMap.entries())
+      .map(([symbol, data]) => ({ symbol, pnl: data.pnl, count: data.count }))
+      .sort((a, b) => b.pnl - a.pnl);
 
     const topTags = [
       { tag: "breakout", pnl: 12432, winrate: 0.56 },
@@ -420,8 +421,7 @@ export default function MonthlyCalendar() {
       bestDay,
       worstDay,
       maxDailyDD,
-      topSymbols,
-      bottomSymbols,
+      allSymbols,
       topTags,
       expectationRows,
     };
@@ -817,8 +817,7 @@ export default function MonthlyCalendar() {
         bestDay={insightsData.bestDay}
         worstDay={insightsData.worstDay}
         maxDailyDD={insightsData.maxDailyDD}
-        topSymbols={insightsData.topSymbols}
-        bottomSymbols={insightsData.bottomSymbols}
+        allSymbols={insightsData.allSymbols}
         topTags={insightsData.topTags}
         expectationRows={insightsData.expectationRows}
       />

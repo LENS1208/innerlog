@@ -28,8 +28,7 @@ export type InsightsSectionProps = {
   bestDay?: { date: string; pnl: number } | null;
   worstDay?: { date: string; pnl: number } | null;
   maxDailyDD?: number | null;
-  topSymbols: { symbol: string; pnl: number }[];
-  bottomSymbols: { symbol: string; pnl: number }[];
+  allSymbols: { symbol: string; pnl: number; count: number }[];
   topTags: { tag: string; pnl: number; winrate: number }[];
   expectationRows: {
     label: string;
@@ -58,8 +57,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
     bestDay,
     worstDay,
     maxDailyDD,
-    topSymbols,
-    bottomSymbols,
+    allSymbols,
     topTags,
     expectationRows,
   } = props;
@@ -455,38 +453,65 @@ export default function InsightsSection(props: InsightsSectionProps) {
           )}
         </div>
 
-        {/* 7) 通貨ペア 上位/下位 */}
+        {/* 7) 銘柄ごとの損益 */}
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
-            通貨ペア 上位/下位
-            <HelpIcon text="最も利益が出た通貨ペアと最も損失が出た通貨ペアのトップ3を表示します。" />
+            銘柄ごとの損益
+            <HelpIcon text="当月で取引した銘柄ごとの取引回数と合計損益を表示します。" />
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)", marginBottom: 8 }}>Top 3</div>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
-                {topSymbols.map((s, i) => (
-                  <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--ink)" }}>
-                    <span>{s.symbol}</span>
-                    <span style={{ fontWeight: 600, color: s.pnl >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                      {currencyJPY(s.pnl)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+          <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(100px, 1fr)",
+                gap: 8,
+                fontSize: 15,
+                color: "var(--muted)",
+                fontWeight: "bold",
+                paddingBottom: 8,
+                borderBottom: "1px solid var(--line)",
+                minWidth: "300px",
+              }}
+            >
+              <div>銘柄</div>
+              <div style={{ textAlign: "right" }}>回数</div>
+              <div style={{ textAlign: "right" }}>合計収支</div>
             </div>
-            <div>
-              <div style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)", marginBottom: 8 }}>Bottom 3</div>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 4 }}>
-                {bottomSymbols.map((s, i) => (
-                  <li key={i} style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--ink)" }}>
-                    <span>{s.symbol}</span>
-                    <span style={{ fontWeight: 600, color: s.pnl >= 0 ? "var(--gain)" : "var(--loss)" }}>
+            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "300px" }}>
+              {allSymbols.length === 0 ? (
+                <div style={{ padding: 16, textAlign: "center", color: "var(--muted)", fontSize: 13 }}>
+                  データがありません
+                </div>
+              ) : (
+                allSymbols.map((s, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(100px, 1fr)",
+                      gap: 8,
+                      fontSize: 13,
+                      color: "var(--ink)",
+                      alignItems: "center",
+                      paddingBottom: 6,
+                      borderBottom: i < allSymbols.length - 1 ? "1px solid #f3f4f6" : "none",
+                    }}
+                  >
+                    <div>{s.symbol}</div>
+                    <div style={{ textAlign: "right", color: "var(--muted)" }}>{s.count}</div>
+                    <div
+                      style={{
+                        textAlign: "right",
+                        fontWeight: 600,
+                        fontSize: 18,
+                        color: s.pnl >= 0 ? "var(--gain)" : "var(--loss)",
+                      }}
+                    >
                       {currencyJPY(s.pnl)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
