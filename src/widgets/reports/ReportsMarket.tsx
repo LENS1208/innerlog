@@ -520,10 +520,14 @@ export default function ReportsMarket() {
             </thead>
             <tbody>
               {[
-                { label: 'JPY関連', data: majorVsCrossData.jpy },
-                { label: 'USD関連', data: majorVsCrossData.usd },
-                { label: 'その他', data: majorVsCrossData.other }
-              ].map((item) => (
+                { label: 'JPY関連', data: assetTypeData.jpy },
+                { label: 'USD関連', data: assetTypeData.usdMajor },
+                { label: '貴金属', data: assetTypeData.metals },
+                { label: '仮想通貨', data: assetTypeData.crypto },
+                { label: '商品', data: assetTypeData.commodities },
+                { label: '新興国通貨', data: assetTypeData.emerging },
+                { label: 'その他', data: assetTypeData.other }
+              ].filter(item => item.data.count > 0).map((item) => (
                 <tr
                   key={item.label}
                   style={{
@@ -534,7 +538,7 @@ export default function ReportsMarket() {
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                 >
-                  <td style={{ padding: 10, fontSize: 13 }}>通貨タイプ</td>
+                  <td style={{ padding: 10, fontSize: 13 }}>資産クラス</td>
                   <td style={{ padding: 10, fontSize: 13 }}>{item.label}</td>
                   <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.data.count}</td>
                   <td
