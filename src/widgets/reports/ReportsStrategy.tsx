@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getOrangeColor } from "../../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getOrangeColor, getGreenColor } from "../../lib/chartColors";
 import { Bar, Doughnut, Scatter } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
@@ -421,7 +421,7 @@ export default function ReportsStrategy() {
                 datasets: [
                   {
                     data: [sideData.long.count, sideData.short.count],
-                    backgroundColor: [getAccentColor(), getOrangeColor()],
+                    backgroundColor: [getGreenColor(), getOrangeColor()],
                   },
                 ],
               }}
@@ -551,7 +551,7 @@ export default function ReportsStrategy() {
                   {
                     label: "買い",
                     data: setupCrossData.slice(0, 5).map((d) => d.long),
-                    backgroundColor: getAccentColor(),
+                    backgroundColor: getGreenColor(),
                   },
                   {
                     label: "売り",
