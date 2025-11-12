@@ -1,4 +1,114 @@
-@import './lib/tokens.css';
+/* ===== Design Tokens ===== */
+/* ライトモード（デフォルト） - ハイセンスで都会的 */
+:root,
+:root[data-theme="light"] {
+  --bg: #fafbfc;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #cbd5e1;
+  --accent: #2563eb;
+  --gain: #10b981;
+  --loss: #ef4444;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --chip: #f1f5f9;
+  --panel-2: #ffffff;
+  --bg-secondary: #f8fafc;
+  --input-bg: #ffffff;
+  --grid-line: rgba(203, 213, 225, 0.6);
+
+  --button-bg: #ffffff;
+  --button-bg-secondary: #f1f5f9;
+  --button-bg-hover: #f8fafc;
+
+  --radius: 14px;
+  --header-h: 56px;
+  --row-h: 44px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 20px;
+  --sidenav-w: 240px;
+
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+  --px-mobile: 16px;
+  --px-desktop: 24px;
+}
+
+/* ダークモード - ハイセンスで都会的 */
+:root[data-theme="dark"] {
+  --bg: #0a0e14;
+  --surface: #1a1f2e;
+  --ink: #e4e8f0;
+  --muted: #a0aec0;
+  --line: #2d3748;
+  --accent: #4f96ff;
+  --gain: #34d399;
+  --loss: #f87171;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --chip: #252d3d;
+  --panel-2: #1f2637;
+  --bg-secondary: #151b28;
+  --input-bg: #ffffff;
+  --grid-line: rgba(255, 255, 255, 0.08);
+
+  --button-bg: #252d3d;
+  --button-bg-secondary: #2a3142;
+  --button-bg-hover: #2d3748;
+
+  --radius: 14px;
+  --header-h: 56px;
+  --row-h: 44px;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 20px;
+  --sidenav-w: 240px;
+
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+  --px-mobile: 16px;
+  --px-desktop: 24px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.6 system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  min-width: 360px;
+  margin: 0;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:root[data-theme="dark"] body {
+  background: #0a0e14;
+}
+
+.pnl-pos {
+  color: var(--gain);
+  font-weight: 700;
+}
+
+.pnl-neg {
+  color: var(--loss);
+  font-weight: 700;
+}
 
 /* ===== Global resets for ForecastHybrid ===== */
 /* body background is controlled by tokens.css */
