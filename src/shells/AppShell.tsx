@@ -715,14 +715,14 @@ export default function AppShell({ children }: Props) {
           <main style={{ flex: 1, padding: "var(--px-mobile)", width: "100%" }} className="main-container">{children}</main>
         </div>
 
-        {/* 右下：グローバル新規日記ボタン */}
+        {/* 左下：グローバル新規日記ボタン */}
         <button
           className="quick-btn"
           onClick={() => setQuickOpen(true)}
           style={{
             position: "fixed",
             bottom: 24,
-            right: 24,
+            left: 24,
             zIndex: 1000,
           }}
         >
