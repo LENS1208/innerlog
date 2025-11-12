@@ -6,6 +6,7 @@ import { UI_TEXT } from "../lib/i18n";
 import { supabase } from "../lib/supabase";
 import InsightsSection from "../components/calendar/InsightsSection";
 import { HelpIcon } from "../components/common/HelpIcon";
+import { filterTrades } from "../lib/filterTrades";
 
 type DayData = {
   date: string;
@@ -73,7 +74,7 @@ function parseDateSafe(dateStr: string): Date {
 }
 
 export default function MonthlyCalendar() {
-  const { dataset, useDatabase } = useDataset();
+  const { dataset, useDatabase, uiFilters } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
@@ -141,12 +142,16 @@ export default function MonthlyCalendar() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
+  const filteredTrades = useMemo(() => {
+    return filterTrades(trades, uiFilters);
+  }, [trades, uiFilters]);
+
   const totalTradesInMonth = useMemo(() => {
-    return trades.filter((t) => {
+    return filteredTrades.filter((t) => {
       const tradeDate = parseDateSafe(t.datetime);
       return !isNaN(tradeDate.getTime()) && tradeDate.getFullYear() === year && tradeDate.getMonth() === month;
     }).length;
-  }, [trades, year, month]);
+  }, [filteredTrades, year, month]);
 
   const { calendarDays, weekSummaries, monthTotal } = useMemo(() => {
     const firstDay = new Date(year, month, 1);
@@ -176,7 +181,7 @@ export default function MonthlyCalendar() {
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = formatDateLocal(year, month, day);
 
-      const dayTrades = trades.filter((t) => {
+      const dayTrades = filteredTrades.filter((t) => {
         const tradeDateStr = normalizeDate(t.datetime);
         return tradeDateStr === dateStr;
       });
@@ -203,7 +208,7 @@ export default function MonthlyCalendar() {
     }
 
     const weeks = new Map<number, number>();
-    trades.forEach((t) => {
+    filteredTrades.forEach((t) => {
       const tradeDate = parseDateSafe(t.datetime);
       if (!isNaN(tradeDate.getTime()) && tradeDate.getFullYear() === year && tradeDate.getMonth() === month) {
         const weekNum = getWeekNumber(tradeDate);
@@ -223,7 +228,7 @@ export default function MonthlyCalendar() {
     }
 
     return { calendarDays: days, weekSummaries, monthTotal };
-  }, [trades, year, month]);
+  }, [filteredTrades, year, month]);
 
   const goToPrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -240,17 +245,17 @@ export default function MonthlyCalendar() {
   const monthName = currentDate.toLocaleDateString("ja-JP", { year: "numeric", month: "long" });
 
   const monthlyStats = useMemo(() => {
-    const filteredTrades = trades.filter((t) => {
+    const monthFilteredTrades = filteredTrades.filter((t) => {
       const tradeDate = parseDateSafe(t.datetime);
       return !isNaN(tradeDate.getTime()) && tradeDate.getFullYear() === year && tradeDate.getMonth() === month;
     });
 
-    const totalTrades = filteredTrades.length;
-    const winTrades = filteredTrades.filter(t => t.profitYen > 0).length;
+    const totalTrades = monthFilteredTrades.length;
+    const winTrades = monthFilteredTrades.filter(t => t.profitYen > 0).length;
     const winRate = totalTrades > 0 ? (winTrades / totalTrades) * 100 : 0;
 
-    const totalProfit = filteredTrades.reduce((sum, t) => sum + (t.profitYen > 0 ? t.profitYen : 0), 0);
-    const totalLoss = Math.abs(filteredTrades.reduce((sum, t) => sum + (t.profitYen < 0 ? t.profitYen : 0), 0));
+    const totalProfit = monthFilteredTrades.reduce((sum, t) => sum + (t.profitYen > 0 ? t.profitYen : 0), 0);
+    const totalLoss = Math.abs(monthFilteredTrades.reduce((sum, t) => sum + (t.profitYen < 0 ? t.profitYen : 0), 0));
     const pf = totalLoss > 0 ? totalProfit / totalLoss : totalProfit > 0 ? Infinity : 0;
 
     const avgProfit = totalTrades > 0 ? monthTotal / totalTrades : 0;
@@ -258,7 +263,7 @@ export default function MonthlyCalendar() {
     let maxDD = 0;
     let peak = 0;
     let cumulative = 0;
-    filteredTrades
+    monthFilteredTrades
       .sort((a, b) => parseDateSafe(a.datetime).getTime() - parseDateSafe(b.datetime).getTime())
       .forEach(t => {
         cumulative += t.profitYen;
@@ -280,10 +285,10 @@ export default function MonthlyCalendar() {
       totalProfit,
       totalLoss
     };
-  }, [trades, year, month, monthTotal]);
+  }, [filteredTrades, year, month, monthTotal]);
 
   const insightsData = useMemo(() => {
-    const filteredTrades = trades.filter((t) => {
+    const monthFilteredTrades = filteredTrades.filter((t) => {
       const tradeDate = parseDateSafe(t.datetime);
       return !isNaN(tradeDate.getTime()) && tradeDate.getFullYear() === year && tradeDate.getMonth() === month;
     });
@@ -295,7 +300,7 @@ export default function MonthlyCalendar() {
 
     const weekdayNames = ["月", "火", "水", "木", "金", "土", "日"];
     const weekdayMap = new Map<number, number>();
-    filteredTrades.forEach((t) => {
+    monthFilteredTrades.forEach((t) => {
       const tradeDate = parseDateSafe(t.datetime);
       const dow = tradeDate.getDay();
       const adjustedDow = dow === 0 ? 6 : dow - 1;
@@ -307,7 +312,7 @@ export default function MonthlyCalendar() {
     }));
 
     const hourlyMap = new Map<number, number>();
-    filteredTrades.forEach((t) => {
+    monthFilteredTrades.forEach((t) => {
       const tradeDate = parseDateSafe(t.datetime);
       const hour = tradeDate.getHours();
       hourlyMap.set(hour, (hourlyMap.get(hour) || 0) + t.profitYen);
@@ -325,7 +330,7 @@ export default function MonthlyCalendar() {
       { name: ">120m", min: 120, max: Infinity },
     ];
     const durationPerformance = durationRanges.map((range) => {
-      const rangeSum = filteredTrades
+      const rangeSum = monthFilteredTrades
         .filter((t) => {
           const openTime = parseDateSafe(t.openTime || t.datetime);
           const closeTime = parseDateSafe(t.datetime);
@@ -336,7 +341,7 @@ export default function MonthlyCalendar() {
       return { name: range.name, pnl: rangeSum };
     });
 
-    const weekendTrades = filteredTrades
+    const weekendTrades = monthFilteredTrades
       .filter((t) => {
         const openTime = parseDateSafe(t.openTime || t.datetime);
         const closeTime = parseDateSafe(t.datetime);
@@ -370,7 +375,7 @@ export default function MonthlyCalendar() {
         pnl: t.profitYen,
       }));
 
-    const overnightTrades = filteredTrades
+    const overnightTrades = monthFilteredTrades
       .filter((t) => {
         const openTime = parseDateSafe(t.openTime || t.datetime);
         const closeTime = parseDateSafe(t.datetime);
@@ -387,7 +392,7 @@ export default function MonthlyCalendar() {
       }));
 
     const dayProfits = new Map<string, number>();
-    filteredTrades.forEach((t) => {
+    monthFilteredTrades.forEach((t) => {
       const dateStr = normalizeDate(t.datetime);
       dayProfits.set(dateStr, (dayProfits.get(dateStr) || 0) + t.profitYen);
     });
@@ -397,7 +402,7 @@ export default function MonthlyCalendar() {
     const maxDailyDD = worstDay ? worstDay.pnl : null;
 
     const symbolMap = new Map<string, { pnl: number; count: number }>();
-    filteredTrades.forEach((t) => {
+    monthFilteredTrades.forEach((t) => {
       const current = symbolMap.get(t.item) || { pnl: 0, count: 0 };
       symbolMap.set(t.item, { pnl: current.pnl + t.profitYen, count: current.count + 1 });
     });
@@ -431,7 +436,7 @@ export default function MonthlyCalendar() {
       topTags,
       expectationRows,
     };
-  }, [trades, year, month, weekSummaries]);
+  }, [filteredTrades, year, month, weekSummaries]);
 
   return (
     <div style={{ width: "100%" }}>
