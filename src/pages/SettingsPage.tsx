@@ -59,10 +59,14 @@ export default function SettingsPage() {
   });
 
   const [importHistory, setImportHistory] = useState<ImportHistory[]>([]);
+  const [openaiApiKey, setOpenaiApiKey] = useState<string>('');
+  const [showApiKey, setShowApiKey] = useState(false);
 
   useEffect(() => {
     loadUserAndSettings();
     loadImportHistory();
+    const savedApiKey = localStorage.getItem('openai_api_key') || '';
+    setOpenaiApiKey(savedApiKey);
   }, []);
 
   const handleThemeChange = (newTheme: string) => {
@@ -838,6 +842,66 @@ export default function SettingsPage() {
             </div>
 
             <div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>OpenAI APIキー</div>
+              <div style={{ marginBottom: 8 }}>
+                <label style={{ display: 'block', fontSize: 13, marginBottom: 8, color: 'var(--muted)' }}>
+                  APIキー（AI機能を使用するために必要です）
+                </label>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <input
+                    type={showApiKey ? 'text' : 'password'}
+                    value={openaiApiKey}
+                    onChange={(e) => setOpenaiApiKey(e.target.value)}
+                    placeholder="sk-proj-..."
+                    style={{
+                      flex: 1,
+                      padding: '8px 12px',
+                      border: '1px solid var(--line)',
+                      borderRadius: 4,
+                      fontSize: 14,
+                    }}
+                  />
+                  <button
+                    onClick={() => setShowApiKey(!showApiKey)}
+                    type="button"
+                    style={{
+                      padding: '8px 12px',
+                      border: '1px solid var(--line)',
+                      borderRadius: 4,
+                      background: 'var(--surface)',
+                      cursor: 'pointer',
+                      fontSize: 13,
+                    }}
+                  >
+                    {showApiKey ? '隠す' : '表示'}
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.setItem('openai_api_key', openaiApiKey);
+                      alert('APIキーを保存しました');
+                    }}
+                    type="button"
+                    style={{
+                      padding: '8px 16px',
+                      background: 'var(--accent)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 4,
+                      cursor: 'pointer',
+                      fontSize: 13,
+                      fontWeight: 600,
+                    }}
+                  >
+                    保存
+                  </button>
+                </div>
+                <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>
+                  APIキーは <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)' }}>OpenAI Platform</a> から取得できます
+                </div>
+              </div>
+            </div>
+
+            <div>
               <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>AI機能のON/OFF</div>
               <div style={{ display: 'grid', gap: 12 }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
@@ -868,6 +932,85 @@ export default function SettingsPage() {
                   <span style={{ fontSize: 14 }}>AIアドバイスを有効化</span>
                 </label>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="panel">
+          <div
+            style={{
+              padding: '14px 16px',
+              borderBottom: '1px solid var(--line)',
+            }}
+          >
+            <div style={{ fontSize: 18, fontWeight: 700 }}>開発者向け機能</div>
+          </div>
+
+          <div style={{ padding: 16, display: 'grid', gap: 16 }}>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 8 }}>デモデータのAI分析</div>
+              <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12 }}>
+                デモデータA、B、Cをすべて分析してコーチングシートを生成します。初回のみ実行が必要です。
+              </p>
+              <button
+                onClick={async () => {
+                  const apiKey = localStorage.getItem('openai_api_key');
+                  if (!apiKey) {
+                    alert('OpenAI APIキーを先に設定してください');
+                    return;
+                  }
+
+                  if (!confirm('デモデータA、B、Cをすべて分析します。この処理には数分かかります。続行しますか？')) {
+                    return;
+                  }
+
+                  setSaving(true);
+                  try {
+                    const { getDataRows } = await import('../services/demoData');
+                    const { callAutoReviewAI } = await import('../services/ai-coaching/callAutoReviewAI');
+                    const { setCoachingCache } = await import('../services/coaching-storage');
+
+                    for (const dataset of ['A', 'B', 'C'] as const) {
+                      const rows = await getDataRows(false, dataset);
+                      const tradesJson = rows.map(row => ({
+                        date: row.closeDate,
+                        symbol: row.symbol,
+                        side: row.profit >= 0 ? 'BUY' : 'SELL',
+                        lots: row.lots || 0.1,
+                        pnl: row.profit,
+                      }));
+
+                      const result = await callAutoReviewAI(tradesJson, {
+                        dateRange: `Dataset ${dataset}`,
+                      }, apiKey);
+
+                      setCoachingCache(dataset, result);
+                      console.log(`Dataset ${dataset} analysis completed`);
+                    }
+
+                    alert('すべてのデモデータの分析が完了しました');
+                  } catch (error) {
+                    console.error('一括生成エラー:', error);
+                    alert('エラーが発生しました。コンソールを確認してください。');
+                  } finally {
+                    setSaving(false);
+                  }
+                }}
+                disabled={saving}
+                style={{
+                  padding: '10px 20px',
+                  background: 'var(--accent)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 6,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: saving ? 'not-allowed' : 'pointer',
+                  opacity: saving ? 0.6 : 1,
+                }}
+              >
+                {saving ? 'AI分析実行中...' : 'デモデータA、B、Cを一括分析'}
+              </button>
             </div>
           </div>
         </section>

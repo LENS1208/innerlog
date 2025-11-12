@@ -11,6 +11,7 @@ import { HelpIcon } from '../components/common/HelpIcon';
 import { CoachingSheetView } from '../components/ai-coaching/CoachingSheetView';
 import { callAutoReviewAI, generateMockCoachingSheet } from '../services/ai-coaching/callAutoReviewAI';
 import type { AIResponse } from '../services/ai-coaching/types';
+import { getCoachingCache, setCoachingCache, clearCoachingCache } from '../services/coaching-storage';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
@@ -19,6 +20,7 @@ export default function AiEvaluationPage() {
   const [loading, setLoading] = useState(true);
   const [coachingData, setCoachingData] = useState<AIResponse | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -35,6 +37,18 @@ export default function AiEvaluationPage() {
       }
     })();
   }, [dataset, useDatabase, isInitialized]);
+
+  useEffect(() => {
+    if (!isInitialized || !dataset) return;
+
+    const cached = getCoachingCache(dataset);
+    if (cached) {
+      setCoachingData(cached);
+      setError(null);
+    } else {
+      setCoachingData(null);
+    }
+  }, [dataset, isInitialized]);
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
     if (dataRows.length === 0) {
@@ -169,10 +183,22 @@ export default function AiEvaluationPage() {
                 <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>
                   取引データを分析して、パーソナライズされたコーチングシートを生成します。
                 </p>
+                {error && (
+                  <p style={{ fontSize: '13px', color: 'var(--loss)', marginBottom: '16px', padding: '12px', background: 'var(--loss-bg)', borderRadius: '6px' }}>
+                    {error}
+                  </p>
+                )}
                 <button
                   onClick={async () => {
                     setGenerating(true);
+                    setError(null);
                     try {
+                      const apiKey = localStorage.getItem('openai_api_key');
+                      if (!apiKey) {
+                        setError('OpenAI APIキーが設定されていません。設定ページで設定してください。');
+                        return;
+                      }
+
                       const tradesJson = dataRows.map(row => ({
                         date: row.closeDate,
                         symbol: row.symbol,
@@ -180,10 +206,16 @@ export default function AiEvaluationPage() {
                         lots: row.lots || 0.1,
                         pnl: row.profit,
                       }));
-                      const result = generateMockCoachingSheet();
+
+                      const result = await callAutoReviewAI(tradesJson, {
+                        dateRange: `Dataset ${dataset}`,
+                      }, apiKey);
+
                       setCoachingData(result);
+                      setCoachingCache(dataset, result);
                     } catch (error) {
                       console.error('コーチング生成エラー:', error);
+                      setError('AIコーチングの生成中にエラーが発生しました。APIキーを確認してください。');
                     } finally {
                       setGenerating(false);
                     }
@@ -207,9 +239,13 @@ export default function AiEvaluationPage() {
           </section>
         ) : (
           <>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
               <button
-                onClick={() => setCoachingData(null)}
+                onClick={() => {
+                  clearCoachingCache(dataset);
+                  setCoachingData(null);
+                  setError(null);
+                }}
                 style={{
                   padding: '8px 16px',
                   fontSize: '13px',
