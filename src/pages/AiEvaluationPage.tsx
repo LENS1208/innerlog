@@ -206,15 +206,15 @@ export default function AiEvaluationPage() {
         </section>
 
 
-        <section className="panel">
-          <div className="panel-header">
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
-              AIコーチング
-              <HelpIcon text="取引データを分析し、AIがパーソナライズされたコーチングを提供します。" />
-            </h3>
-          </div>
-          <div style={{ padding: '12px 16px' }}>
-            {!coachingData ? (
+        {!coachingData ? (
+          <section className="panel">
+            <div className="panel-header">
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+                AIコーチング
+                <HelpIcon text="取引データを分析し、AIがパーソナライズされたコーチングを提供します。" />
+              </h3>
+            </div>
+            <div style={{ padding: '12px 16px' }}>
               <div style={{ textAlign: 'center', padding: '32px 16px' }}>
                 <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>
                   取引データを分析して、パーソナライズされたコーチングシートを生成します。
@@ -253,29 +253,29 @@ export default function AiEvaluationPage() {
                   {generating ? '生成中...' : 'AIコーチングを生成'}
                 </button>
               </div>
-            ) : (
-              <div>
-                <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'flex-end' }}>
-                  <button
-                    onClick={() => setCoachingData(null)}
-                    style={{
-                      padding: '8px 16px',
-                      fontSize: '13px',
-                      color: 'var(--muted)',
-                      background: 'var(--chip)',
-                      border: '1px solid var(--line)',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    再生成
-                  </button>
-                </div>
-                <CoachingSheetView sheet={coachingData.sheet} />
-              </div>
-            )}
-          </div>
-        </section>
+            </div>
+          </section>
+        ) : (
+          <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
+              <button
+                onClick={() => setCoachingData(null)}
+                style={{
+                  padding: '8px 16px',
+                  fontSize: '13px',
+                  color: 'var(--muted)',
+                  background: 'var(--chip)',
+                  border: '1px solid var(--line)',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                }}
+              >
+                再生成
+              </button>
+            </div>
+            <CoachingSheetView sheet={coachingData.sheet} />
+          </>
+        )}
       </div>
     </div>
   );
