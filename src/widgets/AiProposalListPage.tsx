@@ -216,62 +216,46 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
   });
 
   return (
-    <div style={{ display: 'flex', gap: 16, padding: 16, height: 'calc(100vh - 120px)' }}>
+    <div style={{ display: 'flex', gap: 16, padding: 16, alignItems: 'flex-start' }}>
       <div style={{ flex: '0 0 50%', display: 'flex', flexDirection: 'column' }}>
         <section
           className="card"
           style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 24,
-            padding: 28,
-            background: 'linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)',
-            border: '2px solid var(--accent)',
-            borderRadius: 20,
-            boxShadow: '0 4px 20px rgba(59, 130, 246, 0.08)',
+            gap: 32,
+            padding: 40,
+            background: 'var(--surface)',
+            border: '1px solid var(--line)',
+            borderRadius: 16,
+            minHeight: 'calc(150vh - 180px)',
           }}
         >
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '8px 16px',
-            background: 'rgba(59, 130, 246, 0.08)',
-            borderRadius: 12,
-            marginBottom: 8,
-          }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 1v6m0 6v6"></path>
-              <path d="M16.24 7.76l-2.12 2.12m-4.24 4.24l-2.12 2.12"></path>
-              <path d="M21 12h-6m-6 0H3"></path>
-              <path d="M16.24 16.24l-2.12-2.12m-4.24-4.24l-2.12-2.12"></path>
-            </svg>
-            <h3 style={{ margin: 0, fontSize: 16, fontWeight: 'bold', color: 'var(--accent)' }}>
-              新しい予想を生成
-            </h3>
-          </div>
-          <p style={{ margin: 0, fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>
+        <div>
+          <h3 style={{ margin: '0 0 12px 0', fontSize: 18, fontWeight: 600, color: '#111827' }}>
+            新しい予想を生成
+          </h3>
+          <p style={{ margin: 0, fontSize: 14, color: 'var(--muted)', lineHeight: 1.6 }}>
             相場状況やトレードアイデアを入力してAIに分析を依頼できます
           </p>
         </div>
 
-        <div style={{ display: 'grid', gap: 20 }}>
+        <div style={{ display: 'grid', gap: 24 }}>
           <div>
-            <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
+            <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
               分析内容・トレードアイデア
             </label>
             <textarea
               className="btn"
               style={{
                 width: '100%',
-                minHeight: 90,
+                minHeight: 120,
                 boxSizing: 'border-box',
                 resize: 'vertical',
                 fontFamily: 'inherit',
                 fontSize: 14,
                 lineHeight: 1.6,
-                padding: 12,
+                padding: 14,
               }}
               placeholder="例）USDJPY、イベント控えでボラが低い。147.00近辺でレジスタンス確認。戻り売りのシナリオを検討したい。"
               value={prompt}
@@ -280,58 +264,76 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
                 銘柄
               </label>
               <select
                 className="btn"
                 value={pair}
                 onChange={(e) => setPair(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', padding: 12 }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  padding: '12px 14px',
+                  fontSize: 14,
+                  color: '#111827',
+                }}
                 disabled={generating}
               >
-                <option value="" disabled>選択してください</option>
-                <option>USD/JPY</option>
-                <option>EUR/USD</option>
-                <option>GBP/JPY</option>
-                <option>EUR/JPY</option>
-                <option>GBP/USD</option>
+                <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
+                <option style={{ color: '#111827' }}>USD/JPY</option>
+                <option style={{ color: '#111827' }}>EUR/USD</option>
+                <option style={{ color: '#111827' }}>GBP/JPY</option>
+                <option style={{ color: '#111827' }}>EUR/JPY</option>
+                <option style={{ color: '#111827' }}>GBP/USD</option>
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
                 分析足
               </label>
               <select
                 className="btn"
                 value={timeframe}
                 onChange={(e) => setTimeframe(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', padding: 12 }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  padding: '12px 14px',
+                  fontSize: 14,
+                  color: '#111827',
+                }}
                 disabled={generating}
               >
-                <option value="" disabled>選択してください</option>
-                <option>1H</option>
-                <option>4H</option>
-                <option>1D</option>
+                <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
+                <option style={{ color: '#111827' }}>1H</option>
+                <option style={{ color: '#111827' }}>4H</option>
+                <option style={{ color: '#111827' }}>1D</option>
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#111827', marginBottom: 10 }}>
                 予想期間
               </label>
               <select
                 className="btn"
                 value={period}
                 onChange={(e) => setPeriod(e.target.value)}
-                style={{ width: '100%', boxSizing: 'border-box', padding: 12 }}
+                style={{
+                  width: '100%',
+                  boxSizing: 'border-box',
+                  padding: '12px 14px',
+                  fontSize: 14,
+                  color: '#111827',
+                }}
                 disabled={generating}
               >
-                <option value="" disabled>選択してください</option>
-                <option value="短期">短期（24時間）</option>
-                <option value="中期">中期（1週間）</option>
-                <option value="長期">長期（1ヶ月）</option>
+                <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
+                <option value="短期" style={{ color: '#111827' }}>短期（24時間）</option>
+                <option value="中期" style={{ color: '#111827' }}>中期（1週間）</option>
+                <option value="長期" style={{ color: '#111827' }}>長期（1ヶ月）</option>
               </select>
             </div>
           </div>
@@ -343,46 +345,19 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           disabled={generating}
           style={{
             width: '100%',
-            padding: '16px 24px',
-            marginTop: 8,
+            padding: '14px 24px',
             background: generating ? 'var(--muted)' : 'var(--accent)',
             color: '#fff',
-            fontWeight: 700,
+            fontWeight: 600,
             fontSize: 15,
-            borderRadius: 12,
-            boxShadow: generating ? 'none' : '0 2px 8px rgba(59, 130, 246, 0.3)',
+            borderRadius: 8,
+            border: 'none',
+            cursor: generating ? 'not-allowed' : 'pointer',
             transition: 'all 0.2s',
           }}
         >
-          {generating ? (
-            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <span style={{
-                width: 16,
-                height: 16,
-                border: '2px solid rgba(255,255,255,0.3)',
-                borderTopColor: '#fff',
-                borderRadius: '50%',
-                animation: 'spin 0.8s linear infinite'
-              }}></span>
-              生成中...
-            </span>
-          ) : (
-            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 1v6m0 6v6"></path>
-                <path d="M16.24 7.76l-2.12 2.12m-4.24 4.24l-2.12 2.12"></path>
-                <path d="M21 12h-6m-6 0H3"></path>
-                <path d="M16.24 16.24l-2.12-2.12m-4.24-4.24l-2.12-2.12"></path>
-              </svg>
-              AIに予想を生成してもらう
-            </span>
-          )}
+          {generating ? '生成中...' : 'AIに予想を生成してもらう'}
         </button>
-        <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
       </section>
       </div>
 
