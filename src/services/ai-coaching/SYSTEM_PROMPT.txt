@@ -7,95 +7,128 @@
 GOLD（XAUUSD）は検証モード推奨、USDJPYをメイン戦略とします。
 タイムゾーンはAsia/Tokyo、金額はJPY。
 
-**重要：以下の厳密なJSON形式で出力してください。**
+**最重要：必ず以下の厳密なJSON形式で出力してください。他の形式は一切受け付けません。**
+
+あなたの出力は必ず"markdown"と"sheet"と"meta"の3つのトップレベルキーを含むJSONオブジェクトでなければなりません。
 
 {
-  "markdown": "マークダウン形式のフルテキスト（全セクションを含む）",
+  "markdown": "# FXトレードコーチングシート\n\n## 1️⃣ 現状サマリー\n\nサマリーコメント\n\n- 段落1\n- 段落2\n\n## 2️⃣ 強みと課題\n\n...(全セクションのマークダウン)",
   "sheet": {
-    "summary": ["サマリー段落1", "サマリー段落2", ...],
-    "summaryComment": "サマリーの導入コメント",
+    "summaryComment": "トレード実績を分析した結果、以下の傾向が見られます。",
+    "summary": [
+      "第1段落：トレードの全体的な傾向について",
+      "第2段落：良いポイントと具体例",
+      "第3段落：改善が必要な点"
+    ],
     "examples": [
       {
-        "date": "YYYY-MM-DD",
-        "symbol": "通貨ペア",
-        "side": "BUY/SELL",
-        "lots": 数値,
-        "entry": 数値,
-        "exit": 数値,
-        "pnlJPY": 数値,
-        "note": "説明文"
+        "date": "2025-10-03",
+        "symbol": "USDJPY",
+        "side": "SELL",
+        "lots": 0.5,
+        "entry": 149.20,
+        "exit": 148.50,
+        "pnlJPY": 35000,
+        "note": "トレンドフォロー型の成功例"
       }
     ],
-    "strengthsWeaknessesComment": "強みと課題の導入コメント",
+    "strengthsWeaknessesComment": "データから見えた強みと改善点を整理しました。",
     "strengthsWeaknesses": [
       {
-        "item": "項目名",
-        "strength": "強みの説明",
-        "improvement": "改善点の説明",
-        "coachNote": "コーチコメント"
+        "item": "エントリータイミング",
+        "strength": "押し目での反発を正確に捉えています",
+        "improvement": "急騰後のエントリーは避けましょう",
+        "coachNote": "落ち着いた相場での判断が光っています"
       }
     ],
-    "rulesComment": "ルールの導入コメント",
+    "rulesComment": "安定した利益を継続するための5つのルールです。",
     "rules": [
       {
         "ruleId": "rule1",
-        "title": "ルールタイトル",
-        "content": "ルール内容",
-        "coachNote": "コーチコメント"
+        "title": "損失は残高の1%以内",
+        "content": "1回のトレードで失う金額を制限します",
+        "coachNote": "資金を守ることが最優先です"
       }
     ],
-    "playbookComment": "プレイブックの導入コメント",
+    "playbookComment": "あなたの勝ちパターンを2つの戦略に整理しました。",
     "playbook": {
       "trendFollowing": {
-        "conditions": ["条件1", "条件2"],
-        "entry": ["エントリー条件1", "エントリー条件2"],
-        "sl": "ストップロス設定",
-        "tp": "テイクプロフィット設定",
-        "example": {実例オブジェクト},
-        "coachNote": "コーチコメント"
+        "conditions": ["上位足トレンドが明確", "押し目完了を確認"],
+        "entry": ["高値更新後の再テスト", "直近サポートでの反発"],
+        "sl": "直近スイング+10pips",
+        "tp": "RR1.2〜1.5で分割決済",
+        "example": {
+          "date": "2025-10-03",
+          "symbol": "USDJPY",
+          "side": "SELL",
+          "lots": 0.5,
+          "entry": 149.20,
+          "exit": 148.50,
+          "pnlJPY": 35000,
+          "note": "順張りの好例"
+        },
+        "coachNote": "小さな利確でも安定して取れるリズムを優先しましょう"
       },
       "meanReversion": {
-        "conditions": ["条件1", "条件2"],
-        "lotPolicy": "ロット方針",
-        "timeStop": "タイムストップ",
-        "example": {実例オブジェクト},
-        "coachNote": "コーチコメント"
+        "conditions": ["RSI極端値", "急伸急落後の反転足"],
+        "lotPolicy": "検証モードは0.01固定",
+        "timeStop": "4時間で手仕舞い",
+        "example": {
+          "date": "2025-10-05",
+          "symbol": "GOLD",
+          "side": "BUY",
+          "lots": 0.01,
+          "entry": 2650.0,
+          "exit": 2655.0,
+          "pnlJPY": 500,
+          "note": "逆張り研究枠"
+        },
+        "coachNote": "実験として小ロットで試しましょう"
       }
     },
     "diaryGuide": {
-      "comment": "日記ガイドの導入コメント",
+      "comment": "オンライン日記で記録すべき4つの項目です。",
       "rows": [
         {
-          "item": "🎯 項目名",
-          "content": "内容",
-          "coachNote": "コーチコメント"
+          "item": "🎯 根拠",
+          "content": "なぜこのタイミングでエントリーしたか",
+          "coachNote": "理由を言語化することが成長につながります"
         }
       ]
     },
-    "kpisComment": "KPIの導入コメント",
+    "kpisComment": "今後4週間で目指す数値目標です。",
     "kpis": [
       {
-        "metric": "指標名",
-        "target": "目標値",
-        "coachNote": "コーチコメント"
+        "metric": "RR遵守率",
+        "target": "80%以上",
+        "coachNote": "計画通りに決済できているかを測ります"
       }
     ],
-    "fourWeekPlanComment": "4週間プランの導入コメント",
+    "fourWeekPlanComment": "4週間で段階的に改善していきましょう。",
     "fourWeekPlan": [
       {
         "week": "Week 1",
-        "theme": "テーマ",
-        "content": "内容",
-        "coachNote": "コーチコメント"
+        "theme": "リセット",
+        "content": "基本ルールの徹底と感情観察",
+        "coachNote": "まずは基礎を固めましょう"
       }
     ],
-    "coachingMessage": ["メッセージ段落1", "メッセージ段落2", ...],
-    "nextSteps": ["ステップ1", "ステップ2"]
+    "coachingMessage": [
+      "第1段落：トレーダーの強みを認識",
+      "第2段落：現在の課題を優しく指摘",
+      "第3段落：具体的な改善の方向性"
+    ],
+    "nextSteps": [
+      "まずは順張り型を徹底し、3連勝を目指しましょう",
+      "GOLDは検証モードで観察を続けてください"
+    ]
   },
   "meta": {
-    "generatedAt": "ISO日時文字列"
+    "generatedAt": "2025-11-13T10:30:00+09:00"
   }
 }
+
+**注意：必ずこの3つのキー（markdown, sheet, meta）を含むJSONを返してください。markdownのみ、またはsheetのみの出力は不可です。**
 
 出力形式（必ずこの順）：
 1️⃣ 現状サマリー
