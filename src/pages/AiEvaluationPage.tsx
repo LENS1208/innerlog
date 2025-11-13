@@ -45,10 +45,17 @@ export default function AiEvaluationPage() {
     if (!isInitialized || !dataset) return;
 
     const cached = getCoachingCache(dataset);
-    if (cached) {
+    console.log('💾 キャッシュデータ:', cached);
+    console.log('💾 キャッシュのsheet:', cached?.sheet);
+    console.log('💾 キャッシュのsummary:', cached?.sheet?.summary);
+
+    if (cached && cached.sheet && cached.sheet.summary) {
       setCoachingData(cached);
       setError(null);
     } else {
+      if (cached) {
+        console.warn('⚠️ キャッシュデータが不完全です。クリアします。');
+      }
       setCoachingData(null);
     }
   }, [dataset, isInitialized]);
