@@ -44,10 +44,16 @@ function computeDashboard(trades: DashTrade[]) {
 
   const expectancyJPY = winRate * avgProfit - (1 - winRate) * avgLoss
 
+  const sortedTrades = [...trades].sort((a, b) => {
+    const dateA = new Date(a.openTime || a.datetime || 0).getTime()
+    const dateB = new Date(b.openTime || b.datetime || 0).getTime()
+    return dateA - dateB
+  })
+
   let equity = 0
   let peak = 0
   let maxDD = 0
-  trades.forEach(t => {
+  sortedTrades.forEach(t => {
     equity += getProfit(t)
     if (equity > peak) peak = equity
     const dd = peak - equity
