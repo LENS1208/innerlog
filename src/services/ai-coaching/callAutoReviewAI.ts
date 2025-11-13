@@ -16,11 +16,17 @@ export async function callAutoReviewAI(
     focusHint: hints?.focus,
   });
 
+  console.log('📊 トレードデータ件数:', Array.isArray(tradesJson) ? tradesJson.length : 'unknown');
+  console.log('📝 プロンプト長:', userPrompt.length, '文字');
+  console.log('🎯 システムプロンプト長:', SYSTEM_TXT.length, '文字');
+
   try {
     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
     if (!apiKey) {
       throw new Error('OpenAI API key not configured');
     }
+
+    console.log('🔑 APIキー確認:', apiKey.substring(0, 10) + '...');
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -39,18 +45,26 @@ export async function callAutoReviewAI(
       }),
     });
 
+    console.log('📡 OpenAI レスポンスステータス:', response.status);
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(`AI API error: ${response.status} - ${JSON.stringify(errorData)}`);
     }
 
     const data = await response.json();
+    console.log('📦 OpenAI レスポンスデータ:', data);
+
     const content = data.choices?.[0]?.message?.content;
     if (!content) {
       throw new Error('No response from OpenAI');
     }
 
+    console.log('📄 生成されたコンテンツ長:', content.length, '文字');
+
     const result: AIResponse = JSON.parse(content);
+    console.log('✅ パース成功 - セクション数:', Object.keys(result.sheet || {}).length);
+
     return result;
   } catch (error) {
     console.error('AI呼び出しエラー:', error);
