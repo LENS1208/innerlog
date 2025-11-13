@@ -19,9 +19,32 @@ export function buildPrompt(input: PromptInput): string {
 - 期間メモ：${input.dateRangeHint ?? '（指定なし）'}
 - 重点観点：${input.focusHint ?? 'ロット管理と逆張り制御'}
 
+**重要：入力データの構造**
+tradesJson.trades配列の各要素には以下のフィールドがあります：
+- ticket: チケット番号
+- closeDate: 決済日時（ISO 8601形式）
+- symbol: 通貨ペア
+- side: 売買方向（"BUY" または "SELL"）
+- lots: ロット数
+- openPrice: 建値
+- closePrice: 決済値
+- profit: 損益（円）
+- pips: pips値
+
+**出力時には、必ず実際のデータの値を使用してください。ダミーデータを生成しないでください。**
+
 出力要件：
 - 実例：勝ち×2／負け×2／ロット過大または逆張り×1以上で、合計5〜6のトレード例を必ず含める
-- 実例は「日付・通貨ペア・方向・サイズ・価格→価格・損益（円）」まで具体化
+- 実例は実際のtradesJson.trades配列から選び、以下のマッピングで出力：
+  * date ← closeDate
+  * symbol ← symbol
+  * side ← side
+  * lots ← lots
+  * entry ← openPrice
+  * exit ← closePrice
+  * pnlJPY ← profit
+  * pips ← pips
+  * ticket ← ticket
 - 強み→具体例→改善の一言 の順
 - 口調：優しいコーチ（です・ます調）、「コメント」語は使わない
 - 8セクション固定順＋最後に次のステップ提案（1〜2行）
@@ -35,13 +58,15 @@ export function buildPrompt(input: PromptInput): string {
     "summary": ["サマリー段落1", "サマリー段落2", "サマリー段落3"],
     "examples": [
       {
-        "date": "2025-10-03",
+        "date": "2025-10-03T12:30:00Z",
         "symbol": "USDJPY",
         "side": "SELL",
         "lots": 0.5,
         "entry": 149.20,
         "exit": 148.50,
         "pnlJPY": 35000,
+        "pips": 70.0,
+        "ticket": "123456",
         "note": "順張り成功例"
       }
     ],
@@ -71,13 +96,15 @@ export function buildPrompt(input: PromptInput): string {
         "sl": "損切りルール",
         "tp": "利確ルール",
         "example": {
-          "date": "2025-10-03",
+          "date": "2025-10-03T12:30:00Z",
           "symbol": "USDJPY",
           "side": "SELL",
           "lots": 0.5,
           "entry": 149.20,
           "exit": 148.50,
           "pnlJPY": 35000,
+          "pips": 70.0,
+          "ticket": "123456",
           "note": "順張り好例"
         },
         "coachNote": "順張りについてのアドバイス"
@@ -87,13 +114,15 @@ export function buildPrompt(input: PromptInput): string {
         "lotPolicy": "ロット管理",
         "timeStop": "時間制限",
         "example": {
-          "date": "2025-10-05",
+          "date": "2025-10-05T15:00:00Z",
           "symbol": "GOLD",
           "side": "BUY",
           "lots": 0.01,
           "entry": 2650.0,
           "exit": 2655.0,
           "pnlJPY": 500,
+          "pips": 5.0,
+          "ticket": "123457",
           "note": "逆張り研究"
         },
         "coachNote": "逆張りについてのアドバイス"
