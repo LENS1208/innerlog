@@ -2,10 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import type { TradeRow, TradeMetrics } from '../types/evaluation.types';
 import { scoreFromMetrics } from '../utils/evaluation-score';
 import OverallScore from '../components/evaluation/OverallScore';
-import RadarChart from '../components/evaluation/RadarChart';
-import { EvaluationRadarChart } from '../components/evaluation/EvaluationRadarChart';
-import { ScoreBreakdown } from '../components/evaluation/ScoreBreakdown';
-import Sparkline from '../components/evaluation/Sparkline';
 import { getDataMetrics, getDataRows, INIT_CAPITAL } from '../services/demoData';
 import { useDataset } from '../lib/dataset.context';
 import { computeMetrics } from '../utils/evaluation-metrics';
@@ -402,24 +398,6 @@ export default function AiEvaluationPage() {
                   />
                 ) : (
                   <OverallScore score={scoreData.overall} rank={scoreData.rank} />
-                )
-              }
-              radarComponent={
-                coachingData.sheet.evaluationScore ? (
-                  <div>
-                    <EvaluationRadarChart parts={[
-                      { label: 'リスク管理', value: coachingData.sheet.evaluationScore.riskManagement },
-                      { label: 'エントリー', value: coachingData.sheet.evaluationScore.entryTiming },
-                      { label: '出口戦略', value: coachingData.sheet.evaluationScore.exitStrategy },
-                      { label: '感情制御', value: coachingData.sheet.evaluationScore.emotionalControl },
-                      { label: '一貫性', value: coachingData.sheet.evaluationScore.consistency },
-                    ]} />
-                    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--line)' }}>
-                      <ScoreBreakdown score={coachingData.sheet.evaluationScore} />
-                    </div>
-                  </div>
-                ) : (
-                  <RadarChart parts={scoreData.parts} />
                 )
               }
             />

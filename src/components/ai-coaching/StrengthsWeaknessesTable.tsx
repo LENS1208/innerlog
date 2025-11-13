@@ -7,13 +7,27 @@ interface StrengthsWeaknessesTableProps {
 }
 
 export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWeaknessesTableProps) {
-  const scoreMap: Record<string, number | undefined> = {
-    'エントリータイミング': evaluationScore?.entryTiming,
-    'リスク管理': evaluationScore?.riskManagement,
-    '損切り・利確': evaluationScore?.exitStrategy,
-    '感情コントロール': evaluationScore?.emotionalControl,
-    '一貫性・再現性': evaluationScore?.consistency,
-  };
+  const fixedItems = [
+    { key: 'entryTiming', label: 'エントリータイミング' },
+    { key: 'riskManagement', label: 'リスク管理' },
+    { key: 'exitStrategy', label: '損切り・利確' },
+    { key: 'emotionalControl', label: '感情コントロール' },
+    { key: 'consistency', label: '一貫性・再現性' },
+  ];
+
+  const rowMap = new Map(rows.map(r => [r.item, r]));
+
+  const displayRows = fixedItems.map(({ key, label }) => {
+    const existingRow = rowMap.get(label);
+    const score = evaluationScore ? evaluationScore[key as keyof typeof evaluationScore] as number : undefined;
+
+    return {
+      item: label,
+      score,
+      strength: existingRow?.strength || 'データを取得できませんでした',
+      improvement: existingRow?.improvement || 'データを取得できませんでした',
+    };
+  });
 
   return (
     <div style={{ overflowX: 'auto' }}>
@@ -35,49 +49,46 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, i) => {
-            const score = scoreMap[row.item];
-            return (
-              <tr key={i} style={{ borderBottom: '1px solid var(--line)' }}>
-                <td style={{ padding: '10px', fontWeight: 600 }}>{row.item}</td>
-                <td style={{ padding: '10px', textAlign: 'center' }}>
-                  {score !== undefined ? (
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        padding: '4px 12px',
-                        borderRadius: '6px',
-                        fontWeight: 600,
-                        fontSize: '14px',
-                        background:
-                          score >= 80
-                            ? 'rgba(34, 197, 94, 0.1)'
-                            : score >= 60
-                            ? 'rgba(59, 130, 246, 0.1)'
-                            : score >= 40
-                            ? 'rgba(251, 191, 36, 0.1)'
-                            : 'rgba(239, 68, 68, 0.1)',
-                        color:
-                          score >= 80
-                            ? '#22c55e'
-                            : score >= 60
-                            ? '#3b82f6'
-                            : score >= 40
-                            ? '#fbbf24'
-                            : '#ef4444',
-                      }}
-                    >
-                      {score}
-                    </span>
-                  ) : (
-                    <span style={{ color: 'var(--muted)' }}>-</span>
-                  )}
-                </td>
-                <td style={{ padding: '10px' }}>{row.strength}</td>
-                <td style={{ padding: '10px', color: 'var(--accent)' }}>{row.improvement}</td>
-              </tr>
-            );
-          })}
+          {displayRows.map((row, i) => (
+            <tr key={i} style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '10px', fontWeight: 600 }}>{row.item}</td>
+              <td style={{ padding: '10px', textAlign: 'center' }}>
+                {row.score !== undefined ? (
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      padding: '4px 12px',
+                      borderRadius: '6px',
+                      fontWeight: 600,
+                      fontSize: '14px',
+                      background:
+                        row.score >= 80
+                          ? 'rgba(34, 197, 94, 0.1)'
+                          : row.score >= 60
+                          ? 'rgba(59, 130, 246, 0.1)'
+                          : row.score >= 40
+                          ? 'rgba(251, 191, 36, 0.1)'
+                          : 'rgba(239, 68, 68, 0.1)',
+                      color:
+                        row.score >= 80
+                          ? '#22c55e'
+                          : row.score >= 60
+                          ? '#3b82f6'
+                          : row.score >= 40
+                          ? '#fbbf24'
+                          : '#ef4444',
+                    }}
+                  >
+                    {row.score}
+                  </span>
+                ) : (
+                  <span style={{ color: 'var(--muted)' }}>-</span>
+                )}
+              </td>
+              <td style={{ padding: '10px' }}>{row.strength}</td>
+              <td style={{ padding: '10px', color: 'var(--accent)' }}>{row.improvement}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
