@@ -60,6 +60,16 @@ export type DiaryGuideRow = {
   coachNote: string;
 };
 
+export type EvaluationScore = {
+  overall: number;
+  riskManagement: number;
+  entryTiming: number;
+  exitStrategy: number;
+  emotionalControl: number;
+  consistency: number;
+  explanation: string;
+};
+
 export type CoachingSheet = {
   summary: string[];
   summaryComment?: string;
@@ -77,6 +87,7 @@ export type CoachingSheet = {
   fourWeekPlanComment?: string;
   coachingMessage: string[];
   nextSteps: string[];
+  evaluationScore?: EvaluationScore;
 };
 
 export type AIResponse = {

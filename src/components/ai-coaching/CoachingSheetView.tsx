@@ -47,6 +47,14 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         )}
       </div>
 
+      {sheet.evaluationScore && sheet.evaluationScore.explanation && (
+        <Section title="評価について">
+          <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.6, color: 'var(--ink)' }}>
+            {sheet.evaluationScore.explanation}
+          </p>
+        </Section>
+      )}
+
       {sheet.examples && sheet.examples.length > 0 && (
         <Section title="あなたの注目トレード">
           <div

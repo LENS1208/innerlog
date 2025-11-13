@@ -203,24 +203,67 @@ export default function AiEvaluationPage() {
                     setGenerating(true);
                     setError(null);
                     try {
-                      const tradesJson = dataRows.map(row => ({
-                        ticket: row.ticket,
-                        openDate: row.openDate,
-                        closeDate: row.closeDate,
-                        symbol: row.symbol,
-                        side: row.side,
-                        lots: row.lots,
-                        openPrice: row.openPrice,
-                        closePrice: row.closePrice,
-                        sl: row.sl,
-                        tp: row.tp,
-                        profit: row.profit,
-                        pips: row.pips,
-                        swap: row.swap,
-                        commission: row.commission,
-                      }));
+                      const winTrades = dataRows.filter(r => (r.profit || 0) > 0);
+                      const lossTrades = dataRows.filter(r => (r.profit || 0) < 0);
+                      const avgWin = winTrades.length > 0 ? winTrades.reduce((s, r) => s + (r.profit || 0), 0) / winTrades.length : 0;
+                      const avgLoss = lossTrades.length > 0 ? Math.abs(lossTrades.reduce((s, r) => s + (r.profit || 0), 0) / lossTrades.length) : 0;
 
-                      console.log('🎯 送信するトレードデータ:', tradesJson.slice(0, 3));
+                      const symbolStats = dataRows.reduce((acc, row) => {
+                        const sym = row.symbol || 'UNKNOWN';
+                        if (!acc[sym]) acc[sym] = { trades: 0, wins: 0, pnl: 0 };
+                        acc[sym].trades++;
+                        if ((row.profit || 0) > 0) acc[sym].wins++;
+                        acc[sym].pnl += row.profit || 0;
+                        return acc;
+                      }, {} as Record<string, { trades: number; wins: number; pnl: number }>);
+
+                      const setupStats = dataRows.reduce((acc, row) => {
+                        const setup = row.setup || 'unknown';
+                        if (!acc[setup]) acc[setup] = { trades: 0, wins: 0, pnl: 0 };
+                        acc[setup].trades++;
+                        if ((row.profit || 0) > 0) acc[setup].wins++;
+                        acc[setup].pnl += row.profit || 0;
+                        return acc;
+                      }, {} as Record<string, { trades: number; wins: number; pnl: number }>);
+
+                      const tradesJson = {
+                        trades: dataRows.map(row => ({
+                          ticket: row.ticket,
+                          openDate: row.openDate,
+                          closeDate: row.closeDate,
+                          symbol: row.symbol,
+                          side: row.side,
+                          lots: row.lots,
+                          openPrice: row.openPrice,
+                          closePrice: row.closePrice,
+                          sl: row.sl,
+                          tp: row.tp,
+                          profit: row.profit,
+                          pips: row.pips,
+                          swap: row.swap,
+                          commission: row.commission,
+                          setup: row.setup,
+                        })),
+                        summary: {
+                          totalTrades: dataRows.length,
+                          winRate: baseMetrics.winrate,
+                          profitFactor: baseMetrics.pf,
+                          totalPnL: dataRows.reduce((s, r) => s + (r.profit || 0), 0),
+                          totalPips: baseMetrics.pipsSum,
+                          maxDrawdown: baseMetrics.maxdd,
+                          avgWin,
+                          avgLoss,
+                          winLossRatio: avgLoss > 0 ? avgWin / avgLoss : 0,
+                          largestWin: Math.max(...dataRows.map(r => r.profit || 0)),
+                          largestLoss: Math.min(...dataRows.map(r => r.profit || 0)),
+                        },
+                        bySymbol: symbolStats,
+                        bySetup: setupStats,
+                      };
+
+                      console.log('🎯 送信するトレードデータ（サマリー）:', tradesJson.summary);
+                      console.log('🎯 送信するトレードデータ（通貨ペア別）:', tradesJson.bySymbol);
+                      console.log('🎯 送信するトレードデータ（セットアップ別）:', tradesJson.bySetup);
 
                       const result = await callAutoReviewAI(tradesJson, {
                         dateRange: `Dataset ${dataset}`,
@@ -280,8 +323,34 @@ export default function AiEvaluationPage() {
             </div>
             <CoachingSheetView
               sheet={coachingData.sheet}
-              scoreComponent={<OverallScore score={scoreData.overall} rank={scoreData.rank} />}
-              radarComponent={<RadarChart parts={scoreData.parts} />}
+              scoreComponent={
+                coachingData.sheet.evaluationScore ? (
+                  <OverallScore
+                    score={coachingData.sheet.evaluationScore.overall}
+                    rank={
+                      coachingData.sheet.evaluationScore.overall >= 80 ? 'S' :
+                      coachingData.sheet.evaluationScore.overall >= 70 ? 'A' :
+                      coachingData.sheet.evaluationScore.overall >= 60 ? 'B' :
+                      coachingData.sheet.evaluationScore.overall >= 50 ? 'C' : 'D'
+                    }
+                  />
+                ) : (
+                  <OverallScore score={scoreData.overall} rank={scoreData.rank} />
+                )
+              }
+              radarComponent={
+                coachingData.sheet.evaluationScore ? (
+                  <RadarChart parts={[
+                    { label: 'リスク管理', value: coachingData.sheet.evaluationScore.riskManagement },
+                    { label: 'エントリー', value: coachingData.sheet.evaluationScore.entryTiming },
+                    { label: '出口戦略', value: coachingData.sheet.evaluationScore.exitStrategy },
+                    { label: '感情制御', value: coachingData.sheet.evaluationScore.emotionalControl },
+                    { label: '一貫性', value: coachingData.sheet.evaluationScore.consistency },
+                  ]} />
+                ) : (
+                  <RadarChart parts={scoreData.parts} />
+                )
+              }
             />
           </>
         ) : (

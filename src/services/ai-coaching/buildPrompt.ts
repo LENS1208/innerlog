@@ -127,7 +127,16 @@ export function buildPrompt(input: PromptInput): string {
       }
     ],
     "coachingMessage": ["メッセージ段落1", "メッセージ段落2", "メッセージ段落3"],
-    "nextSteps": ["次のステップ1", "次のステップ2"]
+    "nextSteps": ["次のステップ1", "次のステップ2"],
+    "evaluationScore": {
+      "overall": 75,
+      "riskManagement": 70,
+      "entryTiming": 80,
+      "exitStrategy": 65,
+      "emotionalControl": 75,
+      "consistency": 80,
+      "explanation": "各項目の評価根拠を簡潔に説明"
+    }
   },
   "meta": {
     "generatedAt": "2025-11-13T10:30:00+09:00"

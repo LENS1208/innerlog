@@ -372,6 +372,15 @@ export function generateMockCoachingSheet(): AIResponse {
         '来週1週間は「RR1.2固定＋順張りのみ」で運用し、記録を5件残しましょう',
         '次回の分析では、その5件をもとに"待つ力"の成長度を一緒に見ていきます',
       ],
+      evaluationScore: {
+        overall: 72,
+        riskManagement: 65,
+        entryTiming: 78,
+        exitStrategy: 68,
+        emotionalControl: 70,
+        consistency: 79,
+        explanation: 'エントリータイミングと一貫性は良好です。リスク管理と感情制御の改善により、総合スコアは大きく向上する見込みです。',
+      },
     },
     meta: {
       model: 'mock',
