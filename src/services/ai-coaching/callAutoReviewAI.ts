@@ -61,9 +61,18 @@ export async function callAutoReviewAI(
     }
 
     console.log('📄 生成されたコンテンツ長:', content.length, '文字');
+    console.log('📄 生成されたコンテンツ（最初の500文字）:', content.substring(0, 500));
 
     const result: AIResponse = JSON.parse(content);
-    console.log('✅ パース成功 - セクション数:', Object.keys(result.sheet || {}).length);
+    console.log('✅ パース成功');
+    console.log('📦 result:', result);
+    console.log('📦 result.sheet:', result.sheet);
+    console.log('📦 result.sheet?.summary:', result.sheet?.summary);
+
+    if (!result.sheet || !result.sheet.summary) {
+      console.error('⚠️ AIレスポンスの構造が不正です');
+      throw new Error('Invalid AI response structure');
+    }
 
     return result;
   } catch (error) {
