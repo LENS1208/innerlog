@@ -29,9 +29,12 @@ export default function AiEvaluationPage() {
     (async () => {
       try {
         const rows = await getDataRows(useDatabase, dataset);
+        console.log('📥 取得したトレード件数:', rows.length);
+        console.log('📥 最初のトレードデータサンプル:', rows[0]);
         setDataRows(rows);
       } catch (err) {
         console.error('データ取得エラー:', err);
+        setError('データの取得に失敗しました');
       } finally {
         setLoading(false);
       }
@@ -215,6 +218,10 @@ export default function AiEvaluationPage() {
                       const result = await callAutoReviewAI(tradesJson, {
                         dateRange: `Dataset ${dataset}`,
                       });
+
+                      console.log('📦 AI結果:', result);
+                      console.log('📦 AI結果のsheet:', result?.sheet);
+                      console.log('📦 AI結果のsummary:', result?.sheet?.summary);
 
                       setCoachingData(result);
                       setCoachingCache(dataset, result);
