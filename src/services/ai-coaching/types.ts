@@ -6,6 +6,7 @@ export type TradeExample = {
   entry: number;
   exit: number;
   pnlJPY: number;
+  pips?: number;
   note?: string;
 };
 

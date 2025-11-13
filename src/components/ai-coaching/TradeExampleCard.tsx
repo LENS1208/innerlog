@@ -1,5 +1,6 @@
 import React from 'react';
 import type { TradeExample } from '../../services/ai-coaching/types';
+import { fmt } from '../../lib/formatters';
 
 interface TradeExampleCardProps {
   ex: TradeExample;
@@ -11,7 +12,12 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
-    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    const hour = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${year}年${month}月${day}日 ${hour}:${min}`;
   };
 
   const formatSide = (side: string) => {
@@ -75,13 +81,16 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
     iconColor = 'var(--loss)';
   }
 
+  const pnlFormatted = fmt.yen_signed_colored(ex.pnlJPY);
+  const pipsFormatted = ex.pips != null ? fmt.pips_signed_colored(ex.pips) : { text: '—', cls: '' };
+
   return (
     <div
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--line)',
         borderRadius: '12px',
-        padding: '12px',
+        padding: '16px',
         position: 'relative',
       }}
     >
@@ -89,8 +98,8 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
         <div
           style={{
             position: 'absolute',
-            top: '8px',
-            left: '8px',
+            top: '12px',
+            left: '12px',
             width: '24px',
             height: '24px',
             borderRadius: '50%',
@@ -106,37 +115,60 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
           {iconSymbol}
         </div>
       )}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '8px',
+
+      {note && (
+        <div style={{
+          fontSize: '13px',
+          color: 'var(--ink)',
+          marginBottom: '12px',
           paddingLeft: iconType ? '32px' : '0',
-        }}
-      >
-        <div style={{ fontWeight: 600, fontSize: '14px' }}>
-          {formatDate(ex.date)} · {ex.symbol} · {formatSide(ex.side)}
+          fontWeight: 500
+        }}>
+          {note}
         </div>
-        <div
-          style={{
-            fontSize: '12px',
-            padding: '4px 8px',
-            borderRadius: '12px',
-            background: isProfit ? 'var(--gain-bg)' : 'var(--loss-bg)',
-            color: isProfit ? 'var(--gain)' : 'var(--loss)',
-            fontWeight: 600,
-          }}
-        >
-          {ex.pnlJPY.toLocaleString('ja-JP')} 円
-        </div>
-      </div>
-      <div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px', paddingLeft: iconType ? '32px' : '0' }}>
-        {ex.lots} lot / {ex.entry} → {ex.exit}
-      </div>
-      {ex.note && (
-        <p style={{ fontSize: '12px', margin: '8px 0 0 0', color: 'var(--ink)', paddingLeft: iconType ? '32px' : '0' }}>{ex.note}</p>
       )}
+
+      <div style={{
+        fontSize: '12px',
+        paddingLeft: iconType ? '32px' : '0'
+      }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <tbody>
+            <tr style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)', width: '30%' }}>決済日時</td>
+              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{formatDate(ex.date)}</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>銘柄</td>
+              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.symbol}</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>方向</td>
+              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{formatSide(ex.side)}</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>損益</td>
+              <td style={{ padding: '6px 0' }} className={pnlFormatted.cls}>{pnlFormatted.text}</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>pips</td>
+              <td style={{ padding: '6px 0' }} className={pipsFormatted.cls}>{pipsFormatted.text}</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>ロット数</td>
+              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.lots.toFixed(2)}</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--line)' }}>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>建値</td>
+              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.entry}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>決済</td>
+              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.exit}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
