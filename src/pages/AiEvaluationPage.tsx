@@ -226,6 +226,60 @@ export default function AiEvaluationPage() {
                         return acc;
                       }, {} as Record<string, { trades: number; wins: number; pnl: number }>);
 
+                      const timeStats = dataRows.reduce((acc, row) => {
+                        if (!row.openDate) return acc;
+                        const dt = new Date(row.openDate);
+                        const hour = dt.getHours();
+                        const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][dt.getDay()];
+
+                        if (!acc.byHour[hour]) acc.byHour[hour] = { trades: 0, wins: 0, pnl: 0 };
+                        acc.byHour[hour].trades++;
+                        if ((row.profit || 0) > 0) acc.byHour[hour].wins++;
+                        acc.byHour[hour].pnl += row.profit || 0;
+
+                        if (!acc.byDayOfWeek[dayOfWeek]) acc.byDayOfWeek[dayOfWeek] = { trades: 0, wins: 0, pnl: 0 };
+                        acc.byDayOfWeek[dayOfWeek].trades++;
+                        if ((row.profit || 0) > 0) acc.byDayOfWeek[dayOfWeek].wins++;
+                        acc.byDayOfWeek[dayOfWeek].pnl += row.profit || 0;
+
+                        return acc;
+                      }, { byHour: {}, byDayOfWeek: {} } as { byHour: Record<number, { trades: number; wins: number; pnl: number }>; byDayOfWeek: Record<string, { trades: number; wins: number; pnl: number }> });
+
+                      const streakAnalysis = (() => {
+                        let currentStreak = 0;
+                        let maxWinStreak = 0;
+                        let maxLossStreak = 0;
+                        const afterWinStreak: { win: number; loss: number } = { win: 0, loss: 0 };
+                        const afterLossStreak: { win: number; loss: number } = { win: 0, loss: 0 };
+                        let wasInWinStreak = false;
+                        let wasInLossStreak = false;
+
+                        dataRows.forEach((row, idx) => {
+                          const isWin = (row.profit || 0) > 0;
+
+                          if (isWin) {
+                            currentStreak = currentStreak > 0 ? currentStreak + 1 : 1;
+                            maxWinStreak = Math.max(maxWinStreak, currentStreak);
+                            if (wasInLossStreak && idx > 0) afterLossStreak.win++;
+                            wasInWinStreak = currentStreak >= 2;
+                            wasInLossStreak = false;
+                          } else {
+                            currentStreak = currentStreak < 0 ? currentStreak - 1 : -1;
+                            maxLossStreak = Math.max(maxLossStreak, Math.abs(currentStreak));
+                            if (wasInWinStreak && idx > 0) afterWinStreak.loss++;
+                            wasInLossStreak = Math.abs(currentStreak) >= 2;
+                            wasInWinStreak = false;
+                          }
+                        });
+
+                        return {
+                          maxWinStreak,
+                          maxLossStreak,
+                          afterWinStreak,
+                          afterLossStreak,
+                        };
+                      })();
+
                       const tradesJson = {
                         trades: dataRows.map(row => ({
                           ticket: row.ticket,
@@ -259,6 +313,11 @@ export default function AiEvaluationPage() {
                         },
                         bySymbol: symbolStats,
                         bySetup: setupStats,
+                        timePatterns: {
+                          byHour: timeStats.byHour,
+                          byDayOfWeek: timeStats.byDayOfWeek,
+                        },
+                        streakPatterns: streakAnalysis,
                       };
 
                       console.log('🎯 送信するトレードデータ（サマリー）:', tradesJson.summary);
