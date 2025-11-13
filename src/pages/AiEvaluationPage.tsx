@@ -194,12 +194,23 @@ export default function AiEvaluationPage() {
                     setError(null);
                     try {
                       const tradesJson = dataRows.map(row => ({
-                        date: row.closeDate,
+                        ticket: row.ticket,
+                        openDate: row.openDate,
+                        closeDate: row.closeDate,
                         symbol: row.symbol,
-                        side: row.profit >= 0 ? 'BUY' : 'SELL',
-                        lots: row.lots || 0.1,
-                        pnl: row.profit,
+                        side: row.side,
+                        lots: row.lots,
+                        openPrice: row.openPrice,
+                        closePrice: row.closePrice,
+                        sl: row.sl,
+                        tp: row.tp,
+                        profit: row.profit,
+                        pips: row.pips,
+                        swap: row.swap,
+                        commission: row.commission,
                       }));
+
+                      console.log('🎯 送信するトレードデータ:', tradesJson.slice(0, 3));
 
                       const result = await callAutoReviewAI(tradesJson, {
                         dateRange: `Dataset ${dataset}`,
