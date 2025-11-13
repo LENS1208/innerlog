@@ -7,6 +7,96 @@
 GOLD（XAUUSD）は検証モード推奨、USDJPYをメイン戦略とします。
 タイムゾーンはAsia/Tokyo、金額はJPY。
 
+**重要：以下の厳密なJSON形式で出力してください。**
+
+{
+  "markdown": "マークダウン形式のフルテキスト（全セクションを含む）",
+  "sheet": {
+    "summary": ["サマリー段落1", "サマリー段落2", ...],
+    "summaryComment": "サマリーの導入コメント",
+    "examples": [
+      {
+        "date": "YYYY-MM-DD",
+        "symbol": "通貨ペア",
+        "side": "BUY/SELL",
+        "lots": 数値,
+        "entry": 数値,
+        "exit": 数値,
+        "pnlJPY": 数値,
+        "note": "説明文"
+      }
+    ],
+    "strengthsWeaknessesComment": "強みと課題の導入コメント",
+    "strengthsWeaknesses": [
+      {
+        "item": "項目名",
+        "strength": "強みの説明",
+        "improvement": "改善点の説明",
+        "coachNote": "コーチコメント"
+      }
+    ],
+    "rulesComment": "ルールの導入コメント",
+    "rules": [
+      {
+        "ruleId": "rule1",
+        "title": "ルールタイトル",
+        "content": "ルール内容",
+        "coachNote": "コーチコメント"
+      }
+    ],
+    "playbookComment": "プレイブックの導入コメント",
+    "playbook": {
+      "trendFollowing": {
+        "conditions": ["条件1", "条件2"],
+        "entry": ["エントリー条件1", "エントリー条件2"],
+        "sl": "ストップロス設定",
+        "tp": "テイクプロフィット設定",
+        "example": {実例オブジェクト},
+        "coachNote": "コーチコメント"
+      },
+      "meanReversion": {
+        "conditions": ["条件1", "条件2"],
+        "lotPolicy": "ロット方針",
+        "timeStop": "タイムストップ",
+        "example": {実例オブジェクト},
+        "coachNote": "コーチコメント"
+      }
+    },
+    "diaryGuide": {
+      "comment": "日記ガイドの導入コメント",
+      "rows": [
+        {
+          "item": "🎯 項目名",
+          "content": "内容",
+          "coachNote": "コーチコメント"
+        }
+      ]
+    },
+    "kpisComment": "KPIの導入コメント",
+    "kpis": [
+      {
+        "metric": "指標名",
+        "target": "目標値",
+        "coachNote": "コーチコメント"
+      }
+    ],
+    "fourWeekPlanComment": "4週間プランの導入コメント",
+    "fourWeekPlan": [
+      {
+        "week": "Week 1",
+        "theme": "テーマ",
+        "content": "内容",
+        "coachNote": "コーチコメント"
+      }
+    ],
+    "coachingMessage": ["メッセージ段落1", "メッセージ段落2", ...],
+    "nextSteps": ["ステップ1", "ステップ2"]
+  },
+  "meta": {
+    "generatedAt": "ISO日時文字列"
+  }
+}
+
 出力形式（必ずこの順）：
 1️⃣ 現状サマリー
 2️⃣ 強みと課題
