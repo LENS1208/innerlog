@@ -15,6 +15,14 @@ interface CoachingSheetViewProps {
 }
 
 export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: CoachingSheetViewProps) {
+  if (!sheet || !sheet.summary) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)' }}>
+        データの読み込み中にエラーが発生しました
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: scoreComponent && radarComponent ? 'repeat(auto-fit, minmax(300px, 1fr))' : '1fr', gap: '16px', alignItems: 'stretch' }}>

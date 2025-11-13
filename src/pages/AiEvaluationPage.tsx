@@ -242,7 +242,7 @@ export default function AiEvaluationPage() {
               </div>
             </div>
           </section>
-        ) : (
+        ) : coachingData?.sheet ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
               <button
@@ -270,6 +270,14 @@ export default function AiEvaluationPage() {
               radarComponent={<RadarChart parts={scoreData.parts} />}
             />
           </>
+        ) : (
+          <section style={{ background: 'var(--card)', padding: '24px', borderRadius: '8px' }}>
+            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+              <p style={{ fontSize: '14px', color: 'var(--muted)', marginBottom: '16px' }}>
+                データの読み込み中にエラーが発生しました
+              </p>
+            </div>
+          </section>
         )}
       </div>
     </div>
