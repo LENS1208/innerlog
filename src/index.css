@@ -801,9 +801,11 @@
 
 .table-wrap { overflow:auto; border:1px solid var(--c-border); border-radius: var(--radii); }
 .table { width:100%; border-collapse:separate; border-spacing:0; font-size:14px; }
-.table thead th { position:sticky; top:0; background:#fff; z-index:1; text-align:left; padding:10px 12px; border-bottom:1px solid var(--c-border); }
+.table thead th { position:sticky; top:0; background:var(--surface); z-index:1; text-align:left; padding:10px 12px; border-bottom:1px solid var(--c-border); font-weight:600; color:var(--ink); }
 .table tbody td { padding:10px 12px; border-bottom:1px solid var(--c-border); }
-.table tbody tr:hover { background: var(--c-surface); }
+.table tbody tr:nth-child(odd) { background: var(--surface); }
+.table tbody tr:nth-child(even) { background: var(--panel); }
+.table tbody tr:hover { background: var(--chip); }
 .text-right { text-align:right; }
 .text-pos { color: var(--c-pos); }
 .text-neg { color: var(--c-neg); }
@@ -818,6 +820,48 @@
 .text-right { text-align: right; }
 .text-pos { color: var(--c-pos, #059669); }
 .text-neg { color: var(--c-neg, #dc2626); }
+
+/* マークダウン内のテーブルスタイル */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table thead th {
+  background: var(--surface);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+table tbody tr:nth-child(odd) {
+  background: var(--surface);
+}
+
+table tbody tr:nth-child(even) {
+  background: var(--panel);
+}
+
+table tbody tr:hover {
+  background: var(--chip);
+}
+
+table tbody tr:last-child td {
+  border-bottom: none;
+}
 
 /* ===== Responsive Layout for AppShell ===== */
 @media (min-width: 1024px) {
