@@ -26,25 +26,26 @@ export function buildPrompt(input: PromptInput): string {
 - 口調：優しいコーチ（です・ます調）、「コメント」語は使わない
 - 8セクション固定順＋最後に次のステップ提案（1〜2行）
 
-出力フォーマット：
-必ずJSON形式で以下の構造で返してください：
+**重要：必ず以下のJSON構造で出力してください。markdown、sheet、metaの3つのトップレベルキーが必須です。**
 
 {
-  "markdown": "Markdown形式の全文",
+  "markdown": "# FXトレードコーチングシート\\n\\n## 1️⃣ 現状サマリー\\n\\n...(全セクションのMarkdown)",
   "sheet": {
-    "summary": ["サマリー項目1", "サマリー項目2", ...],
+    "summaryComment": "導入コメント",
+    "summary": ["サマリー段落1", "サマリー段落2", "サマリー段落3"],
     "examples": [
       {
-        "date": "2024-01-15",
+        "date": "2025-10-03",
         "symbol": "USDJPY",
-        "side": "BUY",
-        "lots": 0.1,
-        "entry": 148.50,
-        "exit": 149.20,
-        "pnlJPY": 7000,
+        "side": "SELL",
+        "lots": 0.5,
+        "entry": 149.20,
+        "exit": 148.50,
+        "pnlJPY": 35000,
         "note": "順張り成功例"
       }
     ],
+    "strengthsWeaknessesComment": "強みと課題の導入コメント",
     "strengthsWeaknesses": [
       {
         "item": "項目名",
@@ -53,6 +54,7 @@ export function buildPrompt(input: PromptInput): string {
         "coachNote": "コーチからの一言"
       }
     ],
+    "rulesComment": "ルールの導入コメント",
     "rules": [
       {
         "ruleId": "rule1",
@@ -61,30 +63,53 @@ export function buildPrompt(input: PromptInput): string {
         "coachNote": "コーチノート"
       }
     ],
+    "playbookComment": "プレイブックの導入コメント",
     "playbook": {
       "trendFollowing": {
         "conditions": ["条件1", "条件2"],
         "entry": ["エントリー条件1"],
         "sl": "損切りルール",
         "tp": "利確ルール",
+        "example": {
+          "date": "2025-10-03",
+          "symbol": "USDJPY",
+          "side": "SELL",
+          "lots": 0.5,
+          "entry": 149.20,
+          "exit": 148.50,
+          "pnlJPY": 35000,
+          "note": "順張り好例"
+        },
         "coachNote": "順張りについてのアドバイス"
       },
       "meanReversion": {
         "conditions": ["条件1"],
         "lotPolicy": "ロット管理",
         "timeStop": "時間制限",
+        "example": {
+          "date": "2025-10-05",
+          "symbol": "GOLD",
+          "side": "BUY",
+          "lots": 0.01,
+          "entry": 2650.0,
+          "exit": 2655.0,
+          "pnlJPY": 500,
+          "note": "逆張り研究"
+        },
         "coachNote": "逆張りについてのアドバイス"
       }
     },
     "diaryGuide": {
+      "comment": "日記ガイドの導入コメント",
       "rows": [
         {
-          "item": "記録項目",
+          "item": "🎯 記録項目",
           "content": "記録内容",
           "coachNote": "アドバイス"
         }
       ]
     },
+    "kpisComment": "KPIの導入コメント",
     "kpis": [
       {
         "metric": "指標名",
@@ -92,6 +117,7 @@ export function buildPrompt(input: PromptInput): string {
         "coachNote": "説明"
       }
     ],
+    "fourWeekPlanComment": "4週間プランの導入コメント",
     "fourWeekPlan": [
       {
         "week": "Week 1",
@@ -100,13 +126,23 @@ export function buildPrompt(input: PromptInput): string {
         "coachNote": "アドバイス"
       }
     ],
-    "coachingMessage": ["メッセージ段落1", "メッセージ段落2"],
+    "coachingMessage": ["メッセージ段落1", "メッセージ段落2", "メッセージ段落3"],
     "nextSteps": ["次のステップ1", "次のステップ2"]
+  },
+  "meta": {
+    "generatedAt": "2025-11-13T10:30:00+09:00"
   }
 }
 
+**絶対に守ること：**
+1. JSONの最上位には必ず "markdown", "sheet", "meta" の3つのキーを含める
+2. sheetオブジェクト内のすべてのフィールド（summaryComment, summary, examples等）を含める
+3. markdownのみ、またはsheetのみの出力は不可
+
 ここからデータ（JSON）：
 <<TRADES_JSON>>
+
+**繰り返し：上記のJSON構造（markdown + sheet + meta）で出力してください。**
 `.trim();
 
   const jsonStr = JSON.stringify(input.tradesJson).slice(0, 200_000);
