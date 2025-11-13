@@ -312,6 +312,11 @@ export default function AiEvaluationPage() {
                           winLossRatio: avgLoss > 0 ? avgWin / avgLoss : 0,
                           largestWin: Math.max(...dataRows.map(r => r.profit || 0)),
                           largestLoss: Math.min(...dataRows.map(r => r.profit || 0)),
+                          avgLotSize: dataRows.length > 0
+                            ? dataRows.reduce((s, r) => s + (r.lots || 0), 0) / dataRows.length
+                            : 0,
+                          maxLotSize: Math.max(...dataRows.map(r => r.lots || 0)),
+                          minLotSize: Math.min(...dataRows.map(r => r.lots || 0)),
                         },
                         bySymbol: symbolStats,
                         bySetup: setupStats,
