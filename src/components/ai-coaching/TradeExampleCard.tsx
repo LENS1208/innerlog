@@ -84,14 +84,36 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
   const pnlFormatted = fmt.yen_signed_colored(ex.pnlJPY);
   const pipsFormatted = ex.pips != null ? fmt.pips_signed_colored(ex.pips) : { text: '—', cls: '' };
 
+  const handleClick = () => {
+    if (ex.ticket) {
+      console.log('Trade example clicked:', ex.ticket);
+      location.hash = `/notebook/${ex.ticket}`;
+    }
+  };
+
   return (
     <div
+      onClick={handleClick}
       style={{
         background: 'var(--surface)',
         border: '1px solid var(--line)',
         borderRadius: '12px',
         padding: '16px',
         position: 'relative',
+        cursor: ex.ticket ? 'pointer' : 'default',
+        transition: 'all 0.2s ease',
+      }}
+      onMouseEnter={(e) => {
+        if (ex.ticket) {
+          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+          e.currentTarget.style.borderColor = 'var(--accent)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (ex.ticket) {
+          e.currentTarget.style.boxShadow = 'none';
+          e.currentTarget.style.borderColor = 'var(--line)';
+        }
       }}
     >
       {iconType && (

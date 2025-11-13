@@ -8,6 +8,7 @@ export type TradeExample = {
   pnlJPY: number;
   pips?: number;
   note?: string;
+  ticket?: string | number;
 };
 
 export type KPIRow = {
