@@ -101,7 +101,7 @@ function computeDashboard(trades: DashTrade[]) {
     count, gross, avg, wins, losses, draws, winRate,
     profitFactor, totalProfit, totalLoss, avgProfit, avgLoss,
     expectancyJPY, maxDD, totalPips, avgPips, avgHoldMin,
-    tradingDays, riskRewardRatio, sharpeRatio
+    tradingDays, riskRewardRatio, sharpeRatio, peak
   }
 }
 
@@ -406,7 +406,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
         <div className="kpi-desc">リターン / リスク</div>
       </div>
 
-      <AccountSummaryCards />
+      <AccountSummaryCards peakEquity={dash.peak} />
     </div>
     </>
   )

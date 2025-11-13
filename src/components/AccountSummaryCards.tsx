@@ -4,7 +4,11 @@ import { getAccountSummary, type DbAccountSummary } from '../lib/db.service';
 import { useDataset } from '../lib/dataset.context';
 import { HelpIcon } from './common/HelpIcon';
 
-export default function AccountSummaryCards() {
+type AccountSummaryCardsProps = {
+  peakEquity?: number;
+};
+
+export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsProps = {}) {
   const [summary, setSummary] = useState<DbAccountSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -121,6 +125,19 @@ export default function AccountSummaryCards() {
         </div>
         <div className="kpi-desc">累計出金額の合計</div>
       </div>
+
+      {peakEquity !== undefined && (
+        <div className="kpi-card">
+          <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+            最高資産
+            <HelpIcon text="累積損益の最高到達点です。過去に達成した最大の資産額を示します。" />
+          </div>
+          <div className="kpi-value" style={{ color: getAccentColor() }}>
+            {peakEquity.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+          </div>
+          <div className="kpi-desc">累積損益のピーク値</div>
+        </div>
+      )}
 
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
