@@ -8,17 +8,34 @@ interface StrengthsWeaknessesTableProps {
 
 export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWeaknessesTableProps) {
   const fixedItems = [
-    { key: 'entryTiming', label: 'エントリータイミング' },
-    { key: 'riskManagement', label: 'リスク管理' },
-    { key: 'exitStrategy', label: '損切り・利確' },
-    { key: 'emotionalControl', label: '感情コントロール' },
-    { key: 'consistency', label: '一貫性・再現性' },
+    { key: 'entryTiming', label: 'エントリータイミング', aliases: ['エントリー精度', 'エントリー'] },
+    { key: 'riskManagement', label: 'リスク管理', aliases: ['ロット管理', '資金管理'] },
+    { key: 'exitStrategy', label: '損切り・利確', aliases: ['出口戦略', 'SL/TP'] },
+    { key: 'emotionalControl', label: '感情コントロール', aliases: ['感情制御', 'メンタル管理'] },
+    { key: 'consistency', label: '一貫性・再現性', aliases: ['一貫性', '再現性'] },
   ];
 
-  const rowMap = new Map(rows.map(r => [r.item, r]));
+  const rowMap = new Map<string, StrengthWeaknessRow>();
+  rows.forEach(r => {
+    rowMap.set(r.item, r);
+  });
 
-  const displayRows = fixedItems.map(({ key, label }) => {
-    const existingRow = rowMap.get(label);
+  const findRow = (label: string, aliases: string[]) => {
+    if (rowMap.has(label)) return rowMap.get(label);
+    for (const alias of aliases) {
+      if (rowMap.has(alias)) return rowMap.get(alias);
+    }
+    for (const [key, value] of rowMap.entries()) {
+      if (key.includes(label) || label.includes(key)) return value;
+      for (const alias of aliases) {
+        if (key.includes(alias) || alias.includes(key)) return value;
+      }
+    }
+    return undefined;
+  };
+
+  const displayRows = fixedItems.map(({ key, label, aliases }) => {
+    const existingRow = findRow(label, aliases);
     const score = evaluationScore ? evaluationScore[key as keyof typeof evaluationScore] as number : undefined;
 
     return {
