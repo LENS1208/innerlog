@@ -9,6 +9,17 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
   const isProfit = ex.pnlJPY >= 0;
   const note = ex.note || '';
 
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+  };
+
+  const formatSide = (side: string) => {
+    if (side === "LONG" || side === "BUY" || side === "買い") return "買い";
+    if (side === "SHORT" || side === "SELL" || side === "売り") return "売り";
+    return side;
+  };
+
   const isGoodExample =
     note.includes('良い') ||
     note.includes('好例') ||
@@ -105,7 +116,7 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
         }}
       >
         <div style={{ fontWeight: 600, fontSize: '14px' }}>
-          {ex.date} · {ex.symbol} · {ex.side}
+          {formatDate(ex.date)} · {ex.symbol} · {formatSide(ex.side)}
         </div>
         <div
           style={{

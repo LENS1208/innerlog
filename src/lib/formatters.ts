@@ -1,11 +1,21 @@
 export const fmt = {
   datetime_utc: (v: string|Date) => {
     const d = typeof v === "string" ? new Date(v) : v;
-    return d.toISOString().slice(0,16).replace("T"," ") + " UTC";
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    const hour = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${year}年${month}月${day}日 ${hour}:${min}`;
   },
   datetime_simple: (v: string|Date) => {
     const d = typeof v === "string" ? new Date(v) : v;
-    return d.toISOString().slice(0,16).replace("T"," ");
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    const hour = String(d.getHours()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${year}年${month}月${day}日 ${hour}:${min}`;
   },
   yen_signed_colored: (n?: number) => {
     if (n == null) return { text: "—", cls: "" };
@@ -27,6 +37,11 @@ export const fmt = {
     return { text: "📝", cls: "note-icon" };
   },
   symbol: (s?: string) => (s || "—"),
-  side_caps: (s?: string) => (s || "—"),
+  side_caps: (s?: string) => {
+    if (!s) return "—";
+    if (s === "LONG" || s === "BUY" || s === "買い") return "買い";
+    if (s === "SHORT" || s === "SELL" || s === "売り") return "売り";
+    return s;
+  },
   price_raw: (n?: number) => (n==null ? "—" : n.toString())
 };
