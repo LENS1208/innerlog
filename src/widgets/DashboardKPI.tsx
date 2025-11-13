@@ -44,9 +44,23 @@ function computeDashboard(trades: DashTrade[]) {
 
   const expectancyJPY = winRate * avgProfit - (1 - winRate) * avgLoss
 
-  const sortedTrades = [...trades].sort((a, b) => {
-    const dateA = new Date(a.openTime || a.datetime || 0).getTime()
-    const dateB = new Date(b.openTime || b.datetime || 0).getTime()
+  const parseDateTime = (datetime: string | number | undefined): Date => {
+    if (!datetime) return new Date(NaN)
+    if (typeof datetime === 'number') return new Date(datetime)
+    let dt = String(datetime).trim()
+    if (!dt) return new Date(NaN)
+    dt = dt.replace(/\./g, '-').replace(' ', 'T')
+    return new Date(dt)
+  }
+
+  const validTrades = trades.filter(t => {
+    const date = parseDateTime((t as any).datetime || (t as any).time)
+    return !isNaN(date.getTime())
+  })
+
+  const sortedTrades = [...validTrades].sort((a, b) => {
+    const dateA = parseDateTime((a as any).datetime || (a as any).time).getTime()
+    const dateB = parseDateTime((b as any).datetime || (b as any).time).getTime()
     return dateA - dateB
   })
 
