@@ -63,15 +63,38 @@ export async function callAutoReviewAI(
     console.log('📄 生成されたコンテンツ長:', content.length, '文字');
     console.log('📄 生成されたコンテンツ（最初の500文字）:', content.substring(0, 500));
 
-    const result: AIResponse = JSON.parse(content);
-    console.log('✅ パース成功');
+    let result: AIResponse;
+    try {
+      result = JSON.parse(content);
+      console.log('✅ パース成功');
+    } catch (parseError) {
+      console.error('❌ JSONパースエラー:', parseError);
+      console.error('📄 パース失敗したコンテンツ:', content);
+      throw new Error(`Failed to parse AI response: ${parseError}`);
+    }
+
     console.log('📦 result:', result);
     console.log('📦 result.sheet:', result.sheet);
     console.log('📦 result.sheet?.summary:', result.sheet?.summary);
+    console.log('📦 result.sheet タイプ:', typeof result.sheet);
+    console.log('📦 result.sheet.summary タイプ:', typeof result.sheet?.summary);
+    console.log('📦 result.sheet.summary 配列？:', Array.isArray(result.sheet?.summary));
 
-    if (!result.sheet || !result.sheet.summary) {
-      console.error('⚠️ AIレスポンスの構造が不正です');
-      throw new Error('Invalid AI response structure');
+    if (!result.sheet) {
+      console.error('⚠️ result.sheetが存在しません');
+      console.error('📦 resultの全キー:', Object.keys(result));
+      throw new Error('Invalid AI response structure: missing sheet');
+    }
+
+    if (!result.sheet.summary) {
+      console.error('⚠️ result.sheet.summaryが存在しません');
+      console.error('📦 result.sheetの全キー:', Object.keys(result.sheet));
+      throw new Error('Invalid AI response structure: missing summary');
+    }
+
+    if (!Array.isArray(result.sheet.summary) || result.sheet.summary.length === 0) {
+      console.error('⚠️ result.sheet.summaryが空の配列です');
+      throw new Error('Invalid AI response structure: empty summary');
     }
 
     return result;
