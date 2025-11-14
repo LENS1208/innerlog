@@ -1266,11 +1266,11 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
       <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
         <thead>
           <tr>
-            <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)", position: "sticky", left: 0, background: "var(--bg)", zIndex: 2 }}>
+            <th style={{ padding: 7, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)", position: "sticky", left: 0, background: "var(--bg)", zIndex: 2 }}>
               通貨ペア
             </th>
             {analysisData.data.map((item) => (
-              <th key={item.range} style={{ padding: 10, textAlign: "center", fontSize: 13, fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>
+              <th key={item.range} style={{ padding: 7, textAlign: "center", fontSize: 13, fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>
                 {item.range}
               </th>
             ))}
@@ -1279,7 +1279,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
         <tbody>
           {analysisData.symbols.map((symbol) => (
             <tr key={symbol}>
-              <td style={{ padding: 10, fontSize: 13, fontWeight: 600, position: "sticky", left: 0, background: "var(--bg)", zIndex: 1, color: "var(--fg)" }}>
+              <td style={{ padding: 7, fontSize: 13, fontWeight: 600, position: "sticky", left: 0, background: "var(--bg)", zIndex: 1, color: "var(--fg)" }}>
                 {symbol}
               </td>
               {analysisData.data.map((item) => {
@@ -1291,13 +1291,13 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                   <td
                     key={item.range}
                     style={{
-                      padding: 8,
+                      padding: 6,
                       textAlign: "center",
                       fontSize: 12,
                       background: hasData ? getCellBackgroundColor(winRate) : "var(--chip)",
                       cursor: "default",
                       position: "relative",
-                      height: 28,
+                      height: 20,
                     }}
                     onMouseEnter={(e) => {
                       if (hasData) {
