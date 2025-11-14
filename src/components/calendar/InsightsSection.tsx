@@ -270,7 +270,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
             曜日ごとの損益
-            <HelpIcon text="曜日別の取引回数、平均損益、勝率、プロフィットファクター、合計収支を表示します。" />
+            <HelpIcon text="曜日別の取引回数、平均損益、勝率、プロフィットファクター、合計損益を表示します。" />
           </div>
           <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
           <div
@@ -291,7 +291,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             <div style={{ textAlign: "right" }}>平均損益</div>
             <div style={{ textAlign: "right" }}>勝率</div>
             <div style={{ textAlign: "right" }}>PF</div>
-            <div style={{ textAlign: "right" }}>合計収支</div>
+            <div style={{ textAlign: "right" }}>合計損益</div>
           </div>
           <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "550px" }}>
             {expectationRows.map((row, i) => (
@@ -309,7 +309,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 }}
               >
                 <div>{row.label}</div>
-                <div style={{ textAlign: "right", color: "var(--muted)" }}>{row.count}</div>
+                <div style={{ textAlign: "right", color: "var(--muted)" }}>{row.count}回</div>
                 <div
                   style={{
                     textAlign: "right",
@@ -366,7 +366,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               <div style={{ textAlign: "right" }}>平均損益</div>
               <div style={{ textAlign: "right" }}>勝率</div>
               <div style={{ textAlign: "right" }}>PF</div>
-              <div style={{ textAlign: "right" }}>合計収支</div>
+              <div style={{ textAlign: "right" }}>合計損益</div>
             </div>
             <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "550px" }}>
               {allSymbols.length === 0 ? (
@@ -389,7 +389,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                     }}
                   >
                     <div>{s.symbol}</div>
-                    <div style={{ textAlign: "right", color: "var(--muted)" }}>{s.count}</div>
+                    <div style={{ textAlign: "right", color: "var(--muted)" }}>{s.count}回</div>
                     <div style={{
                       textAlign: "right",
                       fontWeight: 600,
