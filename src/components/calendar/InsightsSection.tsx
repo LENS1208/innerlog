@@ -29,7 +29,7 @@ export type InsightsSectionProps = {
   bestDay?: { date: string; pnl: number } | null;
   worstDay?: { date: string; pnl: number } | null;
   maxDailyDD?: number | null;
-  allSymbols: { symbol: string; pnl: number; count: number }[];
+  allSymbols: { symbol: string; pnl: number; count: number; winrate: number }[];
   topTags: { tag: string; pnl: number; winrate: number }[];
   expectationRows: {
     label: string;
@@ -310,21 +310,22 @@ export default function InsightsSection(props: InsightsSectionProps) {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(100px, 1fr)",
+                gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(60px, 70px) minmax(100px, 1fr)",
                 gap: 8,
                 fontSize: 15,
                 color: "var(--muted)",
                 fontWeight: "bold",
                 paddingBottom: 8,
                 borderBottom: "1px solid var(--line)",
-                minWidth: "300px",
+                minWidth: "380px",
               }}
             >
               <div>通貨ペア</div>
               <div style={{ textAlign: "right" }}>取引回数</div>
+              <div style={{ textAlign: "right" }}>勝率</div>
               <div style={{ textAlign: "right" }}>合計収支</div>
             </div>
-            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "300px" }}>
+            <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "380px" }}>
               {allSymbols.length === 0 ? (
                 <div style={{ padding: 16, textAlign: "center", color: "var(--muted)", fontSize: 13 }}>
                   データがありません
@@ -335,7 +336,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                     key={i}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(100px, 1fr)",
+                      gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(60px, 70px) minmax(100px, 1fr)",
                       gap: 8,
                       fontSize: 13,
                       color: "var(--ink)",
@@ -346,6 +347,11 @@ export default function InsightsSection(props: InsightsSectionProps) {
                   >
                     <div>{s.symbol}</div>
                     <div style={{ textAlign: "right", color: "var(--muted)" }}>{s.count}</div>
+                    <div style={{
+                      textAlign: "right",
+                      fontWeight: 600,
+                      color: s.winrate >= 60 ? "var(--gain)" : s.winrate >= 50 ? "var(--ink)" : "var(--loss)"
+                    }}>{Math.round(s.winrate)}%</div>
                     <div
                       style={{
                         textAlign: "right",

@@ -405,16 +405,25 @@ export default function MonthlyCalendar() {
     const worstDay = sortedDays.length > 0 ? { date: sortedDays[sortedDays.length - 1][0], pnl: sortedDays[sortedDays.length - 1][1] } : null;
     const maxDailyDD = worstDay ? worstDay.pnl : null;
 
-    const symbolMap = new Map<string, { pnl: number; count: number }>();
+    const symbolMap = new Map<string, { pnl: number; count: number; wins: number }>();
     monthFilteredTrades.forEach((t) => {
       const symbol = t.item || t.pair || t.symbol || 'N/A';
       if (symbol && symbol !== 'N/A') {
-        const current = symbolMap.get(symbol) || { pnl: 0, count: 0 };
-        symbolMap.set(symbol, { pnl: current.pnl + t.profitYen, count: current.count + 1 });
+        const current = symbolMap.get(symbol) || { pnl: 0, count: 0, wins: 0 };
+        symbolMap.set(symbol, {
+          pnl: current.pnl + t.profitYen,
+          count: current.count + 1,
+          wins: current.wins + (t.profitYen > 0 ? 1 : 0)
+        });
       }
     });
     const allSymbols = Array.from(symbolMap.entries())
-      .map(([symbol, data]) => ({ symbol, pnl: data.pnl, count: data.count }))
+      .map(([symbol, data]) => ({
+        symbol,
+        pnl: data.pnl,
+        count: data.count,
+        winrate: data.count > 0 ? (data.wins / data.count) * 100 : 0
+      }))
       .sort((a, b) => b.pnl - a.pnl);
 
     const topTags = [
