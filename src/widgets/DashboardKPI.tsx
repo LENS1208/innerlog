@@ -217,8 +217,8 @@ function BarSplit({ avgProfit, avgLoss }: { avgProfit: number; avgLoss: number }
         <div style={{ width: `${lossPct}%`, background: 'rgba(239,68,68,.35)' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6, fontWeight: 600 }}>
-        <span style={{ color: 'var(--accent-2, #0084c7)' }}>+{Math.round(avgProfit).toLocaleString('ja-JP')} <span style={{ fontSize: 12, color: 'var(--muted)' }}>円</span></span>
-        <span style={{ color: 'var(--danger, #ef4444)' }}>-{Math.round(avgLoss).toLocaleString('ja-JP')} <span style={{ fontSize: 12, color: 'var(--muted)' }}>円</span></span>
+        <span style={{ color: 'var(--accent-2, #0084c7)' }}>+{Math.round(avgProfit).toLocaleString('ja-JP')} <span style={{ fontSize: 12, color: 'var(--accent-2, #0084c7)' }}>円</span></span>
+        <span style={{ color: 'var(--danger, #ef4444)' }}>-{Math.round(avgLoss).toLocaleString('ja-JP')} <span style={{ fontSize: 12, color: 'var(--danger, #ef4444)' }}>円</span></span>
       </div>
     </div>
   )
@@ -286,8 +286,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           総損益
           <HelpIcon text="全取引の利益と損失を合計した最終的な損益です。プラスなら利益が出ています。" />
         </div>
-        <div className="kpi-value" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
-          {Math.round(dash.gross).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+        <div className="kpi-value" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
+          {dash.gross >= 0 ? '+' : ''}{Math.round(dash.gross).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>円</span>
         </div>
         <div className="kpi-desc">全取引の合計損益</div>
       </div>
@@ -297,8 +297,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           総獲得pips
           <HelpIcon text="全取引で獲得したpipsの合計です。値幅としてどれだけ取れたかを表します。" />
         </div>
-        <div className="kpi-value">
-          {Math.round(dash.totalPips).toLocaleString('ja-JP')} <span className="kpi-unit">pips</span>
+        <div className="kpi-value" style={{ color: dash.totalPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
+          {dash.totalPips >= 0 ? '+' : ''}{Math.round(dash.totalPips).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.totalPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>pips</span>
         </div>
         <div className="kpi-desc">全取引のpips合計</div>
       </div>
@@ -309,8 +309,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           <HelpIcon text="1回の取引あたりの平均的な損益です。プラスなら平均的に利益が出ています。" />
         </div>
         <div>
-          <div className="kpi-value" style={{ color: dash.avg < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
-            {Math.round(dash.avg).toLocaleString('ja-JP')} <span className="kpi-unit">円/件</span>
+          <div className="kpi-value" style={{ color: dash.avg < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
+            {dash.avg >= 0 ? '+' : ''}{Math.round(dash.avg).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.avg < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>円/件</span>
           </div>
           <div className="kpi-desc">1取引あたりの平均</div>
           <BarSplit avgProfit={dash.avgProfit} avgLoss={dash.avgLoss} />
@@ -368,7 +368,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           <HelpIcon text="資金が最も減った金額です。この数値が大きいほど、大きな含み損に耐える必要があります。" />
         </div>
         <div className="kpi-value" style={{ color: 'var(--danger, #ef4444)' }}>
-          {Math.round(dash.maxDD).toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
+          -{Math.round(dash.maxDD).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--danger, #ef4444)' }}>円</span>
         </div>
         <div className="kpi-desc">ピーク→ボトムの最大下落</div>
       </div>
@@ -378,8 +378,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           期待値（円）
           <HelpIcon text="1回の取引で期待できる平均的な利益です。勝率と平均損益から計算されます。" />
         </div>
-        <div className="kpi-value" style={{ color: dash.expectancyJPY < 0 ? 'var(--danger, #ef4444)' : 'inherit' }}>
-          {Math.round(dash.expectancyJPY).toLocaleString('ja-JP')} <span className="kpi-unit">円/件</span>
+        <div className="kpi-value" style={{ color: dash.expectancyJPY < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
+          {dash.expectancyJPY >= 0 ? '+' : ''}{Math.round(dash.expectancyJPY).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.expectancyJPY < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>円/件</span>
         </div>
         <div className="kpi-desc">1取引あたりの平均（円）</div>
       </div>
@@ -389,8 +389,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           期待値（pips）
           <HelpIcon text="1回の取引で期待できる平均的なpipsです。値幅としてどれだけ取れるかの目安になります。" />
         </div>
-        <div className="kpi-value">
-          {dash.avgPips.toFixed(1)} <span className="kpi-unit">pips/件</span>
+        <div className="kpi-value" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
+          {dash.avgPips >= 0 ? '+' : ''}{dash.avgPips.toFixed(1)} <span className="kpi-unit" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>pips/件</span>
         </div>
         <div className="kpi-desc">1取引あたりの平均（pips）</div>
       </div>
