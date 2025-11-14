@@ -83,9 +83,9 @@ function generateDatasetA(): Trade[] {
   const favoredSetups = ['Trend', 'Breakout', 'Pullback'];
 
   const losingPeriods = [
-    { start: new Date('2024-03-15T00:00:00Z'), end: new Date('2024-04-10T00:00:00Z') },
-    { start: new Date('2024-06-01T00:00:00Z'), end: new Date('2024-06-20T00:00:00Z') },
-    { start: new Date('2024-09-05T00:00:00Z'), end: new Date('2024-09-25T00:00:00Z') }
+    { start: new Date('2024-03-10T00:00:00Z'), end: new Date('2024-04-25T00:00:00Z') },
+    { start: new Date('2024-06-01T00:00:00Z'), end: new Date('2024-07-10T00:00:00Z') },
+    { start: new Date('2024-08-20T00:00:00Z'), end: new Date('2024-09-30T00:00:00Z') }
   ];
 
   function isInLosingPeriod(date: Date): boolean {
@@ -143,7 +143,7 @@ function generateDatasetA(): Trade[] {
       const openPrice = Number((basePrice + priceVariation).toFixed(pair.includes('JPY') ? 2 : 4));
 
       const inLosingPeriod = isInLosingPeriod(currentDate);
-      const baseWinRate = inLosingPeriod ? 0.35 : 0.58;
+      const baseWinRate = inLosingPeriod ? 0.30 : 0.58;
       const isWin = Math.random() < baseWinRate;
 
       let pipMove: number;
@@ -151,13 +151,13 @@ function generateDatasetA(): Trade[] {
         if (isSwingOrPosition) {
           pipMove = randomBetween(30, 120);
         } else {
-          pipMove = randomBetween(5, 35);
+          pipMove = inLosingPeriod ? randomBetween(3, 20) : randomBetween(5, 35);
         }
       } else {
         if (isSwingOrPosition) {
           pipMove = -randomBetween(25, 90);
         } else {
-          pipMove = -randomBetween(5, 30);
+          pipMove = inLosingPeriod ? -randomBetween(10, 45) : -randomBetween(5, 30);
         }
       }
 
