@@ -1232,7 +1232,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                       background: hasData ? getCellBackgroundColor(winRate) : "var(--chip)",
                       cursor: "default",
                       position: "relative",
-                      height: 40,
+                      height: 28,
                     }}
                     onMouseEnter={(e) => {
                       if (hasData) {
@@ -1298,18 +1298,22 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
         </tbody>
       </table>
 
-      <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
+      <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)", justifyContent: "flex-end" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <div style={{ width: 16, height: 16, background: "rgb(0, 86, 130)", borderRadius: 2 }}></div>
-          <span>濃青 (100%)</span>
+          <span>優秀 (75%以上)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <div style={{ width: 16, height: 16, background: "rgb(0, 132, 199)", borderRadius: 2 }}></div>
-          <span>中間 (50%)</span>
+          <span>良好 (50-74%)</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ width: 16, height: 16, background: "rgb(87, 174, 215)", borderRadius: 2 }}></div>
+          <span>普通 (25-49%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
           <div style={{ width: 16, height: 16, background: "rgb(173, 216, 230)", borderRadius: 2 }}></div>
-          <span>ライトブルー (0%)</span>
+          <span>要改善 (25%未満)</span>
         </div>
       </div>
     </div>
