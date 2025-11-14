@@ -47,12 +47,11 @@ const currencyJPY = (n: number) => {
 
 const formatDateTime = (dateStr: string) => {
   const d = new Date(dateStr);
-  const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   const hour = String(d.getHours()).padStart(2, '0');
   const min = String(d.getMinutes()).padStart(2, '0');
-  return `${year}年${month}月${day}日 ${hour}:${min}`;
+  return `${month}月${day}日 ${hour}:${min}`;
 };
 
 export default function InsightsSection(props: InsightsSectionProps) {
@@ -583,7 +582,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "100px 80px minmax(200px, 2fr) 120px 100px",
+              gridTemplateColumns: "100px 80px minmax(200px, 2fr) 140px 100px",
               gap: 8,
               fontSize: 15,
               color: "var(--muted)",
@@ -596,7 +595,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             <div>通貨ペア</div>
             <div>方向</div>
             <div>エントリー日時 → 決済日時</div>
-            <div style={{ textAlign: "right" }}>ポジション保有時間</div>
+            <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>ポジション保有時間</div>
             <div style={{ textAlign: "right" }}>損益</div>
           </div>
           <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
@@ -614,7 +613,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                     key={idx}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "100px 80px minmax(200px, 2fr) 120px 100px",
+                      gridTemplateColumns: "100px 80px minmax(200px, 2fr) 140px 100px",
                       gap: 8,
                       fontSize: 13,
                       color: "var(--ink)",
@@ -629,7 +628,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                     <div style={{ fontSize: 12, color: "var(--muted)" }}>
                       {formatDateTime(t.entry)} → {formatDateTime(t.exit)}
                     </div>
-                    <div style={{ textAlign: "right" }}>{hrs}h</div>
+                    <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>{hrs}h</div>
                     <div
                       style={{
                         textAlign: "right",
