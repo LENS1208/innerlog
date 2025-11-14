@@ -258,17 +258,13 @@ function Header({
 function Banner() {
   const { dataset, setDataset, useDatabase, dataCount } = useDataset();
 
-  if (useDatabase && dataCount > 0) {
-    return null;
-  }
-
   return (
     <section
       style={{
         display: "flex",
         margin: "var(--space-3) var(--px-mobile)",
-        border: "1px solid var(--warning)",
-        background: "var(--chip)",
+        border: "1px solid var(--line)",
+        background: "var(--surface)",
         color: "var(--ink)",
         borderRadius: 12,
         padding: "12px 14px",
@@ -277,12 +273,12 @@ function Banner() {
         flexWrap: "wrap",
       }}
       role="region"
-      aria-label="データ操作"
+      aria-label="データセット選択"
       className="banner-section"
     >
-      <strong>MT4/MT5の取引履歴を追加してください</strong>
+      <span style={{ fontSize: 14, fontWeight: 600 }}>表示データ:</span>
       <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        <span style={{ fontSize: 13, color: 'var(--muted)' }}>デモデータ:</span>
+        <span style={{ fontSize: 13, color: 'var(--muted)' }}>デモデータセット:</span>
         <div style={{ display: "inline-flex", border: "1px solid var(--line)", borderRadius: 999, overflow: "hidden" }}>
           {(["A", "B", "C"] as const).map((d) => (
             <button
@@ -297,6 +293,8 @@ function Banner() {
                 background: dataset === d ? "var(--accent)" : "var(--surface)",
                 color: dataset === d ? "#fff" : "var(--ink)",
                 border: 0,
+                cursor: "pointer",
+                fontWeight: dataset === d ? 600 : 400,
               }}
             >
               {d}
