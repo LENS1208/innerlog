@@ -405,25 +405,33 @@ export default function MonthlyCalendar() {
     const worstDay = sortedDays.length > 0 ? { date: sortedDays[sortedDays.length - 1][0], pnl: sortedDays[sortedDays.length - 1][1] } : null;
     const maxDailyDD = worstDay ? worstDay.pnl : null;
 
-    const symbolMap = new Map<string, { pnl: number; count: number; wins: number }>();
+    const symbolMap = new Map<string, { pnl: number; count: number; wins: number; totalProfit: number; totalLoss: number }>();
     monthFilteredTrades.forEach((t) => {
       const symbol = t.item || t.pair || t.symbol || 'N/A';
       if (symbol && symbol !== 'N/A') {
-        const current = symbolMap.get(symbol) || { pnl: 0, count: 0, wins: 0 };
+        const current = symbolMap.get(symbol) || { pnl: 0, count: 0, wins: 0, totalProfit: 0, totalLoss: 0 };
         symbolMap.set(symbol, {
           pnl: current.pnl + t.profitYen,
           count: current.count + 1,
-          wins: current.wins + (t.profitYen > 0 ? 1 : 0)
+          wins: current.wins + (t.profitYen > 0 ? 1 : 0),
+          totalProfit: current.totalProfit + (t.profitYen > 0 ? t.profitYen : 0),
+          totalLoss: current.totalLoss + (t.profitYen < 0 ? Math.abs(t.profitYen) : 0)
         });
       }
     });
     const allSymbols = Array.from(symbolMap.entries())
-      .map(([symbol, data]) => ({
-        symbol,
-        pnl: data.pnl,
-        count: data.count,
-        winrate: data.count > 0 ? (data.wins / data.count) * 100 : 0
-      }))
+      .map(([symbol, data]) => {
+        const avgPnl = data.count > 0 ? data.pnl / data.count : 0;
+        const pf = data.totalLoss > 0 ? data.totalProfit / data.totalLoss : (data.totalProfit > 0 ? Infinity : 0);
+        return {
+          symbol,
+          pnl: data.pnl,
+          count: data.count,
+          winrate: data.count > 0 ? (data.wins / data.count) * 100 : 0,
+          avgPnl,
+          pf
+        };
+      })
       .sort((a, b) => b.pnl - a.pnl);
 
     const topTags = [
