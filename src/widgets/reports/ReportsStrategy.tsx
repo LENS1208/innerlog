@@ -11,6 +11,138 @@ import Card from "../../components/common/Card";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 
+type StrategySegmentTab = "戦略" | "方向";
+
+function StrategySegmentTabs({
+  setupData,
+  sideData
+}: {
+  setupData: any[];
+  sideData: any;
+}) {
+  const [activeTab, setActiveTab] = React.useState<StrategySegmentTab>("戦略");
+
+  const tabs: StrategySegmentTab[] = ["戦略", "方向"];
+
+  const renderTable = () => {
+    let data: any[] = [];
+    let segmentLabel = "";
+
+    switch (activeTab) {
+      case "戦略":
+        data = setupData.map(s => ({
+          label: s.setup,
+          count: s.count,
+          profit: s.profit,
+          winRate: s.winRate,
+          pf: s.pf,
+          avgProfit: s.avgProfit
+        }));
+        segmentLabel = "戦略";
+        break;
+      case "方向":
+        data = [
+          {
+            label: "買い",
+            count: sideData.long.count,
+            profit: sideData.long.profit,
+            winRate: sideData.long.winRate,
+            pf: sideData.long.pf,
+            avgProfit: sideData.long.avgProfit
+          },
+          {
+            label: "売り",
+            count: sideData.short.count,
+            profit: sideData.short.profit,
+            winRate: sideData.short.winRate,
+            pf: sideData.short.pf,
+            avgProfit: sideData.short.avgProfit
+          }
+        ];
+        segmentLabel = "方向";
+        break;
+    }
+
+    return (
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ borderBottom: "2px solid var(--line)" }}>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
+              {segmentLabel}
+            </th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>PF</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr
+              key={index}
+              style={{
+                borderBottom: "1px solid var(--line)",
+                height: 44,
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            >
+              <td style={{ padding: 10, fontSize: 13 }}>{item.label}</td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.count}</td>
+              <td
+                style={{
+                  padding: 10,
+                  textAlign: "right",
+                  fontSize: 13,
+                  color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                }}
+              >
+                {Math.round(item.profit).toLocaleString("ja-JP")}円
+              </td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.winRate.toFixed(0)}%</td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.pf.toFixed(2)}</td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
+                {Math.round(item.avgProfit).toLocaleString("ja-JP")}円
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--line)" }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: "10px 20px",
+              fontSize: 14,
+              fontWeight: activeTab === tab ? 600 : 400,
+              color: activeTab === tab ? "var(--fg)" : "var(--muted)",
+              background: "transparent",
+              border: "none",
+              borderBottom: activeTab === tab ? "2px solid var(--accent)" : "2px solid transparent",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+        {renderTable()}
+      </div>
+    </div>
+  );
+}
+
 export default function ReportsStrategy() {
   const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -695,126 +827,10 @@ export default function ReportsStrategy() {
             戦略・行動 明細
             <HelpIcon text="全戦略と方向の詳細データテーブルです。細かい数値を確認して改善点を見つけられます。" />
           </h3>
-        <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>区分</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>バケット</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>PF</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
-              </tr>
-            </thead>
-            <tbody>
-              {setupData.map((s) => (
-                <tr
-                  key={s.setup}
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>戦略</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{s.setup}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{s.count}</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: s.profit >= 0 ? "var(--gain)" : "var(--loss)",
-                    }}
-                  >
-                    {Math.round(s.profit).toLocaleString("ja-JP")}円
-                  </td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{s.winRate.toFixed(0)}%</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{s.pf.toFixed(2)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    {Math.round(s.avgProfit).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              ))}
-              <tr
-                style={{
-                  borderBottom: "1px solid var(--line)",
-                  height: 44,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-              >
-                <td style={{ padding: 10, fontSize: 13 }}>方向</td>
-                <td style={{ padding: 10, fontSize: 13 }}>買い</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{sideData.long.count}</td>
-                <td
-                  style={{
-                    padding: 10,
-                    textAlign: "right",
-                    fontSize: 13,
-                    color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)",
-                  }}
-                >
-                  {Math.round(sideData.long.profit).toLocaleString("ja-JP")}円
-                </td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{sideData.long.winRate.toFixed(0)}%</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{sideData.long.pf.toFixed(2)}</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                  {Math.round(sideData.long.avgProfit).toLocaleString("ja-JP")}円
-                </td>
-              </tr>
-              <tr
-                style={{
-                  borderBottom: "1px solid var(--line)",
-                  height: 44,
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-              >
-                <td style={{ padding: 10, fontSize: 13 }}>方向</td>
-                <td style={{ padding: 10, fontSize: 13 }}>売り</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{sideData.short.count}</td>
-                <td
-                  style={{
-                    padding: 10,
-                    textAlign: "right",
-                    fontSize: 13,
-                    color: sideData.short.profit >= 0 ? "var(--gain)" : "var(--loss)",
-                  }}
-                >
-                  {Math.round(sideData.short.profit).toLocaleString("ja-JP")}円
-                </td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{sideData.short.winRate.toFixed(0)}%</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{sideData.short.pf.toFixed(2)}</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                  {Math.round(sideData.short.avgProfit).toLocaleString("ja-JP")}円
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "2px 8px",
-              borderRadius: 999,
-              background: "var(--chip)",
-              border: "1px solid var(--line)",
-              fontSize: 12,
-              color: "var(--muted)",
-            }}
-          >
-            戦略・方向別の詳細統計
-          </span>
-        </div>
+        <StrategySegmentTabs
+          setupData={setupData}
+          sideData={sideData}
+        />
       </div>
     </div>
   );

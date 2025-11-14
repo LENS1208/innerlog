@@ -11,6 +11,155 @@ import Card from "../../components/common/Card";
 
 type UnitType = "yen" | "r";
 
+type TailEventTab = "最大損失" | "最大利益" | "連敗ピーク" | "連勝ピーク";
+
+function TailEventTabs({
+  riskMetrics,
+  streakData,
+  formatDate,
+  getTradePair,
+  extractSetup
+}: {
+  riskMetrics: any;
+  streakData: any;
+  formatDate: (date: string) => string;
+  getTradePair: (trade: any) => string;
+  extractSetup: (trade: any) => string;
+}) {
+  const [activeTab, setActiveTab] = React.useState<TailEventTab>("最大損失");
+
+  const tabs: TailEventTab[] = ["最大損失", "最大利益", "連敗ピーク", "連勝ピーク"];
+
+  const renderTable = () => {
+    let data: any = null;
+    let type = "";
+
+    switch (activeTab) {
+      case "最大損失":
+        if (!riskMetrics.maxLossTrade) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "最大損失",
+          date: formatDate(riskMetrics.maxLossTrade.openTime),
+          pair: getTradePair(riskMetrics.maxLossTrade),
+          setup: extractSetup(riskMetrics.maxLossTrade),
+          r: `${(riskMetrics.maxLoss / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R`,
+          profit: riskMetrics.maxLoss,
+          color: "var(--loss)"
+        };
+        break;
+      case "最大利益":
+        if (!riskMetrics.maxProfitTrade) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "最大利益",
+          date: formatDate(riskMetrics.maxProfitTrade.openTime),
+          pair: getTradePair(riskMetrics.maxProfitTrade),
+          setup: extractSetup(riskMetrics.maxProfitTrade),
+          r: `+${(riskMetrics.maxProfit / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R`,
+          profit: riskMetrics.maxProfit,
+          color: "var(--gain)"
+        };
+        break;
+      case "連敗ピーク":
+        if (!streakData.maxLossStreakDate) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "連敗ピーク",
+          date: formatDate(streakData.maxLossStreakDate),
+          pair: "—",
+          setup: "—",
+          r: "—",
+          profit: `${streakData.maxLossStreak}連敗`,
+          color: "var(--loss)",
+          isStreak: true
+        };
+        break;
+      case "連勝ピーク":
+        if (!streakData.maxWinStreakDate) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "連勝ピーク",
+          date: formatDate(streakData.maxWinStreakDate),
+          pair: "—",
+          setup: "—",
+          r: "—",
+          profit: `${streakData.maxWinStreak}連勝`,
+          color: "var(--gain)",
+          isStreak: true
+        };
+        break;
+    }
+
+    return (
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ borderBottom: "2px solid var(--line)" }}>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>タイプ</th>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>日付</th>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>通貨</th>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>R</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>損益</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            style={{
+              borderBottom: "1px solid var(--line)",
+              height: 44,
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+          >
+            <td style={{ padding: 10, fontSize: 13 }}>{data.type}</td>
+            <td style={{ padding: 10, fontSize: 13 }}>{data.date}</td>
+            <td style={{ padding: 10, fontSize: 13 }}>{data.pair}</td>
+            <td style={{ padding: 10, fontSize: 13 }}>{data.setup}</td>
+            <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{data.r}</td>
+            <td
+              style={{
+                padding: 10,
+                textAlign: "right",
+                fontSize: 13,
+                color: data.color,
+              }}
+            >
+              {data.isStreak ? data.profit : `${data.profit > 0 ? '+' : ''}${Math.round(data.profit).toLocaleString("ja-JP")}円`}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--line)" }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: "10px 20px",
+              fontSize: 14,
+              fontWeight: activeTab === tab ? 600 : 400,
+              color: activeTab === tab ? "var(--fg)" : "var(--muted)",
+              background: "transparent",
+              border: "none",
+              borderBottom: activeTab === tab ? "2px solid var(--accent)" : "2px solid transparent",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div style={{ maxHeight: "40vh", overflowY: "auto" }}>
+        {renderTable()}
+      </div>
+    </div>
+  );
+}
+
 export default function ReportsRisk() {
   const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -718,150 +867,13 @@ export default function ReportsRisk() {
           テールイベント（ベスト/ワースト）
           <HelpIcon text="極端に大きな損益を記録した取引リストです。異常なケースを振り返り対策を考えられます。" />
         </h3>
-        <div style={{ maxHeight: "40vh", overflowY: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>タイプ</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>日付</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>通貨</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>R</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>損益</th>
-              </tr>
-            </thead>
-            <tbody>
-              {riskMetrics.maxLossTrade && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>最大損失</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(riskMetrics.maxLossTrade.openTime)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{getTradePair(riskMetrics.maxLossTrade)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{extractSetup(riskMetrics.maxLossTrade)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    {(riskMetrics.maxLoss / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R
-                  </td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--loss)",
-                    }}
-                  >
-                    {Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              )}
-              {riskMetrics.maxProfitTrade && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>最大利益</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(riskMetrics.maxProfitTrade.openTime)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{getTradePair(riskMetrics.maxProfitTrade)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{extractSetup(riskMetrics.maxProfitTrade)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    +{(riskMetrics.maxProfit / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R
-                  </td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--gain)",
-                    }}
-                  >
-                    +{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              )}
-              {streakData.maxLossStreakDate && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>連敗ピーク</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(streakData.maxLossStreakDate)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>—</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--loss)",
-                    }}
-                  >
-                    {streakData.maxLossStreak}連敗
-                  </td>
-                </tr>
-              )}
-              {streakData.maxWinStreakDate && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>連勝ピーク</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(streakData.maxWinStreakDate)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>—</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--gain)",
-                    }}
-                  >
-                    {streakData.maxWinStreak}連勝
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "2px 8px",
-              borderRadius: 999,
-              background: "var(--chip)",
-              border: "1px solid var(--line)",
-              fontSize: 12,
-              color: "var(--muted)",
-            }}
-          >
-            極端な損益イベントの追跡
-          </span>
-        </div>
+        <TailEventTabs
+          riskMetrics={riskMetrics}
+          streakData={streakData}
+          formatDate={formatDate}
+          getTradePair={getTradePair}
+          extractSetup={extractSetup}
+        />
       </div>
     </div>
   );
