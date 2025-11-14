@@ -980,6 +980,11 @@ export default function ReportsTimeAxis() {
                   legend: { display: false },
                   tooltip: {
                     callbacks: {
+                      title: (context) => {
+                        const dateStr = weeklyData[context[0].dataIndex][0];
+                        const [year, month, day] = dateStr.split('-');
+                        return `${year}年${parseInt(month)}月${parseInt(day)}日 週`;
+                      },
                       label: (context) => {
                         const value = context.parsed.y;
                         return `損益: ${(value as number).toLocaleString()}円`;
