@@ -389,7 +389,8 @@ export default function SettingsPage() {
                     アイコン画像
                   </label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <div
+                    <label
+                      htmlFor="avatar-upload"
                       style={{
                         width: 80,
                         height: 80,
@@ -400,6 +401,7 @@ export default function SettingsPage() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         backgroundColor: 'var(--bg-secondary)',
+                        cursor: 'pointer',
                       }}
                     >
                       {avatarPreview ? (
@@ -414,7 +416,7 @@ export default function SettingsPage() {
                           <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
                         </svg>
                       )}
-                    </div>
+                    </label>
                     <div style={{ flex: 1 }}>
                       <input
                         type="file"
