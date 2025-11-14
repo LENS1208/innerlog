@@ -6,6 +6,7 @@ import '../lib/dashboard.css'
 import { HelpIcon } from '../components/common/HelpIcon'
 import { getGridLineColor, getAccentColor, getLossColor, createProfitGradient, createDrawdownGradient } from '../lib/chartColors'
 import { useTheme } from '../lib/theme.context'
+import { formatJPY, formatJPYSigned, getPnLColor, pnlStyle } from '../lib/formatters'
 
 type TradeWithProfit = {
   profitYen?: number
@@ -22,10 +23,6 @@ type TradeWithProfit = {
 
 function getProfit(t: TradeWithProfit): number {
   return t.profitYen ?? t.profitJPY ?? 0
-}
-
-function formatJPY(v: number) {
-  return Math.round(v).toLocaleString('ja-JP')
 }
 
 function getWeekdayJP(date: Date): string {
@@ -1486,7 +1483,7 @@ export function BasicStatisticsCards({ trades }: { trades: TradeWithProfit[] }) 
         </div>
 
         <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>期待値</div>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>平均損益</div>
           <div style={{ fontSize: 24, fontWeight: 700, color: stats.expectancy >= 0 ? 'var(--gain)' : 'var(--loss)' }}>
             {stats.expectancy >= 0 ? '+' : ''}{formatJPY(stats.expectancy)}
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>円</span>

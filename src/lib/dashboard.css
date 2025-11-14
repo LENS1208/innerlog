@@ -311,10 +311,12 @@
 
 .accent-2 {
   color: var(--accent-2, #0084c7);
+  font-weight: 700;
 }
 
 .danger {
   color: var(--danger, #ef4444);
+  font-weight: 700;
 }
 
 /* Risk Cards Grid - Responsive */

@@ -45,3 +45,20 @@ export const fmt = {
   },
   price_raw: (n?: number) => (n==null ? "—" : n.toString())
 };
+
+export function formatJPY(value: number): string {
+  return `${Math.round(value).toLocaleString('ja-JP')}円`;
+}
+
+export function formatJPYSigned(value: number): string {
+  const sign = value >= 0 ? '+' : '';
+  return `${sign}${formatJPY(value)}`;
+}
+
+export function getPnLColor(value: number): string {
+  return value >= 0 ? 'var(--gain)' : 'var(--loss)';
+}
+
+export const pnlStyle = {
+  fontWeight: 700 as const
+};
