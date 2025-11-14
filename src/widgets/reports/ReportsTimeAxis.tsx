@@ -592,7 +592,7 @@ export default function ReportsTimeAxis() {
                     onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                   >
                     <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{style.label}</td>
-                    <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.count}件</td>
+                    <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.count}回</td>
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.winRate.toFixed(1)}%</td>
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.ev >= 0 ? "var(--gain)" : "var(--loss)" }}>
                       {style.ev >= 0 ? '+' : ''}{Math.round(style.ev).toLocaleString()}円
