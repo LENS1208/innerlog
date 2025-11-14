@@ -340,15 +340,27 @@ export default function JournalNotesPage() {
         })),
         ...tradeNotes.map(note => {
           const trade = tradesMap.get(note.ticket);
-          const closeDateKey = trade?.close_time ? trade.close_time.split('T')[0] : note.ticket;
+          if (!trade) {
+            console.warn(`Trade data not found for ticket: ${note.ticket}`);
+            return {
+              id: note.ticket,
+              title: `取引ノート｜${note.ticket}`,
+              kind: '取引' as const,
+              updatedAt: note.updated_at,
+              dateKey: note.ticket,
+              linked: false,
+              pnlYen: 0,
+            };
+          }
+          const closeDateKey = trade.close_time ? trade.close_time.split('T')[0] : note.ticket;
           return {
             id: note.ticket,
-            title: `${formatTradeDate(trade?.close_time)}（${getDayOfWeek(trade?.close_time || '')}）｜取引ノート｜${trade?.item || note.ticket}`,
+            title: `${formatTradeDate(trade.close_time)}（${getDayOfWeek(trade.close_time || '')}）｜取引ノート｜${trade.item}`,
             kind: '取引' as const,
             updatedAt: note.updated_at,
             dateKey: closeDateKey,
             linked: true,
-            pnlYen: trade?.profit || 0,
+            pnlYen: trade.profit || 0,
           };
         }),
         ...freeMemos.map(memo => ({
