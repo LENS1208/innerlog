@@ -266,43 +266,78 @@ export default function InsightsSection(props: InsightsSectionProps) {
       </div>
 
       <div className="insights-grid-secondary">
-        {/* 6) ベスト/ワーストデイ */}
+        {/* 6) 曜日ごとの損益 */}
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
-            ベスト/ワーストデイ
-            <HelpIcon text="最も利益が出た日と最も損失が出た日を表示します。" />
+            曜日ごとの損益
+            <HelpIcon text="曜日別の取引回数、平均損益、勝率、プロフィットファクター、合計収支を表示します。" />
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
-            <div
-              style={{
-                borderRadius: 12,
-                padding: 12,
-                background: "rgba(0, 132, 199, 0.1)",
-              }}
-            >
-              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Best Day</div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{formatJapaneseDate(bestDay?.date)}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-                  {bestDay ? currencyJPY(bestDay.pnl) : "—"}
+          <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(80px, 90px) minmax(60px, 70px) minmax(50px, 60px) minmax(100px, 1fr)",
+              gap: 8,
+              fontSize: 15,
+              color: "var(--muted)",
+              fontWeight: "bold",
+              paddingBottom: 8,
+              borderBottom: "1px solid var(--line)",
+              minWidth: "550px",
+            }}
+          >
+            <div>曜日</div>
+            <div style={{ textAlign: "right" }}>取引回数</div>
+            <div style={{ textAlign: "right" }}>平均損益</div>
+            <div style={{ textAlign: "right" }}>勝率</div>
+            <div style={{ textAlign: "right" }}>PF</div>
+            <div style={{ textAlign: "right" }}>合計収支</div>
+          </div>
+          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "550px" }}>
+            {expectationRows.map((row, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(80px, 90px) minmax(60px, 70px) minmax(50px, 60px) minmax(100px, 1fr)",
+                  gap: 8,
+                  fontSize: 13,
+                  color: "var(--ink)",
+                  alignItems: "center",
+                  paddingBottom: 6,
+                  borderBottom: i < expectationRows.length - 1 ? "1px solid #f3f4f6" : "none",
+                }}
+              >
+                <div>{row.label}</div>
+                <div style={{ textAlign: "right", color: "var(--muted)" }}>{row.count}</div>
+                <div
+                  style={{
+                    textAlign: "right",
+                    fontWeight: 600,
+                    color: row.avgPnl >= 0 ? "var(--gain)" : "var(--loss)",
+                  }}
+                >
+                  {currencyJPY(row.avgPnl)}
+                </div>
+                <div style={{ textAlign: "right", color: "var(--muted)" }}>
+                  {row.winrate !== null && row.winrate !== undefined ? `${Math.round(row.winrate * 100)}%` : "—"}
+                </div>
+                <div style={{ textAlign: "right", color: "var(--muted)" }}>
+                  {row.pf !== null && row.pf !== undefined ? (row.pf === Infinity ? '∞' : row.pf.toFixed(1)) : "—"}
+                </div>
+                <div
+                  style={{
+                    textAlign: "right",
+                    fontWeight: 600,
+                    fontSize: 18,
+                    color: row.totalPnl >= 0 ? "var(--gain)" : "var(--loss)",
+                  }}
+                >
+                  {currencyJPY(row.totalPnl)}
                 </div>
               </div>
-            </div>
-            <div
-              style={{
-                borderRadius: 12,
-                padding: 12,
-                background: "rgba(239, 68, 68, 0.1)",
-              }}
-            >
-              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Worst Day</div>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{formatJapaneseDate(worstDay?.date)}</div>
-                <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-                  {worstDay ? currencyJPY(worstDay.pnl) : "—"}
-                </div>
-              </div>
-            </div>
+            ))}
+          </div>
           </div>
         </div>
 
@@ -443,78 +478,43 @@ export default function InsightsSection(props: InsightsSectionProps) {
           </div>
         </div>
 
-        {/* 9) 曜日ごとの損益 */}
+        {/* 9) ベスト/ワーストデイ */}
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
-            曜日ごとの損益
-            <HelpIcon text="曜日別の取引回数、平均損益、勝率、プロフィットファクター、合計収支を表示します。" />
+            ベスト/ワーストデイ
+            <HelpIcon text="最も利益が出た日と最も損失が出た日を表示します。" />
           </div>
-          <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(80px, 90px) minmax(60px, 70px) minmax(50px, 60px) minmax(100px, 1fr)",
-              gap: 8,
-              fontSize: 15,
-              color: "var(--muted)",
-              fontWeight: "bold",
-              paddingBottom: 8,
-              borderBottom: "1px solid var(--line)",
-              minWidth: "550px",
-            }}
-          >
-            <div>曜日</div>
-            <div style={{ textAlign: "right" }}>取引回数</div>
-            <div style={{ textAlign: "right" }}>平均損益</div>
-            <div style={{ textAlign: "right" }}>勝率</div>
-            <div style={{ textAlign: "right" }}>PF</div>
-            <div style={{ textAlign: "right" }}>合計収支</div>
-          </div>
-          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "550px" }}>
-            {expectationRows.map((row, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(80px, 1fr) minmax(60px, 80px) minmax(80px, 90px) minmax(60px, 70px) minmax(50px, 60px) minmax(100px, 1fr)",
-                  gap: 8,
-                  fontSize: 13,
-                  color: "var(--ink)",
-                  alignItems: "center",
-                  paddingBottom: 6,
-                  borderBottom: i < expectationRows.length - 1 ? "1px solid #f3f4f6" : "none",
-                }}
-              >
-                <div>{row.label}</div>
-                <div style={{ textAlign: "right", color: "var(--muted)" }}>{row.count}</div>
-                <div
-                  style={{
-                    textAlign: "right",
-                    fontWeight: 600,
-                    color: row.avgPnl >= 0 ? "var(--gain)" : "var(--loss)",
-                  }}
-                >
-                  {currencyJPY(row.avgPnl)}
-                </div>
-                <div style={{ textAlign: "right", color: "var(--muted)" }}>
-                  {row.winrate !== null && row.winrate !== undefined ? `${Math.round(row.winrate * 100)}%` : "—"}
-                </div>
-                <div style={{ textAlign: "right", color: "var(--muted)" }}>
-                  {row.pf !== null && row.pf !== undefined ? (row.pf === Infinity ? '∞' : row.pf.toFixed(1)) : "—"}
-                </div>
-                <div
-                  style={{
-                    textAlign: "right",
-                    fontWeight: 600,
-                    fontSize: 18,
-                    color: row.totalPnl >= 0 ? "var(--gain)" : "var(--loss)",
-                  }}
-                >
-                  {currencyJPY(row.totalPnl)}
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
+            <div
+              style={{
+                borderRadius: 12,
+                padding: 12,
+                background: "rgba(0, 132, 199, 0.1)",
+              }}
+            >
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Best Day</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{formatJapaneseDate(bestDay?.date)}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
+                  {bestDay ? currencyJPY(bestDay.pnl) : "—"}
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+            <div
+              style={{
+                borderRadius: 12,
+                padding: 12,
+                background: "rgba(239, 68, 68, 0.1)",
+              }}
+            >
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Worst Day</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{formatJapaneseDate(worstDay?.date)}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
+                  {worstDay ? currencyJPY(worstDay.pnl) : "—"}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
