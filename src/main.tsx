@@ -38,6 +38,10 @@ ChartJS.register(
   TimeScale
 );
 
+ChartJS.defaults.scales.linear.grid.color = 'var(--grid-line)';
+ChartJS.defaults.scales.category.grid.color = 'var(--grid-line)';
+ChartJS.defaults.scales.time.grid.color = 'var(--grid-line)';
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
     <App />
