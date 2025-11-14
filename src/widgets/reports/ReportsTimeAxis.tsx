@@ -496,6 +496,15 @@ export default function ReportsTimeAxis() {
     }
   };
 
+  const formatDateJapanese = (dateString: string) => {
+    if (dateString === "-") return "-";
+    const parts = dateString.split("-");
+    if (parts.length < 3) return dateString;
+    const month = parseInt(parts[1], 10);
+    const day = parseInt(parts[2], 10);
+    return `${month}月${day}日`;
+  };
+
   const formatHoldTime = (minutes: number) => {
     if (minutes < 60) return `${Math.round(minutes)}分`;
     if (minutes < 1440) {
@@ -887,7 +896,7 @@ export default function ReportsTimeAxis() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: topDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {topDay.date !== "-" ? `${parseInt(topDay.date.split("-")[1])}月${parseInt(topDay.date.split("-")[2])}日` : "-"}：{formatValue(topDay.profit, "profit")}
+                {formatDateJapanese(topDay.date)}：{formatValue(topDay.profit, "profit")}
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {topDay.winRate.toFixed(0)}% | 取引 {topDay.count}件
@@ -896,7 +905,7 @@ export default function ReportsTimeAxis() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: bottomDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {bottomDay.date !== "-" ? `${parseInt(bottomDay.date.split("-")[1])}月${parseInt(bottomDay.date.split("-")[2])}日` : "-"}：{formatValue(bottomDay.profit, "profit")}
+                {formatDateJapanese(bottomDay.date)}：{formatValue(bottomDay.profit, "profit")}
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {bottomDay.winRate.toFixed(0)}% | 取引 {bottomDay.count}件
