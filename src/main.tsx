@@ -39,9 +39,9 @@ ChartJS.register(
 );
 
 function updateChartColors() {
-  const gridColor = getComputedStyle(document.documentElement)
-    .getPropertyValue('--grid-line')
-    .trim();
+  const styles = getComputedStyle(document.documentElement);
+  const gridColor = styles.getPropertyValue('--grid-line').trim();
+  const textColor = styles.getPropertyValue('--ink').trim();
 
   if (!ChartJS.defaults.scales) {
     ChartJS.defaults.scales = {};
@@ -50,6 +50,8 @@ function updateChartColors() {
   ChartJS.defaults.scale = ChartJS.defaults.scale || {};
   ChartJS.defaults.scale.grid = ChartJS.defaults.scale.grid || {};
   ChartJS.defaults.scale.grid.color = gridColor;
+  ChartJS.defaults.scale.ticks = ChartJS.defaults.scale.ticks || {};
+  ChartJS.defaults.scale.ticks.color = textColor;
 }
 
 updateChartColors();
