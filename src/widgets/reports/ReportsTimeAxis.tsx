@@ -771,7 +771,22 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        const day = dayOfWeekData[context.dataIndex];
+                        return [
+                          `損益: ${formatValue(value, "profit")}`,
+                          `勝率: ${day.winRate.toFixed(0)}%`,
+                          `取引: ${day.count}件`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -817,7 +832,22 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        const hour = hourData[context.dataIndex];
+                        return [
+                          `損益: ${formatValue(value, "profit")}`,
+                          `勝率: ${hour.winRate.toFixed(0)}%`,
+                          `取引: ${hour.count}件`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -845,7 +875,17 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        return `損益: ${(value as number).toLocaleString()}円`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -883,7 +923,17 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        return `損益: ${(value as number).toLocaleString()}円`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -909,7 +959,17 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        return `取引数: ${value}件`;
+                      }
+                    }
+                  }
+                },
                 scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
               }}
             />
@@ -933,7 +993,17 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const value = context.parsed.y;
+                        return `勝率: ${value.toFixed(1)}%`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     min: 0,
@@ -972,7 +1042,20 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const point = context.raw as { x: number; y: number };
+                        return [
+                          `時刻: ${Math.floor(point.x)}時`,
+                          `損益: ${point.y.toLocaleString()}円`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   x: { title: { display: true, text: "時刻" }, min: 0, max: 24 },
                   y: { title: { display: true, text: "損益" } },
@@ -998,7 +1081,20 @@ export default function ReportsTimeAxis() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const point = context.raw as { x: number; y: number };
+                        return [
+                          `保有時間: ${Math.round(point.x)}分`,
+                          `損益: ${point.y.toLocaleString()}円`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   x: { title: { display: true, text: "保有時間（分）" } },
                   y: { title: { display: true, text: "損益" } },
