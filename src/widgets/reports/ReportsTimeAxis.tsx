@@ -1166,16 +1166,20 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
   }, [trades]);
 
   const getCellBackgroundColor = (winRate: number) => {
-    const redColor = [239, 68, 68];
-    const blueColor = [0, 132, 199];
-
-    const ratio = winRate / 100;
-
-    const r = Math.round(redColor[0] + (blueColor[0] - redColor[0]) * ratio);
-    const g = Math.round(redColor[1] + (blueColor[1] - redColor[1]) * ratio);
-    const b = Math.round(redColor[2] + (blueColor[2] - redColor[2]) * ratio);
-
-    return `rgb(${r}, ${g}, ${b})`;
+    if (winRate >= 70) {
+      const intensity = 0.65 + ((winRate - 70) / 30) * 0.35;
+      return `rgba(59, 130, 246, ${intensity})`;
+    }
+    if (winRate >= 55) {
+      const intensity = 0.6 + ((winRate - 55) / 15) * 0.3;
+      return `rgba(34, 197, 94, ${intensity})`;
+    }
+    if (winRate >= 45) {
+      const intensity = 0.6 + ((winRate - 45) / 10) * 0.25;
+      return `rgba(251, 146, 60, ${intensity})`;
+    }
+    const intensity = 0.65 + ((45 - winRate) / 45) * 0.35;
+    return `rgba(239, 68, 68, ${intensity})`;
   };
 
   if (trades.length === 0) {
@@ -1265,16 +1269,20 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
       <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: getLossColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
-          <span>0% (赤)</span>
+          <div style={{ width: 16, height: 16, background: "rgba(59, 130, 246, 0.8)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <span>優秀 (70%+)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(120, 100, 134)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
-          <span>50%</span>
+          <div style={{ width: 16, height: 16, background: "rgba(34, 197, 94, 0.75)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <span>良好 (55-69%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: getAccentColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
-          <span>100% (青)</span>
+          <div style={{ width: 16, height: 16, background: "rgba(251, 146, 60, 0.75)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <span>普通 (45-54%)</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ width: 16, height: 16, background: "rgba(239, 68, 68, 0.8)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <span>要改善 (-44%)</span>
         </div>
       </div>
     </div>
