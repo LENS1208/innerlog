@@ -281,55 +281,53 @@ export default function LoginPage() {
             />
           </div>
 
-          {isLogin && (
-            <div
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: 24,
+            }}
+          >
+            <label
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                marginBottom: 24,
+                gap: 8,
+                cursor: 'pointer',
+                fontSize: 14,
+                color: '#4a5568',
               }}
             >
-              <label
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
+                  width: 18,
+                  height: 18,
                   cursor: 'pointer',
-                  fontSize: 14,
-                  color: '#4a5568',
+                  accentColor: '#0084c7',
                 }}
-              >
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  style={{
-                    width: 18,
-                    height: 18,
-                    cursor: 'pointer',
-                    accentColor: '#0084c7',
-                  }}
-                />
-                ログイン状態を保持
-              </label>
-              <button
-                type="button"
-                onClick={handleResetPassword}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#48bb78',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
-              >
-                パスワードを忘れた方
-              </button>
-            </div>
-          )}
+              />
+              ログイン状態を保持
+            </label>
+            <button
+              type="button"
+              onClick={handleResetPassword}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#0084c7',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                textDecoration: 'underline',
+              }}
+            >
+              パスワードを忘れた方
+            </button>
+          </div>
 
           {message && (
             <div
@@ -370,7 +368,7 @@ export default function LoginPage() {
               if (!loading) e.currentTarget.style.background = '#0084c7';
             }}
           >
-            {loading ? '処理中...' : isLogin ? 'ログイン' : '新規登録'}
+            {loading ? '処理中...' : 'ログイン'}
           </button>
         </form>
 
