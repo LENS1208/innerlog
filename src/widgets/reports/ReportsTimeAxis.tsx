@@ -1165,22 +1165,27 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
     return { data, symbols };
   }, [trades]);
 
-  const getCellBackgroundColor = (winRate: number, opacity: number = 1) => {
+  const getCellBackgroundColor = (winRate: number) => {
     if (winRate >= 70) {
-      const green = getGreenColor();
-      return winRate >= 80 ? green : green.replace('rgb', 'rgba').replace(')', `, ${0.6 + (winRate - 70) / 50})`);
+      const intensity = 0.25 + ((winRate - 70) / 30) * 0.35;
+      return `rgba(34, 197, 94, ${intensity})`;
     }
     if (winRate >= 55) {
-      const accent = getAccentColor();
-      return accent.replace('rgb', 'rgba').replace(')', `, ${0.5 + (winRate - 55) / 75})`);
+      const intensity = 0.2 + ((winRate - 55) / 15) * 0.25;
+      return `rgba(59, 130, 246, ${intensity})`;
     }
     if (winRate >= 45) {
-      const warning = getWarningColor();
-      return warning.replace('rgb', 'rgba').replace(')', `, ${0.4 + (winRate - 45) / 50})`);
+      const intensity = 0.2 + ((winRate - 45) / 10) * 0.2;
+      return `rgba(251, 146, 60, ${intensity})`;
     }
-    const loss = getLossColor();
-    const intensity = Math.max(0.3, 0.8 - winRate / 100);
-    return loss.replace('rgb', 'rgba').replace(')', `, ${intensity})`);
+    const intensity = 0.25 + ((45 - winRate) / 45) * 0.35;
+    return `rgba(239, 68, 68, ${intensity})`;
+  };
+
+  const getTextColor = (winRate: number) => {
+    if (winRate >= 65) return "#ffffff";
+    if (winRate <= 35) return "#ffffff";
+    return "var(--fg)";
   };
 
   if (trades.length === 0) {
@@ -1217,6 +1222,10 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                 const winRate = data.total > 0 ? (data.wins / data.total) * 100 : 0;
                 const hasData = data.total > 0;
 
+                const tooltipText = hasData
+                  ? `${symbol} ${item.range}\n${data.wins}勝 ${data.total - data.wins}敗 (${data.total}戦)\n損益: ${Math.round(data.profit).toLocaleString()}円`
+                  : "";
+
                 return (
                   <td
                     key={symbol}
@@ -1226,11 +1235,11 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                       fontSize: 12,
                       background: hasData ? getCellBackgroundColor(winRate) : "var(--chip)",
                       border: "1px solid var(--line)",
-                      cursor: hasData ? "pointer" : "default",
+                      cursor: hasData ? "help" : "default",
                       position: "relative",
                       height: 60,
                     }}
-                    title={hasData ? `${symbol} ${item.range}\n${data.wins}勝 ${data.total - data.wins}敗 (${data.total}戦)\n損益: ${Math.round(data.profit).toLocaleString()}円` : ""}
+                    title={tooltipText}
                   >
                     {hasData ? (
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
@@ -1238,8 +1247,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                           style={{
                             fontSize: 15,
                             fontWeight: 700,
-                            color: "#ffffff",
-                            textShadow: "0 1px 2px rgba(0,0,0,0.3)",
+                            color: getTextColor(winRate),
                           }}
                         >
                           {winRate.toFixed(0)}%
@@ -1248,8 +1256,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                           style={{
                             fontSize: 11,
                             fontWeight: 600,
-                            color: "#ffffff",
-                            textShadow: "0 1px 2px rgba(0,0,0,0.3)",
+                            color: getTextColor(winRate),
                           }}
                         >
                           {Math.round(data.profit) >= 0 ? '+' : ''}{Math.round(data.profit).toLocaleString()}
