@@ -63,6 +63,10 @@ function generateDatasetA(): Trade[] {
   const totalTrades = 262;
 
   let startDate = new Date('2024-12-01T00:00:00Z');
+  const endDate = new Date('2025-11-30T23:59:59Z');
+  const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+  const daysPerTrade = totalDays / totalTrades;
+
   let ticketNumber = 101000600;
 
   const profitPerTrade = targetProfit / totalTrades;
@@ -74,10 +78,11 @@ function generateDatasetA(): Trade[] {
     const side = Math.random() > 0.5 ? 'buy' : 'sell';
     const size = parseFloat((randomBetween(1.0, 3.5)).toFixed(1));
 
-    const daysOffset = randomInt(0, 11);
+    const baseDays = Math.floor(i * daysPerTrade);
+    const daysOffset = randomInt(0, Math.floor(daysPerTrade) + 1);
     const hoursOffset = randomInt(0, 24);
     const minutesOffset = randomInt(0, 60);
-    startDate = new Date(startDate.getTime() + daysOffset * 24 * 60 * 60 * 1000 + hoursOffset * 60 * 60 * 1000 + minutesOffset * 60 * 1000);
+    startDate = new Date(new Date('2024-12-01T00:00:00Z').getTime() + (baseDays + daysOffset) * 24 * 60 * 60 * 1000 + hoursOffset * 60 * 60 * 1000 + minutesOffset * 60 * 1000);
 
     const holdTimeMinutes = randomInt(180, 720);
     const closeDate = new Date(startDate.getTime() + holdTimeMinutes * 60 * 1000);

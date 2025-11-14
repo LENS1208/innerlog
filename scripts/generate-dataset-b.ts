@@ -100,8 +100,14 @@ function calculateProfit(pair: string, size: number, pips: number): number {
 function generateDatasetB(): Trade[] {
   const trades: Trade[] = [];
   const totalTrades = 754;
+  const targetProfit = 7806376;
   let startDate = new Date('2024-08-01T00:00:00Z');
+  const endDate = new Date('2025-11-30T23:59:59Z');
+  const totalDays = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+  const daysPerTrade = totalDays / totalTrades;
+
   let ticketNumber = 102000100;
+  let accumulatedProfit = 0;
 
   for (let i = 0; i < totalTrades; i++) {
     const pair = weightedRandomPair();
@@ -110,27 +116,34 @@ function generateDatasetB(): Trade[] {
     const side = Math.random() > 0.5 ? 'buy' : 'sell';
     const size = parseFloat((randomBetween(0.5, 4.0)).toFixed(1));
 
-    const daysOffset = randomInt(0, 5);
+    const baseDays = Math.floor(i * daysPerTrade);
+    const daysOffset = randomInt(0, Math.floor(daysPerTrade) + 1);
     const hoursOffset = randomInt(0, 24);
     const minutesOffset = randomInt(0, 60);
-    startDate = new Date(startDate.getTime() + daysOffset * 24 * 60 * 60 * 1000 + hoursOffset * 60 * 60 * 1000 + minutesOffset * 60 * 1000);
+    startDate = new Date(new Date('2024-08-01T00:00:00Z').getTime() + (baseDays + daysOffset) * 24 * 60 * 60 * 1000 + hoursOffset * 60 * 60 * 1000 + minutesOffset * 60 * 1000);
 
     const holdTimeMinutes = randomInt(120, 900);
     const closeDate = new Date(startDate.getTime() + holdTimeMinutes * 60 * 1000);
 
     const openPrice = pairInfo.basePrice + randomBetween(-pairInfo.volatility, pairInfo.volatility);
 
+    const remainingProfit = targetProfit - accumulatedProfit;
+    const remainingTrades = totalTrades - i;
+    const avgProfitNeeded = remainingProfit / remainingTrades;
+
     const isWin = Math.random() < performance;
     let targetPips: number;
 
     if (isWin) {
-      targetPips = randomBetween(10, 60);
+      const pipsForTarget = avgProfitNeeded / (size * (pair.includes('JPY') ? 1000 : 100000));
+      targetPips = Math.max(10, Math.min(60, pipsForTarget * randomBetween(0.8, 1.5)));
     } else {
       targetPips = randomBetween(-50, -8);
     }
 
     const actualPips = targetPips + randomBetween(-3, 3);
     const profit = calculateProfit(pair, size, actualPips);
+    accumulatedProfit += profit;
 
     let closePrice: number;
     if (side === 'buy') {
@@ -170,6 +183,11 @@ function generateDatasetB(): Trade[] {
       comment: setup
     });
   }
+
+  const actualTotal = trades.reduce((sum, t) => sum + parseInt(t.profit), 0);
+  const adjustment = targetProfit - actualTotal;
+  const lastTrade = trades[trades.length - 1];
+  lastTrade.profit = (parseInt(lastTrade.profit) + adjustment).toString();
 
   return trades;
 }
