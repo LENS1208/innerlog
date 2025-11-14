@@ -540,7 +540,25 @@ export default function ReportsStrategy() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return setupData.slice(0, 6)[context[0].dataIndex].setup;
+                      },
+                      label: (context) => {
+                        const dataIndex = context.dataIndex;
+                        const s = setupData.slice(0, 6)[dataIndex];
+                        return [
+                          `損益: ${s.profit.toLocaleString()}円`,
+                          `勝率: ${s.winRate.toFixed(1)}%`,
+                          `取引回数: ${s.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -573,6 +591,20 @@ export default function ReportsStrategy() {
                 maintainAspectRatio: false,
                 plugins: {
                   legend: { position: "bottom" },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const label = context.label || '';
+                        const value = context.parsed;
+                        const data = label === '買い' ? sideData.long : sideData.short;
+                        return [
+                          `${label}: ${value}回`,
+                          `損益: ${data.profit.toLocaleString()}円`,
+                          `勝率: ${data.winRate.toFixed(1)}%`
+                        ];
+                      }
+                    }
+                  }
                 },
               }}
             />
@@ -597,7 +629,20 @@ export default function ReportsStrategy() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return setupData.slice(0, 6)[context[0].dataIndex].setup;
+                      },
+                      label: (context) => {
+                        const mins = context.parsed.y;
+                        return `平均保有時間: ${formatMinutes(mins)}`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -637,7 +682,23 @@ export default function ReportsStrategy() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return setupData.slice(0, 6)[context[0].dataIndex].setup;
+                      },
+                      label: (context) => {
+                        const s = setupData.slice(0, 6)[context.dataIndex];
+                        return [
+                          `勝率: ${s.winRate.toFixed(1)}%`,
+                          `取引回数: ${s.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -670,7 +731,23 @@ export default function ReportsStrategy() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return setupData.slice(0, 6)[context[0].dataIndex].setup;
+                      },
+                      label: (context) => {
+                        const s = setupData.slice(0, 6)[context.dataIndex];
+                        return [
+                          `PF: ${s.pf.toFixed(2)}`,
+                          `取引回数: ${s.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -708,6 +785,18 @@ export default function ReportsStrategy() {
                 maintainAspectRatio: false,
                 plugins: {
                   legend: { position: "bottom" },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return setupCrossData.slice(0, 5)[context[0].dataIndex].setup;
+                      },
+                      label: (context) => {
+                        const direction = context.dataset.label;
+                        const value = context.parsed.y;
+                        return `${direction}: ${value.toLocaleString()}円`;
+                      }
+                    }
+                  }
                 },
                 scales: {
                   y: {
@@ -790,7 +879,19 @@ export default function ReportsStrategy() {
                 options={{
                   responsive: true,
                   maintainAspectRatio: false,
-                  plugins: { legend: { display: false } },
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        title: (context) => {
+                          return exitEfficiencyData.distribution[context[0].dataIndex].label;
+                        },
+                        label: (context) => {
+                          return `取引回数: ${context.parsed.y}回`;
+                        }
+                      }
+                    }
+                  },
                   scales: {
                     y: { beginAtZero: true, ticks: { stepSize: 1 } },
                   },

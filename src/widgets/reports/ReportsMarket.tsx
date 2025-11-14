@@ -505,7 +505,25 @@ export default function ReportsMarket() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return symbolData.slice(0, 6)[context[0].dataIndex].symbol;
+                      },
+                      label: (context) => {
+                        const dataIndex = context.dataIndex;
+                        const s = symbolData.slice(0, 6)[dataIndex];
+                        return [
+                          `損益: ${s.profit.toLocaleString()}円`,
+                          `勝率: ${s.winRate.toFixed(1)}%`,
+                          `取引回数: ${s.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -537,7 +555,25 @@ export default function ReportsMarket() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return pipsRangeData[context[0].dataIndex].label;
+                      },
+                      label: (context) => {
+                        const dataIndex = context.dataIndex;
+                        const r = pipsRangeData[dataIndex];
+                        return [
+                          `損益: ${r.profit.toLocaleString()}円`,
+                          `勝率: ${r.winRate.toFixed(1)}%`,
+                          `取引回数: ${r.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -569,7 +605,33 @@ export default function ReportsMarket() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        const dataIndex = context[0].dataIndex;
+                        const baseData = currencyData.base.slice(0, 4);
+                        const quoteData = currencyData.quote.slice(0, 4);
+                        if (dataIndex < baseData.length) {
+                          return `${baseData[dataIndex].curr} (ベース通貨)`;
+                        } else {
+                          return `${quoteData[dataIndex - baseData.length].curr} (クオート通貨)`;
+                        }
+                      },
+                      label: (context) => {
+                        const dataIndex = context.dataIndex;
+                        const baseData = currencyData.base.slice(0, 4);
+                        const quoteData = currencyData.quote.slice(0, 4);
+                        const data = dataIndex < baseData.length ? baseData[dataIndex] : quoteData[dataIndex - baseData.length];
+                        return [
+                          `損益: ${data.profit.toLocaleString()}円`,
+                          `取引回数: ${data.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -667,7 +729,25 @@ export default function ReportsMarket() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return marketConditionData[context[0].dataIndex].condition;
+                      },
+                      label: (context) => {
+                        const dataIndex = context.dataIndex;
+                        const m = marketConditionData[dataIndex];
+                        return [
+                          `損益: ${m.profit.toLocaleString()}円`,
+                          `勝率: ${m.winRate.toFixed(1)}%`,
+                          `取引回数: ${m.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,

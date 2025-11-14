@@ -679,7 +679,19 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return profitDistribution.labels[context[0].dataIndex];
+                      },
+                      label: (context) => {
+                        return `取引回数: ${context.parsed.y}回`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -713,7 +725,19 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return rMultipleDistribution.labels[context[0].dataIndex];
+                      },
+                      label: (context) => {
+                        return `取引回数: ${context.parsed.y}回`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -747,7 +771,19 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return `取引 #${context[0].dataIndex + 1}`;
+                      },
+                      label: (context) => {
+                        return `ドローダウン: ${context.parsed.y.toLocaleString()}円`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     ticks: { callback: (value) => `${(value as number).toLocaleString()}円` },
@@ -789,7 +825,23 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return ddContributionByDay.slice(0, 7)[context[0].dataIndex].day;
+                      },
+                      label: (context) => {
+                        const d = ddContributionByDay.slice(0, 7)[context.dataIndex];
+                        return [
+                          `損失額: ${d.loss.toLocaleString()}円`,
+                          `負け回数: ${d.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -819,7 +871,23 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return ddContributionByPair.slice(0, 6)[context[0].dataIndex].pair;
+                      },
+                      label: (context) => {
+                        const d = ddContributionByPair.slice(0, 6)[context.dataIndex];
+                        return [
+                          `損失額: ${d.loss.toLocaleString()}円`,
+                          `負け回数: ${d.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -849,7 +917,23 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return ddContributionBySetup.slice(0, 6)[context[0].dataIndex].setup;
+                      },
+                      label: (context) => {
+                        const d = ddContributionBySetup.slice(0, 6)[context.dataIndex];
+                        return [
+                          `損失額: ${d.loss.toLocaleString()}円`,
+                          `負け回数: ${d.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
