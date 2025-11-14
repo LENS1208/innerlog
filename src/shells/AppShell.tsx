@@ -14,6 +14,19 @@ import { showToast } from "../lib/toast";
 type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
 
+function shouldShowFilters(path: string): boolean {
+  const k = path.split("/")[0];
+  if (!k || k === "dashboard") return true;
+  if (k === "calendar") return true;
+  if (k === "trades") return true;
+  if (k === "reports") return true;
+  if (k === "ai-evaluation") return false;
+  if (k === "forecast" || k === "ai-proposal") return false;
+  if (k === "notebook") return false;
+  if (k === "settings") return false;
+  return false;
+}
+
 // ヘッダー（右カラムの上部）
 function Header({
   onMenuToggle,
@@ -27,6 +40,9 @@ function Header({
   onUploadClick: () => void;
 }) {
   const { resetFilters, loading } = useDataset();
+  const fullPath = location.hash.replace(/^#\//, "") || "dashboard";
+  const showFilterBar = shouldShowFilters(fullPath);
+
   return (
     <>
       <div
@@ -97,132 +113,140 @@ function Header({
             </div>
 
             {/* フィルター表示/非表示トグルボタン（モバイルのみ） */}
-            <button
-              onClick={onFilterToggle}
-              className="mobile-only"
-              style={{
-                width: 40,
-                height: 40,
-                display: "none",
-                justifyContent: "center",
-                alignItems: "center",
-                background: showFilters ? "var(--accent)" : "var(--surface)",
-                color: showFilters ? "#fff" : "var(--ink)",
-                border: "1px solid var(--line)",
-                borderRadius: 8,
-                cursor: "pointer",
-                padding: 0,
-                marginLeft: "auto",
-              }}
-              aria-label="フィルターを表示/非表示"
-              title="フィルターを表示/非表示"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-              </svg>
-            </button>
+            {showFilterBar && (
+              <button
+                onClick={onFilterToggle}
+                className="mobile-only"
+                style={{
+                  width: 40,
+                  height: 40,
+                  display: "none",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: showFilters ? "var(--accent)" : "var(--surface)",
+                  color: showFilters ? "#fff" : "var(--ink)",
+                  border: "1px solid var(--line)",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  padding: 0,
+                  marginLeft: "auto",
+                }}
+                aria-label="フィルターを表示/非表示"
+                title="フィルターを表示/非表示"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+              </button>
+            )}
 
             {/* 大画面のみ：1行レイアウト */}
             <div className="header-oneline" style={{ marginLeft: "auto", display: "none", gap: 8, alignItems: "center" }}>
-              {loading && (
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  fontSize: 13,
-                  color: 'var(--muted)'
-                }}>
-                  <div style={{
-                    width: 16,
-                    height: 16,
-                    border: '2px solid var(--line)',
-                    borderTopColor: 'var(--accent)',
-                    borderRadius: '50%',
-                    animation: 'spin 0.8s linear infinite'
-                  }} />
-                  <span>適用中...</span>
-                </div>
+              {showFilterBar && (
+                <>
+                  {loading && (
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      fontSize: 13,
+                      color: 'var(--muted)'
+                    }}>
+                      <div style={{
+                        width: 16,
+                        height: 16,
+                        border: '2px solid var(--line)',
+                        borderTopColor: 'var(--accent)',
+                        borderRadius: '50%',
+                        animation: 'spin 0.8s linear infinite'
+                      }} />
+                      <span>適用中...</span>
+                    </div>
+                  )}
+                  <FiltersBar />
+                  <button
+                    onClick={resetFilters}
+                    title="リセット"
+                    style={{
+                      height: 36,
+                      padding: "0 16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "none",
+                      borderRadius: 12,
+                      background: "var(--accent)",
+                      color: "white",
+                      fontWeight: 600,
+                      fontSize: 14,
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    リセット
+                  </button>
+                </>
               )}
-              <FiltersBar />
-              <button
-                onClick={resetFilters}
-                title="リセット"
-                style={{
-                  height: 36,
-                  padding: "0 16px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: "none",
-                  borderRadius: 12,
-                  background: "var(--accent)",
-                  color: "white",
-                  fontWeight: 600,
-                  fontSize: 14,
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                リセット
-              </button>
               <UserMenu />
             </div>
           </div>
 
           {/* 2行目: 中画面で2行レイアウト */}
-          <div className="header-twoline" style={{ display: "none", padding: "16px var(--px-desktop) 20px" }}>
-            <div style={{ display: "flex", gap: 16, alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", flex: "1 1 auto", minWidth: 0 }}>
-                <FiltersBar />
-              </div>
-              <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0, marginLeft: "auto" }}>
-                {loading && (
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    fontSize: 13,
-                    color: 'var(--muted)'
-                  }}>
+          {showFilterBar && (
+            <div className="header-twoline" style={{ display: "none", padding: "16px var(--px-desktop) 20px" }}>
+              <div style={{ display: "flex", gap: 16, alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", flex: "1 1 auto", minWidth: 0 }}>
+                  <FiltersBar />
+                </div>
+                <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0, marginLeft: "auto" }}>
+                  {loading && (
                     <div style={{
-                      width: 16,
-                      height: 16,
-                      border: '2px solid var(--line)',
-                      borderTopColor: 'var(--accent)',
-                      borderRadius: '50%',
-                      animation: 'spin 0.8s linear infinite'
-                    }} />
-                  </div>
-                )}
-                <button
-                  onClick={resetFilters}
-                  title="リセット"
-                  style={{
-                    height: 36,
-                    padding: "0 16px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    border: "none",
-                    borderRadius: 12,
-                    background: "var(--accent)",
-                    color: "white",
-                    fontWeight: 600,
-                    fontSize: 14,
-                    cursor: "pointer",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  リセット
-                </button>
-                <UserMenu />
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      fontSize: 13,
+                      color: 'var(--muted)'
+                    }}>
+                      <div style={{
+                        width: 16,
+                        height: 16,
+                        border: '2px solid var(--line)',
+                        borderTopColor: 'var(--accent)',
+                        borderRadius: '50%',
+                        animation: 'spin 0.8s linear infinite'
+                      }} />
+                    </div>
+                  )}
+                  <button
+                    onClick={resetFilters}
+                    title="リセット"
+                    style={{
+                      height: 36,
+                      padding: "0 16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "none",
+                      borderRadius: 12,
+                      background: "var(--accent)",
+                      color: "white",
+                      fontWeight: 600,
+                      fontSize: 14,
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    リセット
+                  </button>
+                  <UserMenu />
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* モバイルのみ：フィルター縦配置 */}
-        {showFilters && (
+        {showFilterBar && showFilters && (
           <div className="mobile-only mobile-filters" style={{ display: "none", padding: "12px 16px", borderTop: "1px solid var(--line)", flexDirection: "column", gap: 10 }}>
             <FiltersBar />
             <div style={{ display: "flex", gap: 8, marginTop: 4, justifyContent: "flex-end" }}>
