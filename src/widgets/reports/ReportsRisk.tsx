@@ -355,7 +355,7 @@ export default function ReportsRisk() {
   }, [filteredTrades, riskMetrics.avgLoss]);
 
   const ddContributionByDay = useMemo(() => {
-    const dayMap = new Map<string, number>();
+    const dayMap = new Map<string, { loss: number; count: number }>();
     filteredTrades.forEach((t) => {
       const profit = getTradeProfit(t);
       if (profit < 0) {
@@ -363,42 +363,45 @@ export default function ReportsRisk() {
           const date = new Date(t.openTime);
           const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
           const day = dayNames[date.getDay()];
-          dayMap.set(day, (dayMap.get(day) || 0) + Math.abs(profit));
+          const current = dayMap.get(day) || { loss: 0, count: 0 };
+          dayMap.set(day, { loss: current.loss + Math.abs(profit), count: current.count + 1 });
         } catch (err) {
           console.error("Date parse error:", err);
         }
       }
     });
     return Array.from(dayMap.entries())
-      .map(([day, loss]) => ({ day, loss }))
+      .map(([day, data]) => ({ day, loss: data.loss, count: data.count }))
       .sort((a, b) => b.loss - a.loss);
   }, [filteredTrades]);
 
   const ddContributionByPair = useMemo(() => {
-    const pairMap = new Map<string, number>();
+    const pairMap = new Map<string, { loss: number; count: number }>();
     filteredTrades.forEach((t) => {
       const profit = getTradeProfit(t);
       if (profit < 0) {
         const pair = getTradePair(t);
-        pairMap.set(pair, (pairMap.get(pair) || 0) + Math.abs(profit));
+        const current = pairMap.get(pair) || { loss: 0, count: 0 };
+        pairMap.set(pair, { loss: current.loss + Math.abs(profit), count: current.count + 1 });
       }
     });
     return Array.from(pairMap.entries())
-      .map(([pair, loss]) => ({ pair, loss }))
+      .map(([pair, data]) => ({ pair, loss: data.loss, count: data.count }))
       .sort((a, b) => b.loss - a.loss);
   }, [filteredTrades]);
 
   const ddContributionBySetup = useMemo(() => {
-    const setupMap = new Map<string, number>();
+    const setupMap = new Map<string, { loss: number; count: number }>();
     filteredTrades.forEach((t) => {
       const profit = getTradeProfit(t);
       if (profit < 0) {
         const setup = extractSetup(t);
-        setupMap.set(setup, (setupMap.get(setup) || 0) + Math.abs(profit));
+        const current = setupMap.get(setup) || { loss: 0, count: 0 };
+        setupMap.set(setup, { loss: current.loss + Math.abs(profit), count: current.count + 1 });
       }
     });
     return Array.from(setupMap.entries())
-      .map(([setup, loss]) => ({ setup, loss }))
+      .map(([setup, data]) => ({ setup, loss: data.loss, count: data.count }))
       .sort((a, b) => b.loss - a.loss);
   }, [filteredTrades]);
 
