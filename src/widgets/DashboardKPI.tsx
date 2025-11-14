@@ -341,6 +341,20 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
 
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+          平均pips
+          <HelpIcon text="1回の取引で期待できる平均的なpipsです。値幅としてどれだけ取れるかの目安になります。" />
+        </div>
+        <div>
+          <div className="kpi-value" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
+            {dash.avgPips >= 0 ? '+' : ''}{dash.avgPips.toFixed(1)} <span className="kpi-unit" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>pips/件</span>
+          </div>
+          <div className="kpi-desc">1取引あたりの平均（pips）</div>
+          <BarSplit avgProfit={dash.avgWinPips} avgLoss={dash.avgLossPips} unit="pips" />
+        </div>
+      </div>
+
+      <div className="kpi-card">
+        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
           勝率
           <HelpIcon text="利益が出た取引の割合です。50%以上なら半分以上の取引で勝っています。" />
         </div>
@@ -381,20 +395,6 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
               />
             </svg>
           </div>
-        </div>
-      </div>
-
-      <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
-          平均pips
-          <HelpIcon text="1回の取引で期待できる平均的なpipsです。値幅としてどれだけ取れるかの目安になります。" />
-        </div>
-        <div>
-          <div className="kpi-value" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
-            {dash.avgPips >= 0 ? '+' : ''}{dash.avgPips.toFixed(1)} <span className="kpi-unit" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>pips/件</span>
-          </div>
-          <div className="kpi-desc">1取引あたりの平均（pips）</div>
-          <BarSplit avgProfit={dash.avgWinPips} avgLoss={dash.avgLossPips} unit="pips" />
         </div>
       </div>
 
