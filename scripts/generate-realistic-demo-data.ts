@@ -23,7 +23,7 @@ const CURRENCY_PAIRS_DATASET_B = [
 ];
 const CURRENCY_PAIRS_DATASET_C = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY'];
 
-const SETUPS = ['Trend', 'Breakout', 'Reversal', 'Pullback', 'Range', 'Scalp'];
+const SETUPS = ['Trend', 'Breakout', 'Reversal', 'Pullback', 'Range'];
 
 function randomChoice<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -37,9 +37,9 @@ function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function addHours(date: Date, hours: number): Date {
+function addMinutes(date: Date, minutes: number): Date {
   const newDate = new Date(date);
-  newDate.setHours(newDate.getHours() + hours);
+  newDate.setMinutes(newDate.getMinutes() + minutes);
   return newDate;
 }
 
@@ -122,9 +122,22 @@ function generateDatasetA(): TradeRecord[] {
   let currentDate = new Date(startDate);
   let runningProfit = 0;
   const targetProfit = 1215332;
-
-  const tradesPerMonth = 22;
   const totalTrades = 262;
+
+  const pairPerformance: Record<string, number> = {
+    'EURUSD': randomFloat(-0.3, 1.2),
+    'GBPUSD': randomFloat(-0.2, 1.4),
+    'USDJPY': randomFloat(0.3, 1.5),
+    'AUDUSD': randomFloat(-0.5, 0.8),
+    'EURJPY': randomFloat(0.2, 1.3),
+    'GBPJPY': randomFloat(-0.4, 1.1)
+  };
+
+  const drawdownPeriods = [
+    { start: 40, end: 70, severity: -1.5 },
+    { start: 120, end: 145, severity: -1.2 },
+    { start: 210, end: 235, severity: -0.8 }
+  ];
 
   for (let i = 0; i < totalTrades; i++) {
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_A);
@@ -135,27 +148,40 @@ function generateDatasetA(): TradeRecord[] {
 
     const remainingTrades = totalTrades - i;
     const remainingProfit = targetProfit - runningProfit;
-    const avgProfitNeeded = remainingProfit / remainingTrades;
+    let profitBias = remainingProfit / remainingTrades / 10000;
 
-    let profitBias = avgProfitNeeded / 10000;
+    profitBias *= pairPerformance[pair];
 
-    if (i < 50) {
-      profitBias *= randomFloat(0.3, 1.5);
-    } else if (i < 150) {
-      profitBias *= randomFloat(0.8, 1.2);
-    } else {
-      profitBias *= randomFloat(0.9, 1.1);
+    let periodMultiplier = 1;
+    for (const period of drawdownPeriods) {
+      if (i >= period.start && i <= period.end) {
+        periodMultiplier = period.severity;
+        break;
+      }
     }
+    profitBias *= periodMultiplier;
+
+    profitBias += randomFloat(-0.3, 0.3);
+
+    const setup = randomChoice(SETUPS);
+    const isScalp = setup === 'Scalp' || Math.random() < 0.15;
 
     const openPrice = basePrice + randomFloat(-priceRange / 2, priceRange / 2);
-    const pipMove = randomFloat(-30, 50) + profitBias * 10;
+    const pipMove = randomFloat(-35, 45) + profitBias * 12;
     const closePrice = type === 'buy'
       ? openPrice + (pipMove / pipMultiplier)
       : openPrice - (pipMove / pipMultiplier);
 
     const openTime = new Date(currentDate);
-    const holdHours = randomFloat(0.5, 12);
-    const closeTime = addHours(openTime, holdHours);
+    let holdMinutes: number;
+    if (isScalp) {
+      holdMinutes = randomFloat(2, 45);
+    } else if (setup === 'Trend') {
+      holdMinutes = randomFloat(180, 720);
+    } else {
+      holdMinutes = randomFloat(30, 480);
+    }
+    const closeTime = addMinutes(openTime, holdMinutes);
 
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
@@ -179,13 +205,13 @@ function generateDatasetA(): TradeRecord[] {
       commission: -12,
       swap: parseFloat(randomFloat(-1, 5).toFixed(1)),
       profit,
-      comment: randomChoice(SETUPS)
+      comment: setup
     });
 
     runningProfit += profit;
 
-    const daysToAdd = randomFloat(1, 3);
-    currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+    const hoursToAdd = randomFloat(2, 24);
+    currentDate = new Date(currentDate.getTime() + hoursToAdd * 60 * 60 * 1000);
 
     if (currentDate > endDate) {
       break;
@@ -204,42 +230,69 @@ function generateDatasetB(): TradeRecord[] {
   let currentDate = new Date(startDate);
   let runningProfit = 0;
   const targetProfit = 7806376;
-
   const totalTrades = 754;
 
   const pairPerformance: Record<string, number> = {};
   CURRENCY_PAIRS_DATASET_B.forEach(pair => {
-    pairPerformance[pair] = randomFloat(0.4, 1.6);
+    pairPerformance[pair] = randomFloat(-0.6, 1.8);
   });
+
+  const drawdownPeriods = [
+    { start: 80, end: 140, severity: -1.3 },
+    { start: 280, end: 340, severity: -1.6 },
+    { start: 450, end: 510, severity: -0.9 },
+    { start: 620, end: 680, severity: -1.1 }
+  ];
 
   for (let i = 0; i < totalTrades; i++) {
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_B);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
 
     const type = randomChoice(['buy', 'sell'] as const);
-    const size = parseFloat((randomFloat(0.3, 2.5)).toFixed(1));
+    const size = parseFloat((randomFloat(0.3, 2.8)).toFixed(1));
 
     const remainingTrades = totalTrades - i;
     const remainingProfit = targetProfit - runningProfit;
-    const avgProfitNeeded = remainingProfit / remainingTrades;
+    let profitBias = remainingProfit / remainingTrades / 10000;
 
-    let profitBias = (avgProfitNeeded / 10000) * pairPerformance[pair];
+    profitBias *= pairPerformance[pair];
+
+    let periodMultiplier = 1;
+    for (const period of drawdownPeriods) {
+      if (i >= period.start && i <= period.end) {
+        periodMultiplier = period.severity;
+        break;
+      }
+    }
+    profitBias *= periodMultiplier;
+
+    profitBias += randomFloat(-0.4, 0.4);
+
+    const setup = randomChoice(SETUPS);
+    const isScalp = setup === 'Scalp' || Math.random() < 0.2;
 
     const openPrice = basePrice + randomFloat(-priceRange / 2, priceRange / 2);
-    const pipMove = randomFloat(-25, 40) + profitBias * 8;
+    const pipMove = randomFloat(-30, 50) + profitBias * 10;
     const closePrice = type === 'buy'
       ? openPrice + (pipMove / pipMultiplier)
       : openPrice - (pipMove / pipMultiplier);
 
     const openTime = new Date(currentDate);
-    const holdHours = randomFloat(0.2, 18);
-    const closeTime = addHours(openTime, holdHours);
+    let holdMinutes: number;
+    if (isScalp) {
+      holdMinutes = randomFloat(1, 35);
+    } else if (setup === 'Trend') {
+      holdMinutes = randomFloat(240, 1080);
+    } else {
+      holdMinutes = randomFloat(20, 600);
+    }
+    const closeTime = addMinutes(openTime, holdMinutes);
 
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
 
-    const slDistance = randomFloat(8, 20) / pipMultiplier;
-    const tpDistance = randomFloat(15, 50) / pipMultiplier;
+    const slDistance = randomFloat(8, 22) / pipMultiplier;
+    const tpDistance = randomFloat(18, 55) / pipMultiplier;
     const sl = type === 'buy' ? openPrice - slDistance : openPrice + slDistance;
     const tp = type === 'buy' ? openPrice + tpDistance : openPrice - tpDistance;
 
@@ -257,12 +310,12 @@ function generateDatasetB(): TradeRecord[] {
       commission: -12,
       swap: parseFloat(randomFloat(-2, 6).toFixed(1)),
       profit,
-      comment: randomChoice(SETUPS)
+      comment: setup
     });
 
     runningProfit += profit;
 
-    const hoursToAdd = randomFloat(4, 36);
+    const hoursToAdd = randomFloat(1, 18);
     currentDate = new Date(currentDate.getTime() + hoursToAdd * 60 * 60 * 1000);
 
     if (currentDate > endDate) {
@@ -282,10 +335,24 @@ function generateDatasetC(): TradeRecord[] {
   let currentDate = new Date(startDate);
   let runningProfit = 0;
   const targetLoss = -2206376;
-
   const totalTrades = 213;
 
-  const fomoTradeIndices = [45, 78, 112, 156, 189];
+  const pairPerformance: Record<string, number> = {
+    'EURUSD': randomFloat(-0.8, 0.6),
+    'GBPUSD': randomFloat(-1.2, 0.3),
+    'USDJPY': randomFloat(-0.5, 0.9),
+    'AUDUSD': randomFloat(-1.0, 0.4),
+    'EURJPY': randomFloat(-0.6, 0.7),
+    'GBPJPY': randomFloat(-0.9, 0.5)
+  };
+
+  const fomoTradeIndices = [42, 78, 95, 134, 167, 189];
+
+  const recoveryPeriods = [
+    { start: 10, end: 35, multiplier: 1.8 },
+    { start: 98, end: 125, multiplier: 1.5 },
+    { start: 170, end: 185, multiplier: 1.3 }
+  ];
 
   for (let i = 0; i < totalTrades; i++) {
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_C);
@@ -295,42 +362,61 @@ function generateDatasetC(): TradeRecord[] {
 
     const isFomoTrade = fomoTradeIndices.includes(i);
     const size = isFomoTrade
-      ? parseFloat((randomFloat(3.5, 8.0)).toFixed(1))
-      : parseFloat((randomFloat(0.5, 2.5)).toFixed(1));
+      ? parseFloat((randomFloat(4.0, 9.0)).toFixed(1))
+      : parseFloat((randomFloat(0.5, 2.8)).toFixed(1));
 
     const remainingTrades = totalTrades - i;
     const remainingProfit = targetLoss - runningProfit;
-    const avgProfitNeeded = remainingProfit / remainingTrades;
+    let profitBias = remainingProfit / remainingTrades / 10000;
 
-    let profitBias = avgProfitNeeded / 10000;
+    profitBias *= pairPerformance[pair];
+
+    let periodMultiplier = 1;
+    for (const period of recoveryPeriods) {
+      if (i >= period.start && i <= period.end) {
+        periodMultiplier = period.multiplier;
+        break;
+      }
+    }
+    profitBias *= periodMultiplier;
 
     if (isFomoTrade) {
-      profitBias *= randomFloat(-5, -2);
+      profitBias = randomFloat(-8, -3);
     } else {
-      profitBias *= randomFloat(0.5, 1.5);
+      profitBias += randomFloat(-0.5, 0.5);
     }
+
+    const setup = isFomoTrade ? 'FOMO' : randomChoice(SETUPS);
+    const isScalp = setup === 'Scalp' || Math.random() < 0.12;
 
     const openPrice = basePrice + randomFloat(-priceRange / 2, priceRange / 2);
     const pipMove = isFomoTrade
-      ? randomFloat(-80, -40)
-      : randomFloat(-30, 40) + profitBias * 10;
+      ? randomFloat(-90, -35)
+      : randomFloat(-40, 45) + profitBias * 12;
     const closePrice = type === 'buy'
       ? openPrice + (pipMove / pipMultiplier)
       : openPrice - (pipMove / pipMultiplier);
 
     const openTime = new Date(currentDate);
-    const holdHours = isFomoTrade
-      ? randomFloat(0.1, 2)
-      : randomFloat(0.3, 10);
-    const closeTime = addHours(openTime, holdHours);
+    let holdMinutes: number;
+    if (isFomoTrade) {
+      holdMinutes = randomFloat(3, 90);
+    } else if (isScalp) {
+      holdMinutes = randomFloat(2, 40);
+    } else if (setup === 'Trend') {
+      holdMinutes = randomFloat(150, 600);
+    } else {
+      holdMinutes = randomFloat(25, 420);
+    }
+    const closeTime = addMinutes(openTime, holdMinutes);
 
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
 
     const slDistance = isFomoTrade
-      ? randomFloat(40, 80) / pipMultiplier
-      : randomFloat(10, 25) / pipMultiplier;
-    const tpDistance = randomFloat(20, 60) / pipMultiplier;
+      ? randomFloat(50, 100) / pipMultiplier
+      : randomFloat(10, 28) / pipMultiplier;
+    const tpDistance = randomFloat(20, 65) / pipMultiplier;
     const sl = type === 'buy' ? openPrice - slDistance : openPrice + slDistance;
     const tp = type === 'buy' ? openPrice + tpDistance : openPrice - tpDistance;
 
@@ -348,13 +434,13 @@ function generateDatasetC(): TradeRecord[] {
       commission: -12,
       swap: parseFloat(randomFloat(-3, 4).toFixed(1)),
       profit,
-      comment: isFomoTrade ? 'FOMO' : randomChoice(SETUPS)
+      comment: setup
     });
 
     runningProfit += profit;
 
-    const daysToAdd = randomFloat(0.8, 2.5);
-    currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+    const hoursToAdd = randomFloat(3, 30);
+    currentDate = new Date(currentDate.getTime() + hoursToAdd * 60 * 60 * 1000);
 
     if (currentDate > endDate) {
       break;
@@ -374,15 +460,51 @@ function tradesToCSV(trades: TradeRecord[]): string {
 
 console.log('Generating Dataset A...');
 const datasetA = generateDatasetA();
-console.log(`Dataset A: ${datasetA.length} trades, Total Profit: ¥${datasetA.reduce((sum, t) => sum + t.profit, 0).toLocaleString()}`);
+const totalProfitA = datasetA.reduce((sum, t) => sum + t.profit, 0);
+console.log(`Dataset A: ${datasetA.length} trades, Total Profit: ¥${totalProfitA.toLocaleString()}`);
+
+const pairStatsA: Record<string, { trades: number; profit: number }> = {};
+datasetA.forEach(t => {
+  if (!pairStatsA[t.item]) pairStatsA[t.item] = { trades: 0, profit: 0 };
+  pairStatsA[t.item].trades++;
+  pairStatsA[t.item].profit += t.profit;
+});
+console.log('Pair breakdown:');
+Object.entries(pairStatsA).forEach(([pair, stats]) => {
+  console.log(`  ${pair}: ${stats.trades} trades, ¥${stats.profit.toLocaleString()}`);
+});
 
 console.log('\nGenerating Dataset B...');
 const datasetB = generateDatasetB();
-console.log(`Dataset B: ${datasetB.length} trades, Total Profit: ¥${datasetB.reduce((sum, t) => sum + t.profit, 0).toLocaleString()}`);
+const totalProfitB = datasetB.reduce((sum, t) => sum + t.profit, 0);
+console.log(`Dataset B: ${datasetB.length} trades, Total Profit: ¥${totalProfitB.toLocaleString()}`);
+
+const pairStatsB: Record<string, { trades: number; profit: number }> = {};
+datasetB.forEach(t => {
+  if (!pairStatsB[t.item]) pairStatsB[t.item] = { trades: 0, profit: 0 };
+  pairStatsB[t.item].trades++;
+  pairStatsB[t.item].profit += t.profit;
+});
+console.log('Pair breakdown:');
+Object.entries(pairStatsB).forEach(([pair, stats]) => {
+  console.log(`  ${pair}: ${stats.trades} trades, ¥${stats.profit.toLocaleString()}`);
+});
 
 console.log('\nGenerating Dataset C...');
 const datasetC = generateDatasetC();
-console.log(`Dataset C: ${datasetC.length} trades, Total Profit: ¥${datasetC.reduce((sum, t) => sum + t.profit, 0).toLocaleString()}`);
+const totalProfitC = datasetC.reduce((sum, t) => sum + t.profit, 0);
+console.log(`Dataset C: ${datasetC.length} trades, Total Profit: ¥${totalProfitC.toLocaleString()}`);
+
+const pairStatsC: Record<string, { trades: number; profit: number }> = {};
+datasetC.forEach(t => {
+  if (!pairStatsC[t.item]) pairStatsC[t.item] = { trades: 0, profit: 0 };
+  pairStatsC[t.item].trades++;
+  pairStatsC[t.item].profit += t.profit;
+});
+console.log('Pair breakdown:');
+Object.entries(pairStatsC).forEach(([pair, stats]) => {
+  console.log(`  ${pair}: ${stats.trades} trades, ¥${stats.profit.toLocaleString()}`);
+});
 
 const fs = require('fs');
 
