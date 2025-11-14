@@ -544,7 +544,7 @@ export default function ReportsStrategy() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             買い vs 売り
-            <HelpIcon text="ロングとショートの損益比較です。方向性の得意不得意が分かります。" />
+            <HelpIcon text="買いと売りの損益比較です。方向性の得意不得意が分かります。" />
           </h3>
           <div style={{ height: 180 }}>
             <Doughnut

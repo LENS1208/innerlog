@@ -45,6 +45,16 @@ const currencyJPY = (n: number) => {
   return `${sign}${Math.round(n).toLocaleString("ja-JP")}円`;
 };
 
+const formatDateTime = (dateStr: string) => {
+  const d = new Date(dateStr);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hour = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `${year}年${month}月${day}日 ${hour}:${min}`;
+};
+
 export default function InsightsSection(props: InsightsSectionProps) {
   const {
     weeklySummary,
@@ -520,15 +530,15 @@ export default function InsightsSection(props: InsightsSectionProps) {
           </div>
         </div>
 
-        <div style={{ marginBottom: 12, display: "flex", flexWrap: "wrap", gap: 12, fontSize: 13, alignItems: "center" }}>
-          <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
+        <div style={{ marginBottom: 12, display: "flex", flexWrap: "wrap", gap: 12, fontSize: 11, alignItems: "center", color: "var(--muted)" }}>
+          <div>
             件数 <span style={{ fontWeight: 600 }}>{tradesStats.count}</span>
           </div>
-          <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
+          <div>
             合計損益 <span style={{ fontWeight: 600 }}>{currencyJPY(tradesStats.sumPnl)}</span>
           </div>
-          <div style={{ padding: "4px 12px", borderRadius: 16, border: "1px solid var(--line)" }}>
-            平均保有 <span style={{ fontWeight: 600 }}>{tradesStats.avgHrs.toFixed(1)}</span>h
+          <div>
+            平均保有時間 <span style={{ fontWeight: 600 }}>{tradesStats.avgHrs.toFixed(1)}</span>h
           </div>
           <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
             <button
@@ -583,10 +593,10 @@ export default function InsightsSection(props: InsightsSectionProps) {
               minWidth: "600px",
             }}
           >
-            <div>通貨</div>
+            <div>通貨ペア</div>
             <div>方向</div>
-            <div>Entry → 決済 (UTC)</div>
-            <div style={{ textAlign: "right" }}>保有h</div>
+            <div>エントリー日時 → 決済日時</div>
+            <div style={{ textAlign: "right" }}>ポジション保有時間</div>
             <div style={{ textAlign: "right" }}>損益</div>
           </div>
           <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8 }}>
@@ -615,11 +625,11 @@ export default function InsightsSection(props: InsightsSectionProps) {
                     }}
                   >
                     <div>{t.symbol}</div>
-                    <div>{t.side}</div>
+                    <div>{t.side === "long" ? "買い" : "売り"}</div>
                     <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                      {t.entry.replace("T", " ").substring(0, 16)} → {t.exit.replace("T", " ").substring(0, 16)}
+                      {formatDateTime(t.entry)} → {formatDateTime(t.exit)}
                     </div>
-                    <div style={{ textAlign: "right" }}>{hrs}</div>
+                    <div style={{ textAlign: "right" }}>{hrs}h</div>
                     <div
                       style={{
                         textAlign: "right",
