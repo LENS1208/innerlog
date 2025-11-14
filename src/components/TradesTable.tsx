@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import cfg from "../../config/tables/tradeList.config.json";
 import { fmt } from "../lib/formatters";
 
@@ -7,56 +7,13 @@ type SortConfig = { key: string; direction: 'asc' | 'desc' } | null;
 
 const SORTABLE_COLUMNS = ['datetime', 'symbol', 'side', 'pnl_jpy', 'pips', 'size'];
 
-export default function TradesTable({rows}:{rows:Row[]}){
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'datetime', direction: 'desc' });
+interface TradesTableProps {
+  rows: Row[];
+  sortConfig: SortConfig;
+  onSort: (columnId: string) => void;
+}
 
-  const handleSort = (columnId: string) => {
-    if (!SORTABLE_COLUMNS.includes(columnId)) return;
-
-    let direction: 'asc' | 'desc' = 'asc';
-    if (sortConfig && sortConfig.key === columnId && sortConfig.direction === 'asc') {
-      direction = 'desc';
-    }
-    setSortConfig({ key: columnId, direction });
-  };
-
-  const sortedRows = React.useMemo(() => {
-    if (!sortConfig) return rows;
-
-    const sorted = [...rows].sort((a, b) => {
-      const aVal = a[sortConfig.key];
-      const bVal = b[sortConfig.key];
-
-      if (sortConfig.key === 'datetime') {
-        const aTime = new Date(aVal).getTime();
-        const bTime = new Date(bVal).getTime();
-        return sortConfig.direction === 'asc' ? aTime - bTime : bTime - aTime;
-      }
-
-      if (sortConfig.key === 'symbol') {
-        const aStr = String(aVal || '').toUpperCase();
-        const bStr = String(bVal || '').toUpperCase();
-        return sortConfig.direction === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
-      }
-
-      if (sortConfig.key === 'side') {
-        const aStr = String(aVal || '').toUpperCase();
-        const bStr = String(bVal || '').toUpperCase();
-        return sortConfig.direction === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
-      }
-
-      if (['pnl_jpy', 'pips', 'size'].includes(sortConfig.key)) {
-        const aNum = Number(aVal) || 0;
-        const bNum = Number(bVal) || 0;
-        return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
-      }
-
-      return 0;
-    });
-
-    return sorted;
-  }, [rows, sortConfig]);
-
+export default function TradesTable({ rows, sortConfig, onSort }: TradesTableProps) {
   return (
     <div style={{
       border:"1px solid var(--line)",
@@ -73,7 +30,7 @@ export default function TradesTable({rows}:{rows:Row[]}){
               return (
                 <th
                   key={c.id}
-                  onClick={() => handleSort(c.id)}
+                  onClick={() => onSort(c.id)}
                   style={{
                     position:"sticky",
                     top:0,
@@ -102,7 +59,7 @@ export default function TradesTable({rows}:{rows:Row[]}){
           </tr>
         </thead>
         <tbody>
-          {sortedRows.map((r, i)=>(
+          {rows.map((r, i)=>(
             <tr
               key={i}
               className="trade-row"

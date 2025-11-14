@@ -58,12 +58,50 @@ function applyFiltersToRows(rows: any[], filters: Filters) {
   });
 }
 
+type SortConfig = { key: string; direction: 'asc' | 'desc' } | null;
+
+function sortRows(rows: any[], sortConfig: SortConfig) {
+  if (!sortConfig) return rows;
+
+  return [...rows].sort((a, b) => {
+    const aVal = a[sortConfig.key];
+    const bVal = b[sortConfig.key];
+
+    if (sortConfig.key === 'datetime') {
+      const aTime = new Date(aVal).getTime();
+      const bTime = new Date(bVal).getTime();
+      return sortConfig.direction === 'asc' ? aTime - bTime : bTime - aTime;
+    }
+
+    if (sortConfig.key === 'symbol') {
+      const aStr = String(aVal || '').toUpperCase();
+      const bStr = String(bVal || '').toUpperCase();
+      return sortConfig.direction === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
+    }
+
+    if (sortConfig.key === 'side') {
+      const aStr = String(aVal || '').toUpperCase();
+      const bStr = String(bVal || '').toUpperCase();
+      return sortConfig.direction === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
+    }
+
+    if (['pnl_jpy', 'pips', 'size'].includes(sortConfig.key)) {
+      const aNum = Number(aVal) || 0;
+      const bNum = Number(bVal) || 0;
+      return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
+    }
+
+    return 0;
+  });
+}
+
 export default function TradeListPage() {
   console.log("🔄 TradeListPage render");
   const [srcRows, setSrcRows] = useState<Trade[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [loading, setLoading] = useState(false);
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'datetime', direction: 'desc' });
   const fileRef = useRef<HTMLInputElement | null>(null);
   const { filters, dataset, useDatabase } = useDataset();
 
@@ -221,13 +259,27 @@ export default function TradeListPage() {
     console.log("📊 Mapped rows:", mapped.length);
     const filtered = applyFiltersToRows(mapped, filters);
     console.log("✅ Filtered rows:", filtered.length);
-    return filtered;
-  }, [srcRows, filters]);
+    const sorted = sortRows(filtered, sortConfig);
+    console.log("🔀 Sorted rows:", sorted.length);
+    return sorted;
+  }, [srcRows, filters, sortConfig]);
 
   const totalPages = Math.ceil(allRows.length / rowsPerPage);
   const startIdx = (currentPage - 1) * rowsPerPage;
   const endIdx = startIdx + rowsPerPage;
   const paginatedRows = allRows.slice(startIdx, endIdx);
+
+  const handleSort = (columnId: string) => {
+    const SORTABLE_COLUMNS = ['datetime', 'symbol', 'side', 'pnl_jpy', 'pips', 'size'];
+    if (!SORTABLE_COLUMNS.includes(columnId)) return;
+
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === columnId && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key: columnId, direction });
+    setCurrentPage(1);
+  };
 
   useEffect(() => {
     setCurrentPage(1);
@@ -237,7 +289,7 @@ export default function TradeListPage() {
     <div style={{ display: "grid", gap: 16 }}>
       <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onPick} style={{ display: "none" }} />
 
-      <TradesTable rows={paginatedRows as any[]} />
+      <TradesTable rows={paginatedRows as any[]} sortConfig={sortConfig} onSort={handleSort} />
 
       {/* Pagination Controls */}
       <div style={{
