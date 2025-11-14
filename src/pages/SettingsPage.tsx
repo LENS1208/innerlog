@@ -37,7 +37,6 @@ export default function SettingsPage() {
   const [email, setEmail] = useState('');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string>('');
-  const [uploading, setUploading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -159,10 +158,9 @@ export default function SettingsPage() {
     reader.readAsDataURL(file);
   };
 
-  const handleUploadAvatar = async () => {
-    if (!user || !avatarFile) return;
+  const uploadAvatarToStorage = async () => {
+    if (!user || !avatarFile) return null;
 
-    setUploading(true);
     try {
       const fileExt = avatarFile.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
@@ -181,20 +179,10 @@ export default function SettingsPage() {
         .from('user-avatars')
         .getPublicUrl(filePath);
 
-      const { error: updateError } = await supabase.auth.updateUser({
-        data: { avatar_url: publicUrl }
-      });
-
-      if (updateError) throw updateError;
-
-      setAvatarPreview(publicUrl);
-      setAvatarFile(null);
-      alert('アイコン画像をアップロードしました');
+      return publicUrl;
     } catch (err) {
       console.error('アップロードエラー:', err);
-      alert('アップロードに失敗しました');
-    } finally {
-      setUploading(false);
+      throw err;
     }
   };
 
@@ -203,11 +191,26 @@ export default function SettingsPage() {
 
     setSaving(true);
     try {
+      let avatarUrl = user.user_metadata?.avatar_url;
+
+      if (avatarFile) {
+        const uploadedUrl = await uploadAvatarToStorage();
+        if (uploadedUrl) {
+          avatarUrl = uploadedUrl;
+        }
+      }
+
       const { error } = await supabase.auth.updateUser({
-        data: { trader_name: traderName }
+        data: {
+          trader_name: traderName,
+          avatar_url: avatarUrl
+        }
       });
 
       if (error) throw error;
+
+      setAvatarFile(null);
+      setAvatarPreview(avatarUrl || '');
       alert('プロフィールを保存しました');
     } catch (err) {
       console.error('プロフィール保存エラー:', err);
@@ -430,32 +433,18 @@ export default function SettingsPage() {
                           borderRadius: 4,
                           fontSize: 14,
                           cursor: 'pointer',
-                          marginBottom: 8,
                         }}
                       >
                         画像を選択
                       </label>
-                      {avatarFile && (
-                        <button
-                          onClick={handleUploadAvatar}
-                          disabled={uploading}
-                          style={{
-                            display: 'block',
-                            padding: '8px 16px',
-                            backgroundColor: 'var(--accent)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: 4,
-                            fontSize: 14,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          {uploading ? 'アップロード中...' : 'アップロード'}
-                        </button>
-                      )}
                       <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>
                         JPEG、PNG、GIF、WebP形式、2MB以下
                       </div>
+                      {avatarFile && (
+                        <div style={{ fontSize: 12, color: 'var(--accent)', marginTop: 4 }}>
+                          ✓ 画像が選択されました。「プロフィールを保存」ボタンで確定してください。
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
