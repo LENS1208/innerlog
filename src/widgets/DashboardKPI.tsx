@@ -263,8 +263,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           取引件数（期間）
           <HelpIcon text="分析対象の取引件数です。データが多いほど統計的に信頼できる分析結果が得られます。" />
         </div>
-        <div className="kpi-value">
-          {dash.count} <span className="kpi-unit">件</span>
+        <div className="kpi-value" style={{ color: 'inherit' }}>
+          {dash.count} <span className="kpi-unit" style={{ color: 'inherit' }}>件</span>
         </div>
         {tradePeriod && (
           <div style={{
@@ -324,8 +324,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8, flexWrap: 'wrap' }}>
           <div style={{ flex: '0 0 auto' }}>
-            <div className="kpi-value">
-              {(dash.winRate * 100).toFixed(1)} <span className="kpi-unit">%</span>
+            <div className="kpi-value" style={{ color: 'inherit' }}>
+              {(dash.winRate * 100).toFixed(1)} <span className="kpi-unit" style={{ color: 'inherit' }}>%</span>
             </div>
           </div>
           <div style={{ flex: '0 0 auto', minWidth: 90 }}>
@@ -341,7 +341,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div>
-            <div className="kpi-value">
+            <div className="kpi-value" style={{ color: 'inherit' }}>
               {Number.isFinite(dash.profitFactor) ? dash.profitFactor.toFixed(2) : '∞'}
             </div>
             <div className="kpi-desc">総利益 / 総損失</div>
@@ -400,7 +400,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           平均保有時間
           <HelpIcon text="ポジションを保有していた平均時間です。短いほどスキャルピング、長いほどスイングトレードの傾向があります。" />
         </div>
-        <div className="kpi-value">{formatMinutesJP(dash.avgHoldMin)}</div>
+        <div className="kpi-value" style={{ color: 'inherit' }}>{formatMinutesJP(dash.avgHoldMin)}</div>
         <div className="kpi-desc">Open→Close の平均</div>
       </div>
 
@@ -409,7 +409,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           獲得リスク比
           <HelpIcon text="平均利益÷平均損失の比率です。1.0以上なら利益が損失より大きいことを示します。" />
         </div>
-        <div className="kpi-value">
+        <div className="kpi-value" style={{ color: 'inherit' }}>
           {dash.riskRewardRatio.toFixed(2)}
         </div>
         <div className="kpi-desc">平均利益 / 平均損失</div>
@@ -420,7 +420,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           シャープレシオ
           <HelpIcon text="リスク1単位あたりのリターンを示す指標です。1.0以上で良好、1.5以上で優秀とされます。" />
         </div>
-        <div className="kpi-value" style={{ color: dash.sharpeRatio >= 1 ? 'var(--accent-2, #0084c7)' : 'inherit' }}>
+        <div className="kpi-value" style={{ color: 'inherit' }}>
           {dash.sharpeRatio.toFixed(2)}
         </div>
         <div className="kpi-desc">リターン / リスク</div>
