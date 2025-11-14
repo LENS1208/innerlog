@@ -108,15 +108,13 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
         type: 'time' as const,
         adapters: { date: { locale: ja } },
         ticks: { maxRotation: 0 },
-        time: { tooltipFormat: 'yyyy/MM/dd HH:mm' },
-        grid: { color: 'var(--grid-line)' }
+        time: { tooltipFormat: 'yyyy/MM/dd HH:mm' }
       },
       y: {
         beginAtZero: true,
         ticks: {
           callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     },
     plugins: {
@@ -187,16 +185,14 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
         type: 'time' as const,
         adapters: { date: { locale: ja } },
         ticks: { maxRotation: 0 },
-        time: { tooltipFormat: 'yyyy/MM/dd HH:mm' },
-        grid: { color: 'var(--grid-line)' }
+        time: { tooltipFormat: 'yyyy/MM/dd HH:mm' }
       },
       y: {
         beginAtZero: true,
         reverse: true,
         ticks: {
           callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     },
     plugins: {
@@ -262,15 +258,13 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     maintainAspectRatio: false,
     scales: {
       x: {
-        ticks: { maxRotation: 45, minRotation: 45 },
-        grid: { color: 'var(--grid-line)' }
+        ticks: { maxRotation: 45, minRotation: 45 }
       },
       y: {
         beginAtZero: true,
         ticks: {
           callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v) + '円'
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     },
     plugins: {
@@ -343,15 +337,13 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
         type: 'time' as const,
         adapters: { date: { locale: ja } },
         ticks: { maxRotation: 0 },
-        time: { tooltipFormat: 'yyyy/MM/dd', unit: 'day' as const },
-        grid: { color: 'var(--grid-line)' }
+        time: { tooltipFormat: 'yyyy/MM/dd', unit: 'day' as const }
       },
       y: {
         beginAtZero: true,
         ticks: {
           callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     },
     plugins: {
@@ -793,13 +785,12 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
       }
     },
     scales: {
-      x: { grid: { color: 'var(--grid-line)' } },
+      x: {},
       y: {
         beginAtZero: true,
         ticks: {
           callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v)
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     },
     plugins: {
@@ -875,15 +866,13 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
     },
     scales: {
       x: {
-        grid: { color: 'var(--grid-line)' },
         ticks: { maxRotation: 45, minRotation: 45 }
       },
       y: {
         beginAtZero: true,
         ticks: {
           callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v)
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     },
     plugins: {
@@ -962,10 +951,9 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
         beginAtZero: true,
         ticks: {
           callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v)
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       },
-      y: { grid: { color: 'var(--grid-line)' } }
+      y: {}
     },
     plugins: {
       legend: { display: false },
@@ -1210,7 +1198,6 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
     },
     scales: {
       x: {
-        grid: { color: 'var(--grid-line)' },
         ticks: {
           maxRotation: 45,
           minRotation: 45,
@@ -1222,8 +1209,7 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
         ticks: {
           callback: (value: any) => `${value}件`,
           stepSize: 200
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     }
   }
@@ -1329,7 +1315,6 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
     scales: {
       x: {
         stacked: false,
-        grid: { color: 'var(--grid-line)' },
         ticks: {
           maxRotation: 45,
           minRotation: 45,
@@ -1342,8 +1327,7 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
         ticks: {
           callback: (value: any) => `${value}件`,
           stepSize: 200
-        },
-        grid: { color: 'var(--grid-line)' }
+        }
       }
     }
   }
