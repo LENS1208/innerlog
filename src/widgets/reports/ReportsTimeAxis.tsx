@@ -1165,11 +1165,22 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
     return { data, symbols };
   }, [trades]);
 
-  const getWinRateColor = (winRate: number) => {
-    if (winRate >= 70) return getGreenColor();
-    if (winRate >= 55) return getAccentColor();
-    if (winRate >= 45) return getWarningColor();
-    return getLossColor();
+  const getCellBackgroundColor = (winRate: number, opacity: number = 1) => {
+    if (winRate >= 70) {
+      const green = getGreenColor();
+      return winRate >= 80 ? green : green.replace('rgb', 'rgba').replace(')', `, ${0.6 + (winRate - 70) / 50})`);
+    }
+    if (winRate >= 55) {
+      const accent = getAccentColor();
+      return accent.replace('rgb', 'rgba').replace(')', `, ${0.5 + (winRate - 55) / 75})`);
+    }
+    if (winRate >= 45) {
+      const warning = getWarningColor();
+      return warning.replace('rgb', 'rgba').replace(')', `, ${0.4 + (winRate - 45) / 50})`);
+    }
+    const loss = getLossColor();
+    const intensity = Math.max(0.3, 0.8 - winRate / 100);
+    return loss.replace('rgb', 'rgba').replace(')', `, ${intensity})`);
   };
 
   if (trades.length === 0) {
@@ -1182,14 +1193,14 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
   return (
     <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
+      <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: "2px", minWidth: 600 }}>
         <thead>
-          <tr style={{ borderBottom: "2px solid var(--line)" }}>
-            <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)", position: "sticky", left: 0, background: "var(--bg)", zIndex: 1 }}>
+          <tr>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)", position: "sticky", left: 0, background: "var(--bg)", zIndex: 2 }}>
               時間帯
             </th>
             {analysisData.symbols.map((symbol) => (
-              <th key={symbol} style={{ padding: 10, textAlign: "center", fontSize: 13, fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>
+              <th key={symbol} style={{ padding: 10, textAlign: "center", fontSize: 13, fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>
                 {symbol}
               </th>
             ))}
@@ -1197,16 +1208,8 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
         </thead>
         <tbody>
           {analysisData.data.map((item, index) => (
-            <tr
-              key={index}
-              style={{
-                borderBottom: "1px solid var(--line)",
-                height: 44,
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-            >
-              <td style={{ padding: 10, fontSize: 13, fontWeight: 600, position: "sticky", left: 0, background: "inherit", zIndex: 1 }}>
+            <tr key={index}>
+              <td style={{ padding: 10, fontSize: 13, fontWeight: 600, position: "sticky", left: 0, background: "var(--bg)", zIndex: 1, color: "var(--fg)" }}>
                 {item.range}
               </td>
               {analysisData.symbols.map((symbol) => {
@@ -1218,32 +1221,38 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                   <td
                     key={symbol}
                     style={{
-                      padding: 10,
+                      padding: 8,
                       textAlign: "center",
                       fontSize: 12,
+                      background: hasData ? getCellBackgroundColor(winRate) : "var(--chip)",
+                      border: "1px solid var(--line)",
+                      cursor: hasData ? "pointer" : "default",
+                      position: "relative",
+                      height: 60,
                     }}
+                    title={hasData ? `${symbol} ${item.range}\n${data.wins}勝 ${data.total - data.wins}敗 (${data.total}戦)\n損益: ${Math.round(data.profit).toLocaleString()}円` : ""}
                   >
                     {hasData ? (
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                         <div
                           style={{
-                            fontSize: 14,
+                            fontSize: 15,
                             fontWeight: 700,
-                            color: getWinRateColor(winRate),
+                            color: "#ffffff",
+                            textShadow: "0 1px 2px rgba(0,0,0,0.3)",
                           }}
                         >
                           {winRate.toFixed(0)}%
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)" }}>
-                          {data.wins}勝/{data.total}戦
-                        </div>
                         <div
                           style={{
-                            fontSize: 10,
-                            color: data.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                            fontSize: 11,
+                            fontWeight: 600,
+                            color: "#ffffff",
+                            textShadow: "0 1px 2px rgba(0,0,0,0.3)",
                           }}
                         >
-                          {Math.round(data.profit).toLocaleString()}円
+                          {Math.round(data.profit) >= 0 ? '+' : ''}{Math.round(data.profit).toLocaleString()}
                         </div>
                       </div>
                     ) : (
@@ -1259,19 +1268,19 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
       <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 12, height: 12, background: getGreenColor(), borderRadius: 2 }}></div>
+          <div style={{ width: 16, height: 16, background: getGreenColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>優秀 (70%+)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 12, height: 12, background: getAccentColor(), borderRadius: 2 }}></div>
+          <div style={{ width: 16, height: 16, background: getAccentColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>良好 (55-69%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 12, height: 12, background: getWarningColor(), borderRadius: 2 }}></div>
+          <div style={{ width: 16, height: 16, background: getWarningColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>普通 (45-54%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 12, height: 12, background: getLossColor(), borderRadius: 2 }}></div>
+          <div style={{ width: 16, height: 16, background: getLossColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>要改善 (-44%)</span>
         </div>
       </div>
