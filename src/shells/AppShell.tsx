@@ -375,12 +375,13 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }
               case "ai-proposal":
                 return (
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="14" cy="14" r="3"></circle>
-                    <path d="M14 14L21 21"></path>
-                    <path d="M3 3l4 4"></path>
-                    <line x1="3" y1="3" x2="10" y2="3"></line>
-                    <line x1="3" y1="3" x2="3" y2="10"></line>
-                    <circle cx="10" cy="10" r="2"></circle>
+                    <circle cx="7" cy="14" r="4"></circle>
+                    <circle cx="17" cy="14" r="4"></circle>
+                    <path d="M11 14h2"></path>
+                    <path d="M7 10V8"></path>
+                    <path d="M17 10V8"></path>
+                    <path d="M3 14h1"></path>
+                    <path d="M20 14h1"></path>
                   </svg>
                 );
               case "notebook":
