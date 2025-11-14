@@ -260,7 +260,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
               style={{
                 borderRadius: 12,
                 padding: 12,
-                background: "rgba(34, 197, 94, 0.1)",
+                background: "rgba(0, 132, 199, 0.1)",
               }}
             >
               <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Best Day</div>
