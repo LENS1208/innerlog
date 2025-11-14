@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const pairs = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY', 'AUDJPY', 'NZDUSD', 'USDCAD', 'USDCHF', 'EURGBP', 'EURAUD'];
-const setups = ['Trend', 'Breakout', 'Reversal', 'Pullback', 'Range', 'Scalp', 'News', 'Support', 'Resistance', 'Swing', 'Position'];
+const setups = ['Trend', 'Breakout', 'Reversal', 'Pullback', 'Range', 'Scalp', 'News', 'Support', 'Resistance'];
 const sessions = ['tokyo', 'london', 'ny'];
 
 function randomBetween(min: number, max: number): number {
@@ -72,8 +72,7 @@ function generateDatasetA(): Trade[] {
   const trades: Trade[] = [];
   const startDate = new Date('2024-02-01T00:00:00Z');
   const endDate = new Date('2025-11-30T23:59:59Z');
-  const targetCount = 251;
-  const targetProfit = 1215377;
+  const targetCount = 1253;
 
   let currentDate = new Date(startDate);
   let ticket = 101000000;
@@ -81,16 +80,6 @@ function generateDatasetA(): Trade[] {
 
   const favoredPairs = ['EURUSD', 'USDJPY', 'GBPUSD'];
   const favoredSetups = ['Trend', 'Breakout', 'Pullback'];
-
-  const losingPeriods = [
-    { start: new Date('2024-03-10T00:00:00Z'), end: new Date('2024-04-25T00:00:00Z') },
-    { start: new Date('2024-06-01T00:00:00Z'), end: new Date('2024-07-10T00:00:00Z') },
-    { start: new Date('2024-08-20T00:00:00Z'), end: new Date('2024-09-30T00:00:00Z') }
-  ];
-
-  function isInLosingPeriod(date: Date): boolean {
-    return losingPeriods.some(period => date >= period.start && date <= period.end);
-  }
 
   while (trades.length < targetCount) {
     if (currentDate > endDate) {
@@ -103,7 +92,7 @@ function generateDatasetA(): Trade[] {
     }
 
     const remaining = targetCount - trades.length;
-    const tradesPerDay = Math.min(remaining, randomInt(1, 3));
+    const tradesPerDay = Math.min(remaining, randomInt(1, 4));
 
     for (let i = 0; i < tradesPerDay && trades.length < targetCount; i++) {
       const session = randomChoice(sessions);
@@ -114,77 +103,39 @@ function generateDatasetA(): Trade[] {
       const openTime = new Date(currentDate);
       openTime.setUTCHours(hour, minute, 0, 0);
 
-      const isSwingOrPosition = Math.random() < 0.12;
-      let holdingMinutes: number;
-      let setup: string;
-
-      if (isSwingOrPosition) {
-        if (Math.random() < 0.6) {
-          setup = 'Swing';
-          holdingMinutes = randomInt(2880, 10080);
-        } else {
-          setup = 'Position';
-          holdingMinutes = randomInt(10080, 43200);
-        }
-      } else {
-        holdingMinutes = randomInt(60, 480);
-        setup = Math.random() < 0.6 ? randomChoice(favoredSetups) : randomChoice(setups.filter(s => s !== 'Swing' && s !== 'Position'));
-      }
-
+      const holdingMinutes = randomInt(60, 480);
       const closeTime = new Date(openTime);
       closeTime.setMinutes(closeTime.getMinutes() + holdingMinutes);
 
       const pair = Math.random() < 0.7 ? randomChoice(favoredPairs) : randomChoice(pairs);
+      const setup = Math.random() < 0.6 ? randomChoice(favoredSetups) : randomChoice(setups);
       const type: 'buy' | 'sell' = Math.random() < 0.5 ? 'buy' : 'sell';
-      const size = Number((randomBetween(0.3, 2.5)).toFixed(1));
+      const size = Number((randomBetween(0.5, 3.5)).toFixed(1));
 
       const basePrice = generateBasePrice(pair);
       const priceVariation = basePrice * randomBetween(-0.02, 0.02);
       const openPrice = Number((basePrice + priceVariation).toFixed(pair.includes('JPY') ? 2 : 4));
 
-      const inLosingPeriod = isInLosingPeriod(currentDate);
-      const baseWinRate = inLosingPeriod ? 0.30 : 0.58;
-      const isWin = Math.random() < baseWinRate;
+      const winRate = 0.58;
+      const isWin = Math.random() < winRate;
 
       let pipMove: number;
       if (isWin) {
-        if (isSwingOrPosition) {
-          pipMove = randomBetween(30, 120);
-        } else {
-          pipMove = inLosingPeriod ? randomBetween(3, 20) : randomBetween(5, 35);
-        }
+        pipMove = randomBetween(5, 35);
       } else {
-        if (isSwingOrPosition) {
-          pipMove = -randomBetween(25, 90);
-        } else {
-          pipMove = inLosingPeriod ? -randomBetween(10, 45) : -randomBetween(5, 30);
-        }
+        pipMove = -randomBetween(5, 30);
       }
 
       const pipValue = pair.includes('JPY') ? 0.01 : 0.0001;
       const closePrice = Number((openPrice + (type === 'buy' ? pipMove : -pipMove) * pipValue).toFixed(pair.includes('JPY') ? 2 : 4));
 
       const profitPerPip = pair.includes('JPY') ? 1000 : 10000;
-      let profit = Math.round(pipMove * size * profitPerPip);
-
-      if (trades.length === targetCount - 1) {
-        profit = targetProfit - cumulativeProfit;
-      } else if (trades.length >= targetCount - 15) {
-        const remaining = targetProfit - cumulativeProfit;
-        const tradesLeft = targetCount - trades.length;
-        if (tradesLeft > 0) {
-          const adjustmentFactor = 0.4;
-          const adjustment = (remaining / tradesLeft) * adjustmentFactor;
-          profit = Math.round(profit + adjustment);
-        }
-      }
+      const profit = Math.round(pipMove * size * profitPerPip);
 
       cumulativeProfit += profit;
 
       const sl = Number((openPrice + (type === 'buy' ? -25 : 25) * pipValue).toFixed(pair.includes('JPY') ? 2 : 4));
       const tp = Number((openPrice + (type === 'buy' ? 40 : -40) * pipValue).toFixed(pair.includes('JPY') ? 2 : 4));
-
-      const swapAmount = isSwingOrPosition ? Number(randomBetween(-20, 15).toFixed(1)) : Number(randomBetween(0.5, 5).toFixed(1));
 
       trades.push({
         ticket: ticket++,
@@ -198,7 +149,7 @@ function generateDatasetA(): Trade[] {
         sl,
         tp,
         commission: -12,
-        swap: swapAmount,
+        swap: Number(randomBetween(0.5, 5).toFixed(1)),
         profit,
         comment: setup,
       });
