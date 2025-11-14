@@ -618,7 +618,7 @@ export default function JournalNotesPage() {
         </div>
       </section>
 
-      {viewMode === 'daily' && selectedNoteId && (
+      {viewMode === 'daily' && selectedNoteId ? (
         <DailyNotePanel
           {...demoDailyProps}
           onPrevDay={handlePrevDay}
@@ -631,9 +631,7 @@ export default function JournalNotesPage() {
           onChangeValues={handleChangeValues}
           onSave={handleSave}
         />
-      )}
-
-      {viewMode === 'trade' && selectedNoteId && tradesData[selectedNoteId] && (
+      ) : viewMode === 'trade' && selectedNoteId && tradesData[selectedNoteId] ? (
         <TradeDetailPanel
           trade={tradesData[selectedNoteId]}
           kpi={{
@@ -649,9 +647,7 @@ export default function JournalNotesPage() {
           }}
           noteId={selectedNoteId}
         />
-      )}
-
-      {viewMode === 'free' && selectedNoteId && (
+      ) : viewMode === 'free' && selectedNoteId ? (
         <FreeMemoPanel
           noteId={selectedNoteId}
           title={notes.find(n => n.id === selectedNoteId)?.title || ''}
@@ -662,9 +658,7 @@ export default function JournalNotesPage() {
             loadNotes();
           }}
         />
-      )}
-
-      {!viewMode && (
+      ) : (
         <section className="pane">
           <div className="head">
             <h3>ノートを選択してください</h3>
