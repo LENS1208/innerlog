@@ -38,9 +38,13 @@ ChartJS.register(
   TimeScale
 );
 
-ChartJS.defaults.scales.linear.grid.color = 'var(--grid-line)';
-ChartJS.defaults.scales.category.grid.color = 'var(--grid-line)';
-ChartJS.defaults.scales.time.grid.color = 'var(--grid-line)';
+if (!ChartJS.defaults.scales) {
+  ChartJS.defaults.scales = {};
+}
+
+ChartJS.defaults.scale = ChartJS.defaults.scale || {};
+ChartJS.defaults.scale.grid = ChartJS.defaults.scale.grid || {};
+ChartJS.defaults.scale.grid.color = 'var(--grid-line)';
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
