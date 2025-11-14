@@ -17,10 +17,11 @@ import AiProposalPage from "./pages/AiProposalPage";
 import AiEvaluationPage from "./pages/AiEvaluationPage";
 import SettingsPage from "./pages/SettingsPage";
 import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 import AiProposalListPage from "./widgets/AiProposalListPage";
 import AiProposalContainer from "./widgets/AiProposalContainer";
 
-type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | `/ai-proposal/${string}` | "/ai-evaluation";
+type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trades" | "/reports" | `/reports/${string}` | "/notebook" | `/notebook/${string}` | "/settings" | "/journal-v0" | "/ai-proposal" | `/ai-proposal/${string}` | "/ai-evaluation" | "/login" | "/signup";
 
 function parseHashToNewRoute(): NewRoute {
   const h = location.hash.replace(/^#/, "");
@@ -52,6 +53,8 @@ function parseHashToNewRoute(): NewRoute {
   if (h.startsWith("/ai-proposal/")) return h as NewRoute;
   if (h === "/ai-proposal") return "/ai-proposal";
   if (h.startsWith("/ai-evaluation")) return "/ai-evaluation";
+  if (h === "/login") return "/login";
+  if (h === "/signup") return "/signup";
 
   return "/dashboard";
 }
@@ -139,8 +142,12 @@ export default function App() {
     );
   }
 
-  if (!user) {
+  if (!user && route !== "/signup") {
     return <LoginPage />;
+  }
+
+  if (!user && route === "/signup") {
+    return <SignupPage />;
   }
 
   return <AppShell>{Page}</AppShell>;
