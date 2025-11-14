@@ -595,7 +595,7 @@ export default function ReportsTimeAxis() {
           marginBottom: 16,
         }}
       >
-        <Card title="曜日 Top" helpText="最も稼げている曜日です。この曜日に集中的に取引することで効率を上げられます。">
+        <Card title="曜日 ベスト" helpText="最も稼げている曜日です。この曜日に集中的に取引することで効率を上げられます。">
           <div style={{ fontSize: 18, fontWeight: 700, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topDayOfWeek.day}曜日：{formatValue(topDayOfWeek.profit, "profit")}
           </div>
@@ -627,7 +627,7 @@ export default function ReportsTimeAxis() {
             />
           </div>
         </Card>
-        <Card title="曜日 Bottom" helpText="最も損失が出ている曜日です。この曜日は取引を控える判断材料になります。">
+        <Card title="曜日 ワースト" helpText="最も損失が出ている曜日です。この曜日は取引を控える判断材料になります。">
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomDayOfWeek.day}曜日：{formatValue(bottomDayOfWeek.profit, "profit")}
           </div>
@@ -659,7 +659,7 @@ export default function ReportsTimeAxis() {
             />
           </div>
         </Card>
-        <Card title="時間帯 Top" helpText="最も稼げている時間帯です。この時間に取引することで勝率を上げられます。">
+        <Card title="時間帯 ベスト" helpText="最も稼げている時間帯です。この時間に取引することで勝率を上げられます。">
           <div style={{ fontSize: 18, fontWeight: 700, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {topHour.label.replace('-', '時-')}時：{formatValue(topHour.profit, "profit")}
           </div>
@@ -689,7 +689,7 @@ export default function ReportsTimeAxis() {
             />
           </div>
         </Card>
-        <Card title="時間帯 Bottom" helpText="最も損失が出ている時間帯です。この時間は取引を避けるべきです。">
+        <Card title="時間帯 ワースト" helpText="最も損失が出ている時間帯です。この時間は取引を避けるべきです。">
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
             {bottomHour.label.replace('-', '時-')}時：{formatValue(bottomHour.profit, "profit")}
           </div>

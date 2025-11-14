@@ -715,7 +715,7 @@ export default function ReportsRisk() {
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
         <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-          テールイベント（Top/Bottom）
+          テールイベント（ベスト/ワースト）
           <HelpIcon text="極端に大きな損益を記録した取引リストです。異常なケースを振り返り対策を考えられます。" />
         </h3>
         <div style={{ maxHeight: "40vh", overflowY: "auto" }}>
