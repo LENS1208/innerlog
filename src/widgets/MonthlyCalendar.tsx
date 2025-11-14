@@ -662,14 +662,10 @@ export default function MonthlyCalendar() {
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
           <button
             onClick={goToPrevMonth}
-            className="nav-button"
+            className="btn-secondary"
             style={{
-              background: "var(--chip)",
-              border: "1px solid var(--line)",
-              borderRadius: 8,
               padding: "8px 12px",
-              cursor: "pointer",
-              fontSize: 18,
+              fontSize: 18
             }}
           >
             ‹
@@ -677,14 +673,10 @@ export default function MonthlyCalendar() {
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>{monthName}</h1>
           <button
             onClick={goToNextMonth}
-            className="nav-button"
+            className="btn-secondary"
             style={{
-              background: "var(--chip)",
-              border: "1px solid var(--line)",
-              borderRadius: 8,
               padding: "8px 12px",
-              cursor: "pointer",
-              fontSize: 18,
+              fontSize: 18
             }}
           >
             ›

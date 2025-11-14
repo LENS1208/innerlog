@@ -21,6 +21,18 @@
   --accent-bg: rgba(0, 132, 199, 0.12);
   --accent-border: rgba(0, 132, 199, 0.35);
 
+  --btn-primary-bg: #0084c7;
+  --btn-primary-text: #ffffff;
+  --btn-primary-hover: #006fa8;
+  --btn-secondary-bg: transparent;
+  --btn-secondary-border: #cbd5e1;
+  --btn-secondary-text: #0f172a;
+  --btn-secondary-hover: #f1f5f9;
+  --btn-ghost-text: #64748b;
+  --btn-ghost-hover: #f1f5f9;
+  --btn-disabled-bg: #f1f5f9;
+  --btn-disabled-text: #cbd5e1;
+
   --radius: 14px;
   --header-h: 56px;
   --row-h: 44px;
@@ -60,6 +72,18 @@
   --chart-text: #b0bac9;
   --accent-bg: rgba(1, 161, 255, 0.12);
   --accent-border: rgba(1, 161, 255, 0.35);
+
+  --btn-primary-bg: #01a1ff;
+  --btn-primary-text: #0a0e14;
+  --btn-primary-hover: #3db8ff;
+  --btn-secondary-bg: transparent;
+  --btn-secondary-border: #4a5568;
+  --btn-secondary-text: #e4e8f0;
+  --btn-secondary-hover: #1f2937;
+  --btn-ghost-text: #a0aec0;
+  --btn-ghost-hover: #1f2937;
+  --btn-disabled-bg: #1a1f2e;
+  --btn-disabled-text: #4a5568;
 
   --radius: 14px;
   --header-h: 56px;
@@ -189,4 +213,70 @@ body {
   .mobile-filters {
     display: flex !important;
   }
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--btn-primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1.5px solid var(--btn-secondary-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--btn-secondary-hover);
+  border-color: var(--accent);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--btn-ghost-text);
+  border: none;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--btn-ghost-hover);
+  color: var(--ink);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background: var(--btn-disabled-bg);
+  color: var(--btn-disabled-text);
+  border-color: var(--btn-disabled-text);
+}
+
+button:disabled:hover {
+  transform: none;
 }

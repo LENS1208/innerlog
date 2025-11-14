@@ -303,15 +303,12 @@ export default function TradeListPage() {
         {/* Page Navigation */}
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <button
+            className="btn-secondary"
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
             style={{
               padding: "8px 12px",
-              border: "1px solid var(--line)",
-              borderRadius: 6,
-              background: currentPage === 1 ? "var(--muted-bg)" : "white",
-              cursor: currentPage === 1 ? "not-allowed" : "pointer",
-              color: currentPage === 1 ? "var(--muted)" : "var(--ink)",
+              fontSize: 16
             }}
           >
             ←
@@ -332,15 +329,11 @@ export default function TradeListPage() {
             return (
               <button
                 key={pageNum}
+                className={currentPage === pageNum ? "btn-primary" : "btn-secondary"}
                 onClick={() => setCurrentPage(pageNum)}
                 style={{
                   padding: "8px 12px",
-                  border: "1px solid var(--line)",
-                  borderRadius: 6,
-                  background: currentPage === pageNum ? "var(--accent)" : "white",
-                  color: currentPage === pageNum ? "white" : "var(--ink)",
-                  cursor: "pointer",
-                  fontWeight: currentPage === pageNum ? 600 : 400,
+                  minWidth: 40
                 }}
               >
                 {pageNum}
@@ -349,15 +342,12 @@ export default function TradeListPage() {
           })}
 
           <button
+            className="btn-secondary"
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
             style={{
               padding: "8px 12px",
-              border: "1px solid var(--line)",
-              borderRadius: 6,
-              background: currentPage === totalPages ? "var(--muted-bg)" : "white",
-              cursor: currentPage === totalPages ? "not-allowed" : "pointer",
-              color: currentPage === totalPages ? "var(--muted)" : "var(--ink)",
+              fontSize: 16
             }}
           >
             →

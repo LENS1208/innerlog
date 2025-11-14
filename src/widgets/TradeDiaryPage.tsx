@@ -1100,9 +1100,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
               </div>
             </div>
             <button
-              className="nav-btn"
+              className="btn-secondary"
               onClick={() => window.location.hash = '/notebook'}
-              style={{ fontSize: 14 }}
+              style={{ fontSize: 14, padding: "8px 12px" }}
             >
               ノート一覧
             </button>

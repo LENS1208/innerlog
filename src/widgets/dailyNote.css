@@ -52,16 +52,18 @@
 
 .nav-btn {
   padding: 8px 12px;
-  border: 1px solid var(--line, #e5e7eb);
+  border: 1.5px solid var(--btn-secondary-border);
   border-radius: 8px;
-  background: var(--surface, #ffffff);
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
   cursor: pointer;
   font-size: 18px;
-  transition: background-color 0.15s;
+  transition: all 0.2s ease;
 }
 
 .nav-btn:hover {
-  background: var(--chip, #f3f4f6);
+  background: var(--btn-secondary-hover);
+  border-color: var(--accent);
 }
 
 .kpi-grid-daily {
@@ -229,17 +231,19 @@
 .link-btn,
 .action-btn {
   padding: 6px 12px;
-  border: 1px solid var(--line, #e5e7eb);
+  border: 1.5px solid var(--btn-secondary-border);
   border-radius: 6px;
-  background: var(--surface, #ffffff);
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
   cursor: pointer;
   font-size: 13px;
-  transition: background-color 0.15s;
+  transition: all 0.2s ease;
 }
 
 .link-btn:hover,
 .action-btn:hover {
-  background: var(--chip, #f3f4f6);
+  background: var(--btn-secondary-hover);
+  border-color: var(--accent);
 }
 
 .data-table {
