@@ -1,4 +1,5 @@
 // src/widgets/DashboardKPI.tsx
+// Updated: Fixed neutral KPI colors to use var(--ink)
 import React, { useMemo } from 'react'
 import { UI_TEXT, formatCount } from '../lib/i18n'
 import { computePipsFromPrices, computeDurationMinutes } from '../lib/metrics'
