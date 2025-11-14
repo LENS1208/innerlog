@@ -6,8 +6,8 @@
 .td-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }
 .td-title{ font-size:20px; margin:0; }
 .td-actions{ display:flex; gap:8px; }
-.td-btn{ padding:8px 14px; border-radius:8px; border:1px solid var(--btn-secondary-border); background: var(--btn-secondary-bg); color: var(--btn-secondary-text); cursor:pointer; font-size:14px; font-weight:500; transition:all 0.2s ease; }
-.td-btn:hover{ background:var(--btn-secondary-hover); border-color:var(--accent); transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+.td-btn{ padding:8px 14px; border-radius:8px; border:1px solid var(--btn-secondary-border) !important; background: var(--btn-secondary-bg) !important; color: var(--btn-secondary-text) !important; cursor:pointer; font-size:14px; font-weight:500; transition:all 0.2s ease; }
+.td-btn:hover{ background:var(--btn-secondary-hover) !important; border-color:var(--accent) !important; transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.08); }
 .td-btn:active{ transform:translateY(0); }
 .td-btn.td-accent{ background:var(--accent); border-color:var(--accent); color:#fff; }
 .td-btn.td-accent:hover{ background:var(--accent); opacity:0.9; }
