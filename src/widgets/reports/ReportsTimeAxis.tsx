@@ -1167,12 +1167,23 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
   const getCellBackgroundColor = (winRate: number) => {
     const t = winRate / 100;
-    const lightBlue = { r: 100, g: 149, b: 237 };
-    const darkNavy = { r: 25, g: 47, b: 89 };
+    const lightBlue = { r: 173, g: 216, b: 230 };
+    const midBlue = { r: 0, g: 132, b: 199 };
+    const darkBlue = { r: 0, g: 86, b: 130 };
 
-    const r = Math.round(lightBlue.r + (darkNavy.r - lightBlue.r) * t);
-    const g = Math.round(lightBlue.g + (darkNavy.g - lightBlue.g) * t);
-    const b = Math.round(lightBlue.b + (darkNavy.b - lightBlue.b) * t);
+    let r: number, g: number, b: number;
+
+    if (t <= 0.5) {
+      const localT = t * 2;
+      r = Math.round(lightBlue.r + (midBlue.r - lightBlue.r) * localT);
+      g = Math.round(lightBlue.g + (midBlue.g - lightBlue.g) * localT);
+      b = Math.round(lightBlue.b + (midBlue.b - midBlue.b) * localT);
+    } else {
+      const localT = (t - 0.5) * 2;
+      r = Math.round(midBlue.r + (darkBlue.r - midBlue.r) * localT);
+      g = Math.round(midBlue.g + (darkBlue.g - midBlue.g) * localT);
+      b = Math.round(midBlue.b + (darkBlue.b - midBlue.b) * localT);
+    }
 
     return `rgb(${r}, ${g}, ${b})`;
   };
@@ -1289,15 +1300,15 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
       <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(25, 47, 89)", borderRadius: 2 }}></div>
-          <span>濃紺 (100%)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(0, 86, 130)", borderRadius: 2 }}></div>
+          <span>濃青 (100%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(62, 98, 163)", borderRadius: 2 }}></div>
+          <div style={{ width: 16, height: 16, background: "rgb(0, 132, 199)", borderRadius: 2 }}></div>
           <span>中間 (50%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(100, 149, 237)", borderRadius: 2 }}></div>
+          <div style={{ width: 16, height: 16, background: "rgb(173, 216, 230)", borderRadius: 2 }}></div>
           <span>ライトブルー (0%)</span>
         </div>
       </div>
