@@ -1096,6 +1096,14 @@ export default function ReportsTimeAxis() {
           </Card>
         </div>
 
+      <Card
+        title="時間帯×銘柄 勝率分析"
+        helpText="各時間帯における通貨ペアごとの勝率を分析します。特定の時間帯で有利な銘柄を見つけることができます。"
+        style={{ marginBottom: 16 }}
+      >
+        <TimeSymbolAnalysis trades={filteredTrades} />
+      </Card>
+
       <Card title="セグメント別明細" helpText="全曜日・時間帯の詳細データテーブルです。細かい数値を確認して取引時間を最適化できます。">
         <SegmentDetailsTabs
           dayOfWeekData={dayOfWeekData}
@@ -1104,6 +1112,169 @@ export default function ReportsTimeAxis() {
           monthlyData={monthlyData}
         />
       </Card>
+    </div>
+  );
+}
+
+function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
+  const timeRanges = [
+    { label: "アジア朝(06-10)", start: 6, end: 10 },
+    { label: "アジア昼(10-14)", start: 10, end: 14 },
+    { label: "欧州前場(14-18)", start: 14, end: 18 },
+    { label: "欧州後場(18-22)", start: 18, end: 22 },
+    { label: "NY前場(22-02)", start: 22, end: 26 },
+    { label: "NY後場(02-06)", start: 2, end: 6 },
+  ];
+
+  const analysisData = useMemo(() => {
+    const symbolSet = new Set<string>();
+    trades.forEach((t) => symbolSet.add(t.pair));
+    const symbols = Array.from(symbolSet).sort();
+
+    const data = timeRanges.map((range) => {
+      const symbolData: Record<string, { wins: number; total: number; profit: number }> = {};
+
+      symbols.forEach((symbol) => {
+        symbolData[symbol] = { wins: 0, total: 0, profit: 0 };
+      });
+
+      trades.forEach((t) => {
+        const date = new Date(getTradeTime(t));
+        let hour = date.getHours();
+        if (range.start === 22 && hour >= 0 && hour < 6) {
+          hour += 24;
+        }
+
+        if (
+          (range.start < range.end && hour >= range.start && hour < range.end) ||
+          (range.start > range.end && (hour >= range.start || hour < range.end)) ||
+          (range.start === 22 && hour >= 22 && hour < 26)
+        ) {
+          const profit = getTradeProfit(t);
+          if (symbolData[t.pair]) {
+            symbolData[t.pair].total++;
+            symbolData[t.pair].profit += profit;
+            if (profit > 0) symbolData[t.pair].wins++;
+          }
+        }
+      });
+
+      return { range: range.label, symbolData };
+    });
+
+    return { data, symbols };
+  }, [trades]);
+
+  const getWinRateColor = (winRate: number) => {
+    if (winRate >= 70) return getGreenColor();
+    if (winRate >= 55) return getAccentColor();
+    if (winRate >= 45) return getWarningColor();
+    return getLossColor();
+  };
+
+  if (trades.length === 0) {
+    return (
+      <div style={{ padding: 20, textAlign: "center", color: "var(--muted)", fontSize: 13 }}>
+        データがありません
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
+        <thead>
+          <tr style={{ borderBottom: "2px solid var(--line)" }}>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)", position: "sticky", left: 0, background: "var(--bg)", zIndex: 1 }}>
+              時間帯
+            </th>
+            {analysisData.symbols.map((symbol) => (
+              <th key={symbol} style={{ padding: 10, textAlign: "center", fontSize: 13, fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>
+                {symbol}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {analysisData.data.map((item, index) => (
+            <tr
+              key={index}
+              style={{
+                borderBottom: "1px solid var(--line)",
+                height: 44,
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            >
+              <td style={{ padding: 10, fontSize: 13, fontWeight: 600, position: "sticky", left: 0, background: "inherit", zIndex: 1 }}>
+                {item.range}
+              </td>
+              {analysisData.symbols.map((symbol) => {
+                const data = item.symbolData[symbol];
+                const winRate = data.total > 0 ? (data.wins / data.total) * 100 : 0;
+                const hasData = data.total > 0;
+
+                return (
+                  <td
+                    key={symbol}
+                    style={{
+                      padding: 10,
+                      textAlign: "center",
+                      fontSize: 12,
+                    }}
+                  >
+                    {hasData ? (
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                        <div
+                          style={{
+                            fontSize: 14,
+                            fontWeight: 700,
+                            color: getWinRateColor(winRate),
+                          }}
+                        >
+                          {winRate.toFixed(0)}%
+                        </div>
+                        <div style={{ fontSize: 10, color: "var(--muted)" }}>
+                          {data.wins}勝/{data.total}戦
+                        </div>
+                        <div
+                          style={{
+                            fontSize: 10,
+                            color: data.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                          }}
+                        >
+                          {Math.round(data.profit).toLocaleString()}円
+                        </div>
+                      </div>
+                    ) : (
+                      <span style={{ color: "var(--muted)", fontSize: 11 }}>-</span>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ width: 12, height: 12, background: getGreenColor(), borderRadius: 2 }}></div>
+          <span>優秀 (70%+)</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ width: 12, height: 12, background: getAccentColor(), borderRadius: 2 }}></div>
+          <span>良好 (55-69%)</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ width: 12, height: 12, background: getWarningColor(), borderRadius: 2 }}></div>
+          <span>普通 (45-54%)</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ width: 12, height: 12, background: getLossColor(), borderRadius: 2 }}></div>
+          <span>要改善 (-44%)</span>
+        </div>
+      </div>
     </div>
   );
 }
