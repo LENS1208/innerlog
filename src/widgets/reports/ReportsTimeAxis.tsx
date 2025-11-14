@@ -14,6 +14,135 @@ type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 
 const dayNames: DayOfWeek[] = ["日", "月", "火", "水", "木", "金", "土"];
 
+type SegmentTab = "曜日" | "時間帯" | "週別" | "月別";
+
+function SegmentDetailsTabs({
+  dayOfWeekData,
+  hourData,
+  weeklyDataForTable,
+  monthlyData
+}: {
+  dayOfWeekData: any[];
+  hourData: any[];
+  weeklyDataForTable: any[];
+  monthlyData: any[];
+}) {
+  const [activeTab, setActiveTab] = React.useState<SegmentTab>("曜日");
+
+  const tabs: SegmentTab[] = ["曜日", "時間帯", "週別", "月別"];
+
+  const renderTable = () => {
+    let data: any[] = [];
+    let labelKey = "";
+    let segmentLabel = "";
+
+    switch (activeTab) {
+      case "曜日":
+        data = dayOfWeekData;
+        labelKey = "day";
+        segmentLabel = "曜日";
+        break;
+      case "時間帯":
+        data = hourData;
+        labelKey = "label";
+        segmentLabel = "時間帯";
+        break;
+      case "週別":
+        data = weeklyDataForTable;
+        labelKey = "week";
+        segmentLabel = "週";
+        break;
+      case "月別":
+        data = monthlyData;
+        labelKey = "month";
+        segmentLabel = "月";
+        break;
+    }
+
+    return (
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ borderBottom: "2px solid var(--line)" }}>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
+              {segmentLabel}
+            </th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>PF</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const label = activeTab === "曜日"
+              ? `${item[labelKey]}曜日`
+              : item[labelKey];
+
+            return (
+              <tr
+                key={index}
+                style={{
+                  borderBottom: "1px solid var(--line)",
+                  height: 44,
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+              >
+                <td style={{ padding: 10, fontSize: 13 }}>{label}</td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.count}</td>
+                <td
+                  style={{
+                    padding: 10,
+                    textAlign: "right",
+                    fontSize: 13,
+                    color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
+                  }}
+                >
+                  {Math.round(item.profit).toLocaleString("ja-JP")}円
+                </td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.winRate.toFixed(0)}%</td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.pf.toFixed(2)}</td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
+                  {Math.round(item.avgProfit).toLocaleString("ja-JP")}円
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--line)" }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: "10px 20px",
+              fontSize: 14,
+              fontWeight: activeTab === tab ? 600 : 400,
+              color: activeTab === tab ? "var(--fg)" : "var(--muted)",
+              background: "transparent",
+              border: "none",
+              borderBottom: activeTab === tab ? "2px solid var(--accent)" : "2px solid transparent",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      {renderTable()}
+    </div>
+  );
+}
+
 export default function ReportsTimeAxis() {
   const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
@@ -968,167 +1097,12 @@ export default function ReportsTimeAxis() {
         </div>
 
       <Card title="セグメント別明細" helpText="全曜日・時間帯の詳細データテーブルです。細かい数値を確認して取引時間を最適化できます。">
-        <div>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セグメント</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>バケット</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>PF</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dayOfWeekData.map((d) => (
-                <tr
-                  key={d.day}
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>曜日</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{d.day}曜日</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{d.count}</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: d.profit >= 0 ? "var(--gain)" : "var(--loss)",
-                    }}
-                  >
-                    {Math.round(d.profit).toLocaleString("ja-JP")}円
-                  </td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{d.winRate.toFixed(0)}%</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{d.pf.toFixed(2)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    {Math.round(d.avgProfit).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              ))}
-              {hourData.map((h) => (
-                <tr
-                  key={h.label}
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>時間帯</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{h.label}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{h.count}</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: h.profit >= 0 ? "var(--gain)" : "var(--loss)",
-                    }}
-                  >
-                    {Math.round(h.profit).toLocaleString("ja-JP")}円
-                  </td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{h.winRate.toFixed(0)}%</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{h.pf.toFixed(2)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    {Math.round(h.avgProfit).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              ))}
-              {weeklyDataForTable.map((w) => (
-                <tr
-                  key={w.week}
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                    background: "rgba(34, 197, 94, 0.05)",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(34, 197, 94, 0.1)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(34, 197, 94, 0.05)")}
-                >
-                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>週別</td>
-                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{w.week}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{w.count}</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: w.profit >= 0 ? "var(--gain)" : "var(--loss)",
-                    }}
-                  >
-                    {Math.round(w.profit).toLocaleString("ja-JP")}円
-                  </td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{w.winRate.toFixed(0)}%</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{w.pf.toFixed(2)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    {Math.round(w.avgProfit).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              ))}
-              {monthlyData.map((m) => (
-                <tr
-                  key={m.month}
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                    background: "rgba(0, 132, 199, 0.05)",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = getAccentColor(0.1))}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(0, 132, 199, 0.05)")}
-                >
-                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>月別</td>
-                  <td style={{ padding: 10, fontSize: 13, fontWeight: 600 }}>{m.month}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.count}</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      fontWeight: 600,
-                      color: m.profit >= 0 ? "var(--gain)" : "var(--loss)",
-                    }}
-                  >
-                    {Math.round(m.profit).toLocaleString("ja-JP")}円
-                  </td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.winRate.toFixed(0)}%</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{m.pf.toFixed(2)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    {Math.round(m.avgProfit).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "2px 8px",
-              borderRadius: 999,
-              background: "var(--chip)",
-              border: "1px solid var(--line)",
-              fontSize: 12,
-              color: "var(--muted)",
-            }}
-          >
-            曜日・時間帯・週別・月別の詳細統計
-          </span>
-        </div>
+        <SegmentDetailsTabs
+          dayOfWeekData={dayOfWeekData}
+          hourData={hourData}
+          weeklyDataForTable={weeklyDataForTable}
+          monthlyData={monthlyData}
+        />
       </Card>
     </div>
   );
