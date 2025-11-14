@@ -41,7 +41,7 @@ ChartJS.register(
 function updateChartColors() {
   const styles = getComputedStyle(document.documentElement);
   const gridColor = styles.getPropertyValue('--grid-line').trim();
-  const textColor = styles.getPropertyValue('--ink').trim();
+  const chartTextColor = styles.getPropertyValue('--chart-text').trim();
 
   if (!ChartJS.defaults.scales) {
     ChartJS.defaults.scales = {};
@@ -51,7 +51,7 @@ function updateChartColors() {
   ChartJS.defaults.scale.grid = ChartJS.defaults.scale.grid || {};
   ChartJS.defaults.scale.grid.color = gridColor;
   ChartJS.defaults.scale.ticks = ChartJS.defaults.scale.ticks || {};
-  ChartJS.defaults.scale.ticks.color = textColor;
+  ChartJS.defaults.scale.ticks.color = chartTextColor;
 }
 
 updateChartColors();

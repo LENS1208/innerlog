@@ -17,6 +17,7 @@
   --bg-secondary: #f8fafc;
   --input-bg: #ffffff;
   --grid-line: rgba(100, 116, 139, 0.15);
+  --chart-text: #64748b;
   --accent-bg: rgba(0, 132, 199, 0.12);
   --accent-border: rgba(0, 132, 199, 0.35);
 
@@ -56,6 +57,7 @@
   --bg-secondary: #0f1420;
   --input-bg: #ffffff;
   --grid-line: rgba(160, 174, 192, 0.25);
+  --chart-text: #b0bac9;
   --accent-bg: rgba(1, 161, 255, 0.12);
   --accent-border: rgba(1, 161, 255, 0.35);
 
