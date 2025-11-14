@@ -96,11 +96,11 @@ function MarketSegmentTabs({
             <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
               {segmentLabel}
             </th>
-            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引</th>
-            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>Net損益</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引回数</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
             <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
             <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>PF</th>
-            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>合計損益</th>
           </tr>
         </thead>
         <tbody>
@@ -116,21 +116,30 @@ function MarketSegmentTabs({
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
               <td style={{ padding: 10, fontSize: 13 }}>{item.label}</td>
-              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.count}</td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.count}回</td>
               <td
                 style={{
                   padding: 10,
                   textAlign: "right",
                   fontSize: 13,
+                  fontWeight: 600,
+                  color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)",
+                }}
+              >
+                {Math.round(item.avgProfit).toLocaleString("ja-JP")}円
+              </td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.winRate.toFixed(0)}%</td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{typeof item.pf === 'number' ? item.pf.toFixed(2) : item.pf}</td>
+              <td
+                style={{
+                  padding: 10,
+                  textAlign: "right",
+                  fontSize: 18,
+                  fontWeight: 600,
                   color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
                 }}
               >
                 {Math.round(item.profit).toLocaleString("ja-JP")}円
-              </td>
-              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{item.winRate.toFixed(0)}%</td>
-              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{typeof item.pf === 'number' ? item.pf.toFixed(2) : item.pf}</td>
-              <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                {Math.round(item.avgProfit).toLocaleString("ja-JP")}円
               </td>
             </tr>
           ))}
