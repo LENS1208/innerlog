@@ -119,7 +119,7 @@ export default function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: '#f8fafc',
         padding: 20,
       }}
     >
@@ -130,7 +130,8 @@ export default function LoginPage() {
           background: '#fff',
           borderRadius: 16,
           padding: '48px 40px',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+          border: '1px solid #e2e8f0',
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -158,7 +159,7 @@ export default function LoginPage() {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#48bb78',
+                    color: '#0084c7',
                     fontWeight: 600,
                     cursor: 'pointer',
                     textDecoration: 'underline',
@@ -175,7 +176,7 @@ export default function LoginPage() {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#48bb78',
+                    color: '#0084c7',
                     fontWeight: 600,
                     cursor: 'pointer',
                     textDecoration: 'underline',
@@ -217,7 +218,7 @@ export default function LoginPage() {
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#667eea';
+                e.target.style.borderColor = '#0084c7';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e2e8f0';
@@ -256,7 +257,7 @@ export default function LoginPage() {
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#667eea';
+                e.target.style.borderColor = '#0084c7';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e2e8f0';
@@ -291,7 +292,7 @@ export default function LoginPage() {
                     width: 18,
                     height: 18,
                     cursor: 'pointer',
-                    accentColor: '#48bb78',
+                    accentColor: '#0084c7',
                   }}
                 />
                 ログイン状態を保持
@@ -339,7 +340,7 @@ export default function LoginPage() {
               fontSize: 16,
               fontWeight: 700,
               color: '#fff',
-              background: loading ? '#a0aec0' : '#48bb78',
+              background: loading ? '#a0aec0' : '#0084c7',
               border: 'none',
               borderRadius: 12,
               cursor: loading ? 'not-allowed' : 'pointer',
@@ -347,10 +348,10 @@ export default function LoginPage() {
               marginBottom: 16,
             }}
             onMouseEnter={(e) => {
-              if (!loading) e.currentTarget.style.background = '#38a169';
+              if (!loading) e.currentTarget.style.background = '#006ba3';
             }}
             onMouseLeave={(e) => {
-              if (!loading) e.currentTarget.style.background = '#48bb78';
+              if (!loading) e.currentTarget.style.background = '#0084c7';
             }}
           >
             {loading ? '処理中...' : isLogin ? 'ログイン' : '新規登録'}
