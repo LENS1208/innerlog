@@ -1167,25 +1167,19 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
   const getCellBackgroundColor = (winRate: number) => {
     if (winRate >= 70) {
-      const intensity = 0.25 + ((winRate - 70) / 30) * 0.35;
-      return `rgba(34, 197, 94, ${intensity})`;
-    }
-    if (winRate >= 55) {
-      const intensity = 0.2 + ((winRate - 55) / 15) * 0.25;
+      const intensity = 0.65 + ((winRate - 70) / 30) * 0.35;
       return `rgba(59, 130, 246, ${intensity})`;
     }
+    if (winRate >= 55) {
+      const intensity = 0.6 + ((winRate - 55) / 15) * 0.3;
+      return `rgba(34, 197, 94, ${intensity})`;
+    }
     if (winRate >= 45) {
-      const intensity = 0.2 + ((winRate - 45) / 10) * 0.2;
+      const intensity = 0.6 + ((winRate - 45) / 10) * 0.25;
       return `rgba(251, 146, 60, ${intensity})`;
     }
-    const intensity = 0.25 + ((45 - winRate) / 45) * 0.35;
+    const intensity = 0.65 + ((45 - winRate) / 45) * 0.35;
     return `rgba(239, 68, 68, ${intensity})`;
-  };
-
-  const getTextColor = (winRate: number) => {
-    if (winRate >= 65) return "#ffffff";
-    if (winRate <= 35) return "#ffffff";
-    return "var(--fg)";
   };
 
   if (trades.length === 0) {
@@ -1202,22 +1196,22 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
         <thead>
           <tr>
             <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)", position: "sticky", left: 0, background: "var(--bg)", zIndex: 2 }}>
-              時間帯
+              通貨ペア
             </th>
-            {analysisData.symbols.map((symbol) => (
-              <th key={symbol} style={{ padding: 10, textAlign: "center", fontSize: 13, fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>
-                {symbol}
+            {analysisData.data.map((item) => (
+              <th key={item.range} style={{ padding: 10, textAlign: "center", fontSize: 13, fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>
+                {item.range}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {analysisData.data.map((item, index) => (
-            <tr key={index}>
+          {analysisData.symbols.map((symbol) => (
+            <tr key={symbol}>
               <td style={{ padding: 10, fontSize: 13, fontWeight: 600, position: "sticky", left: 0, background: "var(--bg)", zIndex: 1, color: "var(--fg)" }}>
-                {item.range}
+                {symbol}
               </td>
-              {analysisData.symbols.map((symbol) => {
+              {analysisData.data.map((item) => {
                 const data = item.symbolData[symbol];
                 const winRate = data.total > 0 ? (data.wins / data.total) * 100 : 0;
                 const hasData = data.total > 0;
@@ -1228,7 +1222,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
                 return (
                   <td
-                    key={symbol}
+                    key={item.range}
                     style={{
                       padding: 8,
                       textAlign: "center",
@@ -1247,7 +1241,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                           style={{
                             fontSize: 15,
                             fontWeight: 700,
-                            color: getTextColor(winRate),
+                            color: "#ffffff",
                           }}
                         >
                           {winRate.toFixed(0)}%
@@ -1256,7 +1250,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                           style={{
                             fontSize: 11,
                             fontWeight: 600,
-                            color: getTextColor(winRate),
+                            color: "#ffffff",
                           }}
                         >
                           {Math.round(data.profit) >= 0 ? '+' : ''}{Math.round(data.profit).toLocaleString()}
@@ -1275,19 +1269,19 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
       <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: getGreenColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <div style={{ width: 16, height: 16, background: "rgba(59, 130, 246, 0.8)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>優秀 (70%+)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: getAccentColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <div style={{ width: 16, height: 16, background: "rgba(34, 197, 94, 0.75)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>良好 (55-69%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: getWarningColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <div style={{ width: 16, height: 16, background: "rgba(251, 146, 60, 0.75)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>普通 (45-54%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: getLossColor(), borderRadius: 2, border: "1px solid var(--line)" }}></div>
+          <div style={{ width: 16, height: 16, background: "rgba(239, 68, 68, 0.8)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
           <span>要改善 (-44%)</span>
         </div>
       </div>
