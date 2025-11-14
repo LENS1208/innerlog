@@ -176,7 +176,7 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
               XMポイント利用
               <HelpIcon text="獲得したXMポイントを取引口座に移して使用した金額です。ボーナスとして活用できます。" />
             </div>
-            <div className="kpi-value" style={{ color: 'var(--muted)' }}>
+            <div className="kpi-value" style={{ color: 'var(--ink)' }}>
               +{summaryData.xm_points_used.toLocaleString('ja-JP')} <span style={{ fontSize: '12px', color: 'var(--muted)' }}>円</span>
             </div>
             <div className="kpi-desc">XMPから使用した金額</div>
