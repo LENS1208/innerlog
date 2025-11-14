@@ -1166,20 +1166,22 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
   }, [trades]);
 
   const getCellBackgroundColor = (winRate: number) => {
+    if (winRate === 100) {
+      return 'rgb(59, 130, 246)';
+    }
+    if (winRate === 0) {
+      return 'rgb(239, 68, 68)';
+    }
     if (winRate >= 70) {
-      const intensity = 0.65 + ((winRate - 70) / 30) * 0.35;
-      return `rgba(59, 130, 246, ${intensity})`;
+      const t = (winRate - 70) / 30;
+      return `rgb(${Math.round(34 + (59 - 34) * t)}, ${Math.round(197 + (130 - 197) * t)}, ${Math.round(94 + (246 - 94) * t)})`;
     }
-    if (winRate >= 55) {
-      const intensity = 0.6 + ((winRate - 55) / 15) * 0.3;
-      return `rgba(34, 197, 94, ${intensity})`;
+    if (winRate >= 50) {
+      const t = (winRate - 50) / 20;
+      return `rgb(${Math.round(251 + (34 - 251) * t)}, ${Math.round(146 + (197 - 146) * t)}, ${Math.round(60 + (94 - 60) * t)})`;
     }
-    if (winRate >= 45) {
-      const intensity = 0.6 + ((winRate - 45) / 10) * 0.25;
-      return `rgba(251, 146, 60, ${intensity})`;
-    }
-    const intensity = 0.65 + ((45 - winRate) / 45) * 0.35;
-    return `rgba(239, 68, 68, ${intensity})`;
+    const t = winRate / 50;
+    return `rgb(239, ${Math.round(68 + (146 - 68) * t)}, ${Math.round(68 + (60 - 68) * t)})`;
   };
 
   if (trades.length === 0) {
@@ -1192,7 +1194,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
   return (
     <div style={{ overflowX: "auto" }}>
-      <table style={{ width: "100%", borderCollapse: "separate", borderSpacing: "2px", minWidth: 600 }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 600 }}>
         <thead>
           <tr>
             <th style={{ padding: 10, textAlign: "left", fontSize: 13, fontWeight: "bold", color: "var(--muted)", position: "sticky", left: 0, background: "var(--bg)", zIndex: 2 }}>
@@ -1216,10 +1218,6 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                 const winRate = data.total > 0 ? (data.wins / data.total) * 100 : 0;
                 const hasData = data.total > 0;
 
-                const tooltipText = hasData
-                  ? `${symbol} ${item.range}\n${data.wins}勝 ${data.total - data.wins}敗 (${data.total}戦)\n損益: ${Math.round(data.profit).toLocaleString()}円`
-                  : "";
-
                 return (
                   <td
                     key={item.range}
@@ -1228,18 +1226,47 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                       textAlign: "center",
                       fontSize: 12,
                       background: hasData ? getCellBackgroundColor(winRate) : "var(--chip)",
-                      border: "1px solid var(--line)",
                       cursor: hasData ? "help" : "default",
                       position: "relative",
                       height: 60,
                     }}
-                    title={tooltipText}
+                    onMouseEnter={(e) => {
+                      if (hasData) {
+                        const tooltip = document.createElement('div');
+                        tooltip.id = 'cell-tooltip';
+                        tooltip.style.cssText = `
+                          position: fixed;
+                          background: var(--bg);
+                          border: 1px solid var(--line);
+                          padding: 8px 12px;
+                          border-radius: 6px;
+                          font-size: 12px;
+                          z-index: 1000;
+                          pointer-events: none;
+                          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        `;
+                        tooltip.innerHTML = `
+                          <div style="font-weight: 600; margin-bottom: 4px;">${symbol} ${item.range}</div>
+                          <div>${data.wins}勝 ${data.total - data.wins}敗 (${data.total}戦)</div>
+                          <div style="color: ${data.profit >= 0 ? 'var(--gain)' : 'var(--loss)'}">損益: ${Math.round(data.profit).toLocaleString()}円</div>
+                        `;
+                        document.body.appendChild(tooltip);
+
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
+                        tooltip.style.top = `${rect.top - tooltip.offsetHeight - 8}px`;
+                      }
+                    }}
+                    onMouseLeave={() => {
+                      const tooltip = document.getElementById('cell-tooltip');
+                      if (tooltip) tooltip.remove();
+                    }}
                   >
                     {hasData ? (
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
                         <div
                           style={{
-                            fontSize: 15,
+                            fontSize: 22.5,
                             fontWeight: 700,
                             color: "#ffffff",
                           }}
@@ -1253,7 +1280,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                             color: "#ffffff",
                           }}
                         >
-                          {Math.round(data.profit) >= 0 ? '+' : ''}{Math.round(data.profit).toLocaleString()}
+                          {Math.round(data.profit) >= 0 ? '+' : ''}{Math.round(data.profit).toLocaleString()}円
                         </div>
                       </div>
                     ) : (
@@ -1269,20 +1296,20 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
       <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgba(59, 130, 246, 0.8)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
-          <span>優秀 (70%+)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(59, 130, 246)", borderRadius: 2 }}></div>
+          <span>優秀 (100%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgba(34, 197, 94, 0.75)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
-          <span>良好 (55-69%)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(34, 197, 94)", borderRadius: 2 }}></div>
+          <span>良好 (70%+)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgba(251, 146, 60, 0.75)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
-          <span>普通 (45-54%)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(251, 146, 60)", borderRadius: 2 }}></div>
+          <span>普通 (50-69%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgba(239, 68, 68, 0.8)", borderRadius: 2, border: "1px solid var(--line)" }}></div>
-          <span>要改善 (-44%)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(239, 68, 68)", borderRadius: 2 }}></div>
+          <span>要改善 (0%)</span>
         </div>
       </div>
     </div>
