@@ -1337,25 +1337,14 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                     }}
                   >
                     {hasData ? (
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-                        <div
-                          style={{
-                            fontSize: 20,
-                            fontWeight: 700,
-                            color: "#ffffff",
-                          }}
-                        >
-                          {winRate.toFixed(0)}%
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 11,
-                            fontWeight: 600,
-                            color: "#ffffff",
-                          }}
-                        >
-                          {Math.round(data.profit) >= 0 ? '+' : ''}{Math.round(data.profit).toLocaleString()}円
-                        </div>
+                      <div
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 700,
+                          color: "#ffffff",
+                        }}
+                      >
+                        {winRate.toFixed(0)}%
                       </div>
                     ) : (
                       <span style={{ color: "var(--muted)", fontSize: 11 }}>-</span>
