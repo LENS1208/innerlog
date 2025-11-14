@@ -101,7 +101,7 @@ function SegmentDetailsTabs({
                     color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)",
                   }}
                 >
-                  {Math.round(item.avgProfit).toLocaleString("ja-JP")}円
+                  {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")}円
                 </td>
                 <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.winRate.toFixed(0)}%</td>
                 <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.pf.toFixed(2)}</td>
@@ -114,7 +114,7 @@ function SegmentDetailsTabs({
                     color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
                   }}
                 >
-                  {Math.round(item.profit).toLocaleString("ja-JP")}円
+                  {item.profit >= 0 ? '+' : ''}{Math.round(item.profit).toLocaleString("ja-JP")}円
                 </td>
               </tr>
             );
@@ -461,7 +461,8 @@ export default function ReportsTimeAxis() {
     switch (type) {
       case "profit":
       case "avgProfit":
-        return `${Math.round(value).toLocaleString("ja-JP")}円`;
+        const sign = value >= 0 ? "+" : "";
+        return `${sign}${Math.round(value).toLocaleString("ja-JP")}円`;
       case "winRate":
         return `${value.toFixed(1)}%`;
       case "pf":
@@ -594,11 +595,11 @@ export default function ReportsTimeAxis() {
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.count}件</td>
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{style.winRate.toFixed(1)}%</td>
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.ev >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                      {Math.round(style.ev).toLocaleString()}円
+                      {style.ev >= 0 ? '+' : ''}{Math.round(style.ev).toLocaleString()}円
                     </td>
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{formatHoldTime(style.avgHoldTime)}</td>
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: style.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                      {Math.round(style.profit).toLocaleString()}円
+                      {style.profit >= 0 ? '+' : ''}{Math.round(style.profit).toLocaleString()}円
                     </td>
                   </tr>
                 ))}
@@ -1261,7 +1262,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                         tooltip.innerHTML = `
                           <div style="font-weight: 600; margin-bottom: 4px;">${symbol} ${item.range}</div>
                           <div>${data.wins}勝 ${data.total - data.wins}敗 (${data.total}戦)</div>
-                          <div style="color: ${data.profit >= 0 ? 'var(--gain)' : 'var(--loss)'}">損益: ${Math.round(data.profit).toLocaleString()}円</div>
+                          <div style="color: ${data.profit >= 0 ? 'var(--gain)' : 'var(--loss)'}">損益: ${data.profit >= 0 ? '+' : ''}${Math.round(data.profit).toLocaleString()}円</div>
                         `;
                         document.body.appendChild(tooltip);
 

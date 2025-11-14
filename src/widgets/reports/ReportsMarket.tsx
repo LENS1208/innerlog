@@ -126,7 +126,7 @@ function MarketSegmentTabs({
                   color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)",
                 }}
               >
-                {Math.round(item.avgProfit).toLocaleString("ja-JP")}円
+                {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")}円
               </td>
               <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.winRate.toFixed(0)}%</td>
               <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{typeof item.pf === 'number' ? item.pf.toFixed(2) : item.pf}</td>
@@ -139,7 +139,7 @@ function MarketSegmentTabs({
                   color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
                 }}
               >
-                {Math.round(item.profit).toLocaleString("ja-JP")}円
+                {item.profit >= 0 ? '+' : ''}{Math.round(item.profit).toLocaleString("ja-JP")}円
               </td>
             </tr>
           ))}
@@ -367,7 +367,8 @@ export default function ReportsMarket() {
     switch (type) {
       case "profit":
       case "avgProfit":
-        return `${Math.round(value).toLocaleString("ja-JP")}円`;
+        const sign = value >= 0 ? "+" : "";
+        return `${sign}${Math.round(value).toLocaleString("ja-JP")}円`;
       case "winRate":
         return `${value.toFixed(1)}%`;
       case "pf":

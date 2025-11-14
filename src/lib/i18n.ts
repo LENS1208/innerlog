@@ -44,7 +44,8 @@ export function formatCurrency(value: number): string {
 }
 
 export function formatCurrencySimple(value: number): string {
-  return `${Math.round(value).toLocaleString('ja-JP')}円`;
+  const sign = value >= 0 ? '+' : '';
+  return `${sign}${Math.round(value).toLocaleString('ja-JP')}円`;
 }
 
 export function formatWinRate(rate: number): string {
