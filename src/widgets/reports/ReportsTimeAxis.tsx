@@ -442,6 +442,30 @@ export default function ReportsTimeAxis() {
     return sorted[0] || { label: "-", profit: 0, winRate: 0, count: 0 };
   }, [hourData]);
 
+  const topDay = useMemo(() => {
+    if (dailyData.length === 0) return { date: "-", profit: 0, winRate: 0, count: 0, wins: 0 };
+    const best = dailyData.reduce((best, curr) => curr[1].profit > best[1].profit ? curr : best);
+    return {
+      date: best[0],
+      profit: best[1].profit,
+      winRate: best[1].count > 0 ? (best[1].wins / best[1].count) * 100 : 0,
+      count: best[1].count,
+      wins: best[1].wins
+    };
+  }, [dailyData]);
+
+  const bottomDay = useMemo(() => {
+    if (dailyData.length === 0) return { date: "-", profit: 0, winRate: 0, count: 0, wins: 0 };
+    const worst = dailyData.reduce((worst, curr) => curr[1].profit < worst[1].profit ? curr : worst);
+    return {
+      date: worst[0],
+      profit: worst[1].profit,
+      winRate: worst[1].count > 0 ? (worst[1].wins / worst[1].count) * 100 : 0,
+      count: worst[1].count,
+      wins: worst[1].wins
+    };
+  }, [dailyData]);
+
   const getMetricValue = (item: any) => {
     switch (metric) {
       case "profit":
@@ -859,6 +883,26 @@ export default function ReportsTimeAxis() {
           </div>
         </Card>
         <Card title="日別推移" helpText="日ごとの累積損益の推移グラフです。短期的な成績の変動を追跡できます。">
+          <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: topDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                {topDay.date.substring(5)}：{formatValue(topDay.profit, "profit")}
+              </div>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                勝率 {topDay.winRate.toFixed(0)}% | 取引 {topDay.count}件
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: bottomDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                {bottomDay.date.substring(5)}：{formatValue(bottomDay.profit, "profit")}
+              </div>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                勝率 {bottomDay.winRate.toFixed(0)}% | 取引 {bottomDay.count}件
+              </div>
+            </div>
+          </div>
           <div style={{ height: 180 }}>
             <Bar
               data={{
