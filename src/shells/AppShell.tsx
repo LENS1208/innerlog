@@ -279,62 +279,11 @@ function Header({
   );
 }
 
-// 常時バナー（右カラム上：ヘッダーの下）
-function Banner() {
-  const { dataset, setDataset, useDatabase, dataCount } = useDataset();
-
-  if (useDatabase && dataCount > 0) {
-    return null;
-  }
-
-  return (
-    <section
-      style={{
-        display: "flex",
-        margin: "var(--space-3) var(--px-mobile)",
-        border: "1px solid var(--warning)",
-        background: "var(--chip)",
-        color: "var(--ink)",
-        borderRadius: 12,
-        padding: "12px 14px",
-        alignItems: "center",
-        gap: 12,
-        flexWrap: "wrap",
-      }}
-      role="region"
-      aria-label="データ操作"
-      className="banner-section"
-    >
-      <strong>MT4/MT5の取引履歴を追加してください</strong>
-      <div style={{ marginLeft: "auto", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-        <span style={{ fontSize: 13, color: 'var(--muted)' }}>デモデータ:</span>
-        <div style={{ display: "inline-flex", border: "1px solid var(--line)", borderRadius: 999, overflow: "hidden" }}>
-          {(["A", "B", "C"] as const).map((d) => (
-            <button
-              key={d}
-              onClick={() => {
-                setDataset(d);
-                window.dispatchEvent(new CustomEvent("fx:preset", { detail: d }));
-              }}
-              style={{
-                padding: "8px 12px",
-                height: 36,
-                background: dataset === d ? "var(--accent)" : "var(--surface)",
-                color: dataset === d ? "#fff" : "var(--ink)",
-                border: 0,
-              }}
-            >
-              {d}
-            </button>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // 左メニュー（左上に固定）
 function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void; logoImg: string; theme: 'light' | 'dark'; toggleTheme: () => void }) {
+  const { dataset, setDataset, useDatabase, dataCount } = useDataset();
+  const showDemoDataSelector = !useDatabase || dataCount === 0;
+
   return (
     <aside
       style={{
@@ -508,6 +457,35 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }
           );
         })}
       </ul>
+      {showDemoDataSelector && (
+        <div style={{ marginTop: 12, padding: "0 4px" }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6, paddingLeft: 4 }}>デモデータ</div>
+          <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 8, overflow: "hidden" }}>
+            {(["A", "B", "C"] as const).map((d) => (
+              <button
+                key={d}
+                onClick={() => {
+                  setDataset(d);
+                  window.dispatchEvent(new CustomEvent("fx:preset", { detail: d }));
+                }}
+                style={{
+                  flex: 1,
+                  padding: "8px 12px",
+                  height: 36,
+                  background: dataset === d ? "var(--accent)" : "var(--surface)",
+                  color: dataset === d ? "#fff" : "var(--ink)",
+                  border: 0,
+                  cursor: "pointer",
+                  fontSize: 14,
+                  fontWeight: dataset === d ? 600 : 400,
+                }}
+              >
+                {d}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {onUploadClick && (
         <button
           onClick={onUploadClick}
@@ -796,7 +774,6 @@ export default function AppShell({ children }: Props) {
             showFilters={showFilters}
             onUploadClick={handleUploadClick}
           />
-          <Banner />
           <main style={{ flex: 1, padding: "var(--px-mobile)", width: "100%" }} className="main-container">{children}</main>
         </div>
 
