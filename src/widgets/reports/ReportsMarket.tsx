@@ -266,12 +266,18 @@ export default function ReportsMarket() {
           </h3>
           <div style={{ fontSize: 13, fontWeight: 600, display: "flex", flexWrap: "wrap", gap: "8px" }}>
             {assetTypeData.jpy.count > 0 && (
-              <span style={{ color: assetTypeData.jpy.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <span
+                style={{ color: assetTypeData.jpy.profit >= 0 ? "var(--gain)" : "var(--loss)", cursor: "help" }}
+                title="円絡みの通貨ペア（USD/JPY、EUR/JPYなど）"
+              >
                 JPY：{formatValue(assetTypeData.jpy.profit, "profit")}({assetTypeData.jpy.count})
               </span>
             )}
             {assetTypeData.usdMajor.count > 0 && (
-              <span style={{ color: assetTypeData.usdMajor.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <span
+                style={{ color: assetTypeData.usdMajor.profit >= 0 ? "var(--gain)" : "var(--loss)", cursor: "help" }}
+                title="米ドル主要通貨ペア（EUR/USD、GBP/USDなど、円以外のドルストレート）"
+              >
                 USD：{formatValue(assetTypeData.usdMajor.profit, "profit")}({assetTypeData.usdMajor.count})
               </span>
             )}
