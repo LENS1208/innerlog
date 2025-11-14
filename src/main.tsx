@@ -38,13 +38,30 @@ ChartJS.register(
   TimeScale
 );
 
-if (!ChartJS.defaults.scales) {
-  ChartJS.defaults.scales = {};
+function updateChartColors() {
+  const gridColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--grid-line')
+    .trim();
+
+  if (!ChartJS.defaults.scales) {
+    ChartJS.defaults.scales = {};
+  }
+
+  ChartJS.defaults.scale = ChartJS.defaults.scale || {};
+  ChartJS.defaults.scale.grid = ChartJS.defaults.scale.grid || {};
+  ChartJS.defaults.scale.grid.color = gridColor;
 }
 
-ChartJS.defaults.scale = ChartJS.defaults.scale || {};
-ChartJS.defaults.scale.grid = ChartJS.defaults.scale.grid || {};
-ChartJS.defaults.scale.grid.color = 'var(--grid-line)';
+updateChartColors();
+
+const observer = new MutationObserver(() => {
+  updateChartColors();
+});
+
+observer.observe(document.documentElement, {
+  attributes: true,
+  attributeFilter: ['data-theme']
+});
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
