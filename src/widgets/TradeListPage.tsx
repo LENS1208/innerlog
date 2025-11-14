@@ -316,7 +316,11 @@ export default function TradeListPage() {
           <span style={{ fontSize: 14, color: "var(--muted)" }}>表示件数:</span>
           <select
             value={rowsPerPage}
-            onChange={(e) => setRowsPerPage(Number(e.target.value))}
+            onChange={(e) => {
+              const newValue = Number(e.target.value);
+              console.log('📊 Changing rowsPerPage from', rowsPerPage, 'to', newValue);
+              setRowsPerPage(newValue);
+            }}
             style={{
               padding: "6px 32px 6px 12px",
               border: "1px solid var(--line)",
@@ -328,9 +332,9 @@ export default function TradeListPage() {
               fontWeight: 500,
             }}
           >
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
           </select>
         </div>
       </div>
