@@ -193,14 +193,14 @@ function SemiGauge({ winRate, wins, draws, losses }: { winRate: number; wins: nu
       <div style={{ position: 'relative', width: '100%', maxWidth: 120, height: 70 }}>
         <svg viewBox="0 0 120 70" style={{ width: '100%', height: 70 }}>
           <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--line)" strokeWidth="12" pathLength="100" />
-          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--accent-2, #0084c7)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`${winPct} ${100 - winPct}`} />
-          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--danger, #ef4444)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`0 ${winPct} ${lossPct}`} />
+          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--ink)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`${winPct} ${100 - winPct}`} />
+          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--muted)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`0 ${winPct} ${lossPct}`} />
         </svg>
       </div>
       <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--accent-border)', background: 'var(--accent-bg)', color: 'var(--accent-2, #0084c7)' }}>{wins}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--line)', background: 'var(--chip)', color: 'var(--ink)' }}>{wins}</span>
         <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--muted)' }}>{draws}</span>
-        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid rgba(239,68,68,.35)', background: 'rgba(239,68,68,.12)', color: 'var(--danger, #ef4444)' }}>{losses}</span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', minWidth: 32, height: 22, padding: '0 6px', borderRadius: 999, fontWeight: 600, fontSize: 12, border: '1px solid var(--line)', background: 'var(--chip)', color: 'var(--muted)' }}>{losses}</span>
       </div>
     </div>
   )
@@ -353,7 +353,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
               <circle
                 cx="40" cy="40" r="32"
                 fill="none"
-                stroke="var(--accent-2, #0084c7)"
+                stroke="var(--ink)"
                 strokeWidth="9"
                 strokeLinecap="round"
                 strokeDasharray={`${Math.min(Math.round(dash.profitFactor * 100), 201)} 201`}
