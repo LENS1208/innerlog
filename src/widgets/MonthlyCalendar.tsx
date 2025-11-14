@@ -434,11 +434,26 @@ export default function MonthlyCalendar() {
       })
       .sort((a, b) => b.pnl - a.pnl);
 
-    const topTags = [
-      { tag: "breakout", pnl: 12432, winrate: 0.56 },
-      { tag: "news", pnl: 1832, winrate: 0.52 },
-      { tag: "meanrev", pnl: -4321, winrate: 0.41 },
-    ];
+    const setupMap = new Map<string, { pnl: number; count: number; wins: number }>();
+    monthFilteredTrades.forEach((t) => {
+      const setup = t.setup || 'その他';
+      if (setup && setup !== 'その他') {
+        const current = setupMap.get(setup) || { pnl: 0, count: 0, wins: 0 };
+        setupMap.set(setup, {
+          pnl: current.pnl + t.profitYen,
+          count: current.count + 1,
+          wins: current.wins + (t.profitYen > 0 ? 1 : 0)
+        });
+      }
+    });
+    const topTags = Array.from(setupMap.entries())
+      .map(([tag, data]) => ({
+        tag,
+        pnl: data.pnl,
+        winrate: data.count > 0 ? data.wins / data.count : 0
+      }))
+      .sort((a, b) => b.pnl - a.pnl)
+      .slice(0, 5);
 
     const expectationRows = [
       { label: "曜日: Thu", count: 2, avgPnl: 8190, winrate: 0.6, pf: 1.8 },

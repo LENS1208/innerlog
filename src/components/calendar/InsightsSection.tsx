@@ -383,7 +383,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
             戦略タグ別期待値
-            <HelpIcon text="各戦略タグごとの損益と勝率を表示します。どの戦略タグが効果的かを確認できます。" />
+            <HelpIcon text="各戦略ごとの損益と勝率を表示します。どの戦略が効果的かを確認できます。" />
           </div>
           <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
           <div
@@ -399,40 +399,46 @@ export default function InsightsSection(props: InsightsSectionProps) {
               minWidth: "400px",
             }}
           >
-            <div>戦略タグ</div>
+            <div>戦略</div>
             <div style={{ textAlign: "right" }}>損益</div>
             <div style={{ textAlign: "right" }}>勝率</div>
             <div style={{ textAlign: "right" }}>注目</div>
           </div>
           <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 8, minWidth: "400px" }}>
-            {topTags.map((tag, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(100px, 2fr) minmax(80px, 1fr) minmax(60px, 1fr) 60px",
-                  gap: 8,
-                  fontSize: 13,
-                  color: "var(--ink)",
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{tag.tag}</div>
+            {topTags.length === 0 ? (
+              <div style={{ padding: 16, textAlign: "center", color: "var(--muted)", fontSize: 13 }}>
+                データがありません
+              </div>
+            ) : (
+              topTags.map((tag, i) => (
                 <div
+                  key={i}
                   style={{
-                    textAlign: "right",
-                    fontWeight: 600,
-                    color: tag.pnl >= 0 ? "var(--gain)" : "var(--loss)",
+                    display: "grid",
+                    gridTemplateColumns: "minmax(100px, 2fr) minmax(80px, 1fr) minmax(60px, 1fr) 60px",
+                    gap: 8,
+                    fontSize: 13,
+                    color: "var(--ink)",
+                    alignItems: "center",
                   }}
                 >
-                  {currencyJPY(tag.pnl)}
+                  <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{tag.tag}</div>
+                  <div
+                    style={{
+                      textAlign: "right",
+                      fontWeight: 600,
+                      color: tag.pnl >= 0 ? "var(--gain)" : "var(--loss)",
+                    }}
+                  >
+                    {currencyJPY(tag.pnl)}
+                  </div>
+                  <div style={{ textAlign: "right" }}>{Math.round(tag.winrate * 100)}%</div>
+                  <div style={{ textAlign: "right", fontWeight: 600 }}>
+                    {tag.winrate >= 0.6 ? "◎" : tag.winrate >= 0.5 ? "○" : "—"}
+                  </div>
                 </div>
-                <div style={{ textAlign: "right" }}>{Math.round(tag.winrate * 100)}%</div>
-                <div style={{ textAlign: "right", fontWeight: 600 }}>
-                  {tag.winrate >= 0.6 ? "◎" : tag.winrate >= 0.5 ? "○" : "—"}
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
           </div>
         </div>
