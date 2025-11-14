@@ -430,47 +430,47 @@ export default function ReportsMarket() {
             資産クラス別
             <HelpIcon text="JPY、USD、貴金属、仮想通貨、商品、新興国通貨など、資産クラス別の損益比較です。" />
           </h3>
-          <div style={{ fontSize: 13, fontWeight: 600, display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          <div style={{ fontSize: 18, fontWeight: 700, display: "flex", flexDirection: "column", gap: "4px" }}>
             {assetTypeData.jpy.count > 0 && (
-              <span
+              <div
                 style={{ color: assetTypeData.jpy.profit >= 0 ? "var(--gain)" : "var(--loss)", cursor: "help" }}
                 title="円絡みの通貨ペア（USD/JPY、EUR/JPYなど）"
               >
                 JPY：{formatValue(assetTypeData.jpy.profit, "profit")}({assetTypeData.jpy.count})
-              </span>
+              </div>
             )}
             {assetTypeData.usdMajor.count > 0 && (
-              <span
+              <div
                 style={{ color: assetTypeData.usdMajor.profit >= 0 ? "var(--gain)" : "var(--loss)", cursor: "help" }}
                 title="米ドル主要通貨ペア（EUR/USD、GBP/USDなど、円以外のドルストレート）"
               >
                 USD：{formatValue(assetTypeData.usdMajor.profit, "profit")}({assetTypeData.usdMajor.count})
-              </span>
+              </div>
             )}
             {assetTypeData.metals.count > 0 && (
-              <span style={{ color: assetTypeData.metals.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ color: assetTypeData.metals.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 貴金属：{formatValue(assetTypeData.metals.profit, "profit")}({assetTypeData.metals.count})
-              </span>
+              </div>
             )}
             {assetTypeData.crypto.count > 0 && (
-              <span style={{ color: assetTypeData.crypto.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ color: assetTypeData.crypto.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 仮想通貨：{formatValue(assetTypeData.crypto.profit, "profit")}({assetTypeData.crypto.count})
-              </span>
+              </div>
             )}
             {assetTypeData.commodities.count > 0 && (
-              <span style={{ color: assetTypeData.commodities.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ color: assetTypeData.commodities.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 商品：{formatValue(assetTypeData.commodities.profit, "profit")}({assetTypeData.commodities.count})
-              </span>
+              </div>
             )}
             {assetTypeData.emerging.count > 0 && (
-              <span style={{ color: assetTypeData.emerging.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ color: assetTypeData.emerging.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 新興国：{formatValue(assetTypeData.emerging.profit, "profit")}({assetTypeData.emerging.count})
-              </span>
+              </div>
             )}
             {assetTypeData.other.count > 0 && (
-              <span style={{ color: assetTypeData.other.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ color: assetTypeData.other.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 他：{formatValue(assetTypeData.other.profit, "profit")}({assetTypeData.other.count})
-              </span>
+              </div>
             )}
           </div>
         </div>
