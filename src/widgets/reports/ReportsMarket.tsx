@@ -408,59 +408,55 @@ export default function ReportsMarket() {
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            資産クラス別分布
-            <HelpIcon text="JPY、USD、貴金属、仮想通貨、商品、新興国通貨などの資産クラス別の取引分布です。" />
+            銘柄別損益
+            <HelpIcon text="各銘柄の損益を横棒グラフで比較表示します。カーソルを合わせると取引件数が表示されます。" />
           </h3>
           <div style={{ height: 180 }}>
-            <Doughnut
+            <Bar
               data={{
-                labels: (() => {
-                  const items = [
-                    { label: "JPY", count: assetTypeData.jpy.count },
-                    { label: "USD", count: assetTypeData.usdMajor.count },
-                    { label: "貴金属", count: assetTypeData.metals.count },
-                    { label: "仮想通貨", count: assetTypeData.crypto.count },
-                    { label: "商品", count: assetTypeData.commodities.count },
-                    { label: "新興国", count: assetTypeData.emerging.count },
-                    { label: "その他", count: assetTypeData.other.count },
-                  ];
-                  return items.filter(item => item.count > 0).map(item => item.label);
-                })(),
+                labels: symbolData.map((s) => s.symbol),
                 datasets: [
                   {
-                    data: (() => {
-                      const items = [
-                        { count: assetTypeData.jpy.count, color: "#3b82f6" },
-                        { count: assetTypeData.usdMajor.count, color: "#10b981" },
-                        { count: assetTypeData.metals.count, color: "#f59e0b" },
-                        { count: assetTypeData.crypto.count, color: "#8b5cf6" },
-                        { count: assetTypeData.commodities.count, color: "#ef4444" },
-                        { count: assetTypeData.emerging.count, color: "#06b6d4" },
-                        { count: assetTypeData.other.count, color: "#6b7280" },
-                      ];
-                      return items.filter(item => item.count > 0).map(item => item.count);
-                    })(),
-                    backgroundColor: (() => {
-                      const items = [
-                        { count: assetTypeData.jpy.count, color: "#3b82f6" },
-                        { count: assetTypeData.usdMajor.count, color: "#10b981" },
-                        { count: assetTypeData.metals.count, color: "#f59e0b" },
-                        { count: assetTypeData.crypto.count, color: "#8b5cf6" },
-                        { count: assetTypeData.commodities.count, color: "#ef4444" },
-                        { count: assetTypeData.emerging.count, color: "#06b6d4" },
-                        { count: assetTypeData.other.count, color: "#6b7280" },
-                      ];
-                      return items.filter(item => item.count > 0).map(item => item.color);
-                    })(),
-                    borderWidth: 0,
+                    data: symbolData.map((s) => s.profit),
+                    backgroundColor: symbolData.map((s) =>
+                      s.profit >= 0 ? getAccentColor() : getLossColor()
+                    ),
                   },
                 ],
               }}
               options={{
+                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                  legend: { position: "bottom" },
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      label: (context) => {
+                        const dataIndex = context.dataIndex;
+                        const profit = symbolData[dataIndex].profit;
+                        const count = symbolData[dataIndex].count;
+                        return [
+                          `損益: ${profit.toLocaleString()}円`,
+                          `取引件数: ${count}件`
+                        ];
+                      }
+                    }
+                  },
+                  datalabels: {
+                    display: true,
+                    anchor: 'end',
+                    align: 'end',
+                    formatter: (value) => `${value.toLocaleString()}円`,
+                    color: 'var(--text)',
+                    font: { size: 10 }
+                  }
+                },
+                scales: {
+                  x: {
+                    beginAtZero: true,
+                    ticks: { callback: (value) => `${(value as number).toLocaleString()}円` },
+                  },
                 },
               }}
             />
