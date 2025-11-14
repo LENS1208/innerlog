@@ -16,7 +16,7 @@
   --panel-2: #ffffff;
   --bg-secondary: #f8fafc;
   --input-bg: #ffffff;
-  --grid-line: rgba(203, 213, 225, 0.2);
+  --grid-line: rgba(100, 116, 139, 0.15);
   --accent-bg: rgba(0, 132, 199, 0.12);
   --accent-border: rgba(0, 132, 199, 0.35);
 
@@ -55,7 +55,7 @@
   --panel-2: #171d2a;
   --bg-secondary: #0f1420;
   --input-bg: #ffffff;
-  --grid-line: #a0aec0;
+  --grid-line: rgba(160, 174, 192, 0.25);
   --accent-bg: rgba(1, 161, 255, 0.12);
   --accent-border: rgba(1, 161, 255, 0.35);
 
