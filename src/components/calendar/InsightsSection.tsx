@@ -45,6 +45,14 @@ const currencyJPY = (n: number) => {
   return `${sign}${Math.round(n).toLocaleString("ja-JP")}円`;
 };
 
+const formatJapaneseDate = (dateStr: string | null | undefined) => {
+  if (!dateStr) return "—";
+  const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return dateStr;
+  const [, year, month, day] = match;
+  return `${year}年${month}月${day}日`;
+};
+
 const formatDateTime = (dateStr: string) => {
   const d = new Date(dateStr);
   const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -258,11 +266,11 @@ export default function InsightsSection(props: InsightsSectionProps) {
       </div>
 
       <div className="insights-grid-secondary">
-        {/* 6) ベスト/ワーストデイ & 最大日次DD */}
+        {/* 6) ベスト/ワーストデイ */}
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
-            ベスト/ワーストデイ & 最大日次DD
-            <HelpIcon text="最も利益が出た日と最も損失が出た日、および最大の日次ドローダウンを表示します。" />
+            ベスト/ワーストデイ
+            <HelpIcon text="最も利益が出た日と最も損失が出た日を表示します。" />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
             <div
@@ -272,10 +280,12 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 background: "rgba(0, 132, 199, 0.1)",
               }}
             >
-              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Best Day</div>
-              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2, color: "var(--ink)" }}>{bestDay?.date || "—"}</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-                {bestDay ? currencyJPY(bestDay.pnl) : "—"}
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Best Day</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{formatJapaneseDate(bestDay?.date)}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
+                  {bestDay ? currencyJPY(bestDay.pnl) : "—"}
+                </div>
               </div>
             </div>
             <div
@@ -285,19 +295,15 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 background: "rgba(239, 68, 68, 0.1)",
               }}
             >
-              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Worst Day</div>
-              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 2, color: "var(--ink)" }}>{worstDay?.date || "—"}</div>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-                {worstDay ? currencyJPY(worstDay.pnl) : "—"}
+              <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Worst Day</div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--ink)" }}>{formatJapaneseDate(worstDay?.date)}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
+                  {worstDay ? currencyJPY(worstDay.pnl) : "—"}
+                </div>
               </div>
             </div>
           </div>
-          {maxDailyDD !== null && (
-            <div style={{ marginTop: 12, fontSize: 12, color: "var(--muted)", display: "flex", alignItems: "center", gap: 8 }}>
-              Max Daily Drawdown:
-              <span style={{ fontWeight: 600, fontSize: 13, color: "var(--loss)" }}>{currencyJPY(maxDailyDD)}</span>
-            </div>
-          )}
         </div>
 
         {/* 7) 通貨ペアごとの損益 */}
