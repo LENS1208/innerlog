@@ -256,18 +256,18 @@ export default function ReportsTimeAxis() {
 
   const hourData = useMemo(() => {
     const ranges = [
-      { label: "00-02", start: 0, end: 2 },
-      { label: "02-04", start: 2, end: 4 },
-      { label: "04-06", start: 4, end: 6 },
-      { label: "06-08", start: 6, end: 8 },
-      { label: "08-10", start: 8, end: 10 },
-      { label: "10-12", start: 10, end: 12 },
-      { label: "12-14", start: 12, end: 14 },
-      { label: "14-16", start: 14, end: 16 },
-      { label: "16-18", start: 16, end: 18 },
-      { label: "18-20", start: 18, end: 20 },
-      { label: "20-22", start: 20, end: 22 },
-      { label: "22-00", start: 22, end: 24 },
+      { label: "00〜02", start: 0, end: 2 },
+      { label: "02〜04", start: 2, end: 4 },
+      { label: "04〜06", start: 4, end: 6 },
+      { label: "06〜08", start: 6, end: 8 },
+      { label: "08〜10", start: 8, end: 10 },
+      { label: "10〜12", start: 10, end: 12 },
+      { label: "12〜14", start: 12, end: 14 },
+      { label: "14〜16", start: 14, end: 16 },
+      { label: "16〜18", start: 16, end: 18 },
+      { label: "18〜20", start: 18, end: 20 },
+      { label: "20〜22", start: 20, end: 22 },
+      { label: "22〜00", start: 22, end: 24 },
     ];
 
     return ranges.map((range) => {
@@ -391,11 +391,11 @@ export default function ReportsTimeAxis() {
 
   const holdTimeDistribution = useMemo(() => {
     const ranges = [
-      { label: "0-10分", min: 0, max: 10 },
-      { label: "10-30分", min: 10, max: 30 },
-      { label: "30-60分", min: 30, max: 60 },
-      { label: "1-2h", min: 60, max: 120 },
-      { label: "2-6h", min: 120, max: 360 },
+      { label: "0〜10分", min: 0, max: 10 },
+      { label: "10〜30分", min: 10, max: 30 },
+      { label: "30〜60分", min: 30, max: 60 },
+      { label: "1〜2h", min: 60, max: 120 },
+      { label: "2〜6h", min: 120, max: 360 },
       { label: "6h+", min: 360, max: Infinity },
     ];
     return ranges.map((range) => {
@@ -562,7 +562,7 @@ export default function ReportsTimeAxis() {
       <Card
         title="保有時間別の統計"
         helpText="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたのトレードスタイルを分析できます。"
-        annotation="スキャルピング(0-30分) | デイトレード(30分-8時間) | スイング(8時間-7日) | 長期投資(7日以上)"
+        annotation="スキャルピング(0〜30分) | デイトレード(30分〜8時間) | スイング(8時間〜7日) | 長期投資(7日以上)"
         style={{ marginBottom: 16 }}
       >
 
@@ -800,7 +800,7 @@ export default function ReportsTimeAxis() {
         </Card>
         <Card title="時間帯 ベスト" helpText="最も稼げている時間帯です。この時間に取引することで勝率を上げられます。">
           <div style={{ fontSize: 18, fontWeight: 700, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {topHour.label.replace('-', '時-')}時：{formatValue(topHour.profit, "profit")}
+            {topHour.label}時：{formatValue(topHour.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {topHour.winRate.toFixed(0)}% / 取引 {topHour.count}件
@@ -830,7 +830,7 @@ export default function ReportsTimeAxis() {
         </Card>
         <Card title="時間帯 ワースト" helpText="最も損失が出ている時間帯です。この時間は取引を避けるべきです。">
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {bottomHour.label.replace('-', '時-')}時：{formatValue(bottomHour.profit, "profit")}
+            {bottomHour.label}時：{formatValue(bottomHour.profit, "profit")}
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
             勝率 {bottomHour.winRate.toFixed(0)}% / 取引 {bottomHour.count}件
@@ -1128,12 +1128,12 @@ export default function ReportsTimeAxis() {
 
 function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
   const timeRanges = [
-    { label: "アジア朝(06-10)", start: 6, end: 10 },
-    { label: "アジア昼(10-14)", start: 10, end: 14 },
-    { label: "欧州前場(14-18)", start: 14, end: 18 },
-    { label: "欧州後場(18-22)", start: 18, end: 22 },
-    { label: "NY前場(22-02)", start: 22, end: 26 },
-    { label: "NY後場(02-06)", start: 2, end: 6 },
+    { label: "アジア朝(06〜10)", start: 6, end: 10 },
+    { label: "アジア昼(10〜14)", start: 10, end: 14 },
+    { label: "欧州前場(14〜18)", start: 14, end: 18 },
+    { label: "欧州後場(18〜22)", start: 18, end: 22 },
+    { label: "NY前場(22〜02)", start: 22, end: 26 },
+    { label: "NY後場(02〜06)", start: 2, end: 6 },
   ];
 
   const analysisData = useMemo(() => {

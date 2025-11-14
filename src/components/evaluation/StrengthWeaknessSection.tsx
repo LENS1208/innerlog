@@ -25,7 +25,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
   };
 
   const pairs = ['USD/JPY', 'EUR/USD', 'GBP/JPY', 'AUD/USD', 'EUR/JPY'];
-  const times = ['0-3', '3-6', '6-9', '9-12', '12-15', '15-18', '18-21', '21-24'];
+  const times = ['0〜3', '3〜6', '6〜9', '9〜12', '12〜15', '15〜18', '18〜21', '21〜24'];
   const days = ['日', '月', '火', '水', '木', '金', '土'];
 
   if (trades.length === 0) {

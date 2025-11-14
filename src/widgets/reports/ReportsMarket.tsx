@@ -267,11 +267,11 @@ export default function ReportsMarket() {
 
   const pipsRangeData = useMemo(() => {
     const ranges = [
-      { label: "0-10 pips", min: 0, max: 10 },
-      { label: "10-20 pips", min: 10, max: 20 },
-      { label: "20-40 pips", min: 20, max: 40 },
-      { label: "40-60 pips", min: 40, max: 60 },
-      { label: "60-100 pips", min: 60, max: 100 },
+      { label: "0〜10 pips", min: 0, max: 10 },
+      { label: "10〜20 pips", min: 10, max: 20 },
+      { label: "20〜40 pips", min: 20, max: 40 },
+      { label: "40〜60 pips", min: 40, max: 60 },
+      { label: "60〜100 pips", min: 60, max: 100 },
       { label: "100+ pips", min: 100, max: Infinity },
     ];
 

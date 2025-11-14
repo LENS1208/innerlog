@@ -483,9 +483,9 @@ export default function MonthlyCalendar() {
       if (t.holdingMinutes !== undefined && t.holdingMinutes !== null) {
         let bucket = '';
         if (t.holdingMinutes < 30) bucket = '30分未満';
-        else if (t.holdingMinutes < 60) bucket = '30-60分';
-        else if (t.holdingMinutes < 120) bucket = '1-2時間';
-        else if (t.holdingMinutes < 240) bucket = '2-4時間';
+        else if (t.holdingMinutes < 60) bucket = '30〜60分';
+        else if (t.holdingMinutes < 120) bucket = '1〜2時間';
+        else if (t.holdingMinutes < 240) bucket = '2〜4時間';
         else bucket = '4時間以上';
 
         const current = durationMap.get(bucket) || { pnl: 0, count: 0, wins: 0, totalProfit: 0, totalLoss: 0 };
