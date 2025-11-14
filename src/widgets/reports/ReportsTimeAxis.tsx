@@ -1226,9 +1226,9 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                       textAlign: "center",
                       fontSize: 12,
                       background: hasData ? getCellBackgroundColor(winRate) : "var(--chip)",
-                      cursor: hasData ? "help" : "default",
+                      cursor: "default",
                       position: "relative",
-                      height: 60,
+                      height: 51,
                     }}
                     onMouseEnter={(e) => {
                       if (hasData) {
@@ -1263,10 +1263,10 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                     }}
                   >
                     {hasData ? (
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3 }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
                         <div
                           style={{
-                            fontSize: 22.5,
+                            fontSize: 20,
                             fontWeight: 700,
                             color: "#ffffff",
                           }}
