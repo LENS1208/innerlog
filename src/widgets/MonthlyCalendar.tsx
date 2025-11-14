@@ -499,22 +499,14 @@ export default function MonthlyCalendar() {
       }
     });
 
-    const expectationRows = [
-      ...Array.from(expectationWeekdayMap.entries()).map(([label, data]) => ({
-        label: `曜日: ${label}`,
-        count: data.count,
-        avgPnl: data.count > 0 ? data.pnl / data.count : 0,
-        winrate: data.count > 0 ? data.wins / data.count : 0,
-        pf: data.totalLoss > 0 ? data.totalProfit / data.totalLoss : (data.totalProfit > 0 ? Infinity : 0)
-      })),
-      ...Array.from(durationMap.entries()).map(([label, data]) => ({
-        label: `保有: ${label}`,
-        count: data.count,
-        avgPnl: data.count > 0 ? data.pnl / data.count : 0,
-        winrate: data.count > 0 ? data.wins / data.count : 0,
-        pf: data.totalLoss > 0 ? data.totalProfit / data.totalLoss : (data.totalProfit > 0 ? Infinity : 0)
-      }))
-    ].sort((a, b) => b.avgPnl - a.avgPnl).slice(0, 5);
+    const expectationRows = Array.from(expectationWeekdayMap.entries()).map(([label, data]) => ({
+      label: label,
+      count: data.count,
+      avgPnl: data.count > 0 ? data.pnl / data.count : 0,
+      winrate: data.count > 0 ? data.wins / data.count : 0,
+      pf: data.totalLoss > 0 ? data.totalProfit / data.totalLoss : (data.totalProfit > 0 ? Infinity : 0),
+      totalPnl: data.pnl
+    })).sort((a, b) => b.totalPnl - a.totalPnl);
 
     return {
       weeklySummary,
