@@ -1339,7 +1339,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                     {hasData ? (
                       <div
                         style={{
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: 700,
                           color: "#ffffff",
                         }}
