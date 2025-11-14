@@ -300,7 +300,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
             <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>基本統計</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>該当取引数</div>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8 }}>該当取引回数</div>
                 <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--ink)' }}>
                   {stats.tradeCount} <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)' }}>回</span>
                 </div>

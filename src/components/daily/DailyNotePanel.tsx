@@ -204,8 +204,8 @@ export default function DailyNotePanel({
           </div>
 
           <div className="kpi-card">
-            <div className="kpi-title">取引件数</div>
-            <div className="kpi-value">{kpi.trades}件</div>
+            <div className="kpi-title">取引回数</div>
+            <div className="kpi-value">{kpi.trades}回</div>
             <div className="kpi-desc">勝ち：{kpi.wins}｜負け：{kpi.losses}</div>
           </div>
 

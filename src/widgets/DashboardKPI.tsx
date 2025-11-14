@@ -282,11 +282,11 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
       <div className="kpi-grid" style={{ marginBottom: 12 }}>
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
-          取引件数（期間）
-          <HelpIcon text="分析対象の取引件数です。データが多いほど統計的に信頼できる分析結果が得られます。" />
+          取引回数（期間）
+          <HelpIcon text="分析対象の取引回数です。データが多いほど統計的に信頼できる分析結果が得られます。" />
         </div>
         <div className="kpi-value" style={{ color: 'var(--ink)' }}>
-          {dash.count} <span className="kpi-unit" style={{ color: 'var(--muted)' }}>件</span>
+          {dash.count} <span className="kpi-unit" style={{ color: 'var(--muted)' }}>回</span>
         </div>
         {tradePeriod && (
           <div style={{

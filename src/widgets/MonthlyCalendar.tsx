@@ -866,7 +866,7 @@ export default function MonthlyCalendar() {
         <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12, padding: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>
             取引回数
-            <HelpIcon text="この月の取引件数です。" />
+            <HelpIcon text="この月の取引回数です。" />
           </div>
           <div style={{ fontSize: 24, fontWeight: 700 }}>{monthlyStats.totalTrades}<span style={{ fontSize: 14, color: 'var(--muted)', marginLeft: 4 }}>回</span></div>
         </div>

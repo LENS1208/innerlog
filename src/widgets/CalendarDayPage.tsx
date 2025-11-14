@@ -291,9 +291,9 @@ export default function CalendarDayPage() {
         </div>
 
         <div className="kpi-card">
-          <div className="kpi-title">取引件数</div>
+          <div className="kpi-title">取引回数</div>
           <div className="kpi-value">
-            {kpi.tradeCount} <span className="kpi-unit">件</span>
+            {kpi.tradeCount} <span className="kpi-unit">回</span>
           </div>
           <div className="kpi-desc">(勝ち: {kpi.winCount} / 負け: {kpi.lossCount})</div>
         </div>

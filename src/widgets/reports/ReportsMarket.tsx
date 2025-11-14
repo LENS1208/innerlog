@@ -593,7 +593,7 @@ export default function ReportsMarket() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             銘柄別損益
-            <HelpIcon text="各銘柄の損益を横棒グラフで比較表示します。カーソルを合わせると取引件数が表示されます。" />
+            <HelpIcon text="各銘柄の損益を横棒グラフで比較表示します。カーソルを合わせると取引回数が表示されます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -622,7 +622,7 @@ export default function ReportsMarket() {
                         const count = symbolData[dataIndex].count;
                         return [
                           `損益: ${profit.toLocaleString()}円`,
-                          `取引件数: ${count}件`
+                          `取引回数: ${count}回`
                         ];
                       }
                     }

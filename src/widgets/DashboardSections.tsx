@@ -1424,11 +1424,11 @@ export function BasicStatisticsCards({ trades }: { trades: TradeWithProfit[] }) 
     <div className="dash-card">
       <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 'bold', color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 6 }}>
         基本統計
-        <HelpIcon text="取引の基本的な統計情報です。勝率、平均損益、期待値などを確認できます。" />
+        <HelpIcon text="取引の基本的な統計情報です。勝率、平均損益などを確認できます。" />
       </h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
         <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
-          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>総取引数</div>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>総取引回数</div>
           <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--ink)' }}>
             {stats.totalTrades}
             <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--muted)', marginLeft: 4 }}>回</span>

@@ -17,8 +17,8 @@ export function KpiGrid({ kpi }: KpiGridProps) {
       </div>
 
       <div className="kpi-card-daily">
-        <div className="kpi-label">取引件数</div>
-        <div className="kpi-value">{kpi.tradeCount}件</div>
+        <div className="kpi-label">取引回数</div>
+        <div className="kpi-value">{kpi.tradeCount}回</div>
         <div className="kpi-sub">勝ち：{kpi.winCount}｜負け：{kpi.lossCount}</div>
       </div>
 

@@ -225,7 +225,7 @@ export default function TradeListPage() {
 
       const MAX_TRADES = 50000;
       if (trades.length > MAX_TRADES) {
-        showToast(`アップロードできる取引件数の最大は5万件です。${trades.length.toLocaleString()}件が検出されたため、${MAX_TRADES.toLocaleString()}件のみアップロードされます。`, 'error');
+        showToast(`アップロードできる取引回数の最大は5万回です。${trades.length.toLocaleString()}回が検出されたため、${MAX_TRADES.toLocaleString()}回のみアップロードされます。`, 'error');
       }
 
       const tradesToUpload = trades.slice(0, MAX_TRADES);

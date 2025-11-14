@@ -638,11 +638,11 @@ export default function ReportsRisk() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            取引数
-            <HelpIcon text="分析対象の取引件数です。数が多いほど統計的に信頼できる分析になります。" />
+            取引回数
+            <HelpIcon text="分析対象の取引回数です。数が多いほど統計的に信頼できる分析になります。" />
           </h3>
           <div style={{ fontSize: 18, fontWeight: 700 }}>
-            {filteredTrades.length} 件
+            {filteredTrades.length} 回
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>フィルター適用後</div>
         </div>

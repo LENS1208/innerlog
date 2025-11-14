@@ -54,7 +54,7 @@ export default function KPICards({ metrics, ddBasis, initCap }: KPICardsProps) {
           <div className="value">{ddPct.toFixed(1)}%</div>
         </div>
         <div className="kpi">
-          <div className="label">取引数</div>
+          <div className="label">取引回数</div>
           <div className="value">{fmtNum(metrics.trades)}</div>
         </div>
         <div className="kpi">
