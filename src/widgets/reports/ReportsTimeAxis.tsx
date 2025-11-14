@@ -351,7 +351,7 @@ export default function ReportsTimeAxis() {
       { label: "スキャルピング", min: 0, max: 30 },
       { label: "デイトレード", min: 30, max: 480 },
       { label: "スイング", min: 480, max: 10080 },
-      { label: "ポジション", min: 10080, max: Infinity },
+      { label: "長期投資", min: 10080, max: Infinity },
     ];
 
     return styles.map((style) => {
@@ -423,7 +423,7 @@ export default function ReportsTimeAxis() {
       <Card
         title="保有時間別の統計"
         helpText="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたのトレードスタイルを分析できます。"
-        annotation="スキャルピング(0-30分) | デイトレード(30分-8時間) | スイング(8時間-7日) | ポジション(7日以上)"
+        annotation="スキャルピング(0-30分) | デイトレード(30分-8時間) | スイング(8時間-7日) | 長期投資(7日以上)"
         style={{ marginBottom: 16 }}
       >
 
