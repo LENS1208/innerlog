@@ -80,7 +80,7 @@ export type DbNoteLink = {
   created_at: string;
 };
 
-export async function getAllTrades(dataset?: string | null): Promise<DbTrade[]> {
+export async function getAllTrades(): Promise<DbTrade[]> {
   const PAGE_SIZE = 1000;
   let allTrades: DbTrade[] = [];
   let currentPage = 0;
@@ -90,17 +90,11 @@ export async function getAllTrades(dataset?: string | null): Promise<DbTrade[]> 
     const start = currentPage * PAGE_SIZE;
     const end = start + PAGE_SIZE - 1;
 
-    let query = supabase
+    const { data, error } = await supabase
       .from('trades')
       .select('*')
       .order('close_time', { ascending: false })
       .range(start, end);
-
-    if (dataset !== undefined) {
-      query = query.eq('dataset', dataset);
-    }
-
-    const { data, error } = await query;
 
     if (error) throw error;
 

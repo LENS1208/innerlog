@@ -64,7 +64,7 @@ export default function TradeListPage() {
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [loading, setLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const { filters, dataset, useDatabase, setDataset } = useDataset();
+  const { filters, dataset, useDatabase } = useDataset();
 
   // データ読み込み
   useEffect(() => {
@@ -73,9 +73,9 @@ export default function TradeListPage() {
     (async () => {
       if (useDatabase) {
         try {
-          const dbTrades = await getAllTrades(dataset);
+          const dbTrades = await getAllTrades();
           const trades = dbTrades.map(dbToTrade);
-          console.log("✅ Loaded from database:", trades.length, "dataset:", dataset);
+          console.log("✅ Loaded from database:", trades.length);
           setSrcRows(trades);
         } catch (err) {
           console.error("❌ Error loading from database:", err);
@@ -235,36 +235,6 @@ export default function TradeListPage() {
   return (
     <div style={{ display: "grid", gap: 16 }}>
       <input ref={fileRef} type="file" accept=".csv,text/csv" onChange={onPick} style={{ display: "none" }} />
-
-      {/* Dataset selector buttons */}
-      <div style={{
-        display: "flex",
-        gap: 8,
-        padding: "12px 16px",
-        background: "var(--surface)",
-        borderRadius: 12,
-        alignItems: "center",
-      }}>
-        <span style={{ fontSize: 14, color: "var(--muted)", marginRight: 8 }}>データセット:</span>
-        {(["A", "B", "C"] as const).map((ds) => (
-          <button
-            key={ds}
-            onClick={() => setDataset(ds)}
-            style={{
-              padding: "6px 16px",
-              border: "1px solid var(--line)",
-              borderRadius: 6,
-              background: dataset === ds ? "var(--accent)" : "white",
-              color: dataset === ds ? "white" : "var(--ink)",
-              cursor: "pointer",
-              fontWeight: dataset === ds ? 600 : 400,
-              fontSize: 14,
-            }}
-          >
-            {ds}
-          </button>
-        ))}
-      </div>
 
       <TradesTable rows={paginatedRows as any[]} />
 
