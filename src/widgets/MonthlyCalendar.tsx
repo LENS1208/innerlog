@@ -89,10 +89,13 @@ export default function MonthlyCalendar() {
           const data = await getAllTrades();
 
           const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+              id: t.id || t.ticket,
               datetime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
               ticket: t.ticket,
               item: t.item,
+              pair: t.item,
               side: t.side,
+              volume: t.size || 0,
               size: t.size,
               openTime: new Date(t.open_time).toISOString().replace('T', ' ').substring(0, 19),
               openPrice: t.open_price,
@@ -404,8 +407,11 @@ export default function MonthlyCalendar() {
 
     const symbolMap = new Map<string, { pnl: number; count: number }>();
     monthFilteredTrades.forEach((t) => {
-      const current = symbolMap.get(t.item) || { pnl: 0, count: 0 };
-      symbolMap.set(t.item, { pnl: current.pnl + t.profitYen, count: current.count + 1 });
+      const symbol = t.item || t.pair || t.symbol || 'N/A';
+      if (symbol && symbol !== 'N/A') {
+        const current = symbolMap.get(symbol) || { pnl: 0, count: 0 };
+        symbolMap.set(symbol, { pnl: current.pnl + t.profitYen, count: current.count + 1 });
+      }
     });
     const allSymbols = Array.from(symbolMap.entries())
       .map(([symbol, data]) => ({ symbol, pnl: data.pnl, count: data.count }))

@@ -300,11 +300,11 @@ export default function InsightsSection(props: InsightsSectionProps) {
           )}
         </div>
 
-        {/* 7) 銘柄ごとの損益 */}
+        {/* 7) 通貨ペアごとの損益 */}
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
-            銘柄ごとの損益
-            <HelpIcon text="当月で取引した銘柄ごとの取引回数と合計損益を表示します。" />
+            通貨ペアごとの損益
+            <HelpIcon text="当月で取引した通貨ペアごとの取引回数と合計損益を表示します。" />
           </div>
           <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
             <div
@@ -320,8 +320,8 @@ export default function InsightsSection(props: InsightsSectionProps) {
                 minWidth: "300px",
               }}
             >
-              <div>銘柄</div>
-              <div style={{ textAlign: "right" }}>回数</div>
+              <div>通貨ペア</div>
+              <div style={{ textAlign: "right" }}>取引回数</div>
               <div style={{ textAlign: "right" }}>合計収支</div>
             </div>
             <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 6, minWidth: "300px" }}>
