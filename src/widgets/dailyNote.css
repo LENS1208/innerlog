@@ -66,6 +66,16 @@
   border-color: var(--accent);
 }
 
+.daily-nav-btn {
+  padding: 8px 12px;
+  font-size: 18px;
+}
+
+.daily-today-btn {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
 .kpi-grid-daily {
   display: grid;
   grid-template-columns: repeat(5, 1fr);

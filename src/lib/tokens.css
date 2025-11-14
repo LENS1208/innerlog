@@ -280,3 +280,13 @@ button:disabled {
 button:disabled:hover {
   transform: none;
 }
+
+.pagination-arrow-btn {
+  padding: 8px 12px;
+  font-size: 16px;
+}
+
+.pagination-num-btn {
+  padding: 8px 12px;
+  min-width: 40px;
+}

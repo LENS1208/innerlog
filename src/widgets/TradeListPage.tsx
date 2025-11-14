@@ -303,13 +303,9 @@ export default function TradeListPage() {
         {/* Page Navigation */}
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <button
-            className="btn-secondary"
+            className="btn-secondary pagination-arrow-btn"
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            style={{
-              padding: "8px 12px",
-              fontSize: 16
-            }}
           >
             ←
           </button>
@@ -329,12 +325,8 @@ export default function TradeListPage() {
             return (
               <button
                 key={pageNum}
-                className={currentPage === pageNum ? "btn-primary" : "btn-secondary"}
+                className={currentPage === pageNum ? "btn-primary pagination-num-btn" : "btn-secondary pagination-num-btn"}
                 onClick={() => setCurrentPage(pageNum)}
-                style={{
-                  padding: "8px 12px",
-                  minWidth: 40
-                }}
               >
                 {pageNum}
               </button>
@@ -342,13 +334,9 @@ export default function TradeListPage() {
           })}
 
           <button
-            className="btn-secondary"
+            className="btn-secondary pagination-arrow-btn"
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            style={{
-              padding: "8px 12px",
-              fontSize: 16
-            }}
           >
             →
           </button>

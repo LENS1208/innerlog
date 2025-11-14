@@ -634,6 +634,11 @@ export default function MonthlyCalendar() {
             font-size: 16px !important;
           }
 
+          .calendar-nav-btn {
+            padding: 6px 10px !important;
+            font-size: 16px !important;
+          }
+
           .month-total-label {
             font-size: 11px !important;
           }
@@ -641,6 +646,11 @@ export default function MonthlyCalendar() {
           .month-total-value {
             font-size: 18px !important;
           }
+        }
+
+        .calendar-nav-btn {
+          padding: 8px 12px;
+          font-size: 18px;
         }
 
         @media (min-width: 1024px) {
@@ -662,22 +672,14 @@ export default function MonthlyCalendar() {
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
           <button
             onClick={goToPrevMonth}
-            className="btn-secondary"
-            style={{
-              padding: "8px 12px",
-              fontSize: 18
-            }}
+            className="btn-secondary calendar-nav-btn"
           >
             ‹
           </button>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>{monthName}</h1>
           <button
             onClick={goToNextMonth}
-            className="btn-secondary"
-            style={{
-              padding: "8px 12px",
-              fontSize: 18
-            }}
+            className="btn-secondary calendar-nav-btn"
           >
             ›
           </button>
