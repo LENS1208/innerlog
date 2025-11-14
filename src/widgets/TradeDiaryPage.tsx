@@ -12,6 +12,7 @@ import { supabase } from "../lib/supabase";
 import { getTradeByTicket, type DbTrade } from "../lib/db.service";
 import { useDataset } from "../lib/dataset.context";
 import { parseCsvText } from "../lib/csv";
+import { showToast } from "../lib/toast";
 
 import "../tradeDiary.css";
 
@@ -504,11 +505,11 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     const accepted = Array.from(files)
       .filter((f) => {
         if (!allowed.includes(f.type)) {
-          alert(`未対応の形式です: ${f.name}`);
+          showToast(`未対応の形式です: ${f.name}`, 'error');
           return false;
         }
         if (f.size > 3 * 1024 * 1024) {
-          alert(`サイズ上限3MBを超えています: ${f.name}`);
+          showToast(`サイズ上限3MBを超えています: ${f.name}`, 'error');
           return false;
         }
         return true;
@@ -1050,13 +1051,13 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
       if (error) {
         console.error('Error saving trade note:', error);
-        alert('保存に失敗しました: ' + error.message);
+        showToast('保存に失敗しました', 'error');
       } else {
-        alert('保存しました');
+        showToast('保存しました', 'success');
       }
     } catch (e) {
       console.error('Exception saving trade note:', e);
-      alert('保存中にエラーが発生しました');
+      showToast('保存中にエラーが発生しました', 'error');
     }
   };
 
@@ -1319,7 +1320,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                     captureCanvas(equityRef.current);
                     captureCanvas(histRef.current);
                     captureCanvas(heatRef.current);
-                    alert("3つのチャートを保存しました");
+                    showToast("3つのチャートを保存しました", 'success');
                   }}
                 >
                   画像を保存
@@ -1476,7 +1477,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                       <td>
                         <div style={{ display: 'flex', gap: '8px' }}>
                           <button className="td-btn" onClick={() => {
-                            alert(`詳細表示機能は未実装です。\nメモ内容: ${m.note || 'なし'}`);
+                            showToast(`詳細表示機能は未実装です`, 'info');
                           }}>表示</button>
                           <button className="td-btn" onClick={() => {
                             if (confirm('このメモのリンクを解除しますか？')) {
@@ -1535,11 +1536,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                     }
                     return { ticket: t.ticket, item: t.item, side: t.side, score };
                   }).sort((a, b) => b.score - a.score).slice(0, 3);
-                  alert([
-                    `tempId: ${m.tempId}`,
-                    ...candidates.map(c => `• ${c.item} ${c.side} Ticket:${c.ticket} Score:${Math.round(c.score)}`),
-                    `\n表示中の取引（${row.ticket}）にリンクする想定も可能です。`,
-                  ].join("\n"));
+                  showToast(`リンク候補: ${candidates.length}件の取引が見つかりました`, 'info');
                 }}>候補を見る</button>
                 <button
                   className="td-btn"

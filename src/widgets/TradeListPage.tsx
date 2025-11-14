@@ -5,6 +5,7 @@ import TradesTable from "../components/TradesTable";
 import { parseCsvText } from "../lib/csv";
 import { useDataset, Filters } from "../lib/dataset.context";
 import { getAllTrades, dbToTrade, tradeToDb, insertTrades } from "../lib/db.service";
+import { showToast } from "../lib/toast";
 
 function mapToRow(t: Trade) {
   return {
@@ -186,7 +187,7 @@ export default function TradeListPage() {
 
       const MAX_TRADES = 50000;
       if (trades.length > MAX_TRADES) {
-        alert(`アップロードできる取引件数の最大は5万件です。5万件以上の取引は対象外となります\n\n検出された件数: ${trades.length.toLocaleString()}件\nアップロードされる件数: ${MAX_TRADES.toLocaleString()}件`);
+        showToast(`アップロードできる取引件数の最大は5万件です。${trades.length.toLocaleString()}件が検出されたため、${MAX_TRADES.toLocaleString()}件のみアップロードされます。`, 'error');
       }
 
       const tradesToUpload = trades.slice(0, MAX_TRADES);
@@ -208,7 +209,7 @@ export default function TradeListPage() {
       }
     } catch (err) {
       console.error('❌ Error uploading file:', err);
-      alert('ファイルのアップロードに失敗しました: ' + (err as Error).message);
+      showToast('ファイルのアップロードに失敗しました', 'error');
     }
 
     if (fileRef.current) fileRef.current.value = "";

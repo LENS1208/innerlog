@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import '../../tradeDiary.css';
 import { getTradeNote, saveTradeNote } from '../../lib/db.service';
+import { showToast } from '../../lib/toast';
 
 type TradeData = {
   ticket: string;
@@ -326,10 +327,10 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
         ai_advice: '',
         ai_advice_pinned: false,
       }, tradeDbData);
-      alert('保存しました');
+      showToast('保存しました', 'success');
     } catch (err) {
       console.error('Failed to save trade note:', err);
-      alert('保存に失敗しました: ' + (err as Error).message);
+      showToast('保存に失敗しました', 'error');
     } finally {
       setSaving(false);
     }
@@ -341,12 +342,12 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
     const MAX_SIZE = 3 * 1024 * 1024;
     const arr = Array.from(files);
     if (arr.length + images.length > MAX_FILES) {
-      alert(`画像は最大${MAX_FILES}枚までです`);
+      showToast(`画像は最大${MAX_FILES}枚までです`, 'error');
       return;
     }
     for (const f of arr) {
       if (f.size > MAX_SIZE) {
-        alert(`${f.name}は3MBを超えています`);
+        showToast(`${f.name}は3MBを超えています`, 'error');
         return;
       }
     }
@@ -371,19 +372,19 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
     if (confirm('このノートを削除しますか？')) {
       console.log('ノートを削除:', noteId);
       localStorage.removeItem(`diary_${trade.ticket}`);
-      alert('ノートを削除しました');
+      showToast('ノートを削除しました', 'success');
     }
   };
 
   const handleLinkToDailyNote = () => {
     console.log('日次ノートにリンク:', noteId);
-    alert('日次ノート選択画面を表示します');
+    showToast('日次ノート選択画面を表示します', 'info');
     setMenuOpen(false);
   };
 
   const handleShowRelatedMemos = () => {
     console.log('関連メモを表示:', noteId);
-    alert('この取引に関連するメモ一覧を表示します');
+    showToast('この取引に関連するメモ一覧を表示します', 'info');
     setMenuOpen(false);
   };
 

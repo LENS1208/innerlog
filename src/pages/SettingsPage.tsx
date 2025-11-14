@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme.context';
 import '../styles/journal-notebook.css';
+import { showToast } from '../lib/toast';
 
 interface UserSettings {
   theme: string;
@@ -141,12 +142,12 @@ export default function SettingsPage() {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('画像ファイルを選択してください');
+      showToast('画像ファイルを選択してください', 'error');
       return;
     }
 
     if (file.size > 2 * 1024 * 1024) {
-      alert('ファイルサイズは2MB以下にしてください');
+      showToast('ファイルサイズは2MB以下にしてください', 'error');
       return;
     }
 
@@ -211,10 +212,10 @@ export default function SettingsPage() {
 
       setAvatarFile(null);
       setAvatarPreview(avatarUrl || '');
-      alert('プロフィールを保存しました');
+      showToast('プロフィールを保存しました', 'success');
     } catch (err) {
       console.error('プロフィール保存エラー:', err);
-      alert('保存に失敗しました');
+      showToast('保存に失敗しました', 'error');
     } finally {
       setSaving(false);
     }
@@ -279,10 +280,10 @@ export default function SettingsPage() {
         });
 
       if (error) throw error;
-      alert('設定を保存しました');
+      showToast('設定を保存しました', 'success');
     } catch (err) {
       console.error('設定保存エラー:', err);
-      alert('保存に失敗しました');
+      showToast('保存に失敗しました', 'error');
     } finally {
       setSaving(false);
     }
@@ -331,14 +332,14 @@ export default function SettingsPage() {
 
       localStorage.setItem('useDatabase', 'false');
 
-      alert('取引履歴を削除しました');
+      showToast('取引履歴を削除しました', 'success');
 
       setTimeout(() => {
         window.location.reload();
       }, 500);
     } catch (err) {
       console.error('取引履歴削除エラー:', err);
-      alert('削除に失敗しました');
+      showToast('削除に失敗しました', 'error');
     } finally {
       setSaving(false);
     }
@@ -909,10 +910,10 @@ export default function SettingsPage() {
                       console.log(`Dataset ${dataset} analysis completed`);
                     }
 
-                    alert('すべてのデモデータの分析が完了しました');
+                    showToast('すべてのデモデータの分析が完了しました', 'success');
                   } catch (error) {
                     console.error('一括生成エラー:', error);
-                    alert('エラーが発生しました。コンソールを確認してください。');
+                    showToast('エラーが発生しました', 'error');
                   } finally {
                     setSaving(false);
                   }

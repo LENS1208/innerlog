@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getFreeMemo, saveFreeMemo, deleteFreeMemo } from '../../lib/db.service';
+import { showToast } from '../../lib/toast';
 
 export type FreeMemoPanelProps = {
   noteId: string;
@@ -66,10 +67,10 @@ export default function FreeMemoPanel({
       if (onSave) {
         await onSave(content);
       }
-      alert('保存しました');
+      showToast('保存しました', 'success');
     } catch (err) {
       console.error('Failed to save free memo:', err);
-      alert('保存に失敗しました: ' + (err as Error).message);
+      showToast('保存に失敗しました', 'error');
     } finally {
       setSaving(false);
     }
@@ -79,26 +80,26 @@ export default function FreeMemoPanel({
     if (confirm('この自由メモを削除しますか?')) {
       try {
         await deleteFreeMemo(noteId);
-        alert('自由メモを削除しました');
+        showToast('自由メモを削除しました', 'success');
         if (onDelete) {
           onDelete();
         }
       } catch (err) {
         console.error('Failed to delete free memo:', err);
-        alert('削除に失敗しました: ' + (err as Error).message);
+        showToast('削除に失敗しました', 'error');
       }
     }
   };
 
   const handleLinkToTrade = () => {
     console.log('取引にリンク:', noteId);
-    alert('取引選択画面を表示します');
+    showToast('取引選択画面を表示します', 'info');
     setMenuOpen(false);
   };
 
   const handleLinkToDate = () => {
     console.log('日付にリンク:', noteId);
-    alert('日付選択画面を表示します');
+    showToast('日付選択画面を表示します', 'info');
     setMenuOpen(false);
   };
 

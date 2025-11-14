@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import type { JournalPayload } from "./types";
 import { getDailyNote, saveDailyNote } from "../../lib/db.service";
+import { showToast } from "../../lib/toast";
 
 type DayJournalCardProps = {
   dateKey: string;
@@ -61,10 +62,10 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
       if (onSave) {
         onSave({ good, improve, nextPromise, free });
       }
-      alert('保存しました');
+      showToast('保存しました', 'success');
     } catch (err) {
       console.error('Failed to save daily note:', err);
-      alert('保存に失敗しました: ' + (err as Error).message);
+      showToast('保存に失敗しました', 'error');
     } finally {
       setSaving(false);
     }

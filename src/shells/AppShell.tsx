@@ -9,6 +9,7 @@ import logoImgDark from "../assets/inner-log-logo-d.png";
 import { parseCsvText } from "../lib/csv";
 import { tradeToDb, insertTrades, getTradesCount, deleteAllTrades, upsertAccountSummary } from "../lib/db.service";
 import { parseHtmlStatement, parseFullHtmlStatement, convertHtmlTradesToCsvFormat } from "../lib/html-parser";
+import { showToast } from "../lib/toast";
 
 type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
@@ -561,7 +562,7 @@ export default function AppShell({ children }: Props) {
 
         if (parsed.trades.length === 0) {
           console.warn('⚠️ No trades found in HTML file');
-          alert('HTML形式から有効な取引データが見つかりませんでした');
+          showToast('HTML形式から有効な取引データが見つかりませんでした', 'error');
           e.target.value = '';
           return;
         }
@@ -608,11 +609,11 @@ export default function AppShell({ children }: Props) {
         window.location.reload();
       } else {
         console.warn('⚠️ No trades parsed');
-        alert('有効な取引データが見つかりませんでした');
+        showToast('有効な取引データが見つかりませんでした', 'error');
       }
     } catch (error) {
       console.error('❌ Error processing file:', error);
-      alert('ファイルの処理に失敗しました: ' + (error as Error).message);
+      showToast('ファイルの処理に失敗しました', 'error');
     }
 
     // input要素をリセット

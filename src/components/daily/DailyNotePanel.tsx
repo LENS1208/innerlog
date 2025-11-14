@@ -3,6 +3,7 @@ import DayTradesTable from './DayTradesTable';
 import LinkedNotesTable from './LinkedNotesTable';
 import AiAdviceBlock from './AiAdviceBlock';
 import TextareaGroup from './TextareaGroup';
+import { showToast } from '../../lib/toast';
 import type {
   DailyKpi,
   DayTradeRow,
@@ -64,19 +65,19 @@ export default function DailyNotePanel({
   const handleDeleteNote = () => {
     if (confirm('この日次ノートを削除しますか？')) {
       console.log('日次ノートを削除:', dateJst);
-      alert('日次ノートを削除しました');
+      showToast('日次ノートを削除しました', 'success');
     }
   };
 
   const handleAddTrade = () => {
     console.log('取引を追加:', dateJst);
-    alert('取引選択画面を表示します');
+    showToast('取引選択画面を表示します', 'info');
     setMenuOpen(false);
   };
 
   const handleLinkMemo = () => {
     console.log('メモをリンク:', dateJst);
-    alert('メモ選択画面を表示します');
+    showToast('メモ選択画面を表示します', 'info');
     setMenuOpen(false);
   };
 

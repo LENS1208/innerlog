@@ -1,6 +1,7 @@
 // src/widgets/DiaryIndexPage.tsx
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "../tradeDiary.css";
+import { showToast } from "../lib/toast";
 
 /* ========= 型 ========= */
 type Diary = {
@@ -82,8 +83,8 @@ function Dropzone({ tempId, maxFiles = 3 }: { tempId: string; maxFiles?: number 
     for (const f of Array.from(files)) {
       if (list.length >= maxFiles) break;
       // @ts-ignore
-      const type = f.type || ""; if (!allowed.includes(type)) { alert(`未対応の形式です: ${(f as any).name}`); continue; }
-      if ((f as File).size > 3 * 1024 * 1024) { alert(`サイズ上限3MBを超えています: ${(f as any).name}`); continue; }
+      const type = f.type || ""; if (!allowed.includes(type)) { showToast(`未対応の形式です: ${(f as any).name}`, 'error'); continue; }
+      if ((f as File).size > 3 * 1024 * 1024) { showToast(`サイズ上限3MBを超えています: ${(f as any).name}`, 'error'); continue; }
       const reader = new FileReader();
       reader.onload = () => { list = [{ id: `img_${Date.now()}_${Math.random().toString(16).slice(2)}`, dataUrl: String(reader.result), createdAt: nowISO() }, ...list]; saveImages(tempId, list); setImgs([...list]); };
       reader.readAsDataURL(f as File);
@@ -134,8 +135,8 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
     const allowed = ["image/jpeg", "image/png", "image/gif"]; let list = [...stageImgs];
     for (const f of Array.from(files)) {
       // @ts-ignore
-      const type = f.type || ""; if (!allowed.includes(type)) { alert(`未対応の形式です: ${(f as any).name}`); continue; }
-      if ((f as File).size > 3 * 1024 * 1024) { alert(`サイズ上限3MBを超えています: ${(f as any).name}`); continue; }
+      const type = f.type || ""; if (!allowed.includes(type)) { showToast(`未対応の形式です: ${(f as any).name}`, 'error'); continue; }
+      if ((f as File).size > 3 * 1024 * 1024) { showToast(`サイズ上限3MBを超えています: ${(f as any).name}`, 'error'); continue; }
       const reader = new FileReader();
       reader.onload = () => { list = [{ id: `img_${Date.now()}_${Math.random().toString(16).slice(2)}`, dataUrl: String(reader.result), createdAt: nowISO() }, ...list]; setStageImgs([...list]); };
       reader.readAsDataURL(f as File);
@@ -149,7 +150,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
   useEffect(() => { if (open) { setSymbol(""); setSide("BUY"); setActual(""); setSize(""); const n = new Date(); setEntryDate(toLocalDate(n)); setEntryHour(pad2(n.getHours())); setEntryMin(pad2(n.getMinutes())); setEmotion(""); setAiSide("設定なし"); setAiFollow("選択しない"); setNote(""); setStageImgs([]); } }, [open]);
 
   const onSave = () => {
-    const sym = upper(symbol); if (!sym) { alert("通貨ペアを入力してください（例：USDJPY）"); return; }
+    const sym = upper(symbol); if (!sym) { showToast("通貨ペアを入力してください（例：USDJPY）", 'error'); return; }
     const iso = new Date(`${entryDate}T${entryHour}:${entryMin}:00`).toISOString(); // 入力 → ISO
     const tempId = genTempId(sym);
     const d: Diary = {
