@@ -369,7 +369,7 @@ export default function MonthlyCalendar() {
       .slice(0, 50)
       .map((t) => ({
         id: t.ticket,
-        symbol: t.item,
+        symbol: t.item || t.pair || t.symbol || 'N/A',
         side: (t.side?.toLowerCase() === "buy" || t.side?.toLowerCase() === "long" ? "long" : "short") as "long" | "short",
         entry: t.openTime || t.datetime,
         exit: t.datetime,
@@ -385,7 +385,7 @@ export default function MonthlyCalendar() {
       .slice(0, 50)
       .map((t) => ({
         id: t.ticket,
-        symbol: t.item,
+        symbol: t.item || t.pair || t.symbol || 'N/A',
         side: (t.side?.toLowerCase() === "buy" || t.side?.toLowerCase() === "long" ? "long" : "short") as "long" | "short",
         entry: t.openTime || t.datetime,
         exit: t.datetime,

@@ -583,7 +583,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
+              gridTemplateColumns: "100px 80px minmax(200px, 2fr) 120px 100px",
               gap: 8,
               fontSize: 15,
               color: "var(--muted)",
@@ -614,7 +614,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                     key={idx}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "100px 80px minmax(200px, 2fr) 80px 100px",
+                      gridTemplateColumns: "100px 80px minmax(200px, 2fr) 120px 100px",
                       gap: 8,
                       fontSize: 13,
                       color: "var(--ink)",
@@ -624,7 +624,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                       minWidth: "600px",
                     }}
                   >
-                    <div>{t.symbol}</div>
+                    <div>{t.symbol || 'N/A'}</div>
                     <div>{t.side === "long" ? "買い" : "売り"}</div>
                     <div style={{ fontSize: 12, color: "var(--muted)" }}>
                       {formatDateTime(t.entry)} → {formatDateTime(t.exit)}
