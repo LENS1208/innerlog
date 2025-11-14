@@ -1166,22 +1166,15 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
   }, [trades]);
 
   const getCellBackgroundColor = (winRate: number) => {
-    if (winRate === 100) {
-      return 'rgb(59, 130, 246)';
-    }
-    if (winRate === 0) {
-      return 'rgb(239, 68, 68)';
-    }
-    if (winRate >= 70) {
-      const t = (winRate - 70) / 30;
-      return `rgb(${Math.round(34 + (59 - 34) * t)}, ${Math.round(197 + (130 - 197) * t)}, ${Math.round(94 + (246 - 94) * t)})`;
-    }
-    if (winRate >= 50) {
-      const t = (winRate - 50) / 20;
-      return `rgb(${Math.round(251 + (34 - 251) * t)}, ${Math.round(146 + (197 - 146) * t)}, ${Math.round(60 + (94 - 60) * t)})`;
-    }
-    const t = winRate / 50;
-    return `rgb(239, ${Math.round(68 + (146 - 68) * t)}, ${Math.round(68 + (60 - 68) * t)})`;
+    const t = winRate / 100;
+    const lightBlue = { r: 100, g: 149, b: 237 };
+    const darkNavy = { r: 25, g: 47, b: 89 };
+
+    const r = Math.round(lightBlue.r + (darkNavy.r - lightBlue.r) * t);
+    const g = Math.round(lightBlue.g + (darkNavy.g - lightBlue.g) * t);
+    const b = Math.round(lightBlue.b + (darkNavy.b - lightBlue.b) * t);
+
+    return `rgb(${r}, ${g}, ${b})`;
   };
 
   if (trades.length === 0) {
@@ -1228,7 +1221,7 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
                       background: hasData ? getCellBackgroundColor(winRate) : "var(--chip)",
                       cursor: "default",
                       position: "relative",
-                      height: 51,
+                      height: 40,
                     }}
                     onMouseEnter={(e) => {
                       if (hasData) {
@@ -1296,20 +1289,16 @@ function TimeSymbolAnalysis({ trades }: { trades: Trade[] }) {
 
       <div style={{ marginTop: 16, display: "flex", gap: 16, flexWrap: "wrap", fontSize: 11, color: "var(--muted)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(59, 130, 246)", borderRadius: 2 }}></div>
-          <span>優秀 (100%)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(25, 47, 89)", borderRadius: 2 }}></div>
+          <span>濃紺 (100%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(34, 197, 94)", borderRadius: 2 }}></div>
-          <span>良好 (70%+)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(62, 98, 163)", borderRadius: 2 }}></div>
+          <span>中間 (50%)</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(251, 146, 60)", borderRadius: 2 }}></div>
-          <span>普通 (50-69%)</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <div style={{ width: 16, height: 16, background: "rgb(239, 68, 68)", borderRadius: 2 }}></div>
-          <span>要改善 (0%)</span>
+          <div style={{ width: 16, height: 16, background: "rgb(100, 149, 237)", borderRadius: 2 }}></div>
+          <span>ライトブルー (0%)</span>
         </div>
       </div>
     </div>
