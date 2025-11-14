@@ -447,7 +447,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
         <div className="insight-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 12 }}>
             期待値ミニ表（抜粋）
-            <HelpIcon text="セグメント別の件数、平均損益、勝率、プロフィットファクターを表示します。" />
+            <HelpIcon text="セグメント別の取引回数、平均損益、勝率、プロフィットファクターを表示します。" />
           </div>
           <div style={{ overflowX: "auto", width: "100%", minWidth: 0 }}>
           <div
@@ -464,7 +464,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             }}
           >
             <div>セグメント</div>
-            <div style={{ textAlign: "right" }}>件数</div>
+            <div style={{ textAlign: "right" }}>取引回数</div>
             <div style={{ textAlign: "right" }}>平均損益</div>
             <div style={{ textAlign: "right" }}>勝率</div>
             <div style={{ textAlign: "right" }}>PF</div>
@@ -497,7 +497,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
                   {row.winrate !== null && row.winrate !== undefined ? `${Math.round(row.winrate * 100)}%` : "—"}
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  {row.pf !== null && row.pf !== undefined ? row.pf.toFixed(1) : "—"}
+                  {row.pf !== null && row.pf !== undefined ? (row.pf === Infinity ? '∞' : row.pf.toFixed(1)) : "—"}
                 </div>
               </div>
             ))}

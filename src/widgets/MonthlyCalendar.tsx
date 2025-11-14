@@ -455,11 +455,66 @@ export default function MonthlyCalendar() {
       .sort((a, b) => b.pnl - a.pnl)
       .slice(0, 5);
 
+    const expectationWeekdayMap = new Map<string, { pnl: number; count: number; wins: number; totalProfit: number; totalLoss: number }>();
+    const expectationWeekdayNames: { [key: number]: string } = {
+      0: '日曜日',
+      1: '月曜日',
+      2: '火曜日',
+      3: '水曜日',
+      4: '木曜日',
+      5: '金曜日',
+      6: '土曜日'
+    };
+    monthFilteredTrades.forEach((t) => {
+      const date = new Date(t.datetime);
+      const dayOfWeek = expectationWeekdayNames[date.getDay()];
+      const current = expectationWeekdayMap.get(dayOfWeek) || { pnl: 0, count: 0, wins: 0, totalProfit: 0, totalLoss: 0 };
+      expectationWeekdayMap.set(dayOfWeek, {
+        pnl: current.pnl + t.profitYen,
+        count: current.count + 1,
+        wins: current.wins + (t.profitYen > 0 ? 1 : 0),
+        totalProfit: current.totalProfit + (t.profitYen > 0 ? t.profitYen : 0),
+        totalLoss: current.totalLoss + (t.profitYen < 0 ? Math.abs(t.profitYen) : 0)
+      });
+    });
+
+    const durationMap = new Map<string, { pnl: number; count: number; wins: number; totalProfit: number; totalLoss: number }>();
+    monthFilteredTrades.forEach((t) => {
+      if (t.holdingMinutes !== undefined && t.holdingMinutes !== null) {
+        let bucket = '';
+        if (t.holdingMinutes < 30) bucket = '30分未満';
+        else if (t.holdingMinutes < 60) bucket = '30-60分';
+        else if (t.holdingMinutes < 120) bucket = '1-2時間';
+        else if (t.holdingMinutes < 240) bucket = '2-4時間';
+        else bucket = '4時間以上';
+
+        const current = durationMap.get(bucket) || { pnl: 0, count: 0, wins: 0, totalProfit: 0, totalLoss: 0 };
+        durationMap.set(bucket, {
+          pnl: current.pnl + t.profitYen,
+          count: current.count + 1,
+          wins: current.wins + (t.profitYen > 0 ? 1 : 0),
+          totalProfit: current.totalProfit + (t.profitYen > 0 ? t.profitYen : 0),
+          totalLoss: current.totalLoss + (t.profitYen < 0 ? Math.abs(t.profitYen) : 0)
+        });
+      }
+    });
+
     const expectationRows = [
-      { label: "曜日: Thu", count: 2, avgPnl: 8190, winrate: 0.6, pf: 1.8 },
-      { label: "時間: 11:00", count: 1, avgPnl: 3200, winrate: 1.0, pf: null },
-      { label: "保有: 60-120m", count: 2, avgPnl: 3100, winrate: 0.55, pf: 1.5 },
-    ];
+      ...Array.from(expectationWeekdayMap.entries()).map(([label, data]) => ({
+        label: `曜日: ${label}`,
+        count: data.count,
+        avgPnl: data.count > 0 ? data.pnl / data.count : 0,
+        winrate: data.count > 0 ? data.wins / data.count : 0,
+        pf: data.totalLoss > 0 ? data.totalProfit / data.totalLoss : (data.totalProfit > 0 ? Infinity : 0)
+      })),
+      ...Array.from(durationMap.entries()).map(([label, data]) => ({
+        label: `保有: ${label}`,
+        count: data.count,
+        avgPnl: data.count > 0 ? data.pnl / data.count : 0,
+        winrate: data.count > 0 ? data.wins / data.count : 0,
+        pf: data.totalLoss > 0 ? data.totalProfit / data.totalLoss : (data.totalProfit > 0 ? Infinity : 0)
+      }))
+    ].sort((a, b) => b.avgPnl - a.avgPnl).slice(0, 5);
 
     return {
       weeklySummary,
