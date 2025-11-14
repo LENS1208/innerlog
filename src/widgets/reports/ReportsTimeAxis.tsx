@@ -735,22 +735,22 @@ export default function ReportsTimeAxis() {
         }}
       >
         <Card title="曜日別" helpText="曜日ごとの損益を比較したグラフです。週間パターンを視覚的に把握できます。">
-          <div style={{ display: "flex", gap: 16, marginBottom: 12, fontSize: 13 }}>
+          <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
             <div style={{ flex: 1 }}>
-              <div style={{ color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
-              <div style={{ fontWeight: 700, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 {topDayOfWeek.day}曜日：{formatValue(topDayOfWeek.profit, "profit")}
               </div>
-              <div style={{ fontSize: 11, color: "var(--muted)" }}>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {topDayOfWeek.winRate.toFixed(0)}% | 取引 {topDayOfWeek.count}件
               </div>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
-              <div style={{ fontWeight: 700, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 {bottomDayOfWeek.day}曜日：{formatValue(bottomDayOfWeek.profit, "profit")}
               </div>
-              <div style={{ fontSize: 11, color: "var(--muted)" }}>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {bottomDayOfWeek.winRate.toFixed(0)}% | 取引 {bottomDayOfWeek.count}件
               </div>
             </div>
@@ -783,22 +783,22 @@ export default function ReportsTimeAxis() {
           </div>
         </Card>
         <Card title="時間帯別" helpText="時間帯ごとの損益を比較したグラフです1日の中で有利な時間が分かります。">
-          <div style={{ display: "flex", gap: 16, marginBottom: 12, fontSize: 13 }}>
+          <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
             <div style={{ flex: 1 }}>
-              <div style={{ color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
-              <div style={{ fontWeight: 700, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 {topHour.label}時：{formatValue(topHour.profit, "profit")}
               </div>
-              <div style={{ fontSize: 11, color: "var(--muted)" }}>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {topHour.winRate.toFixed(0)}% | 取引 {topHour.count}件
               </div>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
-              <div style={{ fontWeight: 700, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+              <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
                 {bottomHour.label}時：{formatValue(bottomHour.profit, "profit")}
               </div>
-              <div style={{ fontSize: 11, color: "var(--muted)" }}>
+              <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {bottomHour.winRate.toFixed(0)}% | 取引 {bottomHour.count}件
               </div>
             </div>
