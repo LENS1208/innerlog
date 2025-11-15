@@ -12,6 +12,17 @@
 .td-btn.td-accent{ background:var(--accent); border-color:var(--accent); color:#fff; }
 .td-btn.td-accent:hover{ background:var(--accent); opacity:0.9; }
 
+/* ダークモードで確実にボタンが見えるように */
+:root[data-theme="dark"] .td-btn {
+  border-color: #4a5568;
+  background: transparent;
+  color: #e4e8f0;
+}
+:root[data-theme="dark"] .td-btn:hover {
+  background: #1f2937;
+  border-color: #01a1ff;
+}
+
 /* カード・共通 */
 .td-card{ background: var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.02); }
 .td-card-full{ margin-top:16px; }
