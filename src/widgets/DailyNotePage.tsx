@@ -92,6 +92,8 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
           .lt('close_time', utcEndStr)
           .order('close_time', { ascending: true });
 
+        console.log('Supabase query result:', { dataLength: data?.length, error });
+
         if (error) {
           console.error('Error loading trades:', error);
           setRealKpi(DUMMY_DATA.kpi);
@@ -117,9 +119,9 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
         const grossProfit = winTrades.reduce((sum, t) => sum + Number(t.profit), 0);
         const grossLoss = Math.abs(lossTrades.reduce((sum, t) => sum + Number(t.profit), 0));
         const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? 999 : 0);
-        const totalPips = dayTrades.reduce((sum, t) => sum + Number(t.pips), 0);
+        const totalPips = dayTrades.reduce((sum, t) => sum + Number(t.pips || 0), 0);
 
-        const dayOfWeek = new Date(dateJst).toLocaleDateString('ja-JP', { weekday: 'short' });
+        const dayOfWeek = jstDate.toLocaleDateString('ja-JP', { weekday: 'short' });
 
         setRealKpi({
           winRate,
@@ -136,7 +138,11 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
         setRealTrades(
           dayTrades.map(t => ({
-            time: new Date(t.close_time).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
+            time: new Date(t.close_time).toLocaleTimeString('ja-JP', {
+              hour: '2-digit',
+              minute: '2-digit',
+              timeZone: 'Asia/Tokyo'
+            }),
             symbol: t.item,
             sideJp: t.side === 'BUY' ? '買い' : '売り',
             pnlYen: Number(t.profit),
