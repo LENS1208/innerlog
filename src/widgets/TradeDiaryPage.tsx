@@ -1477,28 +1477,42 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                       <td>
                         <div style={{ display: 'flex', gap: '8px' }}>
                           <button
-                            className="td-btn"
                             style={{
-                              border: '1px solid var(--btn-secondary-border)',
-                              background: 'var(--btn-secondary-bg)',
-                              color: 'var(--btn-secondary-text)',
-                              padding: '6px 10px',
-                              fontSize: '13px'
+                              border: '1px solid #4a5568',
+                              background: '#1f2937',
+                              color: '#e4e8f0',
+                              padding: '6px 12px',
+                              fontSize: '13px',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontWeight: '500',
+                              transition: 'all 0.2s ease'
                             }}
                             onClick={() => {
                               showToast(`詳細表示機能は未実装です`, 'info');
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#374151';
+                              e.currentTarget.style.borderColor = '#01a1ff';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#1f2937';
+                              e.currentTarget.style.borderColor = '#4a5568';
                             }}
                           >
                             表示
                           </button>
                           <button
-                            className="td-btn"
                             style={{
-                              border: '1px solid var(--btn-secondary-border)',
-                              background: 'var(--btn-secondary-bg)',
-                              color: 'var(--btn-secondary-text)',
-                              padding: '6px 10px',
-                              fontSize: '13px'
+                              border: '1px solid #4a5568',
+                              background: '#1f2937',
+                              color: '#e4e8f0',
+                              padding: '6px 12px',
+                              fontSize: '13px',
+                              borderRadius: '6px',
+                              cursor: 'pointer',
+                              fontWeight: '500',
+                              transition: 'all 0.2s ease'
                             }}
                             onClick={() => {
                               if (confirm('このメモのリンクを解除しますか？')) {
@@ -1510,6 +1524,14 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                                   setPending(arr.filter((x) => !x.linkedTo));
                                 }
                               }
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.background = '#374151';
+                              e.currentTarget.style.borderColor = '#01a1ff';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = '#1f2937';
+                              e.currentTarget.style.borderColor = '#4a5568';
                             }}
                           >
                             リンク解除
@@ -1547,13 +1569,16 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
               </div>
               <div className="pending-actions">
                 <button
-                  className="td-btn"
                   style={{
-                    border: '1px solid var(--btn-secondary-border)',
-                    background: 'var(--btn-secondary-bg)',
-                    color: 'var(--btn-secondary-text)',
-                    padding: '6px 10px',
-                    fontSize: '13px'
+                    border: '1px solid #4a5568',
+                    background: '#1f2937',
+                    color: '#e4e8f0',
+                    padding: '6px 12px',
+                    fontSize: '13px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    transition: 'all 0.2s ease'
                   }}
                   onClick={() => {
                     const candidates = chartTrades.map((t) => {
@@ -1571,17 +1596,28 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                     }).sort((a, b) => b.score - a.score).slice(0, 3);
                     showToast(`リンク候補: ${candidates.length}件の取引が見つかりました`, 'info');
                   }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#374151';
+                    e.currentTarget.style.borderColor = '#01a1ff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#1f2937';
+                    e.currentTarget.style.borderColor = '#4a5568';
+                  }}
                 >
                   候補を見る
                 </button>
                 <button
-                  className="td-btn"
                   style={{
-                    border: '1px solid var(--btn-secondary-border)',
-                    background: 'var(--btn-secondary-bg)',
-                    color: 'var(--btn-secondary-text)',
-                    padding: '6px 10px',
-                    fontSize: '13px'
+                    border: '1px solid #4a5568',
+                    background: '#1f2937',
+                    color: '#e4e8f0',
+                    padding: '6px 12px',
+                    fontSize: '13px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    transition: 'all 0.2s ease'
                   }}
                   onClick={() => {
                     if (confirm("削除しますか？")) {
@@ -1590,6 +1626,14 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                       saveQuick(arr);
                       setPending(arr.filter((x) => !x.linkedTo));
                     }
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = '#374151';
+                    e.currentTarget.style.borderColor = '#01a1ff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = '#1f2937';
+                    e.currentTarget.style.borderColor = '#4a5568';
                   }}
                 >
                   削除
