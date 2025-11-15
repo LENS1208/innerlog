@@ -259,9 +259,9 @@
 /* ダークモードで確実にボタンが見えるように */
 :root[data-theme="dark"] .link-btn,
 :root[data-theme="dark"] .action-btn {
-  border-color: #4a5568;
+  border-color: #718096;
   background: transparent;
-  color: #e4e8f0;
+  color: #ffffff;
 }
 :root[data-theme="dark"] .link-btn:hover,
 :root[data-theme="dark"] .action-btn:hover {

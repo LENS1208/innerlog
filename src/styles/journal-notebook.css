@@ -370,9 +370,9 @@
 }
 
 :root[data-theme="dark"] .btn {
-  border-color: #4a5568;
+  border-color: #718096;
   background: transparent;
-  color: #e4e8f0;
+  color: #ffffff;
 }
 
 :root[data-theme="dark"] .btn:hover {
