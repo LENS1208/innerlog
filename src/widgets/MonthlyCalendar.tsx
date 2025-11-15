@@ -759,10 +759,11 @@ export default function MonthlyCalendar() {
 
                   return (
                     <div
-                      key={idx}
+                      key={day.date}
                       className="calendar-day"
                       onClick={() => {
                         if (hasTradesValue) {
+                          console.log('MonthlyCalendar: Clicked day:', day.date, 'dayOfMonth:', day.dayOfMonth, 'isCurrentMonth:', day.isCurrentMonth);
                           location.hash = `/calendar/day/${day.date}`;
                         }
                       }}
