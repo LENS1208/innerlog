@@ -75,15 +75,21 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     const loadDayData = async () => {
       setLoading(true);
       try {
-        const nextDay = new Date(dateJst);
-        nextDay.setDate(nextDay.getDate() + 1);
-        const nextDayStr = nextDay.toISOString().slice(0, 10);
+        const jstDate = new Date(dateJst + 'T00:00:00+09:00');
+        const utcStart = new Date(jstDate.getTime() - 9 * 60 * 60 * 1000);
+        const utcEnd = new Date(utcStart.getTime() + 24 * 60 * 60 * 1000);
+
+        const utcStartStr = utcStart.toISOString();
+        const utcEndStr = utcEnd.toISOString();
+
+        console.log(`Loading trades for JST date: ${dateJst}`);
+        console.log(`  UTC range: ${utcStartStr} to ${utcEndStr}`);
 
         const { data, error } = await supabase
           .from('trades')
           .select('*')
-          .gte('close_time', `${dateJst}T15:00:00Z`)
-          .lt('close_time', `${nextDayStr}T15:00:00Z`)
+          .gte('close_time', utcStartStr)
+          .lt('close_time', utcEndStr)
           .order('close_time', { ascending: true });
 
         if (error) {
