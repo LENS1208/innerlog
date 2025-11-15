@@ -1476,66 +1476,20 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                       <td>{updated}</td>
                       <td>
                         <div style={{ display: 'flex', gap: '8px' }}>
-                          <button
-                            style={{
-                              border: '1px solid #4a5568',
-                              background: '#1f2937',
-                              color: '#e4e8f0',
-                              padding: '6px 12px',
-                              fontSize: '13px',
-                              borderRadius: '6px',
-                              cursor: 'pointer',
-                              fontWeight: '500',
-                              transition: 'all 0.2s ease'
-                            }}
-                            onClick={() => {
-                              showToast(`詳細表示機能は未実装です`, 'info');
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = '#374151';
-                              e.currentTarget.style.borderColor = '#01a1ff';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = '#1f2937';
-                              e.currentTarget.style.borderColor = '#4a5568';
-                            }}
-                          >
-                            表示
-                          </button>
-                          <button
-                            style={{
-                              border: '1px solid #4a5568',
-                              background: '#1f2937',
-                              color: '#e4e8f0',
-                              padding: '6px 12px',
-                              fontSize: '13px',
-                              borderRadius: '6px',
-                              cursor: 'pointer',
-                              fontWeight: '500',
-                              transition: 'all 0.2s ease'
-                            }}
-                            onClick={() => {
-                              if (confirm('このメモのリンクを解除しますか？')) {
-                                let arr = loadQuick();
-                                const idx = arr.findIndex(x => x.tempId === m.tempId);
-                                if (idx >= 0) {
-                                  arr[idx].linkedTo = undefined;
-                                  saveQuick(arr);
-                                  setPending(arr.filter((x) => !x.linkedTo));
-                                }
+                          <button className="td-btn" onClick={() => {
+                            showToast(`詳細表示機能は未実装です`, 'info');
+                          }}>表示</button>
+                          <button className="td-btn" onClick={() => {
+                            if (confirm('このメモのリンクを解除しますか？')) {
+                              let arr = loadQuick();
+                              const idx = arr.findIndex(x => x.tempId === m.tempId);
+                              if (idx >= 0) {
+                                arr[idx].linkedTo = undefined;
+                                saveQuick(arr);
+                                setPending(arr.filter((x) => !x.linkedTo));
                               }
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = '#374151';
-                              e.currentTarget.style.borderColor = '#01a1ff';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = '#1f2937';
-                              e.currentTarget.style.borderColor = '#4a5568';
-                            }}
-                          >
-                            リンク解除
-                          </button>
+                            }
+                          }}>リンク解除</button>
                         </div>
                       </td>
                     </tr>
@@ -1568,57 +1522,24 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                 {m.note && <div className="small">{m.note}</div>}
               </div>
               <div className="pending-actions">
+                <button className="td-btn" onClick={() => {
+                  const candidates = chartTrades.map((t) => {
+                    let score = 0;
+                    if (t.item.toUpperCase() === m.symbol.toUpperCase()) score += 40;
+                    if (t.side === m.side) score += 20;
+                    const td = Math.abs(new Date(t.openTime).getTime() - new Date(m.entry.time).getTime()) / 60000;
+                    score += Math.max(0, 20 - Math.min(20, td));
+                    const ap = m.entry.actual as any;
+                    if (!isNaN(ap)) {
+                      const pd = Math.abs(t.openPrice - ap);
+                      score += Math.max(0, 20 - Math.min(20, pd * 100));
+                    }
+                    return { ticket: t.ticket, item: t.item, side: t.side, score };
+                  }).sort((a, b) => b.score - a.score).slice(0, 3);
+                  showToast(`リンク候補: ${candidates.length}件の取引が見つかりました`, 'info');
+                }}>候補を見る</button>
                 <button
-                  style={{
-                    border: '1px solid #4a5568',
-                    background: '#1f2937',
-                    color: '#e4e8f0',
-                    padding: '6px 12px',
-                    fontSize: '13px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontWeight: '500',
-                    transition: 'all 0.2s ease'
-                  }}
-                  onClick={() => {
-                    const candidates = chartTrades.map((t) => {
-                      let score = 0;
-                      if (t.item.toUpperCase() === m.symbol.toUpperCase()) score += 40;
-                      if (t.side === m.side) score += 20;
-                      const td = Math.abs(new Date(t.openTime).getTime() - new Date(m.entry.time).getTime()) / 60000;
-                      score += Math.max(0, 20 - Math.min(20, td));
-                      const ap = m.entry.actual as any;
-                      if (!isNaN(ap)) {
-                        const pd = Math.abs(t.openPrice - ap);
-                        score += Math.max(0, 20 - Math.min(20, pd * 100));
-                      }
-                      return { ticket: t.ticket, item: t.item, side: t.side, score };
-                    }).sort((a, b) => b.score - a.score).slice(0, 3);
-                    showToast(`リンク候補: ${candidates.length}件の取引が見つかりました`, 'info');
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#374151';
-                    e.currentTarget.style.borderColor = '#01a1ff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = '#1f2937';
-                    e.currentTarget.style.borderColor = '#4a5568';
-                  }}
-                >
-                  候補を見る
-                </button>
-                <button
-                  style={{
-                    border: '1px solid #4a5568',
-                    background: '#1f2937',
-                    color: '#e4e8f0',
-                    padding: '6px 12px',
-                    fontSize: '13px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontWeight: '500',
-                    transition: 'all 0.2s ease'
-                  }}
+                  className="td-btn"
                   onClick={() => {
                     if (confirm("削除しますか？")) {
                       let arr = loadQuick();
@@ -1626,14 +1547,6 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                       saveQuick(arr);
                       setPending(arr.filter((x) => !x.linkedTo));
                     }
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#374151';
-                    e.currentTarget.style.borderColor = '#01a1ff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = '#1f2937';
-                    e.currentTarget.style.borderColor = '#4a5568';
                   }}
                 >
                   削除
