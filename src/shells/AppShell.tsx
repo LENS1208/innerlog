@@ -282,7 +282,7 @@ function Header({
 // 左メニュー（左上に固定）
 function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void; logoImg: string; theme: 'light' | 'dark'; toggleTheme: () => void }) {
   const { dataset, setDataset, useDatabase, dataCount } = useDataset();
-  const showDemoDataSelector = !useDatabase || dataCount === 0;
+  const showDemoDataSelector = true;
 
   return (
     <aside
