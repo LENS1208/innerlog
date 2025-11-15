@@ -65,6 +65,13 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
   const dateJst = props?.kpi?.dateJst || DUMMY_DATA.kpi.dateJst;
   console.log('DailyNotePage: final dateJst=', dateJst);
 
+  React.useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log('🔐 DailyNotePage: Current logged in user:', user?.email, user?.id);
+    })();
+  }, []);
+
   useEffect(() => {
     console.log('DailyNotePage useEffect: useDatabase=', useDatabase, 'isInitialized=', isInitialized, 'dateJst=', dateJst);
 
