@@ -231,6 +231,7 @@ export default function MonthlyCalendar() {
       });
     }
 
+    console.log('MonthlyCalendar: Generated calendarDays:', days.filter(d => d.isCurrentMonth && d.tradeCount > 0).map(d => ({ date: d.date, dayOfMonth: d.dayOfMonth })));
     return { calendarDays: days, weekSummaries, monthTotal };
   }, [filteredTrades, year, month]);
 
@@ -739,6 +740,9 @@ export default function MonthlyCalendar() {
           {Array.from({ length: 5 }).map((_, weekIndex) => {
             const weekDays = calendarDays.slice(weekIndex * 7, (weekIndex + 1) * 7);
             const weekProfit = weekSummaries[weekIndex].profitYen;
+            if (weekIndex === 0) {
+              console.log('MonthlyCalendar: First week days:', weekDays.map(d => ({ date: d.date, dayOfMonth: d.dayOfMonth, isCurrentMonth: d.isCurrentMonth })));
+            }
             return (
               <div key={weekIndex} className="calendar-week-row">
                 {weekDays.map((day, idx) => {
@@ -757,14 +761,18 @@ export default function MonthlyCalendar() {
                       : getLossColor(0.3)
                     : "var(--line)";
 
+                  const handleClick = (dayDate: string) => {
+                    console.log('MonthlyCalendar: Clicked day:', dayDate, 'from day object:', day.date);
+                    location.hash = `/calendar/day/${dayDate}`;
+                  };
+
                   return (
                     <div
                       key={day.date}
                       className="calendar-day"
                       onClick={() => {
                         if (hasTradesValue) {
-                          console.log('MonthlyCalendar: Clicked day:', day.date, 'dayOfMonth:', day.dayOfMonth, 'isCurrentMonth:', day.isCurrentMonth);
-                          location.hash = `/calendar/day/${day.date}`;
+                          handleClick(day.date);
                         }
                       }}
                       style={{
