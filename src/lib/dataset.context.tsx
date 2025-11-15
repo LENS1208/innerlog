@@ -3,6 +3,7 @@ import { debounce } from './debounce';
 import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './urlSync';
 import { showToast } from './toast';
 import { getTradesCount } from './db.service';
+import { supabase } from './supabase';
 
 type DS = "A"|"B"|"C";
 export type Filters = {
@@ -50,6 +51,9 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
     const checkDatabase = async () => {
       console.log('🔍 Checking database for trades...');
       try {
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log('  → Current user:', user?.email, user?.id);
+
         const count = await getTradesCount();
         console.log(`  → Query result: ${count} trades found`);
         setDataCount(count);
