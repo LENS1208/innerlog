@@ -100,6 +100,12 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
         }
 
         const dayTrades = data || [];
+        console.log(`✓ Loaded ${dayTrades.length} trades for ${dateJst}:`, dayTrades.map(t => ({
+          ticket: t.ticket,
+          close_time: t.close_time,
+          profit: t.profit,
+          item: t.item
+        })));
         const tradeCount = dayTrades.length;
         const winTrades = dayTrades.filter(t => t.profit > 0);
         const lossTrades = dayTrades.filter(t => t.profit < 0);
