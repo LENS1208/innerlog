@@ -6,6 +6,7 @@ import type { TradeDetailPanelProps } from '../components/trade/TradeDetailPanel
 import FreeMemoPanel from '../components/free/FreeMemoPanel';
 import type { FolderKind, NoteListItem } from './journal-notes.types';
 import { getAllDailyNotes, getAllTradeNotes, getAllFreeMemos, getAllTrades } from '../lib/db.service';
+import { useDataset } from '../lib/dataset.context';
 import '../styles/journal-notebook.css';
 
 type TradeData = {
@@ -288,6 +289,7 @@ const formatPnl = (pnlYen: number): string => {
 };
 
 export default function JournalNotesPage() {
+  const { dataset } = useDataset();
   const [sortBy, setSortBy] = useState<'updated' | 'date'>('updated');
   const [selectedFolder, setSelectedFolder] = useState<FolderKind>('all');
   const [notes, setNotes] = useState<NoteListItem[]>([]);
@@ -303,7 +305,7 @@ export default function JournalNotesPage() {
         getAllDailyNotes(),
         getAllTradeNotes(),
         getAllFreeMemos(),
-        getAllTrades(),
+        getAllTrades(dataset),
       ]);
 
       const tradesMap = new Map(allTrades.map(t => [t.ticket, t]));
@@ -399,7 +401,7 @@ export default function JournalNotesPage() {
 
   useEffect(() => {
     loadNotes();
-  }, []);
+  }, [dataset]);
 
   const filteredNotes = useMemo(() => {
     let filtered = notes;
