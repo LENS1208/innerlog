@@ -92,18 +92,25 @@ export default function MonthlyCalendar() {
           const { getAllTrades } = await import('../lib/db.service');
           const data = await getAllTrades();
 
+          const toJSTString = (utcDate: string) => {
+            const date = new Date(utcDate);
+            const jstOffset = 9 * 60 * 60 * 1000;
+            const jstDate = new Date(date.getTime() + jstOffset);
+            return jstDate.toISOString().replace('T', ' ').substring(0, 19);
+          };
+
           const mappedTrades: Trade[] = (data || []).map((t: any) => ({
               id: t.id || t.ticket,
-              datetime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
+              datetime: toJSTString(t.close_time),
               ticket: t.ticket,
               item: t.item,
               pair: t.item,
               side: t.side,
               volume: t.size || 0,
               size: t.size,
-              openTime: new Date(t.open_time).toISOString().replace('T', ' ').substring(0, 19),
+              openTime: toJSTString(t.open_time),
               openPrice: t.open_price,
-              closeTime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
+              closeTime: toJSTString(t.close_time),
               closePrice: t.close_price,
               commission: t.commission,
               swap: t.swap,
@@ -111,6 +118,8 @@ export default function MonthlyCalendar() {
               sl: t.sl,
               tp: t.tp,
               pips: t.pips,
+              setup: t.setup,
+              holdingMinutes: t.holding_minutes,
             }));
             setTrades(mappedTrades);
 

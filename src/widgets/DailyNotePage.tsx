@@ -75,11 +75,15 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     const loadDayData = async () => {
       setLoading(true);
       try {
+        const nextDay = new Date(dateJst);
+        nextDay.setDate(nextDay.getDate() + 1);
+        const nextDayStr = nextDay.toISOString().slice(0, 10);
+
         const { data, error } = await supabase
           .from('trades')
           .select('*')
-          .gte('close_time', `${dateJst}T00:00:00Z`)
-          .lt('close_time', `${dateJst}T23:59:59Z`)
+          .gte('close_time', `${dateJst}T15:00:00Z`)
+          .lt('close_time', `${nextDayStr}T15:00:00Z`)
           .order('close_time', { ascending: true });
 
         if (error) {
