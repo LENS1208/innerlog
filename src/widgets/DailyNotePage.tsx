@@ -84,8 +84,9 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     const loadDayData = async () => {
       setLoading(true);
       try {
-        const jstDate = new Date(dateJst + 'T00:00:00+09:00');
-        const utcStart = new Date(jstDate.getTime() - 9 * 60 * 60 * 1000);
+        const [year, month, day] = dateJst.split('-').map(Number);
+        const jstMidnight = new Date(year, month - 1, day, 0, 0, 0);
+        const utcStart = new Date(jstMidnight.getTime() - 9 * 60 * 60 * 1000);
         const utcEnd = new Date(utcStart.getTime() + 24 * 60 * 60 * 1000);
 
         const utcStartStr = utcStart.toISOString();
