@@ -353,10 +353,27 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             const res = await fetch(url + cacheBuster, { cache: "no-store" });
             if (!res.ok) continue;
             const text = await res.text();
-            const trades = parseCsvText(text);
-            if (Array.isArray(trades) && trades.length) {
-              console.log('TradeDiaryPage: Loaded CSV trades:', trades.length);
-              setCsvTrades(trades);
+            const rawTrades = parseCsvText(text);
+            if (Array.isArray(rawTrades) && rawTrades.length) {
+              console.log('TradeDiaryPage: Loaded CSV trades:', rawTrades.length);
+              // CSVトレードをTrade型に変換
+              const mappedTrades: Trade[] = rawTrades.map((t: any) => ({
+                ticket: t.ticket,
+                item: t.pair || t.symbol || 'UNKNOWN',
+                side: (t.side === 'LONG' ? 'BUY' : 'SELL') as "BUY" | "SELL",
+                size: t.volume || 0,
+                openTime: new Date(t.openTime || t.datetime),
+                openPrice: t.openPrice || 0,
+                closeTime: new Date(t.datetime),
+                closePrice: t.closePrice || 0,
+                commission: t.commission || 0,
+                swap: t.swap || 0,
+                profit: t.profitYen || 0,
+                sl: t.stopPrice || null,
+                tp: t.targetPrice || null,
+                pips: t.pips || 0,
+              }));
+              setCsvTrades(mappedTrades);
               return;
             }
           } catch (err) {
@@ -415,47 +432,66 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
       };
     }
 
-    // CSVデータから検索
+    // CSVまたはDBデータから検索
     if (entryId && allTrades.length > 0) {
-      const found = allTrades.find(t => t.ticket === entryId || t.id === entryId);
+      console.log('TradeDiaryPage: Searching for entryId:', entryId, 'type:', typeof entryId);
+      console.log('TradeDiaryPage: First 3 tickets:', allTrades.slice(0, 3).map(t => ({ ticket: t.ticket, type: typeof t.ticket })));
+      const found = allTrades.find(t => String(t.ticket) === String(entryId));
       console.log('TradeDiaryPage: Searching for', entryId, 'in', allTrades.length, 'trades. Found:', found);
       if (found) {
         return {
-          ticket: found.ticket || found.id,
-          item: found.pair || found.symbol || 'UNKNOWN',
-          side: (found.side === 'LONG' ? 'BUY' : 'SELL') as "BUY" | "SELL",
-          size: found.volume,
-          openTime: new Date(found.openTime || found.datetime),
-          openPrice: found.openPrice || 0,
-          closeTime: new Date(found.datetime),
-          closePrice: found.closePrice || 0,
-          commission: found.commission || 0,
-          swap: found.swap || 0,
-          profit: found.profitYen || found.profit || 0,
-          sl: found.stopPrice || null,
-          tp: found.targetPrice || null,
+          ticket: found.ticket,
+          item: found.item,
+          side: found.side,
+          size: found.size,
+          openTime: found.openTime,
+          openPrice: found.openPrice,
+          closeTime: found.closeTime,
+          closePrice: found.closePrice,
+          commission: found.commission,
+          swap: found.swap,
+          profit: found.profit,
+          sl: found.sl,
+          tp: found.tp,
           pips: found.pips,
         };
       }
     }
 
-    return allTrades.length > 0 ? {
-      ticket: allTrades[0].ticket || allTrades[0].id,
-      item: allTrades[0].pair || allTrades[0].symbol || 'UNKNOWN',
-      side: (allTrades[0].side === 'LONG' ? 'BUY' : 'SELL') as "BUY" | "SELL",
-      size: allTrades[0].volume,
-      openTime: new Date(allTrades[0].openTime || allTrades[0].datetime),
-      openPrice: allTrades[0].openPrice || 0,
-      closeTime: new Date(allTrades[0].datetime),
-      closePrice: allTrades[0].closePrice || 0,
-      commission: allTrades[0].commission || 0,
-      swap: allTrades[0].swap || 0,
-      profit: allTrades[0].profitYen || allTrades[0].profit || 0,
-      sl: allTrades[0].stopPrice || null,
-      tp: allTrades[0].targetPrice || null,
-      pips: allTrades[0].pips,
-    } : trades[trades.length - 1];
-  }, [dbTrade, allTrades, trades, entryId]);
+    // entryIdが指定されているのに見つからない場合はnullを返す
+    if (entryId) {
+      console.warn('TradeDiaryPage: Trade not found for entryId:', entryId);
+      return null;
+    }
+
+    // entryIdがない場合もnullを返す（トレード一覧から選択してもらう）
+    return null;
+  }, [dbTrade, allTrades, entryId]);
+
+  // rowがnullの場合の処理
+  if (!row) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center' }}>
+        <h2>トレードが見つかりません</h2>
+        <p>指定されたトレード（ID: {entryId}）が見つかりませんでした。</p>
+        <button
+          onClick={() => location.hash = '/trades'}
+          style={{
+            padding: '10px 20px',
+            background: 'var(--accent)',
+            color: 'white',
+            border: 'none',
+            borderRadius: 8,
+            cursor: 'pointer',
+            fontSize: 14,
+            fontWeight: 600,
+          }}
+        >
+          取引一覧に戻る
+        </button>
+      </div>
+    );
+  }
 
   const kpi = useMemo(() => ({
     net: row.profit,
