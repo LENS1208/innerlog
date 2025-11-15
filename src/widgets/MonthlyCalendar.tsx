@@ -47,16 +47,12 @@ function normalizeDate(dateStr: string): string {
 }
 
 function formatDateLocal(year: number, month: number, day: number): string {
-  // month is 0-based (0=January, 8=September, 9=October)
-  // Convert to 1-based for display: month=9 => "10"
+  // month is 0-based (0=January, 8=September)
+  // Convert to 1-based for display: month=8 => "09"
   const y = String(year);
   const m = String(month + 1).padStart(2, "0");
   const d = String(day).padStart(2, "0");
-  const result = `${y}-${m}-${d}`;
-  if (day <= 5) {
-    console.log(`formatDateLocal(${year}, ${month}, ${day}) => ${result}`);
-  }
-  return result;
+  return `${y}-${m}-${d}`;
 }
 
 function parseDateSafe(dateStr: string): Date {
@@ -92,25 +88,18 @@ export default function MonthlyCalendar() {
           const { getAllTrades } = await import('../lib/db.service');
           const data = await getAllTrades();
 
-          const toJSTString = (utcDate: string) => {
-            const date = new Date(utcDate);
-            const jstOffset = 9 * 60 * 60 * 1000;
-            const jstDate = new Date(date.getTime() + jstOffset);
-            return jstDate.toISOString().replace('T', ' ').substring(0, 19);
-          };
-
           const mappedTrades: Trade[] = (data || []).map((t: any) => ({
               id: t.id || t.ticket,
-              datetime: toJSTString(t.close_time),
+              datetime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
               ticket: t.ticket,
               item: t.item,
               pair: t.item,
               side: t.side,
               volume: t.size || 0,
               size: t.size,
-              openTime: toJSTString(t.open_time),
+              openTime: new Date(t.open_time).toISOString().replace('T', ' ').substring(0, 19),
               openPrice: t.open_price,
-              closeTime: toJSTString(t.close_time),
+              closeTime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
               closePrice: t.close_price,
               commission: t.commission,
               swap: t.swap,
@@ -118,8 +107,6 @@ export default function MonthlyCalendar() {
               sl: t.sl,
               tp: t.tp,
               pips: t.pips,
-              setup: t.setup,
-              holdingMinutes: t.holding_minutes,
             }));
             setTrades(mappedTrades);
 
@@ -158,8 +145,6 @@ export default function MonthlyCalendar() {
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-
-  console.log('MonthlyCalendar: year=', year, 'month=', month, '(0-based, so 9 means October)');
 
   const filteredTrades = useMemo(() => {
     return filterTrades(trades, uiFilters);
@@ -246,7 +231,6 @@ export default function MonthlyCalendar() {
       });
     }
 
-    console.log('MonthlyCalendar: ALL calendarDays:', days.map((d, i) => ({ index: i, date: d.date, dayOfMonth: d.dayOfMonth, isCurrentMonth: d.isCurrentMonth, tradeCount: d.tradeCount })));
     return { calendarDays: days, weekSummaries, monthTotal };
   }, [filteredTrades, year, month]);
 
@@ -650,11 +634,6 @@ export default function MonthlyCalendar() {
             font-size: 16px !important;
           }
 
-          .calendar-nav-btn {
-            padding: 6px 10px !important;
-            font-size: 16px !important;
-          }
-
           .month-total-label {
             font-size: 11px !important;
           }
@@ -662,11 +641,6 @@ export default function MonthlyCalendar() {
           .month-total-value {
             font-size: 18px !important;
           }
-        }
-
-        .calendar-nav-btn {
-          padding: 8px 12px;
-          font-size: 18px;
         }
 
         @media (min-width: 1024px) {
@@ -688,14 +662,30 @@ export default function MonthlyCalendar() {
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
           <button
             onClick={goToPrevMonth}
-            className="btn-secondary calendar-nav-btn"
+            className="nav-button"
+            style={{
+              background: "var(--chip)",
+              border: "1px solid var(--line)",
+              borderRadius: 8,
+              padding: "8px 12px",
+              cursor: "pointer",
+              fontSize: 18,
+            }}
           >
             ‹
           </button>
           <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>{monthName}</h1>
           <button
             onClick={goToNextMonth}
-            className="btn-secondary calendar-nav-btn"
+            className="nav-button"
+            style={{
+              background: "var(--chip)",
+              border: "1px solid var(--line)",
+              borderRadius: 8,
+              padding: "8px 12px",
+              cursor: "pointer",
+              fontSize: 18,
+            }}
           >
             ›
           </button>
@@ -755,9 +745,6 @@ export default function MonthlyCalendar() {
           {Array.from({ length: 5 }).map((_, weekIndex) => {
             const weekDays = calendarDays.slice(weekIndex * 7, (weekIndex + 1) * 7);
             const weekProfit = weekSummaries[weekIndex].profitYen;
-            if (weekIndex === 0) {
-              console.log('MonthlyCalendar: First week days:', weekDays.map(d => ({ date: d.date, dayOfMonth: d.dayOfMonth, isCurrentMonth: d.isCurrentMonth })));
-            }
             return (
               <div key={weekIndex} className="calendar-week-row">
                 {weekDays.map((day, idx) => {
@@ -776,18 +763,13 @@ export default function MonthlyCalendar() {
                       : getLossColor(0.3)
                     : "var(--line)";
 
-                  const handleClick = (dayDate: string) => {
-                    console.log('MonthlyCalendar: Clicked day:', dayDate, 'from day object:', day.date);
-                    location.hash = `/calendar/day/${dayDate}`;
-                  };
-
                   return (
                     <div
-                      key={day.date}
+                      key={idx}
                       className="calendar-day"
                       onClick={() => {
                         if (hasTradesValue) {
-                          handleClick(day.date);
+                          location.hash = `/calendar/day/${day.date}`;
                         }
                       }}
                       style={{

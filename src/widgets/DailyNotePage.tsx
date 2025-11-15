@@ -56,60 +56,29 @@ const DUMMY_DATA: DailyNotePageProps = {
 };
 
 export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
-  const { useDatabase, isInitialized } = useDataset();
+  const { useDatabase } = useDataset();
   const [loading, setLoading] = useState(false);
   const [realKpi, setRealKpi] = useState(DUMMY_DATA.kpi);
   const [realTrades, setRealTrades] = useState(DUMMY_DATA.trades);
 
-  console.log('DailyNotePage: props=', props, 'props?.kpi?.dateJst=', props?.kpi?.dateJst);
   const dateJst = props?.kpi?.dateJst || DUMMY_DATA.kpi.dateJst;
-  console.log('DailyNotePage: final dateJst=', dateJst);
-
-  React.useEffect(() => {
-    (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      console.log('🔐 DailyNotePage: Current logged in user:', user?.email, user?.id);
-    })();
-  }, []);
 
   useEffect(() => {
-    console.log('DailyNotePage useEffect: useDatabase=', useDatabase, 'isInitialized=', isInitialized, 'dateJst=', dateJst);
-
-    if (!isInitialized) {
-      console.log('  → Waiting for initialization...');
-      return;
-    }
-
     if (!useDatabase) {
-      console.log('  → Using DUMMY_DATA (database disabled)');
       setRealKpi(DUMMY_DATA.kpi);
       setRealTrades(DUMMY_DATA.trades);
       return;
     }
 
-    console.log('  → Loading from database...');
     const loadDayData = async () => {
       setLoading(true);
       try {
-        const [year, month, day] = dateJst.split('-').map(Number);
-        const jstMidnight = new Date(year, month - 1, day, 0, 0, 0);
-        const utcStart = new Date(jstMidnight.getTime() - 9 * 60 * 60 * 1000);
-        const utcEnd = new Date(utcStart.getTime() + 24 * 60 * 60 * 1000);
-
-        const utcStartStr = utcStart.toISOString();
-        const utcEndStr = utcEnd.toISOString();
-
-        console.log(`Loading trades for JST date: ${dateJst}`);
-        console.log(`  UTC range: ${utcStartStr} to ${utcEndStr}`);
-
         const { data, error } = await supabase
           .from('trades')
           .select('*')
-          .gte('close_time', utcStartStr)
-          .lt('close_time', utcEndStr)
+          .gte('close_time', `${dateJst}T00:00:00Z`)
+          .lt('close_time', `${dateJst}T23:59:59Z`)
           .order('close_time', { ascending: true });
-
-        console.log('Supabase query result:', { dataLength: data?.length, error });
 
         if (error) {
           console.error('Error loading trades:', error);
@@ -119,12 +88,6 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
         }
 
         const dayTrades = data || [];
-        console.log(`✓ Loaded ${dayTrades.length} trades for ${dateJst}:`, dayTrades.map(t => ({
-          ticket: t.ticket,
-          close_time: t.close_time,
-          profit: t.profit,
-          item: t.item
-        })));
         const tradeCount = dayTrades.length;
         const winTrades = dayTrades.filter(t => t.profit > 0);
         const lossTrades = dayTrades.filter(t => t.profit < 0);
@@ -136,9 +99,9 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
         const grossProfit = winTrades.reduce((sum, t) => sum + Number(t.profit), 0);
         const grossLoss = Math.abs(lossTrades.reduce((sum, t) => sum + Number(t.profit), 0));
         const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? 999 : 0);
-        const totalPips = dayTrades.reduce((sum, t) => sum + Number(t.pips || 0), 0);
+        const totalPips = dayTrades.reduce((sum, t) => sum + Number(t.pips), 0);
 
-        const dayOfWeek = jstDate.toLocaleDateString('ja-JP', { weekday: 'short' });
+        const dayOfWeek = new Date(dateJst).toLocaleDateString('ja-JP', { weekday: 'short' });
 
         setRealKpi({
           winRate,
@@ -155,11 +118,7 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
         setRealTrades(
           dayTrades.map(t => ({
-            time: new Date(t.close_time).toLocaleTimeString('ja-JP', {
-              hour: '2-digit',
-              minute: '2-digit',
-              timeZone: 'Asia/Tokyo'
-            }),
+            time: new Date(t.close_time).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
             symbol: t.item,
             sideJp: t.side === 'BUY' ? '買い' : '売り',
             pnlYen: Number(t.profit),
@@ -176,15 +135,12 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     };
 
     loadDayData();
-  }, [useDatabase, isInitialized, dateJst]);
+  }, [useDatabase, dateJst]);
 
   const mergedProps = {
     ...DUMMY_DATA,
     ...props,
-    kpi: {
-      ...realKpi,
-      dateJst: dateJst,
-    },
+    kpi: realKpi,
     trades: realTrades,
   };
 

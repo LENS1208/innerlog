@@ -361,23 +361,11 @@
   font-size: 13px;
   font-weight: normal;
   color: var(--ink);
-  transition: all 0.15s ease;
+  transition: background-color 0.15s;
 }
 
 .btn:hover {
   background: var(--chip, #f3f4f6);
-  transform: translateY(-1px);
-}
-
-:root[data-theme="dark"] .btn {
-  border-color: #718096;
-  background: transparent;
-  color: #ffffff;
-}
-
-:root[data-theme="dark"] .btn:hover {
-  background: #1f2937;
-  border-color: #01a1ff;
 }
 
 /* 入力 */

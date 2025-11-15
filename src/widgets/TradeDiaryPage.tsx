@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { UI_TEXT } from "../lib/i18n";
 import { supabase } from "../lib/supabase";
-import type { DbTrade } from "../lib/db.service";
+import { getTradeByTicket, type DbTrade } from "../lib/db.service";
 import { useDataset } from "../lib/dataset.context";
 import { parseCsvText } from "../lib/csv";
 import { showToast } from "../lib/toast";
@@ -63,6 +63,46 @@ type Trade = {
   pips: number; // ±
 };
 
+function makeDummyTrades(): Trade[] {
+  const base = new Date("2025-09-10T00:30:00Z").getTime();
+  const items = ["USDJPY", "EURUSD", "GBPJPY", "AUDUSD"];
+  const arr: Trade[] = [];
+  for (let i = 0; i < 80; i++) {
+    const tOpen = new Date(base + i * 45 * 60 * 1000);
+    const dur = 10 + Math.floor(Math.random() * 180);
+    const tClose = new Date(tOpen.getTime() + dur * 60 * 1000);
+    const item = items[i % items.length];
+    const side: Trade["side"] = Math.random() > 0.45 ? "BUY" : "SELL";
+    const size = [0.2, 0.3, 0.5, 1.0][i % 4];
+    const isJPY = /JPY$/.test(item);
+    const pf = isJPY ? 100 : 10000;
+    const openPx = isJPY ? 1.45 + Math.random() * 0.02 : 1.05 + Math.random() * 0.02; // 値はデモ
+    const pips = Math.round((Math.random() * 60 - 20) * 10) / 10; // -20〜+40
+    const closePx = side === "BUY" ? openPx + pips / pf : openPx - pips / pf;
+    const commission = Math.round((Math.random() * 4 - 2) * 50);
+    const swap = Math.round((Math.random() * 4 - 2) * 40);
+    const yen = Math.round(pips * size * (isJPY ? 100 : 1000));
+    const profit = yen + commission + swap;
+    const sl = side === "BUY" ? openPx - 20 / pf : openPx + 20 / pf;
+    arr.push({
+      ticket: "T" + (100000 + i),
+      item,
+      side,
+      size,
+      openTime: tOpen,
+      openPrice: Math.round(openPx * 1000) / 1000,
+      closeTime: tClose,
+      closePrice: Math.round(closePx * 1000) / 1000,
+      commission,
+      swap,
+      profit,
+      sl: Math.round(sl * 1000) / 1000,
+      tp: null,
+      pips,
+    });
+  }
+  return arr;
+}
 
 /* ===== 小道具 ===== */
 const pipFactor = (sym: string) => (/JPY$/.test(sym) ? 100 : 10000);
@@ -306,42 +346,13 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const { dataset, useDatabase } = useDataset();
 
   /* ===== データ準備 ===== */
+  const [dbTrade, setDbTrade] = useState<DbTrade | null>(null);
   const [csvTrades, setCsvTrades] = useState<Trade[]>([]);
-  const [dbTrades, setDbTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // CSVまたはDBデータをロード
+  // CSVデータをロード
   useEffect(() => {
-    if (useDatabase) {
-      (async () => {
-        try {
-          const { getAllTrades } = await import('../lib/db.service');
-          const data = await getAllTrades();
-          const mappedTrades: Trade[] = (data || []).map((t: any) => ({
-            ticket: t.ticket,
-            item: t.item,
-            side: t.side as "BUY" | "SELL",
-            size: t.size,
-            openTime: new Date(t.open_time),
-            openPrice: t.open_price,
-            closeTime: new Date(t.close_time),
-            closePrice: t.close_price,
-            commission: t.commission,
-            swap: t.swap,
-            profit: t.profit,
-            sl: t.sl,
-            tp: t.tp,
-            pips: t.pips,
-          }));
-          console.log('TradeDiaryPage: Loaded', mappedTrades.length, 'trades from DB');
-          console.log('TradeDiaryPage: First 3 tickets:', mappedTrades.slice(0, 3).map(t => t.ticket));
-          setDbTrades(mappedTrades);
-        } catch (err) {
-          console.error('Error loading DB trades:', err);
-          setDbTrades([]);
-        }
-      })();
-    } else {
+    if (!useDatabase) {
       const candidates = [
         `/demo/${dataset}.csv`,
         `/demo/sample/${dataset}.csv`,
@@ -354,27 +365,10 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             const res = await fetch(url + cacheBuster, { cache: "no-store" });
             if (!res.ok) continue;
             const text = await res.text();
-            const rawTrades = parseCsvText(text);
-            if (Array.isArray(rawTrades) && rawTrades.length) {
-              console.log('TradeDiaryPage: Loaded CSV trades:', rawTrades.length);
-              // CSVトレードをTrade型に変換
-              const mappedTrades: Trade[] = rawTrades.map((t: any) => ({
-                ticket: t.ticket,
-                item: t.pair || t.symbol || 'UNKNOWN',
-                side: (t.side === 'LONG' ? 'BUY' : 'SELL') as "BUY" | "SELL",
-                size: t.volume || 0,
-                openTime: new Date(t.openTime || t.datetime),
-                openPrice: t.openPrice || 0,
-                closeTime: new Date(t.datetime),
-                closePrice: t.closePrice || 0,
-                commission: t.commission || 0,
-                swap: t.swap || 0,
-                profit: t.profitYen || 0,
-                sl: t.stopPrice || null,
-                tp: t.targetPrice || null,
-                pips: t.pips || 0,
-              }));
-              setCsvTrades(mappedTrades);
+            const trades = parseCsvText(text);
+            if (Array.isArray(trades) && trades.length) {
+              console.log('TradeDiaryPage: Loaded CSV trades:', trades.length);
+              setCsvTrades(trades);
               return;
             }
           } catch (err) {
@@ -386,73 +380,107 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     }
   }, [dataset, useDatabase]);
 
-  // データ読み込み完了後、loadingをfalseに設定
   useEffect(() => {
-    if (useDatabase && dbTrades.length > 0) {
-      setLoading(false);
-    } else if (!useDatabase && csvTrades.length > 0) {
-      setLoading(false);
-    }
-  }, [useDatabase, dbTrades, csvTrades]);
+    const loadTrade = async () => {
+      if (!entryId) {
+        console.log('TradeDiaryPage: No entryId provided');
+        setLoading(false);
+        return;
+      }
+      console.log('TradeDiaryPage: Loading trade for entryId:', entryId);
 
+      if (useDatabase) {
+        try {
+          const trade = await getTradeByTicket(entryId);
+          console.log('TradeDiaryPage: Loaded trade from DB:', trade);
+          setDbTrade(trade);
+        } catch (error) {
+          console.error('TradeDiaryPage: Error loading trade:', error);
+        }
+      }
+      setLoading(false);
+    };
+    loadTrade();
+  }, [entryId, useDatabase]);
+
+  const trades = useMemo(() => makeDummyTrades(), []);
   const allTrades = useMemo(() => {
-    return useDatabase ? dbTrades : csvTrades;
-  }, [useDatabase, dbTrades, csvTrades]);
+    return useDatabase ? trades : csvTrades;
+  }, [useDatabase, trades, csvTrades]);
 
   const row = useMemo(() => {
-    // entryIdが指定されている場合、allTradesから検索（優先）
+    if (dbTrade) {
+      return {
+        ticket: dbTrade.ticket,
+        item: dbTrade.item,
+        side: dbTrade.side as "BUY" | "SELL",
+        size: dbTrade.size,
+        openTime: new Date(dbTrade.open_time),
+        openPrice: dbTrade.open_price,
+        closeTime: new Date(dbTrade.close_time),
+        closePrice: dbTrade.close_price,
+        commission: dbTrade.commission,
+        swap: dbTrade.swap,
+        profit: dbTrade.profit,
+        sl: dbTrade.sl,
+        tp: dbTrade.tp,
+        pips: dbTrade.pips,
+      };
+    }
+
+    // CSVデータから検索
     if (entryId && allTrades.length > 0) {
-      console.log('TradeDiaryPage: Searching for entryId:', entryId, 'type:', typeof entryId);
-      console.log('TradeDiaryPage: allTrades.length:', allTrades.length);
-      console.log('TradeDiaryPage: All tickets:', allTrades.map(t => t.ticket));
-      console.log('TradeDiaryPage: First 3 trades:', allTrades.slice(0, 3));
-      const found = allTrades.find(t => String(t.ticket) === String(entryId));
-      console.log('TradeDiaryPage: Found:', found ? `Yes (${found.ticket})` : 'No');
+      const found = allTrades.find(t => t.ticket === entryId || t.id === entryId);
+      console.log('TradeDiaryPage: Searching for', entryId, 'in', allTrades.length, 'trades. Found:', found);
       if (found) {
-        console.log('TradeDiaryPage: Found trade:', found);
         return {
-          ticket: found.ticket,
-          item: found.item,
-          side: found.side as "BUY" | "SELL",
-          size: found.size,
-          openTime: found.openTime,
-          openPrice: found.openPrice,
-          closeTime: found.closeTime,
-          closePrice: found.closePrice,
+          ticket: found.ticket || found.id,
+          item: found.pair || found.symbol || 'UNKNOWN',
+          side: (found.side === 'LONG' ? 'BUY' : 'SELL') as "BUY" | "SELL",
+          size: found.volume,
+          openTime: new Date(found.openTime || found.datetime),
+          openPrice: found.openPrice || 0,
+          closeTime: new Date(found.datetime),
+          closePrice: found.closePrice || 0,
           commission: found.commission || 0,
           swap: found.swap || 0,
-          profit: found.profit,
-          sl: found.sl || null,
-          tp: found.tp || null,
+          profit: found.profitYen || found.profit || 0,
+          sl: found.stopPrice || null,
+          tp: found.targetPrice || null,
           pips: found.pips,
         };
       }
     }
 
-    // entryIdが指定されているのに見つからない場合はnullを返す
-    if (entryId) {
-      console.warn('TradeDiaryPage: Trade not found for entryId:', entryId);
-      return null;
-    }
+    return allTrades.length > 0 ? {
+      ticket: allTrades[0].ticket || allTrades[0].id,
+      item: allTrades[0].pair || allTrades[0].symbol || 'UNKNOWN',
+      side: (allTrades[0].side === 'LONG' ? 'BUY' : 'SELL') as "BUY" | "SELL",
+      size: allTrades[0].volume,
+      openTime: new Date(allTrades[0].openTime || allTrades[0].datetime),
+      openPrice: allTrades[0].openPrice || 0,
+      closeTime: new Date(allTrades[0].datetime),
+      closePrice: allTrades[0].closePrice || 0,
+      commission: allTrades[0].commission || 0,
+      swap: allTrades[0].swap || 0,
+      profit: allTrades[0].profitYen || allTrades[0].profit || 0,
+      sl: allTrades[0].stopPrice || null,
+      tp: allTrades[0].targetPrice || null,
+      pips: allTrades[0].pips,
+    } : trades[trades.length - 1];
+  }, [dbTrade, allTrades, trades, entryId]);
 
-    // entryIdがない場合もnullを返す（トレード一覧から選択してもらう）
-    return null;
-  }, [allTrades, entryId]);
-
-  const kpi = useMemo(() => {
-    if (!row) return null;
-    return {
-      net: row.profit,
-      pips: row.pips,
-      hold: holdMs(row.openTime, row.closeTime),
-      gross: row.profit + row.commission,
-      cost: -row.commission,
-      rrr: row.sl
-        ? Math.abs(row.pips) /
-          Math.abs((row.openPrice - row.sl) * pipFactor(row.item))
-        : null,
-    };
-  }, [row]);
+  const kpi = useMemo(() => ({
+    net: row.profit,
+    pips: row.pips,
+    hold: holdMs(row.openTime, row.closeTime),
+    gross: row.profit + row.commission,
+    cost: -row.commission,
+    rrr: row.sl
+      ? Math.abs(row.pips) /
+        Math.abs((row.openPrice - row.sl) * pipFactor(row.item))
+      : null,
+  }), [row]);
   const [last10, setLast10] = useState<Trade[]>([]);
 
   /* ===== タグ ===== */
@@ -465,8 +493,8 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   /* ===== 画像 ===== */
   type Img = { id: string; url: string };
   const IMG_KEY = useMemo(
-    () => row ? `trade_detail_images_${row.ticket}` : 'no_trade',
-    [row]
+    () => `trade_detail_images_${row.ticket}`,
+    [row.ticket]
   );
   const [images, setImages] = useState<Img[]>([]);
   const [imgPreview, setImgPreview] = useState<string | null>(null);
@@ -542,9 +570,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
       }));
       setLast10(converted.slice(-10).reverse());
     } else {
-      setLast10([]);
+      setLast10(trades.slice(-10).reverse());
     }
-  }, [allTrades]);
+  }, [allTrades, trades]);
 
   /* ===== グラフ ===== */
   const equityRef = useRef<HTMLCanvasElement | null>(null);
@@ -572,8 +600,8 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
         pips: t.pips,
       }));
     }
-    return [];
-  }, [allTrades]);
+    return trades;
+  }, [allTrades, trades]);
 
   useEffect(() => {
     let destroyed = false;
@@ -914,8 +942,6 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const [holdNote, setHoldNote] = useState("");
 
   useEffect(() => {
-    if (!row) return;
-
     const loadTradeNote = async () => {
       try {
         const { data, error } = await supabase
@@ -951,7 +977,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     };
 
     loadTradeNote();
-  }, [row]);
+  }, [row.ticket]);
 
   const [aiSide, setAiSide] = useState("");
   const [aiFollow, setAiFollow] = useState("選択しない");
@@ -984,8 +1010,6 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
   /* ===== 保存 ===== */
   const savePayload = async () => {
-    if (!row) return;
-
     try {
       const { data: existing } = await supabase
         .from('trade_notes')
@@ -1046,32 +1070,10 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     );
   }
 
-  if (!row || !kpi) {
+  if (entryId && !dbTrade && allTrades.length === 0) {
     return (
       <section className="td-root">
-        <div style={{ padding: 40, textAlign: 'center' }}>
-          <h2>トレードが見つかりません</h2>
-          <p>指定されたトレード（ID: {entryId}）が見つかりませんでした。</p>
-          <p style={{ fontSize: 14, color: '#666', marginTop: 10 }}>
-            読み込まれたトレード数: {allTrades.length}件
-          </p>
-          <button
-            onClick={() => location.hash = '/trades'}
-            style={{
-              padding: '10px 20px',
-              background: 'var(--accent)',
-              color: 'white',
-              border: 'none',
-              borderRadius: 8,
-              cursor: 'pointer',
-              fontSize: 14,
-              fontWeight: 600,
-              marginTop: 20,
-            }}
-          >
-            取引一覧に戻る
-          </button>
-        </div>
+        <div style={{ padding: 40, textAlign: 'center' }}>取引データが見つかりません</div>
       </section>
     );
   }
@@ -1098,9 +1100,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
               </div>
             </div>
             <button
-              className="btn-secondary"
+              className="nav-btn"
               onClick={() => window.location.hash = '/notebook'}
-              style={{ fontSize: 14, padding: "8px 12px" }}
+              style={{ fontSize: 14 }}
             >
               ノート一覧
             </button>

@@ -52,28 +52,16 @@
 
 .nav-btn {
   padding: 8px 12px;
-  border: 1.5px solid var(--btn-secondary-border);
+  border: 1px solid var(--line, #e5e7eb);
   border-radius: 8px;
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-text);
+  background: var(--surface, #ffffff);
   cursor: pointer;
   font-size: 18px;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s;
 }
 
 .nav-btn:hover {
-  background: var(--btn-secondary-hover);
-  border-color: var(--accent);
-}
-
-.daily-nav-btn {
-  padding: 8px 12px;
-  font-size: 18px;
-}
-
-.daily-today-btn {
-  padding: 8px 12px;
-  font-size: 14px;
+  background: var(--chip, #f3f4f6);
 }
 
 .kpi-grid-daily {
@@ -241,32 +229,17 @@
 .link-btn,
 .action-btn {
   padding: 6px 12px;
-  border: 1.5px solid var(--btn-secondary-border);
+  border: 1px solid var(--line, #e5e7eb);
   border-radius: 6px;
-  background: var(--btn-secondary-bg);
-  color: var(--btn-secondary-text);
+  background: var(--surface, #ffffff);
   cursor: pointer;
   font-size: 13px;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s;
 }
 
 .link-btn:hover,
 .action-btn:hover {
-  background: var(--btn-secondary-hover);
-  border-color: var(--accent);
-}
-
-/* ダークモードで確実にボタンが見えるように */
-:root[data-theme="dark"] .link-btn,
-:root[data-theme="dark"] .action-btn {
-  border-color: #718096;
-  background: transparent;
-  color: #ffffff;
-}
-:root[data-theme="dark"] .link-btn:hover,
-:root[data-theme="dark"] .action-btn:hover {
-  background: #1f2937;
-  border-color: #01a1ff;
+  background: var(--chip, #f3f4f6);
 }
 
 .data-table {

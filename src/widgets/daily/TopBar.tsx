@@ -17,7 +17,7 @@ export function TopBar({ kpi, onPrevDay, onNextDay, onToday }: TopBarProps) {
     <div className="topbar">
       <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
         <button
-          className="btn-secondary daily-nav-btn"
+          className="nav-btn"
           onClick={onPrevDay}
           aria-label="前日"
         >
@@ -25,7 +25,7 @@ export function TopBar({ kpi, onPrevDay, onNextDay, onToday }: TopBarProps) {
         </button>
         <div className="topbar-date">{dateLabel}</div>
         <button
-          className="btn-secondary daily-nav-btn"
+          className="nav-btn"
           onClick={onNextDay}
           aria-label="翌日"
         >
@@ -44,9 +44,10 @@ export function TopBar({ kpi, onPrevDay, onNextDay, onToday }: TopBarProps) {
           </div>
         </div>
         <button
-          className="btn-secondary daily-today-btn"
+          className="nav-btn"
           onClick={onToday}
           aria-label="今日"
+          style={{ fontSize: 14 }}
         >
           今日
         </button>

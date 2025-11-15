@@ -2,8 +2,7 @@ import React from "react";
 import { debounce } from './debounce';
 import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './urlSync';
 import { showToast } from './toast';
-import { getTradesCount, getUserTradesCount } from './db.service';
-import { supabase } from './supabase';
+import { getTradesCount } from './db.service';
 
 type DS = "A"|"B"|"C";
 export type Filters = {
@@ -19,7 +18,6 @@ type Ctx = {
   loading: boolean;
   isInitialized: boolean;
   dataCount: number;
-  userDataCount: number;
   setDataset: (d:DS)=>void;
   setUiFilters: (p:Partial<Filters>)=>void;
   resetFilters: ()=>void;
@@ -41,7 +39,6 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [isInitialized, setIsInitialized] = React.useState<boolean>(false);
   const [dataCount, setDataCount] = React.useState<number>(0);
-  const [userDataCount, setUserDataCount] = React.useState<number>(0);
   const previousFiltersRef = React.useRef<Filters>({});
 
   const setUseDatabase = React.useCallback((value: boolean) => {
@@ -51,16 +48,9 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
 
   React.useEffect(() => {
     const checkDatabase = async () => {
-      console.log('🔍 Checking database for trades...');
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log('  → Current user:', user?.email, user?.id);
-
         const count = await getTradesCount();
-        const userCount = await getUserTradesCount();
-        console.log(`  → Query result: ${count} total trades, ${userCount} user trades`);
         setDataCount(count);
-        setUserDataCount(userCount);
 
         if (count > 0) {
           console.log(`📊 Database has ${count} trades, switching to database mode`);
@@ -72,14 +62,11 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
           localStorage.setItem('useDatabase', 'false');
         }
       } catch (error) {
-        console.error('❌ Error checking database:', error);
+        console.error('Error checking database:', error);
         const stored = localStorage.getItem('useDatabase');
-        const usedStored = stored === 'true';
-        console.log(`  → Using stored preference: useDatabase=${usedStored}`);
-        setUseDatabaseState(usedStored);
+        setUseDatabaseState(stored === 'true');
       } finally {
         setIsInitialized(true);
-        console.log('✅ Database check complete');
       }
     };
 
@@ -162,7 +149,6 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
     loading,
     isInitialized,
     dataCount,
-    userDataCount,
     setDataset,
     setUiFilters,
     resetFilters,

@@ -120,16 +120,6 @@ export async function getTradesCount(): Promise<number> {
   return count || 0;
 }
 
-export async function getUserTradesCount(): Promise<number> {
-  const { count, error } = await supabase
-    .from('trades')
-    .select('*', { count: 'exact', head: true })
-    .is('dataset', null);
-
-  if (error) throw error;
-  return count || 0;
-}
-
 export async function deleteAllTrades(): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -430,7 +420,6 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
 export function dbToTrade(dbTrade: DbTrade): Trade {
   return {
     id: dbTrade.ticket,
-    ticket: dbTrade.ticket,
     datetime: dbTrade.close_time,
     pair: dbTrade.item,
     side: dbTrade.side as Side,
@@ -445,7 +434,6 @@ export function dbToTrade(dbTrade: DbTrade): Trade {
     commission: dbTrade.commission,
     swap: dbTrade.swap,
     symbol: dbTrade.item,
-    item: dbTrade.item,
     action: dbTrade.side as Side,
     profit: dbTrade.profit,
   };

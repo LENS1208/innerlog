@@ -25,7 +25,6 @@ type NewRoute = "/dashboard" | "/calendar" | `/calendar/day/${string}` | "/trade
 
 function parseHashToNewRoute(): NewRoute {
   const h = location.hash.replace(/^#/, "");
-  console.log('parseHashToNewRoute: hash=', location.hash, 'h=', h);
 
   // 旧→新の読み替え（互換） 
   if (h.startsWith("/kpi")) return "/dashboard";
@@ -95,7 +94,6 @@ export default function App() {
   else if (route === "/calendar") Page = <MonthlyCalendar />;
   else if (route.startsWith("/calendar/day/")) {
     const dateKey = route.split("/")[3] ?? "";
-    console.log('App: route=', route, 'dateKey=', dateKey, 'split result=', route.split("/"));
     Page = <DailyNotePage kpi={{ dateJst: dateKey } as any} />;
   }
   else if (route === "/trades") Page = <TradeListPage />;
