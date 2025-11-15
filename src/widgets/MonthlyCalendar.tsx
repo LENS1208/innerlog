@@ -47,12 +47,16 @@ function normalizeDate(dateStr: string): string {
 }
 
 function formatDateLocal(year: number, month: number, day: number): string {
-  // month is 0-based (0=January, 8=September)
-  // Convert to 1-based for display: month=8 => "09"
+  // month is 0-based (0=January, 8=September, 9=October)
+  // Convert to 1-based for display: month=9 => "10"
   const y = String(year);
   const m = String(month + 1).padStart(2, "0");
   const d = String(day).padStart(2, "0");
-  return `${y}-${m}-${d}`;
+  const result = `${y}-${m}-${d}`;
+  if (day <= 5) {
+    console.log(`formatDateLocal(${year}, ${month}, ${day}) => ${result}`);
+  }
+  return result;
 }
 
 function parseDateSafe(dateStr: string): Date {
@@ -146,6 +150,8 @@ export default function MonthlyCalendar() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
+  console.log('MonthlyCalendar: year=', year, 'month=', month, '(0-based, so 9 means October)');
+
   const filteredTrades = useMemo(() => {
     return filterTrades(trades, uiFilters);
   }, [trades, uiFilters]);
@@ -231,7 +237,7 @@ export default function MonthlyCalendar() {
       });
     }
 
-    console.log('MonthlyCalendar: Generated calendarDays:', days.filter(d => d.isCurrentMonth && d.tradeCount > 0).map(d => ({ date: d.date, dayOfMonth: d.dayOfMonth })));
+    console.log('MonthlyCalendar: ALL calendarDays:', days.map((d, i) => ({ index: i, date: d.date, dayOfMonth: d.dayOfMonth, isCurrentMonth: d.isCurrentMonth, tradeCount: d.tradeCount })));
     return { calendarDays: days, weekSummaries, monthTotal };
   }, [filteredTrades, year, month]);
 
