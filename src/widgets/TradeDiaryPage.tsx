@@ -437,55 +437,20 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     return null;
   }, [allTrades, entryId]);
 
-  // データ読み込み中の表示
-  if (loading) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center' }}>
-        <h2>読み込み中...</h2>
-      </div>
-    );
-  }
-
-  // rowがnullの場合の処理
-  if (!row) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center' }}>
-        <h2>トレードが見つかりません</h2>
-        <p>指定されたトレード（ID: {entryId}）が見つかりませんでした。</p>
-        <p style={{ fontSize: 14, color: '#666', marginTop: 10 }}>
-          読み込まれたトレード数: {allTrades.length}件
-        </p>
-        <button
-          onClick={() => location.hash = '/trades'}
-          style={{
-            padding: '10px 20px',
-            background: 'var(--accent)',
-            color: 'white',
-            border: 'none',
-            borderRadius: 8,
-            cursor: 'pointer',
-            fontSize: 14,
-            fontWeight: 600,
-            marginTop: 20,
-          }}
-        >
-          取引一覧に戻る
-        </button>
-      </div>
-    );
-  }
-
-  const kpi = useMemo(() => ({
-    net: row.profit,
-    pips: row.pips,
-    hold: holdMs(row.openTime, row.closeTime),
-    gross: row.profit + row.commission,
-    cost: -row.commission,
-    rrr: row.sl
-      ? Math.abs(row.pips) /
-        Math.abs((row.openPrice - row.sl) * pipFactor(row.item))
-      : null,
-  }), [row]);
+  const kpi = useMemo(() => {
+    if (!row) return null;
+    return {
+      net: row.profit,
+      pips: row.pips,
+      hold: holdMs(row.openTime, row.closeTime),
+      gross: row.profit + row.commission,
+      cost: -row.commission,
+      rrr: row.sl
+        ? Math.abs(row.pips) /
+          Math.abs((row.openPrice - row.sl) * pipFactor(row.item))
+        : null,
+    };
+  }, [row]);
   const [last10, setLast10] = useState<Trade[]>([]);
 
   /* ===== タグ ===== */
@@ -498,8 +463,8 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   /* ===== 画像 ===== */
   type Img = { id: string; url: string };
   const IMG_KEY = useMemo(
-    () => `trade_detail_images_${row.ticket}`,
-    [row.ticket]
+    () => row ? `trade_detail_images_${row.ticket}` : 'no_trade',
+    [row]
   );
   const [images, setImages] = useState<Img[]>([]);
   const [imgPreview, setImgPreview] = useState<string | null>(null);
@@ -947,6 +912,8 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const [holdNote, setHoldNote] = useState("");
 
   useEffect(() => {
+    if (!row) return;
+
     const loadTradeNote = async () => {
       try {
         const { data, error } = await supabase
@@ -982,7 +949,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     };
 
     loadTradeNote();
-  }, [row.ticket]);
+  }, [row]);
 
   const [aiSide, setAiSide] = useState("");
   const [aiFollow, setAiFollow] = useState("選択しない");
@@ -1015,6 +982,8 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
   /* ===== 保存 ===== */
   const savePayload = async () => {
+    if (!row) return;
+
     try {
       const { data: existing } = await supabase
         .from('trade_notes')
@@ -1075,10 +1044,32 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     );
   }
 
-  if (entryId && !dbTrade && allTrades.length === 0) {
+  if (!row || !kpi) {
     return (
       <section className="td-root">
-        <div style={{ padding: 40, textAlign: 'center' }}>取引データが見つかりません</div>
+        <div style={{ padding: 40, textAlign: 'center' }}>
+          <h2>トレードが見つかりません</h2>
+          <p>指定されたトレード（ID: {entryId}）が見つかりませんでした。</p>
+          <p style={{ fontSize: 14, color: '#666', marginTop: 10 }}>
+            読み込まれたトレード数: {allTrades.length}件
+          </p>
+          <button
+            onClick={() => location.hash = '/trades'}
+            style={{
+              padding: '10px 20px',
+              background: 'var(--accent)',
+              color: 'white',
+              border: 'none',
+              borderRadius: 8,
+              cursor: 'pointer',
+              fontSize: 14,
+              fontWeight: 600,
+              marginTop: 20,
+            }}
+          >
+            取引一覧に戻る
+          </button>
+        </div>
       </section>
     );
   }
