@@ -540,9 +540,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
       }));
       setLast10(converted.slice(-10).reverse());
     } else {
-      setLast10(trades.slice(-10).reverse());
+      setLast10([]);
     }
-  }, [allTrades, trades]);
+  }, [allTrades]);
 
   /* ===== グラフ ===== */
   const equityRef = useRef<HTMLCanvasElement | null>(null);
@@ -570,8 +570,8 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
         pips: t.pips,
       }));
     }
-    return trades;
-  }, [allTrades, trades]);
+    return [];
+  }, [allTrades]);
 
   useEffect(() => {
     let destroyed = false;
