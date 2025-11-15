@@ -258,6 +258,18 @@ button:focus-visible {
   border-color: var(--accent);
 }
 
+/* ダークモードで確実にボタンが見えるように */
+:root[data-theme="dark"] .btn-secondary {
+  border-color: #4a5568;
+  background: transparent;
+  color: #e4e8f0;
+}
+
+:root[data-theme="dark"] .btn-secondary:hover:not(:disabled) {
+  background: #1f2937;
+  border-color: #01a1ff;
+}
+
 .btn-ghost {
   background: transparent;
   color: var(--btn-ghost-text);

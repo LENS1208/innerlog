@@ -256,6 +256,19 @@
   border-color: var(--accent);
 }
 
+/* ダークモードで確実にボタンが見えるように */
+:root[data-theme="dark"] .link-btn,
+:root[data-theme="dark"] .action-btn {
+  border-color: #4a5568;
+  background: transparent;
+  color: #e4e8f0;
+}
+:root[data-theme="dark"] .link-btn:hover,
+:root[data-theme="dark"] .action-btn:hover {
+  background: #1f2937;
+  border-color: #01a1ff;
+}
+
 .data-table {
   width: 100%;
   border-collapse: collapse;
