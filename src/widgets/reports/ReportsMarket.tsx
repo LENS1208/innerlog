@@ -531,15 +531,6 @@ export default function ReportsMarket() {
             </tbody>
           </table>
         </div>
-        <div style={{ marginTop: 16, padding: 12, background: "var(--chip)", borderRadius: 8, fontSize: 12, color: "var(--muted)" }}>
-          <div style={{ marginBottom: 4, fontWeight: 600 }}>📊 統計項目の説明</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 8 }}>
-            <div><strong>平均pips幅:</strong> 各取引の値動き平均</div>
-            <div><strong>平均保有時間:</strong> エントリーから決済までの平均時間</div>
-            <div><strong>平均ロット:</strong> ポジションサイズの平均</div>
-          </div>
-          <div style={{ marginTop: 8, fontSize: 11 }}>💡 ヒント: 行にカーソルを合わせると、勝ち/負け別のpips平均、ボラティリティ、PFなどの詳細が表示されます。</div>
-        </div>
       </div>
 
       <div
