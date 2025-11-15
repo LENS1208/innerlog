@@ -8,13 +8,13 @@ type DayTradesTableProps = {
 export default function DayTradesTable({ trades }: DayTradesTableProps) {
   return (
     <div style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+      <table className="trades-table" style={{ width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
         <thead>
           <tr style={{ borderBottom: '1px solid var(--line)' }}>
-            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>決済時間</th>
-            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>銘柄</th>
-            <th style={{ textAlign: 'left', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>方向</th>
-            <th style={{ textAlign: 'right', padding: '12px 8px', fontSize: 13, color: 'var(--muted)', fontWeight: 'bold' }}>損益</th>
+            <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>決済時間</th>
+            <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>銘柄</th>
+            <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>方向</th>
+            <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>損益</th>
           </tr>
         </thead>
         <tbody>
@@ -22,21 +22,19 @@ export default function DayTradesTable({ trades }: DayTradesTableProps) {
             <tr
               key={idx}
               className="trade-row"
-              style={{ borderBottom: '1px solid #f3f4f6', cursor: 'pointer' }}
+              style={{ borderBottom: '1px solid var(--line)', cursor: 'pointer' }}
             >
-              <td style={{ padding: '12px 8px', fontSize: 13 }}>{trade.time}</td>
-              <td style={{ padding: '12px 8px', fontSize: 13 }}>{trade.symbol}</td>
-              <td style={{ padding: '12px 8px', fontSize: 13 }}>{trade.sideJp}</td>
+              <td style={{ padding: '14px 16px', fontSize: 13 }}>{trade.time}</td>
+              <td style={{ padding: '14px 16px', fontSize: 13 }}>{trade.symbol}</td>
+              <td style={{ padding: '14px 16px', fontSize: 13 }}>{trade.sideJp}</td>
               <td
+                className={trade.pnlYen >= 0 ? 'pnl-pos' : 'pnl-neg'}
                 style={{
-                  padding: '12px 8px',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  textAlign: 'right',
-                  color: trade.pnlYen >= 0 ? 'var(--gain)' : 'var(--loss)'
+                  padding: '14px 16px',
+                  textAlign: 'right'
                 }}
               >
-                {trade.pnlYen >= 0 ? '+' : ''}¥{Math.abs(trade.pnlYen).toLocaleString('ja-JP')}円
+                {trade.pnlYen >= 0 ? '+' : ''}{Math.abs(trade.pnlYen).toLocaleString('ja-JP')}円
               </td>
             </tr>
           ))}

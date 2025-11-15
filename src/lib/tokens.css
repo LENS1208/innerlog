@@ -20,6 +20,7 @@
   --chart-text: #64748b;
   --accent-bg: rgba(0, 132, 199, 0.12);
   --accent-border: rgba(0, 132, 199, 0.35);
+  --subtle-bg: #f8fafb;
 
   --radius: 14px;
   --header-h: 56px;
@@ -60,6 +61,7 @@
   --chart-text: #b0bac9;
   --accent-bg: rgba(1, 161, 255, 0.12);
   --accent-border: rgba(1, 161, 255, 0.35);
+  --subtle-bg: #1a1f2e;
 
   --radius: 14px;
   --header-h: 56px;
@@ -102,11 +104,21 @@ body {
 .pnl-pos {
   color: var(--gain);
   font-weight: 700;
+  font-size: 15px;
 }
 
 .pnl-neg {
   color: var(--loss);
   font-weight: 700;
+  font-size: 15px;
+}
+
+.trades-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.trades-table tbody tr:hover {
+  background-color: var(--subtle-bg);
 }
 
 @media (min-width: 768px) {

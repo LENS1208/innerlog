@@ -21,7 +21,7 @@ export default function TradesTable({ rows, sortConfig, onSort }: TradesTablePro
       background:"var(--surface)",
       overflow:"auto"
     }}>
-      <table style={{width:"100%",borderCollapse:"separate",borderSpacing:0}}>
+      <table className="trades-table" style={{width:"100%",borderCollapse:"separate",borderSpacing:0}}>
         <thead>
           <tr>
             {cfg.columns.map(c=>{
@@ -34,13 +34,13 @@ export default function TradesTable({ rows, sortConfig, onSort }: TradesTablePro
                   style={{
                     position:"sticky",
                     top:0,
-                    background:"var(--surface)",
+                    background:"var(--subtle-bg)",
                     borderBottom:"1px solid var(--line)",
                     textAlign:"left",
-                    padding:8,
+                    padding:"12px 16px",
                     fontSize:13,
-                    fontWeight:"bold",
-                    color: isActive ? "var(--ink)" : "var(--muted)",
+                    fontWeight:600,
+                    color:"var(--muted)",
                     cursor: isSortable ? "pointer" : "default",
                     userSelect: "none"
                   }}
@@ -75,7 +75,7 @@ export default function TradesTable({ rows, sortConfig, onSort }: TradesTablePro
                 const out = (fmt as any)[c.format]?.(val) ?? val;
                 const text = out?.text ?? out;
                 const cls  = out?.cls ?? "";
-                return <td key={c.id} className={cls} style={{padding:10,height:"var(--row-h)",background:"var(--surface)",borderBottom:"1px solid var(--line)"}}>{text}</td>;
+                return <td key={c.id} className={cls} style={{padding:"14px 16px",background:"var(--surface)",borderBottom:"1px solid var(--line)"}}>{text}</td>;
               })}
             </tr>
           ))}

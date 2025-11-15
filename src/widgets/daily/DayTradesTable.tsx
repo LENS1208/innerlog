@@ -22,16 +22,16 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
         <table className="data-table">
           <thead>
             <tr>
-              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>決済時間</th>
-              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>銘柄</th>
-              <th style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>方向</th>
-              <th className="text-right" style={{ fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>損益</th>
+              <th style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>決済時間</th>
+              <th style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>銘柄</th>
+              <th style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>方向</th>
+              <th className="text-right" style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>損益</th>
             </tr>
           </thead>
           <tbody>
             {trades.map((trade, idx) => {
               const pnlClass = trade.pnlYen >= 0 ? "good" : "bad";
-              const pnlLabel = trade.pnlYen >= 0 ? "+" : "";
+              const pnlSign = trade.pnlYen >= 0 ? "+" : "";
               return (
                 <tr
                   key={idx}
@@ -47,7 +47,7 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
                   <td>{trade.symbol}</td>
                   <td>{trade.sideJp}</td>
                   <td className={`text-right ${pnlClass}`}>
-                    {pnlLabel}{Math.round(trade.pnlYen).toLocaleString("ja-JP")}円
+                    {pnlSign}{Math.abs(Math.round(trade.pnlYen)).toLocaleString("ja-JP")}円
                   </td>
                 </tr>
               );

@@ -21,7 +21,7 @@ export const fmt = {
     if (n == null) return { text: "—", cls: "" };
     const sign = n >= 0 ? "+" : "−";
     const cls  = n >= 0 ? "pnl-pos" : "pnl-neg";
-    return { text: `${sign}¥${Math.abs(n).toLocaleString("ja-JP")}`, cls };
+    return { text: `${sign}${Math.abs(n).toLocaleString("ja-JP")}円`, cls };
   },
   pips_signed_colored: (n?: number) => {
     if (n == null) return { text: "—", cls: "" };

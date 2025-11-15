@@ -244,13 +244,14 @@
 
 .data-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .data-table th,
 .data-table td {
   text-align: left;
-  padding: 10px 12px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--line, #e5e7eb);
   font-size: 13px;
 }
@@ -258,7 +259,7 @@
 .data-table th {
   font-weight: 600;
   color: var(--muted, #6b7280);
-  background: var(--chip, #f3f4f6);
+  background: var(--subtle-bg, #f8fafb);
 }
 
 .data-table tbody tr {
@@ -266,17 +267,19 @@
 }
 
 .data-table tbody tr.clickable:hover {
-  background: var(--chip, #f3f4f6);
+  background: var(--subtle-bg, #f8fafb);
 }
 
 .data-table td.good {
-  color: var(--pos, #059669);
-  font-weight: 600;
+  color: var(--gain, #0084c7);
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .data-table td.bad {
-  color: var(--neg, #dc2626);
-  font-weight: 600;
+  color: var(--loss, #ef4444);
+  font-weight: 700;
+  font-size: 15px;
 }
 
 .text-right {
