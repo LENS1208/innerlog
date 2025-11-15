@@ -447,6 +447,101 @@ export default function ReportsMarket() {
   return (
     <div style={{ width: "100%" }}>
 
+      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+          通貨ペア別の統計
+          <HelpIcon text="各通貨ペアの特性を詳細に分析します。平均pips幅、保有時間、ボラティリティなど銘柄ごとの傾向を把握できます。" />
+        </h3>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid var(--line)" }}>
+                <th style={{ padding: 10, textAlign: "left", fontWeight: "bold", color: "var(--muted)", minWidth: 80 }}>通貨ペア</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 70 }}>取引回数</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 80 }}>勝率</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均損益(EV)</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>平均保有時間</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均pips幅</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均ロット</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>合計損益</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pairStatsData.map((item, index) => {
+                const hours = Math.floor(item.avgHoldTime / 60);
+                const minutes = Math.round(item.avgHoldTime % 60);
+                const holdTimeStr = hours > 0 ? `${hours}時間${minutes}分` : `${minutes}分`;
+
+                let styleLabel = '';
+                if (item.avgHoldTime < 30) styleLabel = 'スキャルピング(0〜30分)';
+                else if (item.avgHoldTime < 480) styleLabel = 'デイトレード(30分〜8時間)';
+                else if (item.avgHoldTime < 10080) styleLabel = 'スイング(8時間〜7日)';
+                else styleLabel = '長期投資(7日以上)';
+
+                return (
+                  <tr
+                    key={index}
+                    style={{
+                      borderBottom: "1px solid var(--line)",
+                      height: 44,
+                      cursor: "pointer",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                    title={`${item.symbol}\n取引スタイル: ${styleLabel}\n勝ち平均: ${item.avgWinPips.toFixed(1)}pips / 負け平均: ${item.avgLossPips.toFixed(1)}pips\nボラティリティ: ${Math.round(item.volatility).toLocaleString()}円\nPF: ${item.pf.toFixed(2)}`}
+                  >
+                    <td style={{ padding: 10, fontWeight: 600 }}>{item.symbol}</td>
+                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>{item.count}回</td>
+                    <td style={{ padding: 10, textAlign: "right", color: item.winRate >= 50 ? "var(--gain)" : "var(--muted)" }}>
+                      {item.winRate.toFixed(1)}%
+                    </td>
+                    <td
+                      style={{
+                        padding: 10,
+                        textAlign: "right",
+                        fontWeight: 600,
+                        color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)",
+                      }}
+                    >
+                      {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")}円
+                    </td>
+                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>
+                      {holdTimeStr}
+                    </td>
+                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>
+                      {item.avgPips.toFixed(1)}pips
+                    </td>
+                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>
+                      {item.avgVolume.toFixed(2)}
+                    </td>
+                    <td
+                      style={{
+                        padding: 10,
+                        textAlign: "right",
+                        fontSize: 15,
+                        fontWeight: 700,
+                        color: item.avgProfit * item.count >= 0 ? "var(--gain)" : "var(--loss)",
+                      }}
+                    >
+                      {item.avgProfit * item.count >= 0 ? '+' : ''}{Math.round(item.avgProfit * item.count).toLocaleString("ja-JP")}円
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div style={{ marginTop: 16, padding: 12, background: "var(--chip)", borderRadius: 8, fontSize: 12, color: "var(--muted)" }}>
+          <div style={{ marginBottom: 4, fontWeight: 600 }}>📊 統計項目の説明</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 8 }}>
+            <div><strong>平均pips幅:</strong> 各取引の値動き平均</div>
+            <div><strong>平均保有時間:</strong> エントリーから決済までの平均時間</div>
+            <div><strong>平均ロット:</strong> ポジションサイズの平均</div>
+          </div>
+          <div style={{ marginTop: 8, fontSize: 11 }}>💡 ヒント: 行にカーソルを合わせると、勝ち/負け別のpips平均、ボラティリティ、PFなどの詳細が表示されます。</div>
+        </div>
+      </div>
+
       <div
         style={{
           display: "grid",
@@ -823,101 +918,6 @@ export default function ReportsMarket() {
               }}
             />
           </div>
-        </div>
-      </div>
-
-      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-          通貨ペア別の統計
-          <HelpIcon text="各通貨ペアの特性を詳細に分析します。平均pips幅、保有時間、ボラティリティなど銘柄ごとの傾向を把握できます。" />
-        </h3>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontWeight: "bold", color: "var(--muted)", minWidth: 80 }}>通貨ペア</th>
-                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 70 }}>取引回数</th>
-                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 80 }}>勝率</th>
-                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均損益(EV)</th>
-                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>平均保有時間</th>
-                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均pips幅</th>
-                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均ロット</th>
-                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>合計損益</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pairStatsData.map((item, index) => {
-                const hours = Math.floor(item.avgHoldTime / 60);
-                const minutes = Math.round(item.avgHoldTime % 60);
-                const holdTimeStr = hours > 0 ? `${hours}時間${minutes}分` : `${minutes}分`;
-
-                let styleLabel = '';
-                if (item.avgHoldTime < 30) styleLabel = 'スキャルピング(0〜30分)';
-                else if (item.avgHoldTime < 480) styleLabel = 'デイトレード(30分〜8時間)';
-                else if (item.avgHoldTime < 10080) styleLabel = 'スイング(8時間〜7日)';
-                else styleLabel = '長期投資(7日以上)';
-
-                return (
-                  <tr
-                    key={index}
-                    style={{
-                      borderBottom: "1px solid var(--line)",
-                      height: 44,
-                      cursor: "pointer",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                    title={`${item.symbol}\n取引スタイル: ${styleLabel}\n勝ち平均: ${item.avgWinPips.toFixed(1)}pips / 負け平均: ${item.avgLossPips.toFixed(1)}pips\nボラティリティ: ${Math.round(item.volatility).toLocaleString()}円\nPF: ${item.pf.toFixed(2)}`}
-                  >
-                    <td style={{ padding: 10, fontWeight: 600 }}>{item.symbol}</td>
-                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>{item.count}回</td>
-                    <td style={{ padding: 10, textAlign: "right", color: item.winRate >= 50 ? "var(--gain)" : "var(--muted)" }}>
-                      {item.winRate.toFixed(1)}%
-                    </td>
-                    <td
-                      style={{
-                        padding: 10,
-                        textAlign: "right",
-                        fontWeight: 600,
-                        color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)",
-                      }}
-                    >
-                      {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")}円
-                    </td>
-                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>
-                      {holdTimeStr}
-                    </td>
-                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>
-                      {item.avgPips.toFixed(1)}pips
-                    </td>
-                    <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>
-                      {item.avgVolume.toFixed(2)}
-                    </td>
-                    <td
-                      style={{
-                        padding: 10,
-                        textAlign: "right",
-                        fontSize: 15,
-                        fontWeight: 700,
-                        color: item.avgProfit * item.count >= 0 ? "var(--gain)" : "var(--loss)",
-                      }}
-                    >
-                      {item.avgProfit * item.count >= 0 ? '+' : ''}{Math.round(item.avgProfit * item.count).toLocaleString("ja-JP")}円
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ marginTop: 16, padding: 12, background: "var(--chip)", borderRadius: 8, fontSize: 12, color: "var(--muted)" }}>
-          <div style={{ marginBottom: 4, fontWeight: 600 }}>📊 統計項目の説明</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 8 }}>
-            <div><strong>平均pips幅:</strong> 各取引の値動き平均</div>
-            <div><strong>平均保有時間:</strong> エントリーから決済までの平均時間</div>
-            <div><strong>平均ロット:</strong> ポジションサイズの平均</div>
-          </div>
-          <div style={{ marginTop: 8, fontSize: 11 }}>💡 ヒント: 行にカーソルを合わせると、勝ち/負け別のpips平均、ボラティリティ、PFなどの詳細が表示されます。</div>
         </div>
       </div>
 
