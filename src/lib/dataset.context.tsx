@@ -2,7 +2,7 @@ import React from "react";
 import { debounce } from './debounce';
 import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './urlSync';
 import { showToast } from './toast';
-import { getTradesCount } from './db.service';
+import { getTradesCount, getUserTradesCount } from './db.service';
 import { supabase } from './supabase';
 
 type DS = "A"|"B"|"C";
@@ -19,6 +19,7 @@ type Ctx = {
   loading: boolean;
   isInitialized: boolean;
   dataCount: number;
+  userDataCount: number;
   setDataset: (d:DS)=>void;
   setUiFilters: (p:Partial<Filters>)=>void;
   resetFilters: ()=>void;
@@ -40,6 +41,7 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [isInitialized, setIsInitialized] = React.useState<boolean>(false);
   const [dataCount, setDataCount] = React.useState<number>(0);
+  const [userDataCount, setUserDataCount] = React.useState<number>(0);
   const previousFiltersRef = React.useRef<Filters>({});
 
   const setUseDatabase = React.useCallback((value: boolean) => {
@@ -55,8 +57,10 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
         console.log('  → Current user:', user?.email, user?.id);
 
         const count = await getTradesCount();
-        console.log(`  → Query result: ${count} trades found`);
+        const userCount = await getUserTradesCount();
+        console.log(`  → Query result: ${count} total trades, ${userCount} user trades`);
         setDataCount(count);
+        setUserDataCount(userCount);
 
         if (count > 0) {
           console.log(`📊 Database has ${count} trades, switching to database mode`);
@@ -158,6 +162,7 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
     loading,
     isInitialized,
     dataCount,
+    userDataCount,
     setDataset,
     setUiFilters,
     resetFilters,

@@ -120,6 +120,16 @@ export async function getTradesCount(): Promise<number> {
   return count || 0;
 }
 
+export async function getUserTradesCount(): Promise<number> {
+  const { count, error } = await supabase
+    .from('trades')
+    .select('*', { count: 'exact', head: true })
+    .is('dataset', null);
+
+  if (error) throw error;
+  return count || 0;
+}
+
 export async function deleteAllTrades(): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
 
