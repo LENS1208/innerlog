@@ -12,7 +12,7 @@ export default function DayTradesTable({ trades }: DayTradesTableProps) {
         <thead>
           <tr style={{ borderBottom: '1px solid var(--line)' }}>
             <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>決済時間</th>
-            <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>銘柄</th>
+            <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>通貨ペア</th>
             <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>方向</th>
             <th style={{ textAlign: 'right', padding: '12px 16px', fontSize: 13, color: 'var(--muted)', fontWeight: 600, background: 'var(--subtle-bg)' }}>損益</th>
           </tr>

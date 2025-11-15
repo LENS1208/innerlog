@@ -43,7 +43,11 @@ export const fmt = {
     if (s === "SHORT" || s === "SELL" || s === "売り") return "売り";
     return s;
   },
-  price_raw: (n?: number) => (n==null ? "—" : n.toString())
+  price_raw: (n?: number) => (n==null ? "—" : n.toString()),
+  price_with_unit: (n?: number) => {
+    if (n == null) return "—";
+    return n.toFixed(3);
+  }
 };
 
 export function formatJPY(value: number): string {

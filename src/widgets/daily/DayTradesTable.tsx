@@ -23,7 +23,7 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
           <thead>
             <tr>
               <th style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>決済時間</th>
-              <th style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>銘柄</th>
+              <th style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>通貨ペア</th>
               <th style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>方向</th>
               <th className="text-right" style={{ fontSize: 13, fontWeight: 600, color: "var(--muted)" }}>損益</th>
             </tr>
