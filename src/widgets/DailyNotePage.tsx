@@ -61,7 +61,9 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
   const [realKpi, setRealKpi] = useState(DUMMY_DATA.kpi);
   const [realTrades, setRealTrades] = useState(DUMMY_DATA.trades);
 
+  console.log('DailyNotePage: props=', props, 'props?.kpi?.dateJst=', props?.kpi?.dateJst);
   const dateJst = props?.kpi?.dateJst || DUMMY_DATA.kpi.dateJst;
+  console.log('DailyNotePage: final dateJst=', dateJst);
 
   useEffect(() => {
     if (!useDatabase) {
