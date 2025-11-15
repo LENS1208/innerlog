@@ -57,9 +57,9 @@ const DUMMY_DATA: DailyNotePageProps = {
 
 export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
   const { useDatabase } = useDataset();
-  const [loading, setLoading] = useState(false);
-  const [realKpi, setRealKpi] = useState(DUMMY_DATA.kpi);
-  const [realTrades, setRealTrades] = useState(DUMMY_DATA.trades);
+  const [loading, setLoading] = useState(true);
+  const [realKpi, setRealKpi] = useState<typeof DUMMY_DATA.kpi | null>(null);
+  const [realTrades, setRealTrades] = useState<typeof DUMMY_DATA.trades>([]);
 
   const dateJst = props?.kpi?.dateJst || DUMMY_DATA.kpi.dateJst;
 
@@ -67,11 +67,14 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     if (!useDatabase) {
       setRealKpi(DUMMY_DATA.kpi);
       setRealTrades(DUMMY_DATA.trades);
+      setLoading(false);
       return;
     }
 
     const loadDayData = async () => {
       setLoading(true);
+      setRealKpi(null);
+      setRealTrades([]);
       try {
         const { data, error } = await supabase
           .from('trades')
@@ -82,8 +85,8 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
         if (error) {
           console.error('Error loading trades:', error);
-          setRealKpi(DUMMY_DATA.kpi);
-          setRealTrades(DUMMY_DATA.trades);
+          setRealKpi(null);
+          setRealTrades([]);
           return;
         }
 
@@ -127,8 +130,8 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
         );
       } catch (e) {
         console.error('Exception loading day data:', e);
-        setRealKpi(DUMMY_DATA.kpi);
-        setRealTrades(DUMMY_DATA.trades);
+        setRealKpi(null);
+        setRealTrades([]);
       } finally {
         setLoading(false);
       }
@@ -136,6 +139,14 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
     loadDayData();
   }, [useDatabase, dateJst]);
+
+  if (loading || !realKpi) {
+    return (
+      <div className="daily-note-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
+        <div style={{ fontSize: 14, color: 'var(--muted)' }}>読み込み中...</div>
+      </div>
+    );
+  }
 
   const mergedProps = {
     ...DUMMY_DATA,
