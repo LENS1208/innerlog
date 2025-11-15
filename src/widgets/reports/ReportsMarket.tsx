@@ -428,6 +428,18 @@ export default function ReportsMarket() {
           )
         : 0;
 
+      const longTrades = pairTrades.filter(t => getTradeSide(t) === 'LONG');
+      const shortTrades = pairTrades.filter(t => getTradeSide(t) === 'SHORT');
+
+      const longProfit = longTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
+      const shortProfit = shortTrades.reduce((sum, t) => sum + getTradeProfit(t), 0);
+
+      const longWins = longTrades.filter(t => getTradeProfit(t) > 0).length;
+      const shortWins = shortTrades.filter(t => getTradeProfit(t) > 0).length;
+
+      const longWinRate = longTrades.length > 0 ? (longWins / longTrades.length) * 100 : 0;
+      const shortWinRate = shortTrades.length > 0 ? (shortWins / shortTrades.length) * 100 : 0;
+
       return {
         symbol: s.symbol,
         count: s.count,
@@ -439,7 +451,13 @@ export default function ReportsMarket() {
         avgHoldTime,
         avgVolume,
         volatility,
-        pf: s.pf
+        pf: s.pf,
+        longCount: longTrades.length,
+        shortCount: shortTrades.length,
+        longProfit,
+        shortProfit,
+        longWinRate,
+        shortWinRate
       };
     });
   }, [symbolData, filteredTrades]);
