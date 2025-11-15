@@ -333,6 +333,8 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             tp: t.tp,
             pips: t.pips,
           }));
+          console.log('TradeDiaryPage: Loaded', mappedTrades.length, 'trades from DB');
+          console.log('TradeDiaryPage: First 3 tickets:', mappedTrades.slice(0, 3).map(t => t.ticket));
           setDbTrades(mappedTrades);
         } catch (err) {
           console.error('Error loading DB trades:', err);
@@ -384,12 +386,12 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     }
   }, [dataset, useDatabase]);
 
-  // データ読み込み完了を待つ
+  // データ読み込み完了後、loadingをfalseに設定
   useEffect(() => {
-    if (useDatabase) {
-      setLoading(dbTrades.length === 0);
-    } else {
-      setLoading(csvTrades.length === 0);
+    if (useDatabase && dbTrades.length > 0) {
+      setLoading(false);
+    } else if (!useDatabase && csvTrades.length > 0) {
+      setLoading(false);
     }
   }, [useDatabase, dbTrades, csvTrades]);
 
@@ -434,12 +436,24 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     return null;
   }, [allTrades, entryId]);
 
+  // データ読み込み中の表示
+  if (loading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center' }}>
+        <h2>読み込み中...</h2>
+      </div>
+    );
+  }
+
   // rowがnullの場合の処理
   if (!row) {
     return (
       <div style={{ padding: 40, textAlign: 'center' }}>
         <h2>トレードが見つかりません</h2>
         <p>指定されたトレード（ID: {entryId}）が見つかりませんでした。</p>
+        <p style={{ fontSize: 14, color: '#666', marginTop: 10 }}>
+          読み込まれたトレード数: {allTrades.length}件
+        </p>
         <button
           onClick={() => location.hash = '/trades'}
           style={{
@@ -451,6 +465,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             cursor: 'pointer',
             fontSize: 14,
             fontWeight: 600,
+            marginTop: 20,
           }}
         >
           取引一覧に戻る
