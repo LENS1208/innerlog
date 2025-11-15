@@ -553,10 +553,10 @@ export default function ReportsMarket() {
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
         <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-          通貨ペア別 Long vs Short 比較チャート
-          <HelpIcon text="各通貨ペアでのLONG（買い）とSHORT（売り）の収益性と勝率を比較します。得意な方向性が見えてきます。" />
+          通貨ペア別 買い vs 売り 比較チャート
+          <HelpIcon text="各通貨ペアでの買いと売りの収益性と勝率を比較します。得意な方向性が見えてきます。" />
         </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(224px, 1fr))", gap: 16 }}>
           {pairStatsData.slice(0, 6).map((item, idx) => {
             const maxProfit = Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit));
             const longProfitWidth = maxProfit > 0 ? (Math.abs(item.longProfit) / maxProfit) * 100 : 0;
@@ -572,17 +572,19 @@ export default function ReportsMarket() {
                   border: "1px solid var(--line)",
                 }}
               >
-                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 12, color: "var(--text)" }}>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>
                   {item.symbol}
                 </div>
 
-                <div style={{ marginBottom: 12 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>LONG</span>
-                    <span style={{ fontSize: 12, color: "var(--muted)" }}>{item.longCount}回</span>
+                <div style={{ marginBottom: 8 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                    <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>
+                      買い（勝率: <span style={{ color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.longWinRate.toFixed(1)}%</span>）
+                    </span>
+                    <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.longCount}回</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                    <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 24, position: "relative", overflow: "hidden" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 20, position: "relative", overflow: "hidden" }}>
                       <div
                         style={{
                           position: "absolute",
@@ -601,7 +603,7 @@ export default function ReportsMarket() {
                           left: 8,
                           top: "50%",
                           transform: "translateY(-50%)",
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: 600,
                           color: longProfitWidth > 30 ? "#fff" : "var(--text)",
                           zIndex: 1,
@@ -611,18 +613,17 @@ export default function ReportsMarket() {
                       </div>
                     </div>
                   </div>
-                  <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                    勝率: <span style={{ color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.longWinRate.toFixed(1)}%</span>
-                  </div>
                 </div>
 
                 <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>SHORT</span>
-                    <span style={{ fontSize: 12, color: "var(--muted)" }}>{item.shortCount}回</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                    <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>
+                      売り（勝率: <span style={{ color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.shortWinRate.toFixed(1)}%</span>）
+                    </span>
+                    <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.shortCount}回</span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                    <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 24, position: "relative", overflow: "hidden" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 20, position: "relative", overflow: "hidden" }}>
                       <div
                         style={{
                           position: "absolute",
@@ -641,7 +642,7 @@ export default function ReportsMarket() {
                           left: 8,
                           top: "50%",
                           transform: "translateY(-50%)",
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: 600,
                           color: shortProfitWidth > 30 ? "#fff" : "var(--text)",
                           zIndex: 1,
@@ -650,9 +651,6 @@ export default function ReportsMarket() {
                         {item.shortProfit >= 0 ? '+' : ''}{item.shortProfit.toLocaleString()}円
                       </div>
                     </div>
-                  </div>
-                  <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                    勝率: <span style={{ color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.shortWinRate.toFixed(1)}%</span>
                   </div>
                 </div>
               </div>
