@@ -407,20 +407,21 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
       const found = allTrades.find(t => String(t.ticket) === String(entryId));
       console.log('TradeDiaryPage: Searching for', entryId, 'in', allTrades.length, 'trades. Found:', found);
       if (found) {
+        console.log('TradeDiaryPage: Found trade:', found);
         return {
           ticket: found.ticket,
           item: found.item,
-          side: found.side,
+          side: found.side as "BUY" | "SELL",
           size: found.size,
           openTime: found.openTime,
           openPrice: found.openPrice,
           closeTime: found.closeTime,
           closePrice: found.closePrice,
-          commission: found.commission,
-          swap: found.swap,
+          commission: found.commission || 0,
+          swap: found.swap || 0,
           profit: found.profit,
-          sl: found.sl,
-          tp: found.tp,
+          sl: found.sl || null,
+          tp: found.tp || null,
           pips: found.pips,
         };
       }

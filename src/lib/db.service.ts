@@ -420,6 +420,7 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
 export function dbToTrade(dbTrade: DbTrade): Trade {
   return {
     id: dbTrade.ticket,
+    ticket: dbTrade.ticket,
     datetime: dbTrade.close_time,
     pair: dbTrade.item,
     side: dbTrade.side as Side,
@@ -434,6 +435,7 @@ export function dbToTrade(dbTrade: DbTrade): Trade {
     commission: dbTrade.commission,
     swap: dbTrade.swap,
     symbol: dbTrade.item,
+    item: dbTrade.item,
     action: dbTrade.side as Side,
     profit: dbTrade.profit,
   };
