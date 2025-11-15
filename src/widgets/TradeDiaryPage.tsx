@@ -403,9 +403,11 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     // entryIdが指定されている場合、allTradesから検索（優先）
     if (entryId && allTrades.length > 0) {
       console.log('TradeDiaryPage: Searching for entryId:', entryId, 'type:', typeof entryId);
-      console.log('TradeDiaryPage: First 3 tickets:', allTrades.slice(0, 3).map(t => ({ ticket: t.ticket, type: typeof t.ticket })));
+      console.log('TradeDiaryPage: allTrades.length:', allTrades.length);
+      console.log('TradeDiaryPage: All tickets:', allTrades.map(t => t.ticket));
+      console.log('TradeDiaryPage: First 3 trades:', allTrades.slice(0, 3));
       const found = allTrades.find(t => String(t.ticket) === String(entryId));
-      console.log('TradeDiaryPage: Searching for', entryId, 'in', allTrades.length, 'trades. Found:', found);
+      console.log('TradeDiaryPage: Found:', found ? `Yes (${found.ticket})` : 'No');
       if (found) {
         console.log('TradeDiaryPage: Found trade:', found);
         return {
