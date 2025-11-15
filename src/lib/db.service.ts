@@ -80,7 +80,7 @@ export type DbNoteLink = {
   created_at: string;
 };
 
-export async function getAllTrades(): Promise<DbTrade[]> {
+export async function getAllTrades(dataset?: string): Promise<DbTrade[]> {
   const PAGE_SIZE = 1000;
   let allTrades: DbTrade[] = [];
   let currentPage = 0;
@@ -90,11 +90,16 @@ export async function getAllTrades(): Promise<DbTrade[]> {
     const start = currentPage * PAGE_SIZE;
     const end = start + PAGE_SIZE - 1;
 
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
       .select('*')
-      .order('close_time', { ascending: false })
-      .range(start, end);
+      .order('close_time', { ascending: false });
+
+    if (dataset) {
+      query = query.eq('dataset', dataset);
+    }
+
+    const { data, error } = await query.range(start, end);
 
     if (error) throw error;
 
@@ -107,7 +112,7 @@ export async function getAllTrades(): Promise<DbTrade[]> {
     }
   }
 
-  console.log(`✅ Loaded from database: ${allTrades.length} trades`);
+  console.log(`✅ Loaded from database: ${allTrades.length} trades${dataset ? ` (dataset: ${dataset})` : ''}`);
   return allTrades;
 }
 
