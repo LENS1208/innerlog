@@ -63,46 +63,6 @@ type Trade = {
   pips: number; // ±
 };
 
-function makeDummyTrades(): Trade[] {
-  const base = new Date("2025-09-10T00:30:00Z").getTime();
-  const items = ["USDJPY", "EURUSD", "GBPJPY", "AUDUSD"];
-  const arr: Trade[] = [];
-  for (let i = 0; i < 80; i++) {
-    const tOpen = new Date(base + i * 45 * 60 * 1000);
-    const dur = 10 + Math.floor(Math.random() * 180);
-    const tClose = new Date(tOpen.getTime() + dur * 60 * 1000);
-    const item = items[i % items.length];
-    const side: Trade["side"] = Math.random() > 0.45 ? "BUY" : "SELL";
-    const size = [0.2, 0.3, 0.5, 1.0][i % 4];
-    const isJPY = /JPY$/.test(item);
-    const pf = isJPY ? 100 : 10000;
-    const openPx = isJPY ? 1.45 + Math.random() * 0.02 : 1.05 + Math.random() * 0.02; // 値はデモ
-    const pips = Math.round((Math.random() * 60 - 20) * 10) / 10; // -20〜+40
-    const closePx = side === "BUY" ? openPx + pips / pf : openPx - pips / pf;
-    const commission = Math.round((Math.random() * 4 - 2) * 50);
-    const swap = Math.round((Math.random() * 4 - 2) * 40);
-    const yen = Math.round(pips * size * (isJPY ? 100 : 1000));
-    const profit = yen + commission + swap;
-    const sl = side === "BUY" ? openPx - 20 / pf : openPx + 20 / pf;
-    arr.push({
-      ticket: "T" + (100000 + i),
-      item,
-      side,
-      size,
-      openTime: tOpen,
-      openPrice: Math.round(openPx * 1000) / 1000,
-      closeTime: tClose,
-      closePrice: Math.round(closePx * 1000) / 1000,
-      commission,
-      swap,
-      profit,
-      sl: Math.round(sl * 1000) / 1000,
-      tp: null,
-      pips,
-    });
-  }
-  return arr;
-}
 
 /* ===== 小道具 ===== */
 const pipFactor = (sym: string) => (/JPY$/.test(sym) ? 100 : 10000);
@@ -348,11 +308,39 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   /* ===== データ準備 ===== */
   const [dbTrade, setDbTrade] = useState<DbTrade | null>(null);
   const [csvTrades, setCsvTrades] = useState<Trade[]>([]);
+  const [dbTrades, setDbTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // CSVデータをロード
+  // CSVまたはDBデータをロード
   useEffect(() => {
-    if (!useDatabase) {
+    if (useDatabase) {
+      (async () => {
+        try {
+          const { getAllTrades } = await import('../lib/db.service');
+          const data = await getAllTrades();
+          const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+            ticket: t.ticket,
+            item: t.item,
+            side: t.side as "BUY" | "SELL",
+            size: t.size,
+            openTime: new Date(t.open_time),
+            openPrice: t.open_price,
+            closeTime: new Date(t.close_time),
+            closePrice: t.close_price,
+            commission: t.commission,
+            swap: t.swap,
+            profit: t.profit,
+            sl: t.sl,
+            tp: t.tp,
+            pips: t.pips,
+          }));
+          setDbTrades(mappedTrades);
+        } catch (err) {
+          console.error('Error loading DB trades:', err);
+          setDbTrades([]);
+        }
+      })();
+    } else {
       const candidates = [
         `/demo/${dataset}.csv`,
         `/demo/sample/${dataset}.csv`,
@@ -403,10 +391,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     loadTrade();
   }, [entryId, useDatabase]);
 
-  const trades = useMemo(() => makeDummyTrades(), []);
   const allTrades = useMemo(() => {
-    return useDatabase ? trades : csvTrades;
-  }, [useDatabase, trades, csvTrades]);
+    return useDatabase ? dbTrades : csvTrades;
+  }, [useDatabase, dbTrades, csvTrades]);
 
   const row = useMemo(() => {
     if (dbTrade) {
