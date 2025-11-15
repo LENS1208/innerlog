@@ -56,7 +56,7 @@ const DUMMY_DATA: DailyNotePageProps = {
 };
 
 export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
-  const { useDatabase } = useDataset();
+  const { useDatabase, isInitialized } = useDataset();
   const [loading, setLoading] = useState(false);
   const [realKpi, setRealKpi] = useState(DUMMY_DATA.kpi);
   const [realTrades, setRealTrades] = useState(DUMMY_DATA.trades);
@@ -66,12 +66,21 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
   console.log('DailyNotePage: final dateJst=', dateJst);
 
   useEffect(() => {
+    console.log('DailyNotePage useEffect: useDatabase=', useDatabase, 'isInitialized=', isInitialized, 'dateJst=', dateJst);
+
+    if (!isInitialized) {
+      console.log('  → Waiting for initialization...');
+      return;
+    }
+
     if (!useDatabase) {
+      console.log('  → Using DUMMY_DATA (database disabled)');
       setRealKpi(DUMMY_DATA.kpi);
       setRealTrades(DUMMY_DATA.trades);
       return;
     }
 
+    console.log('  → Loading from database...');
     const loadDayData = async () => {
       setLoading(true);
       try {
@@ -159,7 +168,7 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     };
 
     loadDayData();
-  }, [useDatabase, dateJst]);
+  }, [useDatabase, isInitialized, dateJst]);
 
   const mergedProps = {
     ...DUMMY_DATA,
