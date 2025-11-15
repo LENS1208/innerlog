@@ -549,113 +549,113 @@ export default function ReportsMarket() {
             </tbody>
           </table>
         </div>
-      </div>
 
-      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-          通貨ペア別 買い vs 売り 比較チャート
-          <HelpIcon text="各通貨ペアでの買いと売りの収益性と勝率を比較します。得意な方向性が見えてきます。" />
-        </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(224px, 1fr))", gap: 16 }}>
-          {pairStatsData.slice(0, 6).map((item, idx) => {
-            const maxProfit = Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit));
-            const longProfitWidth = maxProfit > 0 ? (Math.abs(item.longProfit) / maxProfit) * 100 : 0;
-            const shortProfitWidth = maxProfit > 0 ? (Math.abs(item.shortProfit) / maxProfit) * 100 : 0;
+        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--line)" }}>
+          <h4 style={{ margin: "0 0 12px 0", fontSize: 14, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            買い vs 売り 比較
+            <HelpIcon text="各通貨ペアでの買いと売りの収益性と勝率を比較します。得意な方向性が見えてきます。" />
+          </h4>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(224px, 1fr))", gap: 16 }}>
+            {pairStatsData.slice(0, 6).map((item, idx) => {
+              const maxProfit = Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit));
+              const longProfitWidth = maxProfit > 0 ? (Math.abs(item.longProfit) / maxProfit) * 100 : 0;
+              const shortProfitWidth = maxProfit > 0 ? (Math.abs(item.shortProfit) / maxProfit) * 100 : 0;
 
-            return (
-              <div
-                key={idx}
-                style={{
-                  background: "var(--chip)",
-                  borderRadius: 12,
-                  padding: 12,
-                  border: "1px solid var(--line)",
-                }}
-              >
-                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>
-                  {item.symbol}
-                </div>
-
-                <div style={{ marginBottom: 8 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-                    <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>
-                      買い（勝率: <span style={{ color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.longWinRate.toFixed(1)}%</span>）
-                    </span>
-                    <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.longCount}回</span>
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    background: "var(--chip)",
+                    borderRadius: 12,
+                    padding: 12,
+                    border: "1px solid var(--line)",
+                  }}
+                >
+                  <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>
+                    {item.symbol}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 20, position: "relative", overflow: "hidden" }}>
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: 0,
-                          top: 0,
-                          height: "100%",
-                          width: `${longProfitWidth}%`,
-                          background: item.longProfit >= 0 ? getAccentColor() : getLossColor(),
-                          borderRadius: 4,
-                          transition: "width 0.3s ease",
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: 8,
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: longProfitWidth > 30 ? "#fff" : "var(--text)",
-                          zIndex: 1,
-                        }}
-                      >
-                        {item.longProfit >= 0 ? '+' : ''}{item.longProfit.toLocaleString()}円
+
+                  <div style={{ marginBottom: 8 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                      <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>
+                        買い（勝率: <span style={{ color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.longWinRate.toFixed(1)}%</span>）
+                      </span>
+                      <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.longCount}回</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 20, position: "relative", overflow: "hidden" }}>
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            height: "100%",
+                            width: `${longProfitWidth}%`,
+                            background: item.longProfit >= 0 ? getAccentColor() : getLossColor(),
+                            borderRadius: 4,
+                            transition: "width 0.3s ease",
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 8,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            fontSize: 11,
+                            fontWeight: 600,
+                            color: longProfitWidth > 30 ? "#fff" : "var(--text)",
+                            zIndex: 1,
+                          }}
+                        >
+                          {item.longProfit >= 0 ? '+' : ''}{item.longProfit.toLocaleString()}円
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                      <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>
+                        売り（勝率: <span style={{ color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.shortWinRate.toFixed(1)}%</span>）
+                      </span>
+                      <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.shortCount}回</span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 20, position: "relative", overflow: "hidden" }}>
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            height: "100%",
+                            width: `${shortProfitWidth}%`,
+                            background: item.shortProfit >= 0 ? getWarningColor() : getLossColor(),
+                            borderRadius: 4,
+                            transition: "width 0.3s ease",
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 8,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            fontSize: 11,
+                            fontWeight: 600,
+                            color: shortProfitWidth > 30 ? "#fff" : "var(--text)",
+                            zIndex: 1,
+                          }}
+                        >
+                          {item.shortProfit >= 0 ? '+' : ''}{item.shortProfit.toLocaleString()}円
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
-                    <span style={{ fontSize: 13, color: "var(--muted)", fontWeight: 600 }}>
-                      売り（勝率: <span style={{ color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)", fontWeight: 600 }}>{item.shortWinRate.toFixed(1)}%</span>）
-                    </span>
-                    <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.shortCount}回</span>
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ flex: 1, background: "var(--surface)", borderRadius: 4, height: 20, position: "relative", overflow: "hidden" }}>
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: 0,
-                          top: 0,
-                          height: "100%",
-                          width: `${shortProfitWidth}%`,
-                          background: item.shortProfit >= 0 ? getWarningColor() : getLossColor(),
-                          borderRadius: 4,
-                          transition: "width 0.3s ease",
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: 8,
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: shortProfitWidth > 30 ? "#fff" : "var(--text)",
-                          zIndex: 1,
-                        }}
-                      >
-                        {item.shortProfit >= 0 ? '+' : ''}{item.shortProfit.toLocaleString()}円
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
