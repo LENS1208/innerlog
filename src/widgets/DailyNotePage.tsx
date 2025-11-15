@@ -142,7 +142,10 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
   const mergedProps = {
     ...DUMMY_DATA,
     ...props,
-    kpi: realKpi,
+    kpi: {
+      ...realKpi,
+      dateJst: dateJst,
+    },
     trades: realTrades,
   };
 
