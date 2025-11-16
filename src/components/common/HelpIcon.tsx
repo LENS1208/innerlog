@@ -53,7 +53,7 @@ export function HelpIcon({ text }: HelpIconProps) {
         lineHeight: 1.6,
         color: 'var(--muted)',
         whiteSpace: 'normal',
-        fontFamily: 'inherit',
+        fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif',
         wordBreak: 'normal',
       }}
     >
