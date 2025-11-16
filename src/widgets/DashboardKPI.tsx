@@ -75,29 +75,6 @@ function computeDashboard(trades: DashTrade[]) {
     if (dd > maxDD) maxDD = dd
   })
 
-  let totalPips = 0
-  let pipsCount = 0
-  let totalWinPips = 0
-  let totalLossPips = 0
-  let winPipsCount = 0
-  let lossPipsCount = 0
-
-  trades.forEach(t => {
-    if (typeof t.pips === 'number') {
-      totalPips += t.pips
-      pipsCount++
-      if (t.pips > 0) {
-        totalWinPips += t.pips
-        winPipsCount++
-      } else if (t.pips < 0) {
-        totalLossPips += Math.abs(t.pips)
-        lossPipsCount++
-      }
-    }
-  })
-  const avgPips = pipsCount > 0 ? totalPips / pipsCount : 0
-  const avgWinPips = winPipsCount > 0 ? totalWinPips / winPipsCount : 0
-  const avgLossPips = lossPipsCount > 0 ? totalLossPips / lossPipsCount : 0
 
   let totalMinutes = 0
   let durationCount = 0
@@ -135,7 +112,7 @@ function computeDashboard(trades: DashTrade[]) {
   return {
     count, gross, avg, wins, losses, draws, winRate,
     profitFactor, totalProfit, totalLoss, avgProfit, avgLoss,
-    expectancyJPY, maxDD, totalPips, avgPips, avgWinPips, avgLossPips, avgHoldMin,
+    expectancyJPY, maxDD, avgHoldMin,
     tradingDays, riskRewardRatio, sharpeRatio, peak
   }
 }
@@ -316,17 +293,6 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
 
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
-          合計獲得pips
-          <HelpIcon text="全取引で獲得したpipsの合計です。値幅としてどれだけ取れたかを表します。" />
-        </div>
-        <div className="kpi-value" style={{ color: dash.totalPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
-          {dash.totalPips >= 0 ? '+' : ''}{Math.round(dash.totalPips).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.totalPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>pips</span>
-        </div>
-        <div className="kpi-desc">全取引のpips合計</div>
-      </div>
-
-      <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
           平均損益
           <HelpIcon text="1回の取引あたりの平均的な損益です。プラスなら平均的に利益が出ています。" />
         </div>
@@ -336,20 +302,6 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           </div>
           <div className="kpi-desc">1取引あたりの平均</div>
           <BarSplit avgProfit={dash.avgProfit} avgLoss={dash.avgLoss} />
-        </div>
-      </div>
-
-      <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
-          平均pips
-          <HelpIcon text="1回の取引で期待できる平均的なpipsです。値幅としてどれだけ取れるかの目安になります。" />
-        </div>
-        <div>
-          <div className="kpi-value" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
-            {dash.avgPips >= 0 ? '+' : ''}{dash.avgPips.toFixed(1)} <span className="kpi-unit" style={{ color: dash.avgPips < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>pips/件</span>
-          </div>
-          <div className="kpi-desc">1取引あたりの平均（pips）</div>
-          <BarSplit avgProfit={dash.avgWinPips} avgLoss={dash.avgLossPips} unit="pips" />
         </div>
       </div>
 
