@@ -630,7 +630,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
             }}
           >
             <div>通貨ペア</div>
-            <div>方向</div>
+            <div>ポジション</div>
             <div>エントリー日時 → 決済日時</div>
             <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>ポジション保有時間</div>
             <div style={{ textAlign: "right" }}>損益</div>

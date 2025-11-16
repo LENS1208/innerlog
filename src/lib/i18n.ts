@@ -31,7 +31,7 @@ export const UI_TEXT = {
   weeklyProfit: '週ごとの損益',
   monthlyTotal: '月合計',
   cost: 'コスト',
-  side: '方向',
+  side: 'ポジション',
   symbol: '通貨ペア',
   position: 'ポジション',
   long: '買い',

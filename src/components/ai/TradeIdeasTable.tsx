@@ -30,7 +30,7 @@ export default function TradeIdeasTable({ ideas, hero, onCreateTradeNote }: Trad
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr>
-            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>方向</th>
+            <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>ポジション</th>
             <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>エントリー</th>
             <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>損切り/利確</th>
             <th style={{ padding: '8px 10px', borderBottom: '2px solid var(--line)', textAlign: 'left', fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>期待リターン</th>

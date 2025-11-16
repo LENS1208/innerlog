@@ -1127,7 +1127,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
             <div style={{ fontWeight: 500 }}>{row.item}</div>
           </div>
           <div>
-            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>方向</div>
+            <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>ポジション</div>
             <div style={{ fontWeight: 500 }}>{row.side === "BUY" ? "買い" : "売り"}</div>
           </div>
           <div>

@@ -527,7 +527,7 @@ export default function TradeDetailPanel({ trade, kpi, noteId }: TradeDetailPane
               <div style={{ fontWeight: 500 }}>{trade.item}</div>
             </div>
             <div>
-              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>方向</div>
+              <div style={{ color: 'var(--muted)', fontSize: 13, fontWeight: 500, marginBottom: 6 }}>ポジション</div>
               <div style={{ fontWeight: 500 }}>{trade.side === 'BUY' ? '買い' : '売り'}</div>
             </div>
             <div>

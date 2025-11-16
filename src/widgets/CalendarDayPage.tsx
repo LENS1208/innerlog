@@ -482,8 +482,8 @@ export default function CalendarDayPage() {
             <thead>
               <tr style={{ borderBottom: "1px solid var(--line)" }}>
                 <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>決済日時</th>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>銘柄</th>
-                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>方向</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>通貨ペア</th>
+                <th style={{ textAlign: "left", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>ポジション</th>
                 <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>損益 (円)</th>
                 <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>pips</th>
                 <th style={{ textAlign: "right", padding: "12px 8px", fontSize: 13, color: "var(--muted)", fontWeight: "bold" }}>ロット数</th>

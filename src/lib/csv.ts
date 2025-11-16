@@ -4,7 +4,7 @@ import type { Trade } from "./types";
 const alias = {
   datetime: ["datetime","日時","date","time","日時年月日"],
   pair: ["pair","通貨ペア","symbol","シンボル"],
-  side: ["side","方向","dir","longshort"],
+  side: ["side","ポジション","方向","dir","longshort"],
   volume: ["volume","qty","lot","数量","取引量"],
   profitYen: ["profit","損益","pl","p/l","損益円"],
   pips: ["pips","pip","損益pips"],
@@ -99,7 +99,7 @@ export function parseCsvText(text: string): Trade[] {
   // 列位置（候補を広く持つ）
   const iTicket    = idx(["ticket", "order"]);
   const iPair      = idx(["item", "pair", "symbol", "銘柄"]);
-  const iType      = idx(["type", "side", "方向"]);
+  const iType      = idx(["type", "side", "ポジション", "方向"]);
   const iSize      = idx(["size", "lot", "lots", "qty", "数量", "取引量"]);
   const iOpenTime  = idx(["opentime", "open time"]);
   const iOpenPrice = idx(["openprice", "open price", "entry", "entryprice"]);
