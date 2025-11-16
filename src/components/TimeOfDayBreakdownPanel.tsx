@@ -161,8 +161,8 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
       backgroundColor: [
         getAccentColor(),
         getLossColor(),
-        'rgba(0, 162, 24, 1)',
-        'rgba(245, 158, 11, 0.8)',
+        getLongColor(),
+        getShortColor(0.8),
         'rgba(139, 92, 246, 0.8)',
         'rgba(6, 182, 212, 0.8)',
         getAccentColor(),
@@ -215,7 +215,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
         return context.raw >= 0 ? getLongColor() : getLossColor();
       },
       backgroundColor: (context: any) => {
-        if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
+        if (!context.raw) return getAccentColor(0.3);
         return context.raw >= 0 ? getLongColor(0.3) : getLossColor(0.3);
       },
       borderWidth: 2,
@@ -251,7 +251,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
           width: '100%',
           maxWidth: 560,
           height: '100vh',
-          background: 'white',
+          background: 'var(--surface)',
           zIndex: 1001,
           overflowY: 'auto',
           boxShadow: '-4px 0 16px rgba(0, 0, 0, 0.2)',

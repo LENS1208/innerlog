@@ -243,7 +243,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
         return context.raw >= 0 ? getLongColor() : getLossColor();
       },
       backgroundColor: (context: any) => {
-        if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
+        if (!context.raw) return getAccentColor(0.3);
         return context.raw >= 0 ? getLongColor(0.3) : getLossColor(0.3);
       },
       borderWidth: 2,
@@ -279,7 +279,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           width: '100%',
           maxWidth: 560,
           height: '100vh',
-          background: 'white',
+          background: 'var(--surface)',
           zIndex: 1001,
           overflowY: 'auto',
           boxShadow: '-4px 0 16px rgba(0, 0, 0, 0.2)',

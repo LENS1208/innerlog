@@ -273,7 +273,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
           width: '100%',
           maxWidth: 640,
           height: '100vh',
-          background: 'white',
+          background: 'var(--surface)',
           zIndex: 1001,
           overflowY: 'auto',
           boxShadow: '-4px 0 16px rgba(0, 0, 0, 0.2)',
@@ -424,7 +424,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                 </div>
               </div>
               <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ textAlign: 'center', padding: 12, background: 'rgba(0, 162, 24, 0.1)', borderRadius: 8 }}>
+                <div style={{ textAlign: 'center', padding: 12, background: getLongColor(0.1), borderRadius: 8 }}>
                   <div style={{ fontSize: 12, color: 'var(--muted)' }}>平均利益</div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--gain)' }}>
                     {Math.round(stats.avgWin).toLocaleString('ja-JP')} 円
@@ -500,11 +500,11 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                         const data = stats.heatmapData.get(key)!;
                         const avgProfit = data.count > 0 ? data.profit / data.count : 0;
 
-                        let bgColor = 'white';
+                        let bgColor = 'var(--surface)';
                         if (data.count > 0) {
                           if (avgProfit > 0) {
                             const intensity = Math.min(Math.abs(avgProfit) / 5000, 1);
-                            bgColor = `rgba(0, 162, 24, ${intensity * 0.8})`;
+                            bgColor = getLongColor(intensity * 0.8);
                           } else {
                             const intensity = Math.min(Math.abs(avgProfit) / 5000, 1);
                             bgColor = getLossColor(intensity * 0.8);
