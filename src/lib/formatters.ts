@@ -39,18 +39,8 @@ export const fmt = {
   symbol: (s?: string) => (s || "—"),
   side_caps: (s?: string) => {
     if (!s) return "—";
-    if (s === "LONG" || s === "BUY" || s === "買い") {
-      return {
-        text: "買い",
-        cls: "side-badge side-long"
-      };
-    }
-    if (s === "SHORT" || s === "SELL" || s === "売り") {
-      return {
-        text: "売り",
-        cls: "side-badge side-short"
-      };
-    }
+    if (s === "LONG" || s === "BUY" || s === "買い") return "買い";
+    if (s === "SHORT" || s === "SELL" || s === "売り") return "売り";
     return s;
   },
   price_raw: (n?: number) => (n==null ? "—" : n.toString()),
