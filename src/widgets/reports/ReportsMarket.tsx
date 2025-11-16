@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor, getProfitColor } from "../../lib/chartColors";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
 import type { Trade } from "../../lib/types";
@@ -844,6 +844,52 @@ export default function ReportsMarket() {
                   y: {
                     beginAtZero: true,
                     ticks: { callback: (value) => formatValue(value as number, "profit") },
+                  },
+                },
+              }}
+            />
+          </div>
+        </div>
+        <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            通貨ペア別 取引回数
+            <HelpIcon text="通貨ペアごとの取引回数を比較したグラフです。どの銘柄を多く取引しているか把握できます。" />
+          </h3>
+          <div style={{ height: 180 }}>
+            <Bar
+              data={{
+                labels: symbolData.slice(0, 6).map((s) => s.symbol),
+                datasets: [
+                  {
+                    data: symbolData.slice(0, 6).map((s) => s.count),
+                    backgroundColor: getAccentColor(),
+                  },
+                ],
+              }}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return symbolData.slice(0, 6)[context[0].dataIndex].symbol;
+                      },
+                      label: (context) => {
+                        const s = symbolData.slice(0, 6)[context.dataIndex];
+                        return [
+                          `取引回数: ${s.count}回`,
+                          `勝率: ${s.winRate.toFixed(1)}%`
+                        ];
+                      }
+                    }
+                  }
+                },
+                scales: {
+                  y: {
+                    beginAtZero: true,
+                    ticks: { callback: (value) => `${value}回` },
                   },
                 },
               }}
