@@ -118,7 +118,8 @@ function TailEventTabs({
               style={{
                 padding: 10,
                 textAlign: "right",
-                fontSize: 13,
+                fontSize: 15,
+                fontWeight: 700,
                 color: data.color,
               }}
             >
