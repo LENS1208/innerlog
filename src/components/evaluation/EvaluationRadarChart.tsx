@@ -66,10 +66,10 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
   }, [parts, axes]);
 
   return (
-    <div style={{ padding: '8px 0', position: 'relative' }}>
+    <div style={{ padding: '8px 0', position: 'relative', maxWidth: '280px', maxHeight: '240px', margin: '0 auto' }}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        style={{ width: '100%', height: 'auto' }}
+        style={{ width: '100%', height: 'auto', maxWidth: '280px', maxHeight: '240px' }}
         aria-label="評価レーダー"
       >
         {webLevels.map((web, idx) => (
