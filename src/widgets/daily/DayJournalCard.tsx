@@ -80,17 +80,6 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
         </button>
       </div>
 
-      <div className="sparkline-container">
-        <svg className="sparkline" viewBox="0 0 300 60" preserveAspectRatio="none">
-          <polyline
-            points="0,40 30,35 60,38 90,25 120,30 150,20 180,28 210,15 240,22 270,18 300,12"
-            fill="none"
-            stroke="rgba(1,161,255,0.8)"
-            strokeWidth="2"
-          />
-        </svg>
-      </div>
-
       <div className="journal-inputs">
         <label>
           <div className="input-label">うまくいった点</div>
