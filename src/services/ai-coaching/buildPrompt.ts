@@ -9,36 +9,40 @@ export interface PromptInput {
 }
 
 export function buildPrompt(input: PromptInput): string {
+  const trades = input.tradesJson.trades || [];
+  const summary = input.tradesJson.summary || {};
+
+  const actualExamples = trades.slice(0, 10).map((t: any, i: number) =>
+    `${i + 1}. ticket:${t.ticket}, date:${t.closeDate}, symbol:${t.symbol}, side:${t.side}, lots:${t.lots}, profit:${t.profit}円, pips:${t.pips}`
+  ).join('\n');
+
   const userTemplate = `
 目的：
-アップロードしたMT4/MT5の履歴（HTML/CSV）を分析し、
-「実例を中心」にした1ページのAIコーチングシートを作成してください。
+取引履歴データを分析し、「実例を中心」にした1ページのAIコーチングシートを作成してください。
 
 入力：
 - 取引履歴ファイル（JSON要約）：<<TRADES_JSON>>
 - 期間メモ：${input.dateRangeHint ?? '（指定なし）'}
 - 重点観点：${input.focusHint ?? 'ロット管理と逆張り制御'}
 
-**重要：入力データの構造**
-tradesJson.trades配列の各要素には以下のフィールドがあります：
-- ticket: チケット番号
-- closeDate: 決済日時（ISO 8601形式）
-- symbol: 通貨ペア
-- side: 売買方向（"BUY" または "SELL"）
-- lots: ロット数
-- openPrice: 建値
-- closePrice: 決済値
-- profit: 損益（円）
-- pips: pips値
+**🚨 絶対に守ること：以下の実際の取引データのみを使用してください 🚨**
 
-tradesJson.summaryには以下の統計情報があります：
-- avgLotSize: 平均ロットサイズ
-- maxLotSize: 最大ロットサイズ
-- minLotSize: 最小ロットサイズ
-- avgWin: 平均勝ちトレード損益
-- avgLoss: 平均負けトレード損益
+実際の取引データのサンプル（最初の10件）：
+${actualExamples}
 
-**出力時には、必ず実際のデータの値を使用してください。ダミーデータを生成しないでください。**
+統計サマリー：
+- 総取引数: ${summary.totalTrades || 0}
+- 勝率: ${(summary.winRate * 100).toFixed(1)}%
+- 平均ロット: ${summary.avgLotSize?.toFixed(2) || 0}
+- 最大ロット: ${summary.maxLotSize?.toFixed(2) || 0}
+- 平均勝ち: ${summary.avgWin?.toFixed(0) || 0}円
+- 平均負け: ${summary.avgLoss?.toFixed(0) || 0}円
+
+**重要指示：**
+1. 取引例は必ず上記の実際のデータから選択すること
+2. 架空の日付（例：2024-10-03）や存在しない通貨ペアを使用しないこと
+3. プロンプト内のサンプル例は形式説明のためであり、実際の出力には使用しないこと
+4. すべての取引例で実際のticket番号を含めること
 
 出力要件：
 - **強みと課題**：必ず以下の5項目を使用（項目名を正確に）
@@ -50,7 +54,7 @@ tradesJson.summaryには以下の統計情報があります：
 
 **重要：書き方のスタイル**
 - 各項目は2-3行で簡潔に。詳細な取引情報に引っ張られすぎない
-- 強み：良い行動パターンを述べる + 具体例は「例：10/03のUSDJPY売りでは、戻り高値を明確に見極めて順張り成功」のように簡潔に
+- 強み：良い行動パターンを述べる + 具体例は実際のticket番号と日付で簡潔に
 - 改善ポイント：「〜のに、〜」という対比で優しく指摘 + 例は最小限
 - コーチコメント：励ましと実践的トレーニング提案（1-2行）
 - 「〜が確認できます」ではなく「〜していますね」という対話的表現
@@ -58,26 +62,27 @@ tradesJson.summaryには以下の統計情報があります：
 - 実例：勝ち×2／負け×2／ロット過大または逆張り×1以上で、合計5〜6のトレード例を必ず含める
 - **ロット過大の判定基準（重要）**：
   * tradesJson.summary.avgLotSizeの2倍以上のロット数を使用している取引を「ロット過大」とする
-  * 例：平均ロット0.5の場合、1.0以上の取引がロット過大
-  * 例：平均ロット1.0の場合、2.0以上の取引がロット過大
+  * 平均ロット=${summary.avgLotSize?.toFixed(2)}の場合、${(summary.avgLotSize * 2)?.toFixed(2)}以上の取引がロット過大
   * 単に損失が大きいだけで、ロット数が平均的な取引は「ロット過大」ではない
-  * まず各取引のlotsと平均ロットを比較し、2倍以上の取引だけを「ロット過大」と判定する
+  * まず各取引のlotsと平均ロット${summary.avgLotSize?.toFixed(2)}を比較し、2倍以上の取引だけを「ロット過大」と判定する
   * ロット過大の例が見つからない場合は、「逆張り」や「損切り遅延」などの別の改善点を選ぶ
 - 実例は実際のtradesJson.trades配列から選び、以下のマッピングで出力：
-  * date ← closeDate
-  * symbol ← symbol
-  * side ← side
-  * lots ← lots
-  * entry ← openPrice
-  * exit ← closePrice
-  * pnlJPY ← profit
-  * pips ← pips
-  * ticket ← ticket
+  * date ← closeDate（実際のデータの値を使用）
+  * symbol ← symbol（実際のデータの値を使用）
+  * side ← side（実際のデータの値を使用）
+  * lots ← lots（実際のデータの値を使用）
+  * entry ← openPrice（実際のデータの値を使用）
+  * exit ← closePrice（実際のデータの値を使用）
+  * pnlJPY ← profit（実際のデータの値を使用）
+  * pips ← pips（実際のデータの値を使用）
+  * ticket ← ticket（実際のデータの値を使用）
 - 強み→具体例→改善の一言 の順
 - 口調：優しいコーチ（です・ます調）、「コメント」語は使わない
 - 8セクション固定順＋最後に次のステップ提案（1〜2行）
 
 **重要：必ず以下のJSON構造で出力してください。markdown、sheet、metaの3つのトップレベルキーが必須です。**
+
+**🚨 警告：以下は形式例です。日付・通貨ペア・金額は実際のデータから取得してください 🚨**
 
 {
   "markdown": "# FXトレードコーチングシート\\n\\n## 1️⃣ 現状サマリー\\n\\n...(全セクションのMarkdown)",
@@ -86,49 +91,49 @@ tradesJson.summaryには以下の統計情報があります：
     "summary": ["サマリー段落1", "サマリー段落2", "サマリー段落3"],
     "examples": [
       {
-        "date": "2025-10-03T12:30:00Z",
-        "symbol": "USDJPY",
-        "side": "SELL",
-        "lots": 0.5,
-        "entry": 149.20,
-        "exit": 148.50,
-        "pnlJPY": 35000,
-        "pips": 70.0,
-        "ticket": "123456",
-        "note": "順張り成功例"
+        "date": "実データのcloseDate",
+        "symbol": "実データのsymbol",
+        "side": "実データのside",
+        "lots": "実データのlots",
+        "entry": "実データのopenPrice",
+        "exit": "実データのclosePrice",
+        "pnlJPY": "実データのprofit",
+        "pips": "実データのpips",
+        "ticket": "実データのticket",
+        "note": "この取引の特徴"
       }
     ],
     "strengthsWeaknessesComment": "強みと課題の導入コメント",
     "strengthsWeaknesses": [
       {
         "item": "エントリータイミング",
-        "strength": "相場の初動を読む力が非常に高く、押し目や戻りを素早く捉えています。例：10/03のUSDJPY売りでは、戻り高値を明確に見極めて順張り成功。",
-        "improvement": "方向感は合っているのに、『ここで終わり』と判断するタイミングが少し早いです。",
-        "coachNote": "トレンドが継続している間は、半分を残して伸ばす習慣をつけましょう。"
+        "strength": "良い行動パターンの説明 + 実際のticket番号と日付で具体例",
+        "improvement": "改善が必要な点の説明",
+        "coachNote": "励ましと実践的アドバイス"
       },
       {
         "item": "リスク管理",
-        "strength": "勝ちパターンでは自信をもってサイズを上げられています。",
-        "improvement": "一方で、逆行時や感情的な場面でロットが膨らみやすいです。例：10/17の売り2lot -135,000円。",
-        "coachNote": "『1回の最大ロット＝平均の1.5倍まで』と決めるだけで安定します。"
+        "strength": "良い行動パターンの説明",
+        "improvement": "改善が必要な点 + 実際のticket番号で具体例",
+        "coachNote": "励ましと実践的アドバイス"
       },
       {
         "item": "損切り・利確",
-        "strength": "決断が早く、迷いの少ないクリックができています。例：9/17のUSDJPY買いでは、上昇再開のブレイクで綺麗に利確。",
-        "improvement": "エントリー回数が多くなると、条件の精度が下がる傾向があります。",
-        "coachNote": "『3条件が揃ったときだけ入る』など、チェックリスト化がおすすめです。"
+        "strength": "良い行動パターンの説明",
+        "improvement": "改善が必要な点",
+        "coachNote": "励ましと実践的アドバイス"
       },
       {
         "item": "感情コントロール",
-        "strength": "負けても次の機会を探せる回復力があります。",
-        "improvement": "『取り返したい』と感じた瞬間の再エントリーが多く見られます。",
-        "coachNote": "連敗後は必ず"観察の1時間"を設けてください。相場を見ても手は出さない時間です。"
+        "strength": "良い行動パターンの説明",
+        "improvement": "改善が必要な点",
+        "coachNote": "励ましと実践的アドバイス"
       },
       {
         "item": "一貫性・再現性",
-        "strength": "履歴を保存し、振り返る意識を持っています。",
-        "improvement": "チャート画像やR換算の記録がまだ少ないです。",
-        "coachNote": "『どの位置でどう感じたか』をスクショにメモすると再現性が高まります。"
+        "strength": "良い行動パターンの説明",
+        "improvement": "改善が必要な点",
+        "coachNote": "励ましと実践的アドバイス"
       }
     ],
     "rulesComment": "ルールの導入コメント",
@@ -148,16 +153,16 @@ tradesJson.summaryには以下の統計情報があります：
         "sl": "損切りルール",
         "tp": "利確ルール",
         "example": {
-          "date": "2025-10-03T12:30:00Z",
-          "symbol": "USDJPY",
-          "side": "SELL",
-          "lots": 0.5,
-          "entry": 149.20,
-          "exit": 148.50,
-          "pnlJPY": 35000,
-          "pips": 70.0,
-          "ticket": "123456",
-          "note": "順張り好例"
+          "date": "実データのcloseDate",
+          "symbol": "実データのsymbol",
+          "side": "実データのside",
+          "lots": "実データのlots",
+          "entry": "実データのopenPrice",
+          "exit": "実データのclosePrice",
+          "pnlJPY": "実データのprofit",
+          "pips": "実データのpips",
+          "ticket": "実データのticket",
+          "note": "この取引の特徴"
         },
         "coachNote": "順張りについてのアドバイス"
       },
@@ -166,16 +171,16 @@ tradesJson.summaryには以下の統計情報があります：
         "lotPolicy": "ロット管理",
         "timeStop": "時間制限",
         "example": {
-          "date": "2025-10-05T15:00:00Z",
-          "symbol": "GOLD",
-          "side": "BUY",
-          "lots": 0.01,
-          "entry": 2650.0,
-          "exit": 2655.0,
-          "pnlJPY": 500,
-          "pips": 5.0,
-          "ticket": "123457",
-          "note": "逆張り研究"
+          "date": "実データのcloseDate",
+          "symbol": "実データのsymbol",
+          "side": "実データのside",
+          "lots": "実データのlots",
+          "entry": "実データのopenPrice",
+          "exit": "実データのclosePrice",
+          "pnlJPY": "実データのprofit",
+          "pips": "実データのpips",
+          "ticket": "実データのticket",
+          "note": "この取引の特徴"
         },
         "coachNote": "逆張りについてのアドバイス"
       }
