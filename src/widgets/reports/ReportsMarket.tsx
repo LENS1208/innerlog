@@ -573,7 +573,7 @@ export default function ReportsMarket() {
                 <div
                   key={idx}
                   style={{
-                    background: "var(--chip)",
+                    background: "transparent",
                     borderRadius: 12,
                     padding: 16,
                     border: "1px solid var(--line)",
@@ -582,39 +582,39 @@ export default function ReportsMarket() {
                 >
                   <div style={{
                     position: "absolute",
-                    left: 0,
-                    width: 8,
+                    left: 12,
+                    width: 3,
                     ...(item.longProfit >= 0 ? {
                       bottom: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
                       background: '#0084C7',
-                      borderRadius: "0 0 0 12px",
+                      borderRadius: "0",
                     } : {
                       top: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
                       background: '#EF4444',
-                      borderRadius: "12px 0 0 0",
+                      borderRadius: "0",
                     })
                   }} />
 
                   <div style={{
                     position: "absolute",
-                    right: 0,
-                    width: 8,
+                    right: 12,
+                    width: 3,
                     ...(item.shortProfit >= 0 ? {
                       bottom: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
                       background: '#0084C7',
-                      borderRadius: "0 0 12px 0",
+                      borderRadius: "0",
                     } : {
                       top: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
                       background: '#EF4444',
-                      borderRadius: "0 12px 0 0",
+                      borderRadius: "0",
                     })
                   }} />
 
