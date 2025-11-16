@@ -46,7 +46,7 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
         </div>
         {playbook.trendFollowing.example && (
           <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '13px', fontWeight: 600, marginBottom: '6px', color: 'var(--ink)' }}>実例：</div>
+            <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>実例：</div>
             <TradeExampleCard ex={playbook.trendFollowing.example} />
           </div>
         )}
@@ -96,7 +96,7 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
         )}
         {playbook.meanReversion.example && (
           <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '13px', fontWeight: 600, marginBottom: '6px', color: 'var(--ink)' }}>実例：</div>
+            <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>実例：</div>
             <TradeExampleCard ex={playbook.meanReversion.example} />
           </div>
         )}

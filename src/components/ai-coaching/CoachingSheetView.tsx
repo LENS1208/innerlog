@@ -127,14 +127,14 @@ function Section({ title, comment, children }: SectionProps) {
         background: 'var(--surface)',
         border: '1px solid var(--line)',
         borderRadius: '12px',
-        padding: '16px',
+        padding: '20px',
       }}
     >
       <h3
         style={{
-          margin: '0 0 12px 0',
-          fontSize: '16px',
-          fontWeight: 'bold',
+          margin: '0 0 16px 0',
+          fontSize: '18px',
+          fontWeight: 700,
           color: 'var(--ink)',
         }}
       >
@@ -143,12 +143,13 @@ function Section({ title, comment, children }: SectionProps) {
       {comment && (
         <p
           style={{
-            margin: '0 0 16px 0',
-            fontSize: '15px',
-            lineHeight: 1.7,
+            margin: '0 0 20px 0',
+            fontSize: '16px',
+            lineHeight: 1.8,
             color: 'var(--ink)',
-            paddingBottom: '12px',
+            paddingBottom: '16px',
             borderBottom: '1px solid var(--line)',
+            fontWeight: 500,
           }}
         >
           {comment}

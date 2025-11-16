@@ -7,7 +7,7 @@ interface FourWeekPlanTableProps {
 
 export function FourWeekPlanTable({ weeks }: FourWeekPlanTableProps) {
   return (
-    <div style={{ display: 'grid', gap: '12px' }}>
+    <div style={{ display: 'grid', gap: '16px' }}>
       {weeks.map((week, i) => (
         <div
           key={i}
@@ -15,7 +15,7 @@ export function FourWeekPlanTable({ weeks }: FourWeekPlanTableProps) {
             background: 'var(--surface)',
             border: '1px solid var(--line)',
             borderRadius: '12px',
-            padding: '12px',
+            padding: '16px',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
@@ -25,19 +25,19 @@ export function FourWeekPlanTable({ weeks }: FourWeekPlanTableProps) {
                 color: 'white',
                 borderRadius: '6px',
                 padding: '4px 8px',
-                fontSize: '12px',
-                fontWeight: 600,
+                fontSize: '13px',
+                fontWeight: 700,
               }}
             >
               {week.week}
             </div>
-            <div style={{ fontWeight: 600, fontSize: '15px', color: 'var(--ink)' }}>{week.theme}</div>
+            <div style={{ fontWeight: 700, fontSize: '17px', color: 'var(--ink)' }}>{week.theme}</div>
           </div>
-          <div style={{ fontSize: '14px', color: 'var(--ink)', marginBottom: '8px', lineHeight: 1.6 }}>
+          <div style={{ fontSize: '16px', color: 'var(--ink)', marginBottom: '10px', lineHeight: 1.8, fontWeight: 500 }}>
             {week.content}
           </div>
           {week.coachNote && (
-            <div style={{ fontSize: '13px', color: 'var(--muted)', fontStyle: 'italic', lineHeight: 1.5 }}>
+            <div style={{ fontSize: '15px', color: 'var(--ink)', fontStyle: 'italic', lineHeight: 1.6, opacity: 0.8 }}>
               💡 {week.coachNote}
             </div>
           )}

@@ -48,19 +48,19 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
 
   return (
     <div style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
         <thead>
           <tr style={{ borderBottom: '2px solid var(--line)' }}>
-            <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)', fontSize: '14px' }}>
+            <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
               項目
             </th>
-            <th style={{ padding: '12px', textAlign: 'center', fontWeight: 600, color: 'var(--ink)', width: '80px', fontSize: '14px' }}>
+            <th style={{ padding: '16px 12px', textAlign: 'center', fontWeight: 700, color: 'var(--ink)', width: '90px', fontSize: '16px' }}>
               点数
             </th>
-            <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)', fontSize: '14px' }}>
+            <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
               強み
             </th>
-            <th style={{ padding: '12px', textAlign: 'left', fontWeight: 600, color: 'var(--ink)', fontSize: '14px' }}>
+            <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
               改善案
             </th>
           </tr>
@@ -68,16 +68,16 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
         <tbody>
           {displayRows.map((row, i) => (
             <tr key={i} style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '12px', fontWeight: 600, color: 'var(--ink)' }}>{row.item}</td>
-              <td style={{ padding: '12px', textAlign: 'center' }}>
+              <td style={{ padding: '14px 12px', fontWeight: 600, color: 'var(--ink)', fontSize: '15px' }}>{row.item}</td>
+              <td style={{ padding: '14px 12px', textAlign: 'center' }}>
                 {row.score !== undefined ? (
                   <span
                     style={{
                       display: 'inline-block',
-                      padding: '4px 12px',
+                      padding: '6px 14px',
                       borderRadius: '6px',
-                      fontWeight: 600,
-                      fontSize: '14px',
+                      fontWeight: 700,
+                      fontSize: '15px',
                       background:
                         row.score >= 80
                           ? 'rgba(34, 197, 94, 0.1)'
@@ -102,8 +102,8 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
                   <span style={{ color: 'var(--muted)' }}>-</span>
                 )}
               </td>
-              <td style={{ padding: '12px', color: 'var(--ink)', lineHeight: 1.6 }}>{row.strength}</td>
-              <td style={{ padding: '12px', color: 'var(--accent)', lineHeight: 1.6 }}>{row.improvement}</td>
+              <td style={{ padding: '14px 12px', color: 'var(--ink)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.strength}</td>
+              <td style={{ padding: '14px 12px', color: 'var(--accent)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.improvement}</td>
             </tr>
           ))}
         </tbody>
