@@ -294,6 +294,9 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
           <section style={{ marginBottom: 24, padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
             <div style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 4 }}>市場セッション</div>
             <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--ink)' }}>{stats.marketSession}</div>
+            <div style={{ marginTop: 8, fontSize: 12, color: 'var(--muted)' }}>
+              この時間帯が属する主要な取引セッション
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>

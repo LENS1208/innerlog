@@ -343,6 +343,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                 </div>
               </div>
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この通貨ペアでの基本的なパフォーマンス指標
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -366,6 +369,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                   {Math.round(stats.avgHoldingTime)} <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>分</span>
                 </div>
               </div>
+            </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この通貨ペアでの最大利益・最大損失・平均保有時間
             </div>
           </section>
 
@@ -562,6 +568,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
             ) : (
               <div style={{ color: 'var(--muted)', textAlign: 'center', padding: 32 }}>データがありません</div>
             )}
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              買い・売りのポジション方向ごとの詳細パフォーマンス比較
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -597,6 +606,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                 }}
               />
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この通貨ペアでの取引が何時頃に発生したかの分布（緑＝その時間は利益、赤＝その時間は損失）
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -630,6 +642,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                   },
                 }}
               />
+            </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この通貨ペアでの取引が何曜日に発生したかの分布（緑＝その曜日は利益、赤＝その曜日は損失）
             </div>
           </section>
 
@@ -675,6 +690,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                 }}
               />
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              保有時間の長さごとの勝ち・負けトレード数の分布
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -710,6 +728,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                   },
                 }}
               />
+            </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この通貨ペアでの各トレードの損益を時系列で表示（緑＝利益、赤＝損失）
             </div>
           </section>
         </div>

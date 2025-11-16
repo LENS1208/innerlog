@@ -288,6 +288,9 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                 </div>
               </div>
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この曜日での基本的なパフォーマンス指標
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -313,6 +316,9 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                 <div style={{ color: 'var(--muted)' }}>データがありません</div>
               )}
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この曜日で取引した通貨ペアの内訳
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -337,6 +343,9 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
               ) : (
                 <div style={{ color: 'var(--muted)' }}>データがありません</div>
               )}
+            </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              買い・売りのポジション方向の分布
             </div>
           </section>
 
@@ -382,6 +391,9 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                 }}
               />
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この曜日での取引が何時頃に発生したかの分布
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -426,6 +438,9 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                 }}
               />
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              保有時間の長さごとの勝ち・負けトレード数の分布
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -461,6 +476,9 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
                   },
                 }}
               />
+            </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              この曜日での各トレードの損益を時系列で表示（緑＝利益、赤＝損失）
             </div>
           </section>
         </div>

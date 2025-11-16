@@ -317,6 +317,9 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
                 <div style={{ color: 'var(--muted)' }}>データがありません</div>
               )}
             </div>
+            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+              買い・売りのポジション方向の分布
+            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
