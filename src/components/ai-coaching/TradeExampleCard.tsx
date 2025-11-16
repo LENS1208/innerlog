@@ -140,53 +140,54 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
 
       {note && (
         <div style={{
-          fontSize: '13px',
+          fontSize: '14px',
           color: 'var(--ink)',
           marginBottom: '12px',
           paddingLeft: iconType ? '32px' : '0',
-          fontWeight: 500
+          fontWeight: 500,
+          lineHeight: 1.6
         }}>
           {note}
         </div>
       )}
 
       <div style={{
-        fontSize: '12px',
+        fontSize: '13px',
         paddingLeft: iconType ? '32px' : '0'
       }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <tbody>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)', width: '30%' }}>決済日時</td>
-              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{formatDate(ex.date)}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500, width: '35%' }}>決済日時</td>
+              <td style={{ padding: '8px 0', color: 'var(--ink)' }}>{formatDate(ex.date)}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>銘柄</td>
-              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.symbol}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500 }}>銘柄</td>
+              <td style={{ padding: '8px 0', color: 'var(--ink)' }}>{ex.symbol}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>方向</td>
-              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{formatSide(ex.side)}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500 }}>方向</td>
+              <td style={{ padding: '8px 0', color: 'var(--ink)' }}>{formatSide(ex.side)}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>損益</td>
-              <td style={{ padding: '6px 0' }} className={pnlFormatted.cls}>{pnlFormatted.text}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500 }}>損益</td>
+              <td style={{ padding: '8px 0' }} className={pnlFormatted.cls}>{pnlFormatted.text}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>pips</td>
-              <td style={{ padding: '6px 0' }} className={pipsFormatted.cls}>{pipsFormatted.text}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500 }}>pips</td>
+              <td style={{ padding: '8px 0' }} className={pipsFormatted.cls}>{pipsFormatted.text}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>ロット数</td>
-              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.lots.toFixed(2)}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500 }}>ロット数</td>
+              <td style={{ padding: '8px 0', color: 'var(--ink)' }}>{ex.lots.toFixed(2)}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>建値</td>
-              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.entry}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500 }}>建値</td>
+              <td style={{ padding: '8px 0', color: 'var(--ink)' }}>{ex.entry}</td>
             </tr>
             <tr>
-              <td style={{ padding: '6px 8px 6px 0', color: 'var(--muted)' }}>決済</td>
-              <td style={{ padding: '6px 0', color: 'var(--ink)' }}>{ex.exit}</td>
+              <td style={{ padding: '8px 8px 8px 0', color: 'var(--ink)', fontWeight: 500 }}>決済</td>
+              <td style={{ padding: '8px 0', color: 'var(--ink)' }}>{ex.exit}</td>
             </tr>
           </tbody>
         </table>

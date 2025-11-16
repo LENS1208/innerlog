@@ -39,9 +39,9 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         )}
 
         <Section title="現状サマリー">
-          <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.6 }}>
+          <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
             {sheet.summary.map((s, i) => (
-              <li key={i} style={{ fontSize: '14px' }}>{s}</li>
+              <li key={i} style={{ fontSize: '15px', color: 'var(--ink)', marginBottom: '6px' }}>{s}</li>
             ))}
           </ul>
         </Section>
@@ -92,7 +92,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
       <Section title="コーチングメッセージ">
         {sheet.coachingMessage.map((text, i) => (
-          <p key={i} style={{ margin: '0 0 12px 0', fontSize: '14px', lineHeight: 1.6 }}>
+          <p key={i} style={{ margin: '0 0 12px 0', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink)' }}>
             {text}
           </p>
         ))}
@@ -100,14 +100,14 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
       <footer
         style={{
-          padding: '12px',
+          padding: '16px',
           background: 'var(--chip)',
           borderRadius: '8px',
-          fontSize: '13px',
-          color: 'var(--muted)',
+          fontSize: '14px',
+          color: 'var(--ink)',
         }}
       >
-        <div style={{ fontWeight: 600, marginBottom: '4px' }}>次のステップ提案：</div>
+        <div style={{ fontWeight: 600, marginBottom: '6px', fontSize: '15px' }}>次のステップ提案：</div>
         <div>{sheet.nextSteps.join(' / ')}</div>
       </footer>
     </div>
@@ -133,9 +133,9 @@ function Section({ title, comment, children }: SectionProps) {
       <h3
         style={{
           margin: '0 0 12px 0',
-          fontSize: '15px',
+          fontSize: '16px',
           fontWeight: 'bold',
-          color: 'var(--muted)',
+          color: 'var(--ink)',
         }}
       >
         {title}
@@ -144,8 +144,8 @@ function Section({ title, comment, children }: SectionProps) {
         <p
           style={{
             margin: '0 0 16px 0',
-            fontSize: '14px',
-            lineHeight: 1.6,
+            fontSize: '15px',
+            lineHeight: 1.7,
             color: 'var(--ink)',
             paddingBottom: '12px',
             borderBottom: '1px solid var(--line)',

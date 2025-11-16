@@ -31,13 +31,13 @@ export function FourWeekPlanTable({ weeks }: FourWeekPlanTableProps) {
             >
               {week.week}
             </div>
-            <div style={{ fontWeight: 600, fontSize: '14px' }}>{week.theme}</div>
+            <div style={{ fontWeight: 600, fontSize: '15px', color: 'var(--ink)' }}>{week.theme}</div>
           </div>
-          <div style={{ fontSize: '13px', color: 'var(--ink)', marginBottom: '6px' }}>
+          <div style={{ fontSize: '14px', color: 'var(--ink)', marginBottom: '8px', lineHeight: 1.6 }}>
             {week.content}
           </div>
           {week.coachNote && (
-            <div style={{ fontSize: '12px', color: 'var(--muted)', fontStyle: 'italic' }}>
+            <div style={{ fontSize: '13px', color: 'var(--muted)', fontStyle: 'italic', lineHeight: 1.5 }}>
               💡 {week.coachNote}
             </div>
           )}

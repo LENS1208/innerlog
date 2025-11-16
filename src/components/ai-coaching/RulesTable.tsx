@@ -35,13 +35,13 @@ export function RulesTable({ rules }: RulesTableProps) {
             >
               {i + 1}
             </div>
-            <div style={{ fontWeight: 600, fontSize: '14px' }}>{rule.title}</div>
+            <div style={{ fontWeight: 600, fontSize: '15px', color: 'var(--ink)' }}>{rule.title}</div>
           </div>
-          <div style={{ fontSize: '13px', color: 'var(--ink)', marginBottom: '6px' }}>
+          <div style={{ fontSize: '14px', color: 'var(--ink)', marginBottom: '8px', lineHeight: 1.6 }}>
             {rule.content}
           </div>
           {rule.coachNote && (
-            <div style={{ fontSize: '12px', color: 'var(--muted)', fontStyle: 'italic' }}>
+            <div style={{ fontSize: '13px', color: 'var(--muted)', fontStyle: 'italic', lineHeight: 1.5 }}>
               💡 {rule.coachNote}
             </div>
           )}
