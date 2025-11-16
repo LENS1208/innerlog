@@ -8,7 +8,7 @@ export function HelpIcon({ text }: HelpIconProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block', marginLeft: 6 }}>
+    <div style={{ position: 'relative', display: 'inline-block', marginLeft: 6, zIndex: 9999 }}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
@@ -55,7 +55,7 @@ export function HelpIcon({ text }: HelpIconProps) {
             borderRadius: 8,
             padding: 12,
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            zIndex: 1000,
+            zIndex: 9999,
             minWidth: 240,
             maxWidth: 320,
             fontSize: 13,
