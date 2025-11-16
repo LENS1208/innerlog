@@ -118,7 +118,15 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       }
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleString('ja-JP') : '',
@@ -196,7 +204,15 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
       }
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleString('ja-JP') : '',
@@ -268,7 +284,15 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
       }
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           title: (items: any) => {
@@ -347,7 +371,15 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
       }
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleDateString('ja-JP') : '',
@@ -794,7 +826,15 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
       }
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           label: (item: any) => [
@@ -876,7 +916,15 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
       }
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           label: (item: any) => [
@@ -956,7 +1004,15 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
       y: {}
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           label: (item: any) => [
@@ -1106,7 +1162,15 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
               }
             },
             plugins: {
-              legend: { display: false },
+              legend: {
+                display: true,
+                position: 'top' as const,
+                labels: {
+                  font: { size: 12 },
+                  padding: 12,
+                  usePointStyle: true
+                }
+              },
               tooltip: {
                 callbacks: {
                   label: (context) => {
@@ -1189,7 +1253,15 @@ export function ProfitDistributionChart({ trades, onRangeClick }: { trades: Trad
       }
     },
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: true,
+        position: 'top' as const,
+        labels: {
+          font: { size: 12 },
+          padding: 12,
+          usePointStyle: true
+        }
+      },
       tooltip: {
         callbacks: {
           label: (context: any) => `取引回数: ${context.parsed.y}件`
