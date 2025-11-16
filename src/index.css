@@ -891,3 +891,45 @@ table tbody tr:last-child td {
     min-width: auto !important;
   }
 }
+
+.side-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 2px solid;
+  box-shadow: 0 2px 4px rgba(0,0,0,.08);
+  transition: all 0.2s ease;
+  min-width: 56px;
+}
+
+.side-buy {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #047857;
+  color: #fff;
+}
+
+.side-sell {
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  border-color: #ea580c;
+  color: #fff;
+}
+
+.side-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,.12);
+}
+
+:root[data-theme="dark"] .side-buy {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  border-color: #065f46;
+}
+
+:root[data-theme="dark"] .side-sell {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  border-color: #c2410c;
+}
