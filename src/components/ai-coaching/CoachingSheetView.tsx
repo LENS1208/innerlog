@@ -28,7 +28,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
     <div style={{ display: 'grid', gap: '16px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'start' }}>
         {radarComponent && (
-          <Section title="総合評価">
+          <Section title="総合評価" style={{ aspectRatio: '1 / 1', minHeight: 0 }}>
             {radarComponent}
           </Section>
         )}
@@ -135,9 +135,10 @@ interface SectionProps {
   title: string;
   comment?: string;
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
-function Section({ title, comment, children }: SectionProps) {
+function Section({ title, comment, children, style }: SectionProps) {
   return (
     <section
       style={{
@@ -146,6 +147,7 @@ function Section({ title, comment, children }: SectionProps) {
         borderRadius: '12px',
         padding: '20px',
         height: '100%',
+        ...style,
       }}
     >
       <h3
