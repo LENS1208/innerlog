@@ -7,7 +7,7 @@ interface FourWeekPlanTableProps {
 
 export function FourWeekPlanTable({ weeks }: FourWeekPlanTableProps) {
   return (
-    <div style={{ display: 'grid', gap: '16px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
       {weeks.map((week, i) => (
         <div
           key={i}
