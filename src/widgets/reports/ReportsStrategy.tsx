@@ -789,7 +789,7 @@ export default function ReportsStrategy() {
                 plugins: {
                   legend: {
                     position: "bottom",
-                    reverse: true
+                    reverse: false
                   },
                   tooltip: {
                     callbacks: {
