@@ -634,7 +634,7 @@ export default function ReportsMarket() {
                       }}>
                         <div style={{ marginBottom: 8 }}>
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>買い</span>
-                          <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: 4 }}>({item.longCount} <span style={{ fontSize: 11 }}>回</span>)</span>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)", marginLeft: 4 }}>({item.longCount} <span style={{ fontSize: 11 }}>回</span>)</span>
                         </div>
                         <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
                         <div style={{
@@ -665,7 +665,7 @@ export default function ReportsMarket() {
                       }}>
                         <div style={{ marginBottom: 8 }}>
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>売り</span>
-                          <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: 4 }}>({item.shortCount} <span style={{ fontSize: 11 }}>回</span>)</span>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)", marginLeft: 4 }}>({item.shortCount} <span style={{ fontSize: 11 }}>回</span>)</span>
                         </div>
                         <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
                         <div style={{
@@ -695,7 +695,10 @@ export default function ReportsMarket() {
                       padding: 12,
                       textAlign: "center",
                     }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)", marginBottom: 4 }}>合計損益 ({item.count} <span style={{ fontSize: 11 }}>回</span>)</div>
+                      <div style={{ marginBottom: 4 }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>合計損益</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)", marginLeft: 4 }}>({item.count} <span style={{ fontSize: 11 }}>回</span>)</span>
+                      </div>
                       <div style={{
                         fontSize: 16,
                         fontWeight: 700,
