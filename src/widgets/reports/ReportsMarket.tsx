@@ -588,13 +588,13 @@ export default function ReportsMarket() {
                       bottom: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to top, ${getLongColor(0.3)}, ${getLongColor()})`,
+                      background: '#0084C7',
                       borderRadius: "0 0 0 12px",
                     } : {
                       top: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                      background: '#EF4444',
                       borderRadius: "12px 0 0 0",
                     })
                   }} />
@@ -607,13 +607,13 @@ export default function ReportsMarket() {
                       bottom: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to top, ${getShortColor(0.3)}, ${getShortColor()})`,
+                      background: '#0084C7',
                       borderRadius: "0 0 12px 0",
                     } : {
                       top: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                      background: '#EF4444',
                       borderRadius: "0 12px 0 0",
                     })
                   }} />
@@ -864,7 +864,7 @@ export default function ReportsMarket() {
                   {
                     data: symbolData.slice(0, 6).map(getMetricValue),
                     backgroundColor: symbolData.slice(0, 6).map((s) =>
-                      s.profit >= 0 ? getProfitColor() : getLossColor()
+                      s.profit >= 0 ? '#0084C7' : '#EF4444'
                     ),
                   },
                 ],
@@ -914,7 +914,7 @@ export default function ReportsMarket() {
                   {
                     data: pipsRangeData.map(getMetricValue),
                     backgroundColor: pipsRangeData.map((r) =>
-                      r.profit >= 0 ? getProfitColor() : getLossColor()
+                      r.profit >= 0 ? '#0084C7' : '#EF4444'
                     ),
                   },
                 ],
@@ -964,7 +964,7 @@ export default function ReportsMarket() {
                   {
                     data: [...currencyData.base.slice(0, 4).map((c) => c.profit), ...currencyData.quote.slice(0, 4).map((c) => c.profit)],
                     backgroundColor: [...currencyData.base.slice(0, 4), ...currencyData.quote.slice(0, 4)].map((c) =>
-                      c.profit >= 0 ? getProfitColor() : getLossColor()
+                      c.profit >= 0 ? '#0084C7' : '#EF4444'
                     ),
                   },
                 ],
@@ -1032,7 +1032,7 @@ export default function ReportsMarket() {
                   {
                     data: symbolData.map((s) => s.profit),
                     backgroundColor: symbolData.map((s) =>
-                      s.profit >= 0 ? getProfitColor() : getLossColor()
+                      s.profit >= 0 ? '#0084C7' : '#EF4444'
                     ),
                   },
                 ],
@@ -1088,7 +1088,7 @@ export default function ReportsMarket() {
                   {
                     data: marketConditionData.map((m) => m.profit),
                     backgroundColor: marketConditionData.map((m) =>
-                      m.profit >= 0 ? getProfitColor() : getLossColor()
+                      m.profit >= 0 ? '#0084C7' : '#EF4444'
                     ),
                   },
                 ],

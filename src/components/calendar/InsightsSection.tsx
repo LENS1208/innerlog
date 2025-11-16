@@ -109,7 +109,7 @@ export default function InsightsSection(props: InsightsSectionProps) {
     datasets: [
       {
         data: data.map((d) => d.pnl),
-        backgroundColor: data.map((d) => (d.pnl >= 0 ? getAccentColor() : getLossColor())),
+        backgroundColor: data.map((d) => (d.pnl >= 0 ? '#0084C7' : '#EF4444')),
       },
     ],
   });
