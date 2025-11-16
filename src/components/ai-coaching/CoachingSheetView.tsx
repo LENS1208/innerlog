@@ -48,7 +48,8 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         </Section>
       </div>
 
-      <Section title="強みと課題" comment={sheet.strengthsWeaknessesComment}>
+      <Section title="強みと課題">
+        {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
         <StrengthsWeaknessesTable
           rows={sheet.strengthsWeaknesses}
           evaluationScore={sheet.evaluationScore}
