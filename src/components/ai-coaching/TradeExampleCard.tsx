@@ -162,11 +162,11 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
               <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>{formatDate(ex.date)}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '10px 8px 10px 0', color: 'var(--ink)', fontWeight: 600, fontSize: '14px' }}>銘柄</td>
+              <td style={{ padding: '10px 8px 10px 0', color: 'var(--ink)', fontWeight: 600, fontSize: '14px' }}>通貨ペア</td>
               <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>{ex.symbol}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
-              <td style={{ padding: '10px 8px 10px 0', color: 'var(--ink)', fontWeight: 600, fontSize: '14px' }}>方向</td>
+              <td style={{ padding: '10px 8px 10px 0', color: 'var(--ink)', fontWeight: 600, fontSize: '14px' }}>ポジション</td>
               <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>{formatSide(ex.side)}</td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>

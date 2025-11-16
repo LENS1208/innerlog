@@ -11,7 +11,7 @@ import Card from "../../components/common/Card";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 
-type StrategySegmentTab = "戦略" | "方向";
+type StrategySegmentTab = "戦略" | "ポジション";
 
 function StrategySegmentTabs({
   setupData,
@@ -22,7 +22,7 @@ function StrategySegmentTabs({
 }) {
   const [activeTab, setActiveTab] = React.useState<StrategySegmentTab>("戦略");
 
-  const tabs: StrategySegmentTab[] = ["戦略", "方向"];
+  const tabs: StrategySegmentTab[] = ["戦略", "ポジション"];
 
   const renderTable = () => {
     let data: any[] = [];
@@ -40,7 +40,7 @@ function StrategySegmentTabs({
         }));
         segmentLabel = "戦略";
         break;
-      case "方向":
+      case "ポジション":
         data = [
           {
             label: "買い",
@@ -59,7 +59,7 @@ function StrategySegmentTabs({
             avgProfit: sideData.short.avgProfit
           }
         ];
-        segmentLabel = "方向";
+        segmentLabel = "ポジション";
         break;
     }
 
@@ -473,8 +473,8 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            方向比較
-            <HelpIcon text="買いと売りの損益比較です。どちらの方向が得意か確認できます。" />
+            ポジション比較
+            <HelpIcon text="買いと売りの損益比較です。どちらのポジションが得意か確認できます。" />
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 18, fontWeight: 700, color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
@@ -572,7 +572,7 @@ export default function ReportsStrategy() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             売り vs 買い
-            <HelpIcon text="買いと売りの損益比較です。方向性の得意不得意が分かります。" />
+            <HelpIcon text="買いと売りの損益比較です。ポジションの得意不得意が分かります。" />
           </h3>
           <div style={{ height: 180 }}>
             <Doughnut
@@ -763,8 +763,8 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            方向×戦略（クロス）
-            <HelpIcon text="売買方向と戦略の組み合わせ分析です。最適な組み合わせを見つけられます。" />
+            ポジション×戦略（クロス）
+            <HelpIcon text="ポジションと戦略の組み合わせ分析です。最適な組み合わせを見つけられます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -942,7 +942,7 @@ export default function ReportsStrategy() {
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
         <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             セグメント別
-            <HelpIcon text="全戦略と方向の詳細データテーブルです。細かい数値を確認して改善点を見つけられます。" />
+            <HelpIcon text="全戦略とポジションの詳細データテーブルです。細かい数値を確認して改善点を見つけられます。" />
           </h3>
         <StrategySegmentTabs
           setupData={setupData}

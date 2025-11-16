@@ -913,7 +913,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     "ほかのセットアップ優先",
   ];
   const AI_PROS_OPTS = [
-    "方向の精度",
+    "ポジションの精度",
     "エントリーのタイミング",
     "利確＆損切りライン",
     "根拠が分かりやすい",
@@ -1204,7 +1204,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                 <h3 style={{ margin: "12px 0 8px 0", fontSize: 15, color: "var(--muted)" }}>AIの予想</h3>
                 <label>
                   <select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-                    <option value="">AIの方向感</option><option>買い</option><option>売り</option><option>様子見</option>
+                    <option value="">AIのポジション予測</option><option>買い</option><option>売り</option><option>様子見</option>
                   </select>
                 </label>
                 <label>
