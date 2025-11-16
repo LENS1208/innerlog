@@ -589,66 +589,117 @@ export default function ReportsMarket() {
                   </div>
 
                   <div style={{ marginBottom: 16 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 11 }}>
+                    <div style={{ display: "flex", justifyContent: "space-around", marginBottom: 8, fontSize: 11 }}>
                       <span style={{ color: getLongColor(), fontWeight: 700 }}>買い</span>
                       <span style={{ color: getShortColor(), fontWeight: 700 }}>売り</span>
                     </div>
 
-                    <div style={{ display: "flex", gap: 4, height: 32, alignItems: "center" }}>
-                      <div style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
-                        <div
-                          style={{
-                            width: `${longBarWidth}%`,
-                            height: "100%",
-                            background: item.longProfit >= 0
-                              ? `linear-gradient(90deg, ${getLongColor(0.3)}, ${getLongColor()})`
-                              : `linear-gradient(90deg, ${getLossColor(0.3)}, ${getLossColor()})`,
-                            borderRadius: "6px 0 0 6px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            color: longBarWidth > 30 ? "#fff" : "transparent",
-                            transition: "width 0.3s ease",
-                          }}
-                        >
+                    <div style={{ display: "flex", gap: 24, justifyContent: "center", alignItems: "center", height: 120 }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                        <div style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "flex-end",
+                          height: 100,
+                          width: 60,
+                          position: "relative"
+                        }}>
+                          <div style={{
+                            position: "absolute",
+                            bottom: "50%",
+                            left: 0,
+                            right: 0,
+                            height: 1,
+                            background: "var(--line)",
+                            zIndex: 1
+                          }} />
+                          {item.longProfit >= 0 ? (
+                            <div style={{
+                              height: `${Math.min((Math.abs(item.longProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
+                              background: `linear-gradient(to top, ${getLongColor(0.3)}, ${getLongColor()})`,
+                              borderRadius: "6px 6px 0 0",
+                              display: "flex",
+                              alignItems: "flex-start",
+                              justifyContent: "center",
+                              alignSelf: "flex-end",
+                              marginBottom: "50%",
+                              transition: "height 0.3s ease",
+                              position: "relative",
+                              zIndex: 2
+                            }} />
+                          ) : (
+                            <div style={{
+                              height: `${Math.min((Math.abs(item.longProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
+                              background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                              borderRadius: "0 0 6px 6px",
+                              display: "flex",
+                              alignItems: "flex-end",
+                              justifyContent: "center",
+                              alignSelf: "flex-start",
+                              marginTop: "50%",
+                              transition: "height 0.3s ease",
+                              position: "relative",
+                              zIndex: 2
+                            }} />
+                          )}
+                        </div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: item.longProfit >= 0 ? getLongColor() : getLossColor(), textAlign: "center" }}>
                           {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit).toLocaleString()}
                         </div>
                       </div>
 
-                      <div style={{
-                        width: 2,
-                        height: "100%",
-                        background: "var(--line)",
-                      }} />
-
-                      <div style={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
-                        <div
-                          style={{
-                            width: `${shortBarWidth}%`,
-                            height: "100%",
-                            background: item.shortProfit >= 0
-                              ? `linear-gradient(90deg, ${getShortColor()}, ${getShortColor(0.3)})`
-                              : `linear-gradient(90deg, ${getLossColor()}, ${getLossColor(0.3)})`,
-                            borderRadius: "0 6px 6px 0",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            color: shortBarWidth > 30 ? "#fff" : "transparent",
-                            transition: "width 0.3s ease",
-                          }}
-                        >
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                        <div style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "flex-end",
+                          height: 100,
+                          width: 60,
+                          position: "relative"
+                        }}>
+                          <div style={{
+                            position: "absolute",
+                            bottom: "50%",
+                            left: 0,
+                            right: 0,
+                            height: 1,
+                            background: "var(--line)",
+                            zIndex: 1
+                          }} />
+                          {item.shortProfit >= 0 ? (
+                            <div style={{
+                              height: `${Math.min((Math.abs(item.shortProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
+                              background: `linear-gradient(to top, ${getShortColor(0.3)}, ${getShortColor()})`,
+                              borderRadius: "6px 6px 0 0",
+                              display: "flex",
+                              alignItems: "flex-start",
+                              justifyContent: "center",
+                              alignSelf: "flex-end",
+                              marginBottom: "50%",
+                              transition: "height 0.3s ease",
+                              position: "relative",
+                              zIndex: 2
+                            }} />
+                          ) : (
+                            <div style={{
+                              height: `${Math.min((Math.abs(item.shortProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
+                              background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                              borderRadius: "0 0 6px 6px",
+                              display: "flex",
+                              alignItems: "flex-end",
+                              justifyContent: "center",
+                              alignSelf: "flex-start",
+                              marginTop: "50%",
+                              transition: "height 0.3s ease",
+                              position: "relative",
+                              zIndex: 2
+                            }} />
+                          )}
+                        </div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: item.shortProfit >= 0 ? getShortColor() : getLossColor(), textAlign: "center" }}>
                           {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit).toLocaleString()}
                         </div>
                       </div>
-                    </div>
-
-                    <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4, fontSize: 10, color: "var(--muted)" }}>
-                      <span>{item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit).toLocaleString()}円</span>
-                      <span>{item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit).toLocaleString()}円</span>
                     </div>
                   </div>
 
