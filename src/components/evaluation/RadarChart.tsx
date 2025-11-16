@@ -1,12 +1,15 @@
 import React, { useMemo } from 'react';
 import { getAccentColor, getLossColor } from '../../lib/chartColors';
 import type { ScoreParts } from '../../types/evaluation.types';
+import { useTheme } from '../../lib/theme.context';
 
 type RadarChartProps = {
   parts: ScoreParts;
 };
 
 export default function RadarChart({ parts }: RadarChartProps) {
+  const { theme } = useTheme();
+  const fillOpacity = theme === 'dark' ? 0.75 : 0.4;
   const labels = ['エントリー技術', 'DD耐性', 'リスクリワード', 'リスク管理', '収益安定'];
   const values = [parts.entry, parts.dd, parts.rr, parts.risk, parts.stability];
 
@@ -107,7 +110,7 @@ export default function RadarChart({ parts }: RadarChartProps) {
         <polygon
           points={dataPoints}
           fill="var(--accent)"
-          fillOpacity="0.6"
+          fillOpacity={fillOpacity}
           stroke="var(--accent)"
           strokeWidth="2"
         />

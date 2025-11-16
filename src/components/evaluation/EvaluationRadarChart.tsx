@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTheme } from '../../lib/theme.context';
 
 type RadarItem = {
   label: string;
@@ -11,6 +12,8 @@ type EvaluationRadarChartProps = {
 };
 
 export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChartProps) {
+  const { theme } = useTheme();
+  const fillOpacity = theme === 'dark' ? 0.75 : 0.4;
   const W = 400;
   const H = 360;
   const cx = W / 2;
@@ -108,7 +111,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
         <polygon
           points={dataPoints}
           fill="var(--accent)"
-          fillOpacity="0.6"
+          fillOpacity={fillOpacity}
           stroke="var(--accent)"
           strokeWidth="2"
         />
