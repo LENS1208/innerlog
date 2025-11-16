@@ -664,13 +664,26 @@ export default function ReportsMarket() {
                       padding: 8,
                       border: "1px solid var(--line)",
                     }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2 }}>勝率</div>
-                      <div style={{
-                        fontSize: 14,
-                        fontWeight: 700,
-                        color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                      }}>
-                        {item.longWinRate.toFixed(1)}%
+                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>買い</div>
+                      <div style={{ marginBottom: 4 }}>
+                        <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
+                        <div style={{
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                        }}>
+                          {item.longWinRate.toFixed(1)}%
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 9, color: "var(--muted)" }}>平均損益</div>
+                        <div style={{
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: longAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
+                        }}>
+                          {longAvgPnL >= 0 ? '+' : ''}{Math.round(longAvgPnL).toLocaleString()}円
+                        </div>
                       </div>
                     </div>
                     <div style={{
@@ -679,51 +692,34 @@ export default function ReportsMarket() {
                       padding: 8,
                       border: "1px solid var(--line)",
                     }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2 }}>勝率</div>
-                      <div style={{
-                        fontSize: 14,
-                        fontWeight: 700,
-                        color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                      }}>
-                        {item.shortWinRate.toFixed(1)}%
+                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>売り</div>
+                      <div style={{ marginBottom: 4 }}>
+                        <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
+                        <div style={{
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                        }}>
+                          {item.shortWinRate.toFixed(1)}%
+                        </div>
                       </div>
-                    </div>
-                    <div style={{
-                      background: "var(--surface)",
-                      borderRadius: 6,
-                      padding: 8,
-                      border: "1px solid var(--line)",
-                    }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2 }}>EV</div>
-                      <div style={{
-                        fontSize: 14,
-                        fontWeight: 700,
-                        color: longAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
-                      }}>
-                        {longAvgPnL >= 0 ? '+' : ''}{Math.round(longAvgPnL).toLocaleString()}円
-                      </div>
-                    </div>
-                    <div style={{
-                      background: "var(--surface)",
-                      borderRadius: 6,
-                      padding: 8,
-                      border: "1px solid var(--line)",
-                    }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2 }}>EV</div>
-                      <div style={{
-                        fontSize: 14,
-                        fontWeight: 700,
-                        color: shortAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
-                      }}>
-                        {shortAvgPnL >= 0 ? '+' : ''}{Math.round(shortAvgPnL).toLocaleString()}円
+                      <div>
+                        <div style={{ fontSize: 9, color: "var(--muted)" }}>平均損益</div>
+                        <div style={{
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: shortAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
+                        }}>
+                          {shortAvgPnL >= 0 ? '+' : ''}{Math.round(shortAvgPnL).toLocaleString()}円
+                        </div>
                       </div>
                     </div>
                   </div>
 
                   <div style={{
                     background: totalProfit >= 0
-                      ? "rgba(16, 185, 129, 0.1)"
-                      : "rgba(239, 68, 68, 0.1)",
+                      ? getLongColor(0.1)
+                      : getLossColor(0.1),
                     borderRadius: 6,
                     padding: 8,
                     textAlign: "center",
@@ -732,12 +728,12 @@ export default function ReportsMarket() {
                     <div style={{
                       fontSize: 16,
                       fontWeight: 700,
-                      color: totalProfit >= 0 ? "var(--gain)" : "var(--loss)",
+                      color: totalProfit >= 0 ? getLongColor() : getLossColor(),
                     }}>
                       {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
                     </div>
                     <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
-                      EV: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円 / PF: {item.pf.toFixed(2)}
+                      平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円 / PF: {item.pf.toFixed(2)}
                     </div>
                   </div>
                 </div>
