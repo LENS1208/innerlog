@@ -32,7 +32,7 @@ export const UI_TEXT = {
   monthlyTotal: '月合計',
   cost: 'コスト',
   side: '方向',
-  symbol: '銘柄',
+  symbol: '通貨ペア',
   position: 'ポジション',
   long: '買い',
   short: '売り',
