@@ -437,19 +437,13 @@ export default function ReportsRisk() {
     return { q1, q2, q3, q4, min, max };
   }, [filteredTrades]);
 
-  // リスクリワード比（設計）
-  const designedRR = useMemo(() => {
-    const tradesWithRR = filteredTrades.filter(t => t.stopPrice && t.targetPrice && t.openPrice);
-    if (tradesWithRR.length === 0) return 0;
+  const actualRR = useMemo(() => {
+    const avgWin = riskMetrics.avgWin;
+    const avgLoss = Math.abs(riskMetrics.avgLoss);
 
-    const rrValues = tradesWithRR.map(t => {
-      const risk = Math.abs(t.openPrice! - t.stopPrice!);
-      const reward = Math.abs(t.targetPrice! - t.openPrice!);
-      return risk > 0 ? reward / risk : 0;
-    });
-
-    return rrValues.reduce((sum, rr) => sum + rr, 0) / rrValues.length;
-  }, [filteredTrades]);
+    if (avgLoss === 0) return 0;
+    return avgWin / avgLoss;
+  }, [riskMetrics]);
 
   // シャープレシオ（簡易版）
   const sharpeRatio = useMemo(() => {
@@ -489,12 +483,12 @@ export default function ReportsRisk() {
           }}
         >
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>リスクリワード比（設計）</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>リスクリワード比（RRR）</h4>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
-              {designedRR > 0 ? designedRR.toFixed(2) : '—'}
+              {actualRR > 0 ? actualRR.toFixed(2) : '—'}
             </div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>
-              {designedRR > 0 ? 'SL/TP設定から算出' : 'SL/TPデータなし'}
+              平均利益 ÷ 平均損失
             </div>
           </div>
 
