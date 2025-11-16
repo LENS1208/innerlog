@@ -27,14 +27,8 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'stretch' }}>
-        {scoreComponent && (
-          <Section title="総合スコア">
-            {scoreComponent}
-          </Section>
-        )}
-
         {radarComponent && (
-          <Section title="バランス評価">
+          <Section title="総合評価">
             {radarComponent}
           </Section>
         )}

@@ -239,30 +239,18 @@ export default function AiEvaluationPage() {
             </div>
             <CoachingSheetView
               sheet={coachingData.sheet}
-              scoreComponent={
-                coachingData.sheet.evaluationScore ? (
-                  <OverallScore
-                    score={coachingData.sheet.evaluationScore.overall}
-                    rank={
-                      coachingData.sheet.evaluationScore.overall >= 80 ? 'S' :
-                      coachingData.sheet.evaluationScore.overall >= 70 ? 'A' :
-                      coachingData.sheet.evaluationScore.overall >= 60 ? 'B' :
-                      coachingData.sheet.evaluationScore.overall >= 50 ? 'C' : 'D'
-                    }
-                  />
-                ) : (
-                  <OverallScore score={scoreData.overall} rank={scoreData.rank} />
-                )
-              }
               radarComponent={
                 coachingData.sheet.evaluationScore ? (
-                  <EvaluationRadarChart parts={[
-                    { label: 'エントリー', value: coachingData.sheet.evaluationScore.entryTiming },
-                    { label: 'リスク管理', value: coachingData.sheet.evaluationScore.riskManagement },
-                    { label: '損切り・利確', value: coachingData.sheet.evaluationScore.exitStrategy },
-                    { label: '感情制御', value: coachingData.sheet.evaluationScore.emotionalControl },
-                    { label: '一貫性', value: coachingData.sheet.evaluationScore.consistency },
-                  ]} />
+                  <EvaluationRadarChart
+                    parts={[
+                      { label: 'エントリー', value: coachingData.sheet.evaluationScore.entryTiming },
+                      { label: 'リスク管理', value: coachingData.sheet.evaluationScore.riskManagement },
+                      { label: '損切り・利確', value: coachingData.sheet.evaluationScore.exitStrategy },
+                      { label: '感情制御', value: coachingData.sheet.evaluationScore.emotionalControl },
+                      { label: '一貫性', value: coachingData.sheet.evaluationScore.consistency },
+                    ]}
+                    centerScore={coachingData.sheet.evaluationScore.overall}
+                  />
                 ) : null
               }
             />

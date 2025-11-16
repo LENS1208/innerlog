@@ -7,14 +7,15 @@ type RadarItem = {
 
 type EvaluationRadarChartProps = {
   parts: RadarItem[];
+  centerScore?: number;
 };
 
-export function EvaluationRadarChart({ parts }: EvaluationRadarChartProps) {
-  const W = 320;
-  const H = 280;
+export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChartProps) {
+  const W = 400;
+  const H = 400;
   const cx = W / 2;
   const cy = H / 2;
-  const R = 90;
+  const R = 140;
   const axes = parts.length;
 
   const webLevels = useMemo(() => {
@@ -65,10 +66,10 @@ export function EvaluationRadarChart({ parts }: EvaluationRadarChartProps) {
   }, [parts, axes]);
 
   return (
-    <div style={{ padding: '12px 0' }}>
+    <div style={{ padding: '12px 0', position: 'relative' }}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        style={{ width: '100%', height: 'auto', maxHeight: 260 }}
+        style={{ width: '100%', height: 'auto' }}
         aria-label="評価レーダー"
       >
         {webLevels.map((web, idx) => (
@@ -96,7 +97,7 @@ export function EvaluationRadarChart({ parts }: EvaluationRadarChartProps) {
             key={`label-${idx}`}
             x={pos.x}
             y={pos.y}
-            fontSize="11"
+            fontSize="14"
             fontWeight="600"
             textAnchor="middle"
             fill="var(--ink)"
@@ -128,6 +129,18 @@ export function EvaluationRadarChart({ parts }: EvaluationRadarChartProps) {
             />
           );
         })}
+        {centerScore !== undefined && (
+          <text
+            x={cx}
+            y={cy + 10}
+            fontSize="72"
+            fontWeight="900"
+            textAnchor="middle"
+            fill="var(--ink)"
+          >
+            {centerScore.toFixed(1)}
+          </text>
+        )}
       </svg>
     </div>
   );
