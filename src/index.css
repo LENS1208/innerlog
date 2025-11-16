@@ -685,6 +685,7 @@
   width: 100%;
   max-width: 100%;
   padding: 10px;
+  border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--surface);
   box-sizing: border-box;
