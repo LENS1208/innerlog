@@ -45,18 +45,18 @@ export function HelpIcon({ text }: HelpIconProps) {
       {isOpen && (
         <div
           style={{
-            position: 'absolute',
-            top: '100%',
+            position: 'fixed',
+            top: '50%',
             left: '50%',
-            transform: 'translateX(-50%)',
-            marginTop: 8,
+            transform: 'translate(-50%, -50%)',
             background: 'var(--surface)',
             border: '1px solid var(--line)',
             borderRadius: 8,
             padding: 12,
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            zIndex: 100,
+            zIndex: 10000,
             width: 320,
+            maxWidth: '90vw',
             fontSize: 13,
             lineHeight: 1.6,
             color: 'var(--muted)',
@@ -65,32 +65,6 @@ export function HelpIcon({ text }: HelpIconProps) {
             wordBreak: 'normal',
           }}
         >
-          <div
-            style={{
-              position: 'absolute',
-              top: -6,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 0,
-              height: 0,
-              borderLeft: '6px solid transparent',
-              borderRight: '6px solid transparent',
-              borderBottom: '6px solid var(--line)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              top: -5,
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 0,
-              height: 0,
-              borderLeft: '5px solid transparent',
-              borderRight: '5px solid transparent',
-              borderBottom: '5px solid var(--surface)',
-            }}
-          />
           {text}
         </div>
       )}
