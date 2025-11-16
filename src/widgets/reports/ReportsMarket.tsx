@@ -551,11 +551,18 @@ export default function ReportsMarket() {
         </div>
 
         <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--line)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(224px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
             {pairStatsData.slice(0, 6).map((item, idx) => {
-              const maxProfit = Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit));
-              const longProfitWidth = maxProfit > 0 ? (Math.abs(item.longProfit) / maxProfit) * 100 : 0;
-              const shortProfitWidth = maxProfit > 0 ? (Math.abs(item.shortProfit) / maxProfit) * 100 : 0;
+              const longAvgPnL = item.longCount > 0 ? item.longProfit / item.longCount : 0;
+              const shortAvgPnL = item.shortCount > 0 ? item.shortProfit / item.shortCount : 0;
+
+              const longGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
+              const longGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
+              const longPF = longGrossLoss > 0 ? longGrossProfit / longGrossLoss : (longGrossProfit > 0 ? Infinity : 0);
+
+              const shortGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
+              const shortGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
+              const shortPF = shortGrossLoss > 0 ? shortGrossProfit / shortGrossLoss : (shortGrossProfit > 0 ? Infinity : 0);
 
               return (
                 <div
@@ -563,100 +570,179 @@ export default function ReportsMarket() {
                   style={{
                     background: "var(--chip)",
                     borderRadius: 12,
-                    padding: 12,
+                    padding: 16,
                     border: "1px solid var(--line)",
                   }}
                 >
-                  <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 10, color: "var(--text)" }}>
-                    {item.symbol}
+                  <div style={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: "var(--text)",
+                    marginBottom: 8,
+                    textAlign: "center"
+                  }}>
+                    {item.symbol} ({item.count}回)
                   </div>
+                  <div style={{
+                    height: 1,
+                    background: "var(--line)",
+                    margin: "8px 0 12px"
+                  }} />
 
-                  <div style={{ marginBottom: 8 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: getLongColor(), background: getLongColor(0.15), padding: "2px 8px", borderRadius: 4 }}>
-                          買い
-                        </span>
-                        <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.longCount}回</span>
+                  <div style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto 1fr",
+                    gap: 12,
+                    alignItems: "start"
+                  }}>
+                    <div>
+                      <div style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: getLongColor(),
+                        marginBottom: 8,
+                        textAlign: "right"
+                      }}>
+                        買い ({item.longCount}回)
                       </div>
-                      <span style={{ fontSize: 12, color: item.longWinRate >= 50 ? getProfitColor() : "var(--muted)", fontWeight: 600 }}>勝率 {item.longWinRate.toFixed(1)}%</span>
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "right" }}>勝率</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: item.longWinRate >= 50 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "right"
+                        }}>
+                          {item.longWinRate.toFixed(1)}%
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "right" }}>EV</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: longAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "right"
+                        }}>
+                          {longAvgPnL >= 0 ? '+' : ''}{Math.round(longAvgPnL).toLocaleString("ja-JP")}円
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "right" }}>PF</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: longPF >= 1 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "right"
+                        }}>
+                          {longPF === Infinity ? '∞' : longPF.toFixed(2)}
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "right" }}>合計</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: item.longProfit >= 0 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "right"
+                        }}>
+                          {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit).toLocaleString("ja-JP")}円
+                        </div>
+                      </div>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ flex: 1, background: "var(--surface)", borderRadius: 6, height: 24, position: "relative", overflow: "hidden", border: "1px solid var(--line)" }}>
-                        <div
-                          style={{
-                            position: "absolute",
-                            left: 0,
-                            top: 0,
-                            height: "100%",
-                            width: `${longProfitWidth}%`,
-                            background: item.longProfit >= 0 ? getProfitColor() : getLossColor(),
-                            borderRadius: 6,
-                            transition: "width 0.3s ease",
-                          }}
-                        />
-                        <div
-                          style={{
-                            position: "absolute",
-                            left: 0,
-                            right: 0,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            color: longProfitWidth > 40 ? "#fff" : "var(--ink)",
-                            zIndex: 1,
-                            textAlign: "center",
-                          }}
-                        >
-                          {item.longProfit >= 0 ? '+' : ''}{item.longProfit.toLocaleString()}円
+
+                    <div style={{
+                      width: 1,
+                      height: 140,
+                      background: "var(--line)",
+                      marginTop: 20
+                    }} />
+
+                    <div>
+                      <div style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: getShortColor(),
+                        marginBottom: 8,
+                        textAlign: "left"
+                      }}>
+                        売り ({item.shortCount}回)
+                      </div>
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "left" }}>勝率</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "left"
+                        }}>
+                          {item.shortWinRate.toFixed(1)}%
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "left" }}>EV</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: shortAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "left"
+                        }}>
+                          {shortAvgPnL >= 0 ? '+' : ''}{Math.round(shortAvgPnL).toLocaleString("ja-JP")}円
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "left" }}>PF</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: shortPF >= 1 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "left"
+                        }}>
+                          {shortPF === Infinity ? '∞' : shortPF.toFixed(2)}
+                        </div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 2, textAlign: "left" }}>合計</div>
+                        <div style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: item.shortProfit >= 0 ? "var(--gain)" : "var(--loss)",
+                          textAlign: "left"
+                        }}>
+                          {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit).toLocaleString("ja-JP")}円
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: getShortColor(), background: getShortColor(0.15), padding: "2px 8px", borderRadius: 4 }}>
-                          売り
-                        </span>
-                        <span style={{ fontSize: 11, color: "var(--muted)" }}>{item.shortCount}回</span>
-                      </div>
-                      <span style={{ fontSize: 12, color: item.shortWinRate >= 50 ? getProfitColor() : "var(--muted)", fontWeight: 600 }}>勝率 {item.shortWinRate.toFixed(1)}%</span>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <div style={{ flex: 1, background: "var(--surface)", borderRadius: 6, height: 24, position: "relative", overflow: "hidden", border: "1px solid var(--line)" }}>
-                        <div
-                          style={{
-                            position: "absolute",
-                            left: 0,
-                            top: 0,
-                            height: "100%",
-                            width: `${shortProfitWidth}%`,
-                            background: item.shortProfit >= 0 ? getProfitColor() : getLossColor(),
-                            borderRadius: 6,
-                            transition: "width 0.3s ease",
-                          }}
-                        />
-                        <div
-                          style={{
-                            position: "absolute",
-                            left: 0,
-                            right: 0,
-                            top: "50%",
-                            transform: "translateY(-50%)",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            color: shortProfitWidth > 40 ? "#fff" : "var(--ink)",
-                            zIndex: 1,
-                            textAlign: "center",
-                          }}
-                        >
-                          {item.shortProfit >= 0 ? '+' : ''}{item.shortProfit.toLocaleString()}円
-                        </div>
-                      </div>
-                    </div>
+                  <div style={{
+                    height: 1,
+                    background: "var(--line)",
+                    margin: "12px 0 8px"
+                  }} />
+
+                  <div style={{
+                    textAlign: "center",
+                    fontSize: 11,
+                    fontWeight: 700,
+                    padding: "6px",
+                    borderRadius: 6,
+                    background: item.longProfit > item.shortProfit
+                      ? getLongColor(0.1)
+                      : item.shortProfit > item.longProfit
+                      ? getShortColor(0.1)
+                      : 'rgba(100, 116, 139, 0.1)',
+                    color: item.longProfit > item.shortProfit
+                      ? getLongColor()
+                      : item.shortProfit > item.longProfit
+                      ? getShortColor()
+                      : 'var(--muted)'
+                  }}>
+                    {item.longProfit > item.shortProfit
+                      ? '買い優位'
+                      : item.shortProfit > item.longProfit
+                      ? '売り優位'
+                      : '同等'}
                   </div>
                 </div>
               );
