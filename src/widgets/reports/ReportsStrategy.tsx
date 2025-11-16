@@ -571,17 +571,17 @@ export default function ReportsStrategy() {
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-            買い vs 売り
+            売り vs 買い
             <HelpIcon text="買いと売りの損益比較です。方向性の得意不得意が分かります。" />
           </h3>
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
-                labels: ["売り", "買い"],
+                labels: ["買い", "売り"],
                 datasets: [
                   {
-                    data: [sideData.short.count, sideData.long.count],
-                    backgroundColor: [getOrangeColor(), getGreenColor()],
+                    data: [sideData.long.count, sideData.short.count],
+                    backgroundColor: [getGreenColor(), getOrangeColor()],
                     borderWidth: 0,
                   },
                 ],
@@ -772,14 +772,14 @@ export default function ReportsStrategy() {
                 labels: setupCrossData.slice(0, 5).map((d) => d.setup),
                 datasets: [
                   {
-                    label: "買い",
-                    data: setupCrossData.slice(0, 5).map((d) => d.long),
-                    backgroundColor: getGreenColor(),
-                  },
-                  {
                     label: "売り",
                     data: setupCrossData.slice(0, 5).map((d) => d.short),
                     backgroundColor: getOrangeColor(),
+                  },
+                  {
+                    label: "買い",
+                    data: setupCrossData.slice(0, 5).map((d) => d.long),
+                    backgroundColor: getGreenColor(),
                   },
                 ],
               }}
@@ -787,7 +787,10 @@ export default function ReportsStrategy() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                  legend: { position: "bottom" },
+                  legend: {
+                    position: "bottom",
+                    reverse: true
+                  },
                   tooltip: {
                     callbacks: {
                       title: (context) => {
