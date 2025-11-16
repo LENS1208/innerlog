@@ -7,8 +7,34 @@ interface PlaybookViewProps {
 }
 
 export function PlaybookView({ playbook }: PlaybookViewProps) {
+  const trendExamples = Array.isArray(playbook.trendFollowing.example)
+    ? playbook.trendFollowing.example
+    : playbook.trendFollowing.example
+      ? [playbook.trendFollowing.example]
+      : [];
+
+  const meanReversionExamples = Array.isArray(playbook.meanReversion.example)
+    ? playbook.meanReversion.example
+    : playbook.meanReversion.example
+      ? [playbook.meanReversion.example]
+      : [];
+
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
+      <style>{`
+        .playbook-trade-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        @media (min-width: 640px) {
+          .playbook-trade-grid {
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+          }
+        }
+      `}</style>
+
       <div
         style={{
           background: 'var(--surface)',
@@ -44,10 +70,14 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
             <span style={{ fontWeight: 600 }}>TP：</span> {playbook.trendFollowing.tp}
           </div>
         </div>
-        {playbook.trendFollowing.example && (
+        {trendExamples.length > 0 && (
           <div style={{ marginTop: '12px' }}>
             <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>実例：</div>
-            <TradeExampleCard ex={playbook.trendFollowing.example} />
+            <div className="playbook-trade-grid">
+              {trendExamples.map((ex, i) => (
+                <TradeExampleCard key={i} ex={ex} />
+              ))}
+            </div>
           </div>
         )}
         {playbook.trendFollowing.coachNote && (
@@ -94,10 +124,14 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
             <span style={{ fontWeight: 600 }}>時間制限：</span> {playbook.meanReversion.timeStop}
           </div>
         )}
-        {playbook.meanReversion.example && (
+        {meanReversionExamples.length > 0 && (
           <div style={{ marginTop: '12px' }}>
             <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>実例：</div>
-            <TradeExampleCard ex={playbook.meanReversion.example} />
+            <div className="playbook-trade-grid">
+              {meanReversionExamples.map((ex, i) => (
+                <TradeExampleCard key={i} ex={ex} />
+              ))}
+            </div>
           </div>
         )}
         {playbook.meanReversion.coachNote && (
