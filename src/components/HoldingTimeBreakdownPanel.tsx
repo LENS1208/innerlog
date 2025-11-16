@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor, getOrangeColor, getGreenColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor } from "../lib/chartColors";
 import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -143,7 +143,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getGreenColor(), getOrangeColor()],
+      backgroundColor: [getLongColor(), getShortColor()],
       borderWidth: 0,
     }],
   };
@@ -162,7 +162,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: 'rgba(0, 162, 24, 1)',
+      backgroundColor: getLongColor(),
     }],
   };
 
@@ -176,7 +176,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
       datasets: [{
         label: '損益',
         data: [...losses, ...wins],
-        backgroundColor: [...losses.map(() => getLossColor()), ...wins.map(() => 'rgba(0, 162, 24, 1)')],
+        backgroundColor: [...losses.map(() => getLossColor()), ...wins.map(() => getLongColor())],
       }],
     };
   }, [stats.pnlBuckets]);

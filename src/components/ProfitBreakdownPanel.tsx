@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getOrangeColor, getGreenColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getLongColor, getShortColor } from "../lib/chartColors";
 import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -152,7 +152,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getGreenColor(), getOrangeColor()],
+      backgroundColor: [getLongColor(), getShortColor()],
       borderWidth: 0,
     }],
   };
@@ -293,13 +293,13 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>買い</div>
-                <div style={{ fontSize: 32, fontWeight: 700, color: getGreenColor(), textAlign: 'center' }}>
+                <div style={{ fontSize: 32, fontWeight: 700, color: getLongColor(), textAlign: 'center' }}>
                   {stats.longCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
                 </div>
               </div>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>売り</div>
-                <div style={{ fontSize: 32, fontWeight: 700, color: getOrangeColor(), textAlign: 'center' }}>
+                <div style={{ fontSize: 32, fontWeight: 700, color: getShortColor(), textAlign: 'center' }}>
                   {stats.shortCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
                 </div>
               </div>

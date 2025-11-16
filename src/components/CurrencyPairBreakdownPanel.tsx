@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor, getOrangeColor, getGreenColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor } from "../lib/chartColors";
 import { Bar, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -204,7 +204,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
-      backgroundColor: stats.hourProfits.map(p => p >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor()),
+      backgroundColor: stats.hourProfits.map(p => p >= 0 ? getLongColor() : getLossColor()),
     }],
   };
 
@@ -213,7 +213,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor()),
+      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? getLongColor() : getLossColor()),
     }],
   };
 
@@ -223,7 +223,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       {
         label: '勝ち取引',
         data: stats.holdingTimeWinCounts,
-        backgroundColor: 'rgba(0, 162, 24, 1)',
+        backgroundColor: getLongColor(),
       },
       {
         label: '負け取引',
@@ -240,18 +240,18 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       data: stats.sortedTrades.map(t => getProfit(t)),
       borderColor: (context: any) => {
         if (!context.raw) return getAccentColor();
-        return context.raw >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
+        return context.raw >= 0 ? getLongColor() : getLossColor();
       },
       backgroundColor: (context: any) => {
         if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
-        return context.raw >= 0 ? getGreenColor(0.3) : getLossColor(0.3);
+        return context.raw >= 0 ? getLongColor(0.3) : getLossColor(0.3);
       },
       borderWidth: 2,
       pointRadius: 4,
       pointHoverRadius: 6,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
+          return ctx.p1.parsed.y >= 0 ? getLongColor() : getLossColor();
         }
       }
     }]
@@ -403,7 +403,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                     <div style={{
                       fontSize: 14,
                       fontWeight: 700,
-                      color: getGreenColor(),
+                      color: getLongColor(),
                       marginBottom: 12
                     }}>
                       買い ({stats.longCount}回)
@@ -418,7 +418,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                     <div style={{
                       fontSize: 14,
                       fontWeight: 700,
-                      color: getOrangeColor(),
+                      color: getShortColor(),
                       marginBottom: 12
                     }}>
                       売り ({stats.shortCount}回)
@@ -541,15 +541,15 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                   fontWeight: 700,
                   padding: '8px',
                   borderRadius: 8,
-                  background: stats.longTotalPnL > stats.shortTotalPnL
-                    ? 'rgba(0, 162, 24, 0.1)'
+background: stats.longTotalPnL > stats.shortTotalPnL
+                    ? getLongColor(0.1)
                     : stats.shortTotalPnL > stats.longTotalPnL
-                    ? 'rgba(229, 142, 3, 0.1)'
+                    ? getShortColor(0.1)
                     : 'rgba(100, 116, 139, 0.1)',
                   color: stats.longTotalPnL > stats.shortTotalPnL
-                    ? getGreenColor()
+                    ? getLongColor()
                     : stats.shortTotalPnL > stats.longTotalPnL
-                    ? getOrangeColor()
+                    ? getShortColor()
                     : 'var(--muted)'
                 }}>
                   {stats.longTotalPnL > stats.shortTotalPnL

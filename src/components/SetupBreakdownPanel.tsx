@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor, createProfitGradient } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor, createProfitGradient } from "../lib/chartColors";
 import { Bar, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -219,13 +219,13 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
       {
         label: 'R:R比',
         data: [0, stats.riskRewardRatio, 0],
-        backgroundColor: 'rgba(0, 162, 24, 1)',
+        backgroundColor: getLongColor(),
         yAxisID: 'y1',
       },
       {
         label: '最大連勝数',
         data: [0, 0, stats.maxConsecutiveWins],
-        backgroundColor: 'rgba(245, 158, 66, 1)',
+        backgroundColor: getShortColor(),
         yAxisID: 'y2',
       },
     ],

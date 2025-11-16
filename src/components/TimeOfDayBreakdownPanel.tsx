@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { getGridLineColor, getAccentColor, getLossColor, getOrangeColor, getGreenColor } from "../lib/chartColors";
+import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor } from "../lib/chartColors";
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -175,7 +175,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getGreenColor(), getOrangeColor()],
+      backgroundColor: [getLongColor(), getShortColor()],
       borderWidth: 0,
     }],
   };
@@ -185,7 +185,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor()),
+      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? getLongColor() : getLossColor()),
     }],
   };
 
@@ -195,7 +195,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
       {
         label: '勝ち取引',
         data: stats.holdingTimeWinCounts,
-        backgroundColor: 'rgba(0, 162, 24, 1)',
+        backgroundColor: getLongColor(),
       },
       {
         label: '負け取引',
@@ -212,18 +212,18 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
       data: stats.sortedTrades.map(t => getProfit(t)),
       borderColor: (context: any) => {
         if (!context.raw) return getAccentColor();
-        return context.raw >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
+        return context.raw >= 0 ? getLongColor() : getLossColor();
       },
       backgroundColor: (context: any) => {
         if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
-        return context.raw >= 0 ? getGreenColor(0.3) : getLossColor(0.3);
+        return context.raw >= 0 ? getLongColor(0.3) : getLossColor(0.3);
       },
       borderWidth: 2,
       pointRadius: 4,
       pointHoverRadius: 6,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
+          return ctx.p1.parsed.y >= 0 ? getLongColor() : getLossColor();
         }
       }
     }]
