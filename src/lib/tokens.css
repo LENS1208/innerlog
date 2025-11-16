@@ -129,27 +129,27 @@ body {
 }
 
 .side-long {
-  background-color: rgba(0, 162, 24, 0.1);
+  background-color: transparent;
   color: #00a218;
-  border: 1px solid rgba(0, 162, 24, 0.3);
+  border: 1px solid #00a218;
 }
 
 :root[data-theme="dark"] .side-long {
-  background-color: rgba(51, 201, 71, 0.1);
+  background-color: transparent;
   color: #33c947;
-  border: 1px solid rgba(51, 201, 71, 0.3);
+  border: 1px solid #33c947;
 }
 
 .side-short {
-  background-color: rgba(229, 142, 3, 0.1);
+  background-color: transparent;
   color: #e58e03;
-  border: 1px solid rgba(229, 142, 3, 0.3);
+  border: 1px solid #e58e03;
 }
 
 :root[data-theme="dark"] .side-short {
-  background-color: rgba(245, 158, 66, 0.1);
+  background-color: transparent;
   color: #f59e42;
-  border: 1px solid rgba(245, 158, 66, 0.3);
+  border: 1px solid #f59e42;
 }
 
 .trades-table tbody tr {
