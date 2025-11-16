@@ -45,7 +45,7 @@ export function DayTradesTable({ trades, onOpenTradesList }: DayTradesTableProps
                 >
                   <td>{trade.time}</td>
                   <td>{trade.symbol}</td>
-                  <td>{trade.sideJp}</td>
+                  <td className={trade.sideJp === "買い" ? "side-long" : "side-short"}>{trade.sideJp}</td>
                   <td className={`text-right ${pnlClass}`}>
                     {pnlSign}{Math.abs(Math.round(trade.pnlYen)).toLocaleString("ja-JP")}円
                   </td>

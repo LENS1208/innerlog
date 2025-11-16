@@ -113,6 +113,16 @@ body {
   font-size: 15px;
 }
 
+.side-long {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.side-short {
+  color: #f97316;
+  font-weight: 600;
+}
+
 .trades-table tbody tr {
   transition: background-color 0.15s ease;
 }
