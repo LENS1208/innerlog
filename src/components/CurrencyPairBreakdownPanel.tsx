@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { getGridLineColor, getAccentColor, getLossColor, getOrangeColor, getGreenColor } from "../lib/chartColors";
-import { Bar, Doughnut, Line } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
 type TradeWithProfit = {
@@ -198,14 +198,6 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     };
   }, [trades]);
 
-  const sideChartData = {
-    labels: ['買い', '売り'],
-    datasets: [{
-      data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getGreenColor(), getOrangeColor()],
-      borderWidth: 0,
-    }],
-  };
 
   const hourChartData = {
     labels: stats.hourLabels,
