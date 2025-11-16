@@ -13,7 +13,7 @@ type ScenarioCardProps = {
 export default function ScenarioCard({ scenario }: ScenarioCardProps) {
   return (
     <Card>
-      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
         シナリオ
         <HelpIcon text="価格の想定パスを強気・中立・弱気の3パターンで表示します。" />
       </h3>

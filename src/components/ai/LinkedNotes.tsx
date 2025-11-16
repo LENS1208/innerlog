@@ -11,7 +11,7 @@ type LinkedNotesProps = {
 export default function LinkedNotes({ notes }: LinkedNotesProps) {
   return (
     <Card>
-      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
         メモ
         <HelpIcon text="なぜそう考えるか、根拠の要点をメモとして記録します。" />
       </h3>

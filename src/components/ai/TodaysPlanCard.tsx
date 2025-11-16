@@ -9,7 +9,7 @@ type TodaysPlanCardProps = {
 export default function TodaysPlanCard({ plan }: TodaysPlanCardProps) {
   return (
     <Card>
-      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
         今日の見立て
         <HelpIcon text="まず短く「どうするか」。その次に理由を3点。" />
       </h3>

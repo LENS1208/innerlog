@@ -23,7 +23,7 @@ export default function TradeIdeasTable({ ideas, hero, onCreateTradeNote }: Trad
 
   return (
     <Card data-testid="trade-ideas" style={{ maxWidth: 'calc(100% - 20px)', margin: '0 auto' }}>
-      <h3 style={{ margin: '0 0 12px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+      <h3 style={{ margin: '0 0 12px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
         エントリープラン
         <HelpIcon text="セットアップ（最大3件）を表示します。各プランのエントリーポイント、損切り・利確、期待リターン、信頼度を確認できます。" />
       </h3>

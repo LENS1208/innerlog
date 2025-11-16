@@ -10,7 +10,7 @@ type DailyActionsProps = {
 export default function DailyActions({ daily }: DailyActionsProps) {
   return (
     <Card data-testid="daily-actions">
-      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+      <h3 style={{ margin: '0 0 8px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
         本日のアクション
         <HelpIcon text="まずはここを見て判断してください。今日の想定方針と主戦場、基準価格を確認できます。" />
       </h3>
