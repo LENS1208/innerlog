@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 import type { AIResponse, TradeRow } from '../services/ai-coaching/types';
 import { callAutoReviewAI } from '../services/ai-coaching/callAutoReviewAI';
+import { getCoachingJob, saveCoachingJob, deleteCoachingJob } from './db.service';
 
 interface CoachingTask {
   dataset: string;
@@ -15,6 +16,7 @@ interface AICoachingContextType {
   getResult: (dataset: string) => AIResponse | null;
   isGenerating: (dataset: string) => boolean;
   clearResult: (dataset: string) => void;
+  loadCachedResult: (dataset: string) => Promise<void>;
 }
 
 const AICoachingContext = createContext<AICoachingContextType | undefined>(undefined);
@@ -22,7 +24,30 @@ const AICoachingContext = createContext<AICoachingContextType | undefined>(undef
 export function AICoachingProvider({ children }: { children: React.ReactNode }) {
   const [currentTask, setCurrentTask] = useState<CoachingTask | null>(null);
   const [completedResults, setCompletedResults] = useState<Map<string, AIResponse>>(new Map());
+  const [loadedDatasets, setLoadedDatasets] = useState<Set<string>>(new Set());
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const loadCachedResult = useCallback(async (dataset: string) => {
+    if (loadedDatasets.has(dataset)) {
+      return;
+    }
+
+    try {
+      const cached = await getCoachingJob(dataset);
+      if (cached && cached.status === 'completed' && cached.result) {
+        console.log('📦 キャッシュから読み込み:', dataset);
+        setCompletedResults(prev => {
+          const newMap = new Map(prev);
+          newMap.set(dataset, cached.result);
+          return newMap;
+        });
+      }
+      setLoadedDatasets(prev => new Set(prev).add(dataset));
+    } catch (error) {
+      console.error('❌ キャッシュ読み込みエラー:', error);
+      setLoadedDatasets(prev => new Set(prev).add(dataset));
+    }
+  }, [loadedDatasets]);
 
   const startGeneration = useCallback(async (dataset: string, dataRows: TradeRow[]) => {
     if (currentTask?.status === 'running') {
@@ -43,6 +68,8 @@ export function AICoachingProvider({ children }: { children: React.ReactNode }) 
       const result = await callAutoReviewAI(dataRows, dataset);
 
       console.log('✅ AI分析完了:', dataset);
+
+      await saveCoachingJob(dataset, result);
 
       setCompletedResults(prev => {
         const newMap = new Map(prev);
@@ -89,11 +116,23 @@ export function AICoachingProvider({ children }: { children: React.ReactNode }) 
     return currentTask?.dataset === dataset && currentTask.status === 'running';
   }, [currentTask]);
 
-  const clearResult = useCallback((dataset: string) => {
+  const clearResult = useCallback(async (dataset: string) => {
+    try {
+      await deleteCoachingJob(dataset);
+    } catch (error) {
+      console.error('❌ キャッシュ削除エラー:', error);
+    }
+
     setCompletedResults(prev => {
       const newMap = new Map(prev);
       newMap.delete(dataset);
       return newMap;
+    });
+
+    setLoadedDatasets(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(dataset);
+      return newSet;
     });
   }, []);
 
@@ -105,6 +144,7 @@ export function AICoachingProvider({ children }: { children: React.ReactNode }) 
         getResult,
         isGenerating,
         clearResult,
+        loadCachedResult,
       }}
     >
       {children}

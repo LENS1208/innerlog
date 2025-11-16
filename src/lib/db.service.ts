@@ -512,3 +512,63 @@ export async function upsertAccountSummary(summary: {
 
   if (error) throw error;
 }
+
+export type DbCoachingJob = {
+  id: string;
+  user_id: string;
+  dataset: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  progress: number;
+  result: any;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+  completed_at: string | null;
+};
+
+export async function getCoachingJob(dataset: string): Promise<DbCoachingJob | null> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data, error } = await supabase
+    .from('ai_coaching_jobs')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('dataset', dataset)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function saveCoachingJob(dataset: string, result: any): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
+  const { error } = await supabase
+    .from('ai_coaching_jobs')
+    .upsert({
+      user_id: user.id,
+      dataset: dataset,
+      status: 'completed',
+      progress: 100,
+      result: result,
+      completed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,dataset' });
+
+  if (error) throw error;
+}
+
+export async function deleteCoachingJob(dataset: string): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
+
+  const { error } = await supabase
+    .from('ai_coaching_jobs')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('dataset', dataset);
+
+  if (error) throw error;
+}

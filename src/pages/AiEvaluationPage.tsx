@@ -14,7 +14,7 @@ import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
   const { dataset, useDatabase, isInitialized } = useDataset();
-  const { currentTask, startGeneration, getResult, isGenerating, clearResult } = useAICoaching();
+  const { currentTask, startGeneration, getResult, isGenerating, clearResult, loadCachedResult } = useAICoaching();
   const [dataRows, setDataRows] = useState<TradeRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,6 +33,8 @@ export default function AiEvaluationPage() {
         console.log('📥 取得したトレード件数:', rows.length);
         console.log('📥 最初のトレードデータサンプル:', rows[0]);
         setDataRows(rows);
+
+        await loadCachedResult(dataset);
       } catch (err) {
         console.error('データ取得エラー:', err);
         setError('データの取得に失敗しました');
@@ -40,7 +42,7 @@ export default function AiEvaluationPage() {
         setLoading(false);
       }
     })();
-  }, [dataset, useDatabase, isInitialized]);
+  }, [dataset, useDatabase, isInitialized, loadCachedResult]);
 
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
