@@ -1336,7 +1336,7 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
     <div className="dash-card" style={{ cursor: onRangeClick ? 'pointer' : 'default' }}>
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
         保有時間分布
-        <HelpIcon text="勝ち負け別のポジション保有時間を比較します。損切りと利確のタイミングを分析できます。" />
+        <HelpIcon text="勝ちトレード（青）と負けトレード（赤）のポジション保有時間を比較します。損切りと利確のタイミングを分析できます。" />
       </h3>
       <div style={{ height: 360, minWidth: 0, width: '100%' }}>
         {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
