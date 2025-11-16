@@ -11,7 +11,7 @@ import { CoachingSheetView } from '../components/ai-coaching/CoachingSheetView';
 import { callAutoReviewAI, generateMockCoachingSheet } from '../services/ai-coaching/callAutoReviewAI';
 import { startCoachingJob, checkCoachingJob, getJobStatus } from '../services/ai-coaching/coachingJob.service';
 import type { AIResponse } from '../services/ai-coaching/types';
-import { getCoachingCache, setCoachingCache, clearCoachingCache } from '../services/coaching-storage';
+import { getCoachingCache, setCoachingCache, clearCoachingCache, clearOldCaches } from '../services/coaching-storage';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
@@ -23,6 +23,10 @@ export default function AiEvaluationPage() {
   const [error, setError] = useState<string | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
   const [progress, setProgress] = useState<number>(0);
+
+  useEffect(() => {
+    clearOldCaches();
+  }, []);
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -49,12 +53,22 @@ export default function AiEvaluationPage() {
     (async () => {
       try {
         const existingJob = await checkCoachingJob(dataset);
+
         if (existingJob) {
           if (existingJob.status === 'completed' && existingJob.result) {
-            console.log('📦 データベースから最新の結果を取得しました');
-            setCoachingData(existingJob.result);
-            setCoachingCache(dataset, existingJob.result);
+            console.log('📦 データベースから最新の結果を取得しました', { jobId: existingJob.id });
+
+            const cached = getCoachingCache(dataset, existingJob.id);
+            if (cached && JSON.stringify(cached) === JSON.stringify(existingJob.result)) {
+              console.log('💾 キャッシュとデータベースが一致しています');
+              setCoachingData(cached);
+            } else {
+              console.log('📦 データベースの結果を優先して表示します');
+              setCoachingData(existingJob.result);
+              setCoachingCache(dataset, existingJob.result, existingJob.id);
+            }
             setGenerating(false);
+            setError(null);
           } else if (existingJob.status === 'processing' || existingJob.status === 'pending') {
             setJobId(existingJob.id);
             setGenerating(true);
@@ -64,17 +78,15 @@ export default function AiEvaluationPage() {
             setGenerating(false);
           }
         } else {
+          console.log('📦 データベースに結果がありません');
           const cached = getCoachingCache(dataset);
-          console.log('💾 データベースに結果なし、キャッシュをチェック:', cached);
 
           if (cached && cached.sheet && cached.sheet.summary) {
-            console.log('💾 キャッシュから結果を表示');
+            console.log('💾 キャッシュから結果を表示（データベースに結果なし）');
             setCoachingData(cached);
             setError(null);
           } else {
-            if (cached) {
-              console.warn('⚠️ キャッシュデータが不完全です。クリアします。');
-            }
+            console.log('💾 キャッシュもありません');
             setCoachingData(null);
           }
         }
@@ -118,9 +130,10 @@ export default function AiEvaluationPage() {
         setProgress(job.progress);
 
         if (job.status === 'completed' && job.result) {
+          console.log('✅ ジョブ完了、結果を保存します', { jobId });
           setGenerating(false);
           setCoachingData(job.result);
-          setCoachingCache(dataset, job.result);
+          setCoachingCache(dataset, job.result, jobId);
           setJobId(null);
           clearInterval(intervalId);
         } else if (job.status === 'failed') {
