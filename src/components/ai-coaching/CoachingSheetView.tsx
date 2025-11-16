@@ -26,11 +26,33 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'stretch' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'start' }}>
         {radarComponent && (
-          <Section title="総合評価">
-            {radarComponent}
-          </Section>
+          <div
+            style={{
+              background: 'var(--surface)',
+              border: '1px solid var(--line)',
+              borderRadius: '12px',
+              padding: '20px',
+              aspectRatio: '1 / 1',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            <h3
+              style={{
+                margin: '0 0 12px 0',
+                fontSize: '18px',
+                fontWeight: 700,
+                color: 'var(--ink)',
+              }}
+            >
+              総合評価
+            </h3>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 0 }}>
+              {radarComponent}
+            </div>
+          </div>
         )}
 
         {sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0 && (
