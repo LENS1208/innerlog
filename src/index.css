@@ -694,6 +694,11 @@
   z-index: 1;
 }
 
+/* Tooltip layer - ensure it's on top of everything */
+[style*="z-index: 99999"] {
+  z-index: 99999 !important;
+}
+
 @media (min-width: 640px) {
   .kpi-card {
     padding: 12px;
