@@ -42,17 +42,16 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
           display: grid;
           grid-template-columns: 1fr;
           gap: 12px;
-          max-width: 600px;
         }
         @media (min-width: 640px) {
           .trade-examples-grid {
             grid-template-columns: repeat(2, 1fr);
-            max-width: 1200px;
+            max-width: 900px;
           }
         }
         @media (min-width: 1024px) {
           .trade-examples-grid {
-            max-width: 1000px;
+            max-width: 800px;
           }
         }
       `}</style>
