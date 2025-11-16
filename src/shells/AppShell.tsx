@@ -101,9 +101,9 @@ function Header({
                 if (k === "reports") {
                   const subPath = fullPath.split("/")[1];
                   if (subPath === "time") return "時間軸";
-                  if (subPath === "market") return "市場・銘柄";
-                  if (subPath === "risk") return "リスク・分布";
-                  if (subPath === "strategy") return "戦略・行動";
+                  if (subPath === "market") return "通貨ペア";
+                  if (subPath === "risk") return "リスク管理";
+                  if (subPath === "strategy") return "トレード戦略";
                   return "レポート";
                 }
                 if (k === "ai-evaluation") return "AI評価";
@@ -644,9 +644,9 @@ export default function AppShell({ children }: Props) {
         setMenu([
           { key: "dashboard", label: "ダッシュボード", active: true },
           { key: "reports/time", label: "時間軸" },
-          { key: "reports/market", label: "市場・銘柄" },
-          { key: "reports/risk", label: "リスク・分布" },
-          { key: "reports/strategy", label: "戦略・行動" },
+          { key: "reports/market", label: "通貨ペア" },
+          { key: "reports/risk", label: "リスク管理" },
+          { key: "reports/strategy", label: "トレード戦略" },
           { key: "ai-evaluation", label: "AI評価" },
           { key: "calendar", label: "カレンダー" },
           { key: "notebook", label: "取引日記" },

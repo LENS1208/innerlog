@@ -26,9 +26,9 @@ export default function ReportsPage() {
 
   const tabs: { key: TabKey; label: string }[] = [
     { key: "time", label: "時間軸" },
-    { key: "market", label: "市場・銘柄" },
-    { key: "risk", label: "リスク・分布" },
-    { key: "strategy", label: "戦略・行動" },
+    { key: "market", label: "通貨ペア" },
+    { key: "risk", label: "リスク管理" },
+    { key: "strategy", label: "トレード戦略" },
   ];
 
   return (
