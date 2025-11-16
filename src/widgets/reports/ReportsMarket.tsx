@@ -580,64 +580,19 @@ export default function ReportsMarket() {
                     position: "relative",
                   }}
                 >
-                  <div style={{
-                    position: "absolute",
-                    left: 12,
-                    width: 3,
-                    ...(item.longProfit >= 0 ? {
-                      bottom: "50%",
-                      height: `${longBarWidth * 0.5}%`,
-                      maxHeight: "50%",
-                      background: '#0084C7',
-                      borderRadius: "0",
-                    } : {
-                      top: "50%",
-                      height: `${longBarWidth * 0.5}%`,
-                      maxHeight: "50%",
-                      background: '#EF4444',
-                      borderRadius: "0",
-                    })
-                  }} />
-
-                  <div style={{
-                    position: "absolute",
-                    right: 12,
-                    width: 3,
-                    ...(item.shortProfit >= 0 ? {
-                      bottom: "50%",
-                      height: `${shortBarWidth * 0.5}%`,
-                      maxHeight: "50%",
-                      background: '#0084C7',
-                      borderRadius: "0",
-                    } : {
-                      top: "50%",
-                      height: `${shortBarWidth * 0.5}%`,
-                      maxHeight: "50%",
-                      background: '#EF4444',
-                      borderRadius: "0",
-                    })
-                  }} />
 
                   <div style={{
                     textAlign: "center",
-                    marginBottom: 12
+                    marginBottom: 16
                   }}>
                     <div style={{
                       fontSize: 18,
                       fontWeight: 700,
                       color: "var(--text)",
+                      marginBottom: 8
                     }}>
                       {item.symbol}
                     </div>
-                  </div>
-
-                  <div style={{
-                    textAlign: "center",
-                    fontSize: 11,
-                    color: "var(--muted)",
-                    marginBottom: 16
-                  }}>
-                    全{item.count}回 (買{item.longCount} / 売{item.shortCount})
                   </div>
 
                   <div style={{
@@ -654,6 +609,7 @@ export default function ReportsMarket() {
                       padding: 12,
                       textAlign: "center"
                     }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>買い ({item.longCount}回)</div>
                       <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
                       <div style={{
                         fontSize: 16,
@@ -681,6 +637,7 @@ export default function ReportsMarket() {
                       padding: 12,
                       textAlign: "center"
                     }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>売り ({item.shortCount}回)</div>
                       <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
                       <div style={{
                         fontSize: 16,
