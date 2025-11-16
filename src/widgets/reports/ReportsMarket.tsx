@@ -619,14 +619,14 @@ export default function ReportsMarket() {
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>買い</span>
                           <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.longCount}回)</span>
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>期待値</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
-                          color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                          color: longAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
                           marginBottom: 8
                         }}>
-                          {item.longWinRate.toFixed(1)}%
+                          {longAvgPnL >= 0 ? '+' : ''}{Math.round(longAvgPnL).toLocaleString()}円
                         </div>
                         <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                         <div style={{
@@ -650,14 +650,14 @@ export default function ReportsMarket() {
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>売り</span>
                           <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.shortCount}回)</span>
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>期待値</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
-                          color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                          color: shortAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
                           marginBottom: 8
                         }}>
-                          {item.shortWinRate.toFixed(1)}%
+                          {shortAvgPnL >= 0 ? '+' : ''}{Math.round(shortAvgPnL).toLocaleString()}円
                         </div>
                         <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                         <div style={{
