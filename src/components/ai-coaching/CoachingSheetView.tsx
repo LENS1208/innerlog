@@ -39,7 +39,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
           </Section>
         )}
 
-        {sheet.summary && sheet.summary.length > 0 && (
+        {sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0 && (
           <Section title="現状サマリー">
             <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
               {sheet.summary.map((s, i) => (
@@ -50,7 +50,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         )}
       </div>
 
-      {sheet.strengthsWeaknesses && (
+      {sheet.strengthsWeaknesses && Array.isArray(sheet.strengthsWeaknesses) && sheet.strengthsWeaknesses.length > 0 && (
         <Section title="強みと課題">
           {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
           <StrengthsWeaknessesTable
@@ -60,7 +60,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         </Section>
       )}
 
-      {sheet.examples && sheet.examples.length > 0 && (
+      {sheet.examples && Array.isArray(sheet.examples) && sheet.examples.length > 0 && (
         <Section title="あなたの注目トレード">
           <div
             style={{
@@ -76,40 +76,40 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         </Section>
       )}
 
-      {sheet.rules && (
+      {sheet.rules && Array.isArray(sheet.rules) && sheet.rules.length > 0 && (
         <Section title="改善のための5ルール" comment={sheet.rulesComment}>
           <RulesTable rules={sheet.rules} />
         </Section>
       )}
 
-      {sheet.playbook && (
+      {sheet.playbook && typeof sheet.playbook === 'object' && (
         <Section title="プレイブック（戦略型）" comment={sheet.playbookComment}>
           <PlaybookView playbook={sheet.playbook} />
         </Section>
       )}
 
-      {sheet.diaryGuide && (
+      {sheet.diaryGuide && sheet.diaryGuide.rows && Array.isArray(sheet.diaryGuide.rows) && sheet.diaryGuide.rows.length > 0 && (
         <Section title="オンライン日記の活用法">
           {sheet.diaryGuide.comment && <CoachBubble message={sheet.diaryGuide.comment} />}
           <DiaryGuideTable rows={sheet.diaryGuide.rows} />
         </Section>
       )}
 
-      {sheet.kpis && (
+      {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
         <Section title="KPI（数値で見る改善指標）">
           {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
           <KPITable kpis={sheet.kpis} />
         </Section>
       )}
 
-      {sheet.fourWeekPlan && (
+      {sheet.fourWeekPlan && Array.isArray(sheet.fourWeekPlan) && sheet.fourWeekPlan.length > 0 && (
         <Section title="4週間リセットプラン">
           {sheet.fourWeekPlanComment && <CoachBubble message={sheet.fourWeekPlanComment} />}
           <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
         </Section>
       )}
 
-      {sheet.coachingMessage && sheet.coachingMessage.length > 0 && (
+      {sheet.coachingMessage && Array.isArray(sheet.coachingMessage) && sheet.coachingMessage.length > 0 && (
         <Section title="コーチングメッセージ">
           {sheet.coachingMessage.map((text, i) => (
             <p key={i} style={{ margin: '0 0 12px 0', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink)' }}>
@@ -119,7 +119,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         </Section>
       )}
 
-      {sheet.nextSteps && sheet.nextSteps.length > 0 && (
+      {sheet.nextSteps && Array.isArray(sheet.nextSteps) && sheet.nextSteps.length > 0 && (
         <footer
           style={{
             padding: '16px',
