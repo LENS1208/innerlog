@@ -108,8 +108,8 @@ function StrategySegmentTabs({
                 style={{
                   padding: 10,
                   textAlign: "right",
-                  fontSize: 18,
-                  fontWeight: 600,
+                  fontSize: 15,
+                  fontWeight: 700,
                   color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
                 }}
               >
