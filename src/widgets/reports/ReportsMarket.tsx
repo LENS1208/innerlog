@@ -440,6 +440,14 @@ export default function ReportsMarket() {
       const longWinRate = longTrades.length > 0 ? (longWins / longTrades.length) * 100 : 0;
       const shortWinRate = shortTrades.length > 0 ? (shortWins / shortTrades.length) * 100 : 0;
 
+      const avgWin = winTrades.length > 0
+        ? winTrades.reduce((sum, t) => sum + getTradeProfit(t), 0) / winTrades.length
+        : 0;
+      const avgLoss = lossTrades.length > 0
+        ? Math.abs(lossTrades.reduce((sum, t) => sum + getTradeProfit(t), 0) / lossTrades.length)
+        : 0;
+      const rrr = avgLoss > 0 ? avgWin / avgLoss : (avgWin > 0 ? 999 : 0);
+
       return {
         symbol: s.symbol,
         count: s.count,
@@ -452,6 +460,7 @@ export default function ReportsMarket() {
         avgVolume,
         volatility,
         pf: s.pf,
+        rrr,
         longCount: longTrades.length,
         shortCount: shortTrades.length,
         longProfit,
@@ -481,6 +490,7 @@ export default function ReportsMarket() {
                 <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>平均保有時間</th>
                 <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均pips幅</th>
                 <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 90 }}>平均ロット</th>
+                <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 80 }}>RRR</th>
                 <th style={{ padding: 10, textAlign: "right", fontWeight: "bold", color: "var(--muted)", minWidth: 100 }}>合計損益</th>
               </tr>
             </thead>
@@ -531,6 +541,9 @@ export default function ReportsMarket() {
                     </td>
                     <td style={{ padding: 10, textAlign: "right", color: "var(--muted)" }}>
                       {item.avgVolume.toFixed(2)}
+                    </td>
+                    <td style={{ padding: 10, textAlign: "right", color: item.rrr >= 1 ? "var(--gain)" : "var(--muted)" }}>
+                      {item.rrr >= 999 ? '∞' : item.rrr.toFixed(2)}
                     </td>
                     <td
                       style={{
