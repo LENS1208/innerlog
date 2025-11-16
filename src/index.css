@@ -690,6 +690,8 @@
   background: var(--surface);
   box-sizing: border-box;
   min-width: 0;
+  position: relative;
+  z-index: 1;
 }
 
 @media (min-width: 640px) {
