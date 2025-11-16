@@ -102,16 +102,6 @@ export function DayJournalCard({ dateKey, onSave }: DayJournalCardProps) {
         </label>
 
         <label>
-          <div className="input-label">次回の約束</div>
-          <textarea
-            className="journal-textarea"
-            value={nextPromise}
-            onChange={(e) => setNextPromise(e.target.value)}
-            placeholder="例）利確ポイントを2段階に分けて、半分は早めに、残りは目標価格まで引っ張る。チャートに目標価格のラインを引いておく。"
-          />
-        </label>
-
-        <label>
           <div className="input-label">自由メモ</div>
           <textarea
             className="journal-textarea"

@@ -42,19 +42,6 @@ export default function TextareaGroup({ values, onChange }: TextareaGroupProps) 
       </div>
 
       <div>
-        <label htmlFor="promise" style={{ display: 'block', fontSize: 12, color: 'var(--muted)', marginBottom: 6 }}>
-          次回の約束
-        </label>
-        <textarea
-          id="promise"
-          className="journal-textarea"
-          value={values.promise}
-          onChange={handleChange('promise')}
-          placeholder="次回の約束を記入..."
-        />
-      </div>
-
-      <div>
         <label htmlFor="memo" style={{ display: 'block', fontSize: 12, color: 'var(--muted)', marginBottom: 6 }}>
           自由メモ
         </label>
