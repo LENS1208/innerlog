@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor } from "../lib/chartColors";
+import { useTheme } from '../lib/theme.context';
 import { Bar, Doughnut, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -38,6 +39,7 @@ interface WeekdayBreakdownPanelProps {
 }
 
 export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: WeekdayBreakdownPanelProps) {
+  const { theme } = useTheme();
   const stats = useMemo(() => {
     const winTrades = trades.filter(t => getProfit(t) > 0);
     const lossTrades = trades.filter(t => getProfit(t) <= 0);
@@ -127,7 +129,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8);
 
-  const pairChartData = {
+  const pairChartData = useMemo(() => ({
     labels: topPairs.map(([pair]) => pair),
     datasets: [{
       data: topPairs.map(([, count]) => count),
@@ -142,27 +144,27 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
         'rgba(236, 72, 153, 0.8)',
       ],
     }],
-  };
+  }), [topPairs, theme]);
 
-  const sideChartData = {
+  const sideChartData = useMemo(() => ({
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getLongColor(), getShortColor()],
       borderWidth: 0,
     }],
-  };
+  }), [stats.longCount, stats.shortCount, theme]);
 
-  const hourChartData = {
+  const hourChartData = useMemo(() => ({
     labels: Array.from({ length: 24 }, (_, i) => `${i}時`),
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
       backgroundColor: getAccentColor(),
     }],
-  };
+  }), [stats.hourCounts, theme]);
 
-  const holdingTimeChartData = {
+  const holdingTimeChartData = useMemo(() => ({
     labels: stats.holdingTimeRanges.map(r => r.label),
     datasets: [
       {
@@ -176,9 +178,9 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
         backgroundColor: getLossColor(),
       }
     ]
-  };
+  }), [stats.holdingTimeRanges, stats.holdingTimeWinCounts, stats.holdingTimeLossCounts, theme]);
 
-  const pnlTimeSeriesData = {
+  const pnlTimeSeriesData = useMemo(() => ({
     labels: stats.sortedTrades.map((_, i) => i + 1),
     datasets: [{
       label: '損益',
@@ -200,7 +202,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
         }
       }
     }]
-  };
+  }), [stats.sortedTrades, theme]);
 
   return (
     <>

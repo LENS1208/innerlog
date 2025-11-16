@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor } from "../lib/chartColors";
 import { Bar, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
+import { useTheme } from '../lib/theme.context';
 
 type TradeWithProfit = {
   profitYen?: number;
@@ -38,6 +39,7 @@ interface CurrencyPairBreakdownPanelProps {
 }
 
 export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose }: CurrencyPairBreakdownPanelProps) {
+  const { theme } = useTheme();
   const stats = useMemo(() => {
     const winTrades = trades.filter(t => getProfit(t) > 0);
     const lossTrades = trades.filter(t => getProfit(t) <= 0);
@@ -198,26 +200,25 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     };
   }, [trades]);
 
-
-  const hourChartData = {
+  const hourChartData = useMemo(() => ({
     labels: stats.hourLabels,
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
       backgroundColor: stats.hourProfits.map(p => p >= 0 ? getLongColor() : getLossColor()),
     }],
-  };
+  }), [stats, theme]);
 
-  const weekdayChartData = {
+  const weekdayChartData = useMemo(() => ({
     labels: stats.weekdayLabels,
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
       backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? getLongColor() : getLossColor()),
     }],
-  };
+  }), [stats, theme]);
 
-  const holdingTimeChartData = {
+  const holdingTimeChartData = useMemo(() => ({
     labels: stats.holdingTimeRanges.map(r => r.label),
     datasets: [
       {
@@ -231,9 +232,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
         backgroundColor: getLossColor(),
       }
     ]
-  };
+  }), [stats, theme]);
 
-  const pnlTimeSeriesData = {
+  const pnlTimeSeriesData = useMemo(() => ({
     labels: stats.sortedTrades.map((_, i) => i + 1),
     datasets: [{
       label: '損益',
@@ -255,7 +256,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
         }
       }
     }]
-  };
+  }), [stats, theme]);
+
+
 
   return (
     <>

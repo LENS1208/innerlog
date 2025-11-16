@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor } from "../lib/chartColors";
+import { useTheme } from '../lib/theme.context';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -38,6 +39,7 @@ interface HoldingTimeBreakdownPanelProps {
 }
 
 export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose }: HoldingTimeBreakdownPanelProps) {
+  const { theme } = useTheme();
   const stats = useMemo(() => {
     const totalPnL = trades.reduce((sum, t) => sum + getProfit(t), 0);
     const avgPnL = trades.length > 0 ? totalPnL / trades.length : 0;
@@ -122,7 +124,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8);
 
-  const pairChartData = {
+  const pairChartData = useMemo(() => ({
     labels: topPairs.map(([pair]) => pair),
     datasets: [{
       data: topPairs.map(([, count]) => count),
@@ -137,34 +139,34 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
         'rgba(236, 72, 153, 0.8)',
       ],
     }],
-  };
+  }), [topPairs, theme]);
 
-  const sideChartData = {
+  const sideChartData = useMemo(() => ({
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getLongColor(), getShortColor()],
       borderWidth: 0,
     }],
-  };
+  }), [stats.longCount, stats.shortCount, theme]);
 
-  const hourChartData = {
+  const hourChartData = useMemo(() => ({
     labels: Array.from({ length: 24 }, (_, i) => `${i}時`),
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
       backgroundColor: getAccentColor(),
     }],
-  };
+  }), [stats.hourCounts, theme]);
 
-  const weekdayChartData = {
+  const weekdayChartData = useMemo(() => ({
     labels: ['日', '月', '火', '水', '木', '金', '土'],
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
       backgroundColor: getLongColor(),
     }],
-  };
+  }), [stats.weekdayCounts, theme]);
 
   const pnlDistributionData = useMemo(() => {
     const sortedPnL = [...stats.pnlBuckets].sort((a, b) => a - b);

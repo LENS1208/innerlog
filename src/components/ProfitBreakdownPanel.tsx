@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getGridLineColor, getAccentColor, getLossColor, getWarningColor, getLongColor, getShortColor } from "../lib/chartColors";
+import { useTheme } from '../lib/theme.context';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -38,6 +39,7 @@ interface ProfitBreakdownPanelProps {
 }
 
 export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: ProfitBreakdownPanelProps) {
+  const { theme } = useTheme();
   const stats = useMemo(() => {
     const winTrades = trades.filter(t => getProfit(t) > 0);
     const lossTrades = trades.filter(t => getProfit(t) <= 0);
@@ -130,7 +132,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8);
 
-  const pairChartData = {
+  const pairChartData = useMemo(() => ({
     labels: topPairs.map(([pair]) => pair),
     datasets: [{
       data: topPairs.map(([, count]) => count),
@@ -146,34 +148,34 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
       ],
       borderWidth: 0,
     }],
-  };
+  }), [topPairs, theme]);
 
-  const sideChartData = {
+  const sideChartData = useMemo(() => ({
     labels: ['買い', '売り'],
     datasets: [{
       data: [stats.longCount, stats.shortCount],
       backgroundColor: [getLongColor(), getShortColor()],
       borderWidth: 0,
     }],
-  };
+  }), [stats.longCount, stats.shortCount, theme]);
 
-  const hourChartData = {
+  const hourChartData = useMemo(() => ({
     labels: Array.from({ length: 24 }, (_, i) => `${i}時`),
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
       backgroundColor: getAccentColor(),
     }],
-  };
+  }), [stats.hourCounts, theme]);
 
-  const weekdayChartData = {
+  const weekdayChartData = useMemo(() => ({
     labels: ['日', '月', '火', '水', '木', '金', '土'],
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
       backgroundColor: getLongColor(),
     }],
-  };
+  }), [stats.weekdayCounts, theme]);
 
   return (
     <>

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { getGridLineColor, getAccentColor, getLossColor, getLongColor, getShortColor, createProfitGradient } from "../lib/chartColors";
+import { useTheme } from '../lib/theme.context';
 import { Bar, Line } from 'react-chartjs-2';
 import type { Trade } from '../lib/types';
 
@@ -40,6 +41,7 @@ interface SetupBreakdownPanelProps {
 }
 
 export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: SetupBreakdownPanelProps) {
+  const { theme } = useTheme();
   const stats = useMemo(() => {
     const winTrades = trades.filter(t => getProfit(t) > 0);
     const lossTrades = trades.filter(t => getProfit(t) <= 0);
@@ -207,7 +209,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
     };
   }, [trades]);
 
-  const performanceMatrixData = {
+  const performanceMatrixData = useMemo(() => ({
     labels: ['勝率', 'R:R比', '最大連勝'],
     datasets: [
       {
@@ -229,9 +231,9 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
         yAxisID: 'y2',
       },
     ],
-  };
+  }), [stats.winRate, stats.riskRewardRatio, stats.maxConsecutiveWins, theme]);
 
-  const cumulativePnLData = {
+  const cumulativePnLData = useMemo(() => ({
     labels: stats.sortedTrades.map((_, i) => i + 1),
     datasets: [{
       label: '累積損益',
@@ -247,7 +249,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
       tension: 0.4,
       borderWidth: 2,
     }]
-  };
+  }), [stats.sortedTrades, stats.cumulativePnL, theme]);
 
   const weekdayLabels = ['日', '月', '火', '水', '木', '金', '土'];
 
