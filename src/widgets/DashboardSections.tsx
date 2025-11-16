@@ -244,22 +244,13 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
 
   const data = {
     labels,
-    datasets: [
-      {
-        label: '利益',
-        data: profits.map(p => p >= 0 ? p : 0),
-        backgroundColor: getAccentColor(),
-        borderColor: getAccentColor(1),
-        borderWidth: 1.5,
-      },
-      {
-        label: '損失',
-        data: profits.map(p => p < 0 ? p : 0),
-        backgroundColor: getLossColor(),
-        borderColor: getLossColor(1),
-        borderWidth: 1.5,
-      }
-    ]
+    datasets: [{
+      label: '月次損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
+      borderWidth: 1.5,
+    }]
   }
 
   const options = {
@@ -277,15 +268,7 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
       }
     },
     plugins: {
-      legend: {
-        display: true,
-        position: 'top' as const,
-        labels: {
-          font: { size: 12 },
-          padding: 12,
-          usePointStyle: true
-        }
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
           title: (items: any) => {
@@ -295,7 +278,7 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
           },
           label: (item: any) => {
             const idx = item.dataIndex
-            const profit = profits[idx]
+            const profit = item.parsed.y
             const count = tradesCounts[idx]
             const wr = winRates[idx]
             return [
@@ -337,22 +320,13 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
 
   const data = {
     labels,
-    datasets: [
-      {
-        label: '利益',
-        data: profits.map(p => p >= 0 ? p : 0),
-        backgroundColor: getAccentColor(),
-        borderColor: getAccentColor(1),
-        borderWidth: 1,
-      },
-      {
-        label: '損失',
-        data: profits.map(p => p < 0 ? p : 0),
-        backgroundColor: getLossColor(),
-        borderColor: getLossColor(1),
-        borderWidth: 1,
-      }
-    ]
+    datasets: [{
+      label: '日次損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
+      borderWidth: 1,
+    }]
   }
 
   const options = {
@@ -373,23 +347,11 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
       }
     },
     plugins: {
-      legend: {
-        display: true,
-        position: 'top' as const,
-        labels: {
-          font: { size: 12 },
-          padding: 12,
-          usePointStyle: true
-        }
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
           title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleDateString('ja-JP') : '',
-          label: (item: any) => {
-            const dataIndex = item.dataIndex
-            const totalProfit = profits[dataIndex]
-            return `損益: ${totalProfit >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(totalProfit)} 円`
-          }
+          label: (item: any) => `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
         }
       }
     }
@@ -800,22 +762,13 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
 
   const data = {
     labels,
-    datasets: [
-      {
-        label: '利益',
-        data: profits.map(p => p >= 0 ? p : 0),
-        backgroundColor: getAccentColor(),
-        borderColor: getAccentColor(1),
-        borderWidth: 1,
-      },
-      {
-        label: '損失',
-        data: profits.map(p => p < 0 ? p : 0),
-        backgroundColor: getLossColor(),
-        borderColor: getLossColor(1),
-        borderWidth: 1,
-      }
-    ]
+    datasets: [{
+      label: '損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
+      borderWidth: 1,
+    }]
   }
 
   const options = {
@@ -841,25 +794,13 @@ export function WeekdayChart({ trades, onWeekdayClick }: { trades: TradeWithProf
       }
     },
     plugins: {
-      legend: {
-        display: true,
-        position: 'top' as const,
-        labels: {
-          font: { size: 12 },
-          padding: 12,
-          usePointStyle: true
-        }
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (item: any) => {
-            const dataIndex = item.dataIndex
-            const totalProfit = profits[dataIndex]
-            return [
-              `損益: ${totalProfit >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(totalProfit)} 円`,
-              `取引数: ${counts[dataIndex]}回`
-            ]
-          }
+          label: (item: any) => [
+            `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`,
+            `取引数: ${counts[item.dataIndex]}回`
+          ]
         }
       }
     }
@@ -901,22 +842,13 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
 
   const data = {
     labels,
-    datasets: [
-      {
-        label: '利益',
-        data: profits.map(p => p >= 0 ? p : 0),
-        backgroundColor: getAccentColor(),
-        borderColor: getAccentColor(1),
-        borderWidth: 1,
-      },
-      {
-        label: '損失',
-        data: profits.map(p => p < 0 ? p : 0),
-        backgroundColor: getLossColor(),
-        borderColor: getLossColor(1),
-        borderWidth: 1,
-      }
-    ]
+    datasets: [{
+      label: '損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
+      borderWidth: 1,
+    }]
   }
 
   const options = {
@@ -944,25 +876,13 @@ export function TimeOfDayChart({ trades, onTimeClick }: { trades: TradeWithProfi
       }
     },
     plugins: {
-      legend: {
-        display: true,
-        position: 'top' as const,
-        labels: {
-          font: { size: 12 },
-          padding: 12,
-          usePointStyle: true
-        }
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (item: any) => {
-            const dataIndex = item.dataIndex
-            const totalProfit = profits[dataIndex]
-            return [
-              `損益: ${totalProfit >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(totalProfit)} 円`,
-              `取引数: ${counts[dataIndex]}回`
-            ]
-          }
+          label: (item: any) => [
+            `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`,
+            `取引数: ${counts[item.dataIndex]}回`
+          ]
         }
       }
     }
@@ -1003,22 +923,13 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
 
   const data = {
     labels,
-    datasets: [
-      {
-        label: '利益',
-        data: profits.map(p => p >= 0 ? p : 0),
-        backgroundColor: getAccentColor(),
-        borderColor: getAccentColor(1),
-        borderWidth: 1,
-      },
-      {
-        label: '損失',
-        data: profits.map(p => p < 0 ? p : 0),
-        backgroundColor: getLossColor(),
-        borderColor: getLossColor(1),
-        borderWidth: 1,
-      }
-    ]
+    datasets: [{
+      label: '損益（円）',
+      data: profits,
+      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
+      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
+      borderWidth: 1,
+    }]
   }
 
   const options = {
@@ -1045,25 +956,13 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
       y: {}
     },
     plugins: {
-      legend: {
-        display: true,
-        position: 'top' as const,
-        labels: {
-          font: { size: 12 },
-          padding: 12,
-          usePointStyle: true
-        }
-      },
+      legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (item: any) => {
-            const dataIndex = item.dataIndex
-            const totalProfit = profits[dataIndex]
-            return [
-              `損益: ${totalProfit >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(totalProfit)} 円`,
-              `取引数: ${counts[dataIndex]}回`
-            ]
-          }
+          label: (item: any) => [
+            `損益: ${item.parsed.x >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.x)} 円`,
+            `取引数: ${counts[item.dataIndex]}回`
+          ]
         }
       }
     }
@@ -1185,14 +1084,11 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
             labels: setupData.items.map(s => s.setup),
             datasets: [
               {
-                label: '利益',
-                data: setupData.items.map(s => s.profit >= 0 ? s.profit : 0),
-                backgroundColor: getAccentColor(),
-              },
-              {
-                label: '損失',
-                data: setupData.items.map(s => s.profit < 0 ? s.profit : 0),
-                backgroundColor: getLossColor(),
+                label: '損益',
+                data: setupData.items.map(s => s.profit),
+                backgroundColor: setupData.items.map(s =>
+                  s.profit >= 0 ? getAccentColor() : getLossColor()
+                ),
               },
             ],
           }}
@@ -1210,15 +1106,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
               }
             },
             plugins: {
-              legend: {
-                display: true,
-                position: 'top' as const,
-                labels: {
-                  font: { size: 12 },
-                  padding: 12,
-                  usePointStyle: true
-                }
-              },
+              legend: { display: false },
               tooltip: {
                 callbacks: {
                   label: (context) => {
@@ -1448,7 +1336,7 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
     <div className="dash-card" style={{ cursor: onRangeClick ? 'pointer' : 'default' }}>
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
         保有時間分布
-        <HelpIcon text="勝ちトレード（青）と負けトレード（赤）のポジション保有時間を比較します。損切りと利確のタイミングを分析できます。" />
+        <HelpIcon text="勝ち負け別のポジション保有時間を比較します。損切りと利確のタイミングを分析できます。" />
       </h3>
       <div style={{ height: 360, minWidth: 0, width: '100%' }}>
         {trades.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
