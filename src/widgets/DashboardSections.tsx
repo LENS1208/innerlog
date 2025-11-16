@@ -912,7 +912,7 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
       current.trades.push(t)
     })
 
-    const sorted = Array.from(pairMap.entries()).sort((a, b) => b[1].profit - a[1].profit)
+    const sorted = Array.from(pairMap.entries()).sort((a, b) => b[1].count - a[1].count).slice(0, 6)
     const labels = sorted.map(([pair]) => pair)
     const profits = sorted.map(([, data]) => data.profit)
     const counts = sorted.map(([, data]) => data.count)
@@ -924,11 +924,14 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
   const data = {
     labels,
     datasets: [{
-      label: '損益（円）',
-      data: profits,
-      backgroundColor: profits.map(p => p >= 0 ? getAccentColor() : getLossColor()),
-      borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
-      borderWidth: 1,
+      label: '取引回数',
+      data: counts,
+      borderColor: getAccentColor(1),
+      backgroundColor: getAccentColor(0.1),
+      borderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      tension: 0.4,
     }]
   }
 
@@ -945,23 +948,23 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
         }
       }
     },
-    indexAxis: 'y' as const,
     scales: {
-      x: {
+      x: {},
+      y: {
         beginAtZero: true,
         ticks: {
-          callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v)
+          callback: (v: any) => `${v}回`,
+          stepSize: 1,
         }
-      },
-      y: {}
+      }
     },
     plugins: {
       legend: { display: false },
       tooltip: {
         callbacks: {
           label: (item: any) => [
-            `損益: ${item.parsed.x >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.x)} 円`,
-            `取引数: ${counts[item.dataIndex]}回`
+            `取引回数: ${counts[item.dataIndex]}回`,
+            `損益: ${profits[item.dataIndex] >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(profits[item.dataIndex])} 円`
           ]
         }
       }
@@ -970,7 +973,7 @@ export function CurrencyPairChart({ trades, onPairClick }: { trades: TradeWithPr
 
   return (
     <div style={{ height: 200, minWidth: 0, width: '100%', cursor: onPairClick ? 'pointer' : 'default' }}>
-      {labels.length ? <Bar data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
+      {labels.length ? <Line data={data} options={options} /> : <div style={{ height: '100%', display: 'grid', placeItems: 'center', color: 'var(--muted)' }}>データがありません</div>}
     </div>
   )
 }
