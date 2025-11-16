@@ -590,42 +590,29 @@ export default function ReportsMarket() {
 
                   <div style={{
                     display: "grid",
-                    gridTemplateColumns: "60px 1fr 1fr 60px",
+                    gridTemplateColumns: "20px 1fr 1fr 20px",
                     gap: 8,
                     marginBottom: 16,
-                    alignItems: "center"
+                    alignItems: "stretch"
                   }}>
                     <div style={{
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      height: 80
+                      alignItems: "stretch",
+                      justifyContent: "center"
                     }}>
                       <div style={{
-                        fontSize: 10,
-                        color: getLongColor(),
-                        fontWeight: 700,
-                        marginBottom: 4
-                      }}>買い</div>
-                      <div style={{
-                        flex: 1,
-                        width: 40,
-                        background: "var(--surface)",
-                        borderRadius: 6,
-                        border: "1px solid var(--line)",
+                        width: 12,
                         position: "relative",
-                        overflow: "hidden",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center"
+                        overflow: "hidden"
                       }}>
                         <div style={{
                           position: "absolute",
-                          top: "50%",
-                          left: 0,
-                          right: 0,
-                          height: 2,
+                          top: "0",
+                          bottom: "0",
+                          left: "50%",
+                          width: 1,
                           background: "var(--line)",
+                          transform: "translateX(-50%)",
                           zIndex: 1
                         }} />
                         {item.longProfit >= 0 ? (
@@ -660,7 +647,6 @@ export default function ReportsMarket() {
                       background: "var(--surface)",
                       borderRadius: 6,
                       padding: 8,
-                      border: "1px solid var(--line)",
                       textAlign: "center"
                     }}>
                       <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
@@ -686,7 +672,6 @@ export default function ReportsMarket() {
                       background: "var(--surface)",
                       borderRadius: 6,
                       padding: 8,
-                      border: "1px solid var(--line)",
                       textAlign: "center"
                     }}>
                       <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
@@ -710,35 +695,22 @@ export default function ReportsMarket() {
 
                     <div style={{
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      height: 80
+                      alignItems: "stretch",
+                      justifyContent: "center"
                     }}>
                       <div style={{
-                        fontSize: 10,
-                        color: getShortColor(),
-                        fontWeight: 700,
-                        marginBottom: 4
-                      }}>売り</div>
-                      <div style={{
-                        flex: 1,
-                        width: 40,
-                        background: "var(--surface)",
-                        borderRadius: 6,
-                        border: "1px solid var(--line)",
+                        width: 12,
                         position: "relative",
-                        overflow: "hidden",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center"
+                        overflow: "hidden"
                       }}>
                         <div style={{
                           position: "absolute",
-                          top: "50%",
-                          left: 0,
-                          right: 0,
-                          height: 2,
+                          top: "0",
+                          bottom: "0",
+                          left: "50%",
+                          width: 1,
                           background: "var(--line)",
+                          transform: "translateX(-50%)",
                           zIndex: 1
                         }} />
                         {item.shortProfit >= 0 ? (
