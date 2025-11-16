@@ -573,82 +573,90 @@ export default function ReportsMarket() {
                 <div
                   key={idx}
                   style={{
-                    background: totalProfit >= 0
-                      ? 'linear-gradient(135deg, rgba(0, 132, 199, 0.03) 0%, rgba(0, 132, 199, 0.08) 100%)'
-                      : 'linear-gradient(135deg, rgba(239, 68, 68, 0.03) 0%, rgba(239, 68, 68, 0.08) 100%)',
-                    borderRadius: 16,
-                    padding: 20,
+                    background: "transparent",
+                    borderRadius: 12,
+                    padding: 16,
                     border: "1px solid var(--line)",
                     position: "relative",
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.08)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.04)';
                   }}
                 >
                   <div style={{
                     position: "absolute",
-                    left: 0,
-                    width: 4,
+                    left: 12,
+                    width: 3,
                     ...(item.longProfit >= 0 ? {
                       bottom: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: 'linear-gradient(180deg, #0084C7 0%, #0066A0 100%)',
-                      borderRadius: "0 4px 0 0",
-                      boxShadow: '2px 0 8px rgba(0, 132, 199, 0.3)',
+                      background: '#0084C7',
+                      borderRadius: "0",
                     } : {
                       top: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: 'linear-gradient(180deg, #EF4444 0%, #DC2626 100%)',
-                      borderRadius: "0 0 4px 0",
-                      boxShadow: '2px 0 8px rgba(239, 68, 68, 0.3)',
+                      background: '#EF4444',
+                      borderRadius: "0",
                     })
                   }} />
 
                   <div style={{
                     position: "absolute",
-                    right: 0,
-                    width: 4,
+                    right: 12,
+                    width: 3,
                     ...(item.shortProfit >= 0 ? {
                       bottom: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: 'linear-gradient(180deg, #0084C7 0%, #0066A0 100%)',
-                      borderRadius: "4px 0 0 0",
-                      boxShadow: '-2px 0 8px rgba(0, 132, 199, 0.3)',
+                      background: '#0084C7',
+                      borderRadius: "0",
                     } : {
                       top: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: 'linear-gradient(180deg, #EF4444 0%, #DC2626 100%)',
-                      borderRadius: "0 0 0 4px",
-                      boxShadow: '-2px 0 8px rgba(239, 68, 68, 0.3)',
+                      background: '#EF4444',
+                      borderRadius: "0",
                     })
                   }} />
 
                   <div style={{
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                    marginBottom: 20,
+                    gap: 12,
+                    marginBottom: 12,
+                    justifyContent: "center"
                   }}>
                     <div style={{
-                      fontSize: 24,
+                      border: `2px solid ${getLongColor()}`,
+                      borderRadius: 16,
+                      padding: "4px 12px",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: getLongColor(),
+                    }}>買い</div>
+                    <div style={{
+                      fontSize: 18,
                       fontWeight: 700,
                       color: "var(--text)",
-                      letterSpacing: '0.5px',
                     }}>
                       {item.symbol}
                     </div>
+                    <div style={{
+                      border: `2px solid ${getShortColor()}`,
+                      borderRadius: 16,
+                      padding: "4px 12px",
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: getShortColor(),
+                    }}>売り</div>
+                  </div>
+
+                  <div style={{
+                    textAlign: "center",
+                    fontSize: 11,
+                    color: "var(--muted)",
+                    marginBottom: 16
+                  }}>
+                    全{item.count}回 (買{item.longCount} / 売{item.shortCount})
                   </div>
 
                   <div style={{
@@ -659,39 +667,24 @@ export default function ReportsMarket() {
                   }}>
                     <div style={{
                       background: item.longProfit >= 0
-                        ? 'rgba(0, 132, 199, 0.08)'
-                        : 'rgba(239, 68, 68, 0.08)',
-                      border: item.longProfit >= 0
-                        ? '1px solid rgba(0, 132, 199, 0.2)'
-                        : '1px solid rgba(239, 68, 68, 0.2)',
-                      borderRadius: 12,
-                      padding: 14,
-                      textAlign: "center",
-                      position: 'relative',
+                        ? 'rgba(0, 132, 199, 0.1)'
+                        : 'rgba(239, 68, 68, 0.1)',
+                      borderRadius: 8,
+                      padding: 12,
+                      textAlign: "center"
                     }}>
-                      <div style={{
-                        display: 'inline-block',
-                        background: getLongColor(),
-                        color: '#fff',
-                        borderRadius: 12,
-                        padding: '3px 10px',
-                        fontSize: 10,
-                        fontWeight: 700,
-                        marginBottom: 10,
-                        boxShadow: `0 2px 6px ${getLongColor()}40`,
-                      }}>買い {item.longCount}回</div>
                       <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
                       <div style={{
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: 700,
                         color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                        marginBottom: 10
+                        marginBottom: 8
                       }}>
                         {item.longWinRate.toFixed(1)}%
                       </div>
                       <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                       <div style={{
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: 700,
                         color: item.longProfit >= 0 ? '#0084C7' : '#EF4444'
                       }}>
@@ -701,39 +694,24 @@ export default function ReportsMarket() {
 
                     <div style={{
                       background: item.shortProfit >= 0
-                        ? 'rgba(0, 132, 199, 0.08)'
-                        : 'rgba(239, 68, 68, 0.08)',
-                      border: item.shortProfit >= 0
-                        ? '1px solid rgba(0, 132, 199, 0.2)'
-                        : '1px solid rgba(239, 68, 68, 0.2)',
-                      borderRadius: 12,
-                      padding: 14,
-                      textAlign: "center",
-                      position: 'relative',
+                        ? 'rgba(0, 132, 199, 0.1)'
+                        : 'rgba(239, 68, 68, 0.1)',
+                      borderRadius: 8,
+                      padding: 12,
+                      textAlign: "center"
                     }}>
-                      <div style={{
-                        display: 'inline-block',
-                        background: getShortColor(),
-                        color: '#fff',
-                        borderRadius: 12,
-                        padding: '3px 10px',
-                        fontSize: 10,
-                        fontWeight: 700,
-                        marginBottom: 10,
-                        boxShadow: `0 2px 6px ${getShortColor()}40`,
-                      }}>売り {item.shortCount}回</div>
                       <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
                       <div style={{
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: 700,
                         color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                        marginBottom: 10
+                        marginBottom: 8
                       }}>
                         {item.shortWinRate.toFixed(1)}%
                       </div>
                       <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                       <div style={{
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: 700,
                         color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444'
                       }}>
@@ -744,28 +722,23 @@ export default function ReportsMarket() {
 
                   <div style={{
                     background: totalProfit >= 0
-                      ? 'rgba(0, 132, 199, 0.12)'
-                      : 'rgba(239, 68, 68, 0.12)',
-                    border: totalProfit >= 0
-                      ? '2px solid rgba(0, 132, 199, 0.3)'
-                      : '2px solid rgba(239, 68, 68, 0.3)',
-                    borderRadius: 12,
-                    padding: 16,
+                      ? 'rgba(0, 132, 199, 0.1)'
+                      : 'rgba(239, 68, 68, 0.1)',
+                    borderRadius: 8,
+                    padding: 12,
                     textAlign: "center",
                   }}>
-                    <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, fontWeight: 600 }}>合計損益 ({item.count}回)</div>
+                    <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>合計損益</div>
                     <div style={{
-                      fontSize: 24,
+                      fontSize: 18,
                       fontWeight: 700,
                       color: totalProfit >= 0 ? '#0084C7' : '#EF4444',
-                      marginBottom: 8,
-                      letterSpacing: '0.5px',
+                      marginBottom: 4
                     }}>
                       {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
                     </div>
-                    <div style={{ fontSize: 11, color: "var(--muted)", display: 'flex', justifyContent: 'space-around', gap: 8 }}>
-                      <span>平均: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円</span>
-                      <span>PF: {item.pf.toFixed(2)}</span>
+                    <div style={{ fontSize: 10, color: "var(--muted)" }}>
+                      平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円 / PF: {item.pf.toFixed(2)}
                     </div>
                   </div>
                 </div>
