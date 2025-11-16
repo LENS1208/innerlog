@@ -104,6 +104,18 @@ export function getGreenColor(alpha: number = 1): string {
   return `rgba(34, 197, 94, ${alpha})`
 }
 
+export function getLongColor(alpha: number = 1): string {
+  return getGreenColor(alpha)
+}
+
+export function getShortColor(alpha: number = 1): string {
+  return getOrangeColor(alpha)
+}
+
+export function getProfitColor(alpha: number = 1): string {
+  return getAccentColor(alpha)
+}
+
 export function createProfitGradient(
   ctx: CanvasRenderingContext2D,
   chartArea: any,
