@@ -119,18 +119,20 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         </Section>
       )}
 
-      <footer
-        style={{
-          padding: '16px',
-          background: 'var(--chip)',
-          borderRadius: '8px',
-          fontSize: '14px',
-          color: 'var(--ink)',
-        }}
-      >
-        <div style={{ fontWeight: 600, marginBottom: '6px', fontSize: '15px' }}>次のステップ提案：</div>
-        <div>{sheet.nextSteps.join(' / ')}</div>
-      </footer>
+      {sheet.nextSteps && sheet.nextSteps.length > 0 && (
+        <footer
+          style={{
+            padding: '16px',
+            background: 'var(--chip)',
+            borderRadius: '8px',
+            fontSize: '14px',
+            color: 'var(--ink)',
+          }}
+        >
+          <div style={{ fontWeight: 600, marginBottom: '6px', fontSize: '15px' }}>次のステップ提案：</div>
+          <div>{sheet.nextSteps.join(' / ')}</div>
+        </footer>
+      )}
     </div>
   );
 }
