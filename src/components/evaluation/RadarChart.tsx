@@ -107,7 +107,7 @@ export default function RadarChart({ parts }: RadarChartProps) {
         <polygon
           points={dataPoints}
           fill="var(--accent)"
-          fillOpacity="0.25"
+          fillOpacity="0.5"
           stroke="var(--accent)"
           strokeWidth="2"
         />
