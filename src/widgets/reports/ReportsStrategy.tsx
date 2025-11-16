@@ -577,11 +577,11 @@ export default function ReportsStrategy() {
           <div style={{ height: 180 }}>
             <Doughnut
               data={{
-                labels: ["買い", "売り"],
+                labels: ["売り", "買い"],
                 datasets: [
                   {
-                    data: [sideData.long.count, sideData.short.count],
-                    backgroundColor: [getGreenColor(), getOrangeColor()],
+                    data: [sideData.short.count, sideData.long.count],
+                    backgroundColor: [getOrangeColor(), getGreenColor()],
                     borderWidth: 0,
                   },
                 ],
