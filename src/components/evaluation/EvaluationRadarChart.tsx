@@ -11,11 +11,11 @@ type EvaluationRadarChartProps = {
 };
 
 export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChartProps) {
-  const W = 280;
-  const H = 240;
+  const W = 400;
+  const H = 360;
   const cx = W / 2;
   const cy = H / 2;
-  const R = 80;
+  const R = 120;
   const axes = parts.length;
 
   const webLevels = useMemo(() => {
@@ -47,8 +47,8 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
   const labelPositions = useMemo(() => {
     return parts.map((item, i) => {
       const ang = -Math.PI / 2 + (i * 2 * Math.PI) / axes;
-      const x = cx + (R + 24) * Math.cos(ang);
-      const y = cy + (R + 24) * Math.sin(ang);
+      const x = cx + (R + 36) * Math.cos(ang);
+      const y = cy + (R + 36) * Math.sin(ang);
       return { label: item.label, value: item.value, x, y };
     });
   }, [axes, parts]);
@@ -66,10 +66,10 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
   }, [parts, axes]);
 
   return (
-    <div style={{ padding: '8px 0', position: 'relative', maxWidth: '280px', maxHeight: '240px', margin: '0 auto' }}>
+    <div style={{ padding: '8px 0', position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto' }}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        style={{ width: '100%', height: 'auto', maxWidth: '280px', maxHeight: '240px' }}
+        style={{ width: '100%', height: 'auto' }}
         aria-label="評価レーダー"
       >
         {webLevels.map((web, idx) => (
@@ -97,7 +97,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
             key={`label-${idx}`}
             x={pos.x}
             y={pos.y}
-            fontSize="11"
+            fontSize="13"
             fontWeight="600"
             textAnchor="middle"
             fill="var(--ink)"
@@ -133,7 +133,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
           <text
             x={cx}
             y={cy + 6}
-            fontSize="32"
+            fontSize="42"
             fontWeight="900"
             textAnchor="middle"
             fill="var(--ink)"

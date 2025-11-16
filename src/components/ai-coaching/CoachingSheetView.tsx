@@ -26,7 +26,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'stretch' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'start' }}>
         {radarComponent && (
           <Section title="総合評価">
             {radarComponent}
@@ -145,6 +145,7 @@ function Section({ title, comment, children }: SectionProps) {
         border: '1px solid var(--line)',
         borderRadius: '12px',
         padding: '20px',
+        height: '100%',
       }}
     >
       <h3
