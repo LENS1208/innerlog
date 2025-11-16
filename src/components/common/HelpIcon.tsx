@@ -56,13 +56,16 @@ export function HelpIcon({ text }: HelpIconProps) {
             padding: 12,
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
             zIndex: 9999,
-            minWidth: 240,
-            maxWidth: 320,
+            minWidth: 280,
+            maxWidth: 400,
+            width: 'max-content',
             fontSize: 13,
-            lineHeight: 1.5,
+            lineHeight: 1.6,
             color: 'var(--muted)',
             whiteSpace: 'normal',
             fontFamily: 'inherit',
+            wordBreak: 'keep-all',
+            overflowWrap: 'break-word',
           }}
         >
           <div
