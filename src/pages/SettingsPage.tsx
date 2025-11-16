@@ -886,37 +886,7 @@ export default function SettingsPage() {
                     return;
                   }
 
-                  setSaving(true);
-                  try {
-                    const { getDataRows } = await import('../services/demoData');
-                    const { callAutoReviewAI } = await import('../services/ai-coaching/callAutoReviewAI');
-                    const { setCoachingCache } = await import('../services/coaching-storage');
-
-                    for (const dataset of ['A', 'B', 'C'] as const) {
-                      const rows = await getDataRows(false, dataset);
-                      const tradesJson = rows.map(row => ({
-                        date: row.closeDate,
-                        symbol: row.symbol,
-                        side: row.profit >= 0 ? 'BUY' : 'SELL',
-                        lots: row.lots || 0.1,
-                        pnl: row.profit,
-                      }));
-
-                      const result = await callAutoReviewAI(tradesJson, {
-                        dateRange: `Dataset ${dataset}`,
-                      });
-
-                      setCoachingCache(dataset, result);
-                      console.log(`Dataset ${dataset} analysis completed`);
-                    }
-
-                    showToast('すべてのデモデータの分析が完了しました', 'success');
-                  } catch (error) {
-                    console.error('一括生成エラー:', error);
-                    showToast('エラーが発生しました', 'error');
-                  } finally {
-                    setSaving(false);
-                  }
+                  showToast('この機能は現在無効化されています', 'error');
                 }}
                 disabled={saving}
                 style={{

@@ -8,10 +8,8 @@ import { useDataset } from '../lib/dataset.context';
 import { computeMetrics } from '../utils/evaluation-metrics';
 import { HelpIcon } from '../components/common/HelpIcon';
 import { CoachingSheetView } from '../components/ai-coaching/CoachingSheetView';
-import { callAutoReviewAI, generateMockCoachingSheet } from '../services/ai-coaching/callAutoReviewAI';
-import { startCoachingJob, checkCoachingJob, getJobStatus } from '../services/ai-coaching/coachingJob.service';
+import { callAutoReviewAI } from '../services/ai-coaching/callAutoReviewAI';
 import type { AIResponse } from '../services/ai-coaching/types';
-import { getCoachingCache, setCoachingCache, clearCoachingCache, clearOldCaches } from '../services/coaching-storage';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
@@ -21,12 +19,7 @@ export default function AiEvaluationPage() {
   const [coachingData, setCoachingData] = useState<AIResponse | null>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [jobId, setJobId] = useState<string | null>(null);
-  const [progress, setProgress] = useState<number>(0);
 
-  useEffect(() => {
-    clearOldCaches();
-  }, []);
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -47,59 +40,6 @@ export default function AiEvaluationPage() {
     })();
   }, [dataset, useDatabase, isInitialized]);
 
-  useEffect(() => {
-    if (!isInitialized || !dataset) return;
-
-    (async () => {
-      try {
-        const existingJob = await checkCoachingJob(dataset);
-
-        if (existingJob) {
-          if (existingJob.status === 'completed' && existingJob.result) {
-            console.log('📦 データベースから最新の結果を取得しました', { jobId: existingJob.id });
-
-            const cached = getCoachingCache(dataset, existingJob.id);
-            if (cached && JSON.stringify(cached) === JSON.stringify(existingJob.result)) {
-              console.log('💾 キャッシュとデータベースが一致しています');
-              setCoachingData(cached);
-            } else {
-              console.log('📦 データベースの結果を優先して表示します');
-              setCoachingData(existingJob.result);
-              setCoachingCache(dataset, existingJob.result, existingJob.id);
-            }
-            setGenerating(false);
-            setError(null);
-          } else if (existingJob.status === 'processing' || existingJob.status === 'pending') {
-            setJobId(existingJob.id);
-            setGenerating(true);
-            setProgress(existingJob.progress);
-          } else if (existingJob.status === 'failed') {
-            setError(existingJob.error_message || '生成に失敗しました');
-            setGenerating(false);
-          }
-        } else {
-          console.log('📦 データベースに結果がありません');
-          const cached = getCoachingCache(dataset);
-
-          if (cached && cached.sheet && cached.sheet.summary) {
-            console.log('💾 キャッシュから結果を表示（データベースに結果なし）');
-            setCoachingData(cached);
-            setError(null);
-          } else {
-            console.log('💾 キャッシュもありません');
-            setCoachingData(null);
-          }
-        }
-      } catch (err) {
-        console.error('ジョブチェックエラー:', err);
-        const cached = getCoachingCache(dataset);
-        if (cached && cached.sheet && cached.sheet.summary) {
-          console.log('💾 エラー発生、キャッシュにフォールバック');
-          setCoachingData(cached);
-        }
-      }
-    })();
-  }, [dataset, isInitialized]);
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
     if (dataRows.length === 0) {
@@ -121,34 +61,6 @@ export default function AiEvaluationPage() {
     return scoreFromMetrics(baseMetrics, 'capital', INIT_CAPITAL);
   }, [baseMetrics]);
 
-  useEffect(() => {
-    if (!jobId || !generating) return;
-
-    const intervalId = setInterval(async () => {
-      try {
-        const job = await getJobStatus(jobId);
-        setProgress(job.progress);
-
-        if (job.status === 'completed' && job.result) {
-          console.log('✅ ジョブ完了、結果を保存します', { jobId });
-          setGenerating(false);
-          setCoachingData(job.result);
-          setCoachingCache(dataset, job.result, jobId);
-          setJobId(null);
-          clearInterval(intervalId);
-        } else if (job.status === 'failed') {
-          setGenerating(false);
-          setError(job.error_message || '生成に失敗しました');
-          setJobId(null);
-          clearInterval(intervalId);
-        }
-      } catch (err) {
-        console.error('ポーリングエラー:', err);
-      }
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, [jobId, generating, dataset]);
 
   if (!isInitialized || loading) {
     return (
@@ -273,142 +185,17 @@ export default function AiEvaluationPage() {
                     setGenerating(true);
                     setError(null);
                     try {
-                      const winTrades = dataRows.filter(r => (r.profit || 0) > 0);
-                      const lossTrades = dataRows.filter(r => (r.profit || 0) < 0);
-                      const avgWin = winTrades.length > 0 ? winTrades.reduce((s, r) => s + (r.profit || 0), 0) / winTrades.length : 0;
-                      const avgLoss = lossTrades.length > 0 ? Math.abs(lossTrades.reduce((s, r) => s + (r.profit || 0), 0) / lossTrades.length) : 0;
+                      console.log('🚀 AI分析を開始します...');
+                      console.log('📊 取引データ件数:', dataRows.length);
 
-                      const symbolStats = dataRows.reduce((acc, row) => {
-                        const sym = row.symbol || 'UNKNOWN';
-                        if (!acc[sym]) acc[sym] = { trades: 0, wins: 0, pnl: 0 };
-                        acc[sym].trades++;
-                        if ((row.profit || 0) > 0) acc[sym].wins++;
-                        acc[sym].pnl += row.profit || 0;
-                        return acc;
-                      }, {} as Record<string, { trades: number; wins: number; pnl: number }>);
+                      const result = await callAutoReviewAI(dataRows, dataset);
 
-                      const setupStats = dataRows.reduce((acc, row) => {
-                        const setup = row.setup || 'unknown';
-                        if (!acc[setup]) acc[setup] = { trades: 0, wins: 0, pnl: 0 };
-                        acc[setup].trades++;
-                        if ((row.profit || 0) > 0) acc[setup].wins++;
-                        acc[setup].pnl += row.profit || 0;
-                        return acc;
-                      }, {} as Record<string, { trades: number; wins: number; pnl: number }>);
-
-                      const timeStats = dataRows.reduce((acc, row) => {
-                        if (!row.openDate) return acc;
-                        const dt = new Date(row.openDate);
-                        const hour = dt.getHours();
-                        const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][dt.getDay()];
-
-                        if (!acc.byHour[hour]) acc.byHour[hour] = { trades: 0, wins: 0, pnl: 0 };
-                        acc.byHour[hour].trades++;
-                        if ((row.profit || 0) > 0) acc.byHour[hour].wins++;
-                        acc.byHour[hour].pnl += row.profit || 0;
-
-                        if (!acc.byDayOfWeek[dayOfWeek]) acc.byDayOfWeek[dayOfWeek] = { trades: 0, wins: 0, pnl: 0 };
-                        acc.byDayOfWeek[dayOfWeek].trades++;
-                        if ((row.profit || 0) > 0) acc.byDayOfWeek[dayOfWeek].wins++;
-                        acc.byDayOfWeek[dayOfWeek].pnl += row.profit || 0;
-
-                        return acc;
-                      }, { byHour: {}, byDayOfWeek: {} } as { byHour: Record<number, { trades: number; wins: number; pnl: number }>; byDayOfWeek: Record<string, { trades: number; wins: number; pnl: number }> });
-
-                      const streakAnalysis = (() => {
-                        let currentStreak = 0;
-                        let maxWinStreak = 0;
-                        let maxLossStreak = 0;
-                        const afterWinStreak: { win: number; loss: number } = { win: 0, loss: 0 };
-                        const afterLossStreak: { win: number; loss: number } = { win: 0, loss: 0 };
-                        let wasInWinStreak = false;
-                        let wasInLossStreak = false;
-
-                        dataRows.forEach((row, idx) => {
-                          const isWin = (row.profit || 0) > 0;
-
-                          if (isWin) {
-                            currentStreak = currentStreak > 0 ? currentStreak + 1 : 1;
-                            maxWinStreak = Math.max(maxWinStreak, currentStreak);
-                            if (wasInLossStreak && idx > 0) afterLossStreak.win++;
-                            wasInWinStreak = currentStreak >= 2;
-                            wasInLossStreak = false;
-                          } else {
-                            currentStreak = currentStreak < 0 ? currentStreak - 1 : -1;
-                            maxLossStreak = Math.max(maxLossStreak, Math.abs(currentStreak));
-                            if (wasInWinStreak && idx > 0) afterWinStreak.loss++;
-                            wasInLossStreak = Math.abs(currentStreak) >= 2;
-                            wasInWinStreak = false;
-                          }
-                        });
-
-                        return {
-                          maxWinStreak,
-                          maxLossStreak,
-                          afterWinStreak,
-                          afterLossStreak,
-                        };
-                      })();
-
-                      const tradesJson = {
-                        trades: dataRows.map(row => ({
-                          ticket: row.ticket,
-                          openDate: row.openDate,
-                          closeDate: row.closeDate,
-                          symbol: row.symbol,
-                          side: row.side,
-                          lots: row.lots,
-                          openPrice: row.openPrice,
-                          closePrice: row.closePrice,
-                          sl: row.sl,
-                          tp: row.tp,
-                          profit: row.profit,
-                          pips: row.pips,
-                          swap: row.swap,
-                          commission: row.commission,
-                          setup: row.setup,
-                        })),
-                        summary: {
-                          totalTrades: dataRows.length,
-                          winRate: baseMetrics.winrate,
-                          profitFactor: baseMetrics.pf,
-                          totalPnL: dataRows.reduce((s, r) => s + (r.profit || 0), 0),
-                          totalPips: baseMetrics.pipsSum,
-                          maxDrawdown: baseMetrics.maxdd,
-                          avgWin,
-                          avgLoss,
-                          winLossRatio: avgLoss > 0 ? avgWin / avgLoss : 0,
-                          largestWin: Math.max(...dataRows.map(r => r.profit || 0)),
-                          largestLoss: Math.min(...dataRows.map(r => r.profit || 0)),
-                          avgLotSize: dataRows.length > 0
-                            ? dataRows.reduce((s, r) => s + (r.lots || 0), 0) / dataRows.length
-                            : 0,
-                          maxLotSize: Math.max(...dataRows.map(r => r.lots || 0)),
-                          minLotSize: Math.min(...dataRows.map(r => r.lots || 0)),
-                        },
-                        bySymbol: symbolStats,
-                        bySetup: setupStats,
-                        timePatterns: {
-                          byHour: timeStats.byHour,
-                          byDayOfWeek: timeStats.byDayOfWeek,
-                        },
-                        streakPatterns: streakAnalysis,
-                      };
-
-                      console.log('🎯 送信するトレードデータ（サマリー）:', tradesJson.summary);
-                      console.log('🎯 送信するトレードデータ（通貨ペア別）:', tradesJson.bySymbol);
-                      console.log('🎯 送信するトレードデータ（セットアップ別）:', tradesJson.bySetup);
-
-                      const jobResponse = await startCoachingJob(dataset, tradesJson, {
-                        dateRange: `Dataset ${dataset}`,
-                      });
-
-                      console.log('📦 ジョブ開始:', jobResponse);
-                      setJobId(jobResponse.jobId);
-                      setProgress(0);
+                      console.log('✅ AI分析完了');
+                      setCoachingData(result);
                     } catch (error) {
                       console.error('コーチング生成エラー:', error);
                       setError('AIコーチングの生成中にエラーが発生しました。しばらくしてから再度お試しください。');
+                    } finally {
                       setGenerating(false);
                     }
                   }}
@@ -424,31 +211,8 @@ export default function AiEvaluationPage() {
                     cursor: generating || dataRows.length === 0 ? 'not-allowed' : 'pointer',
                   }}
                 >
-                  {generating ? `生成中... (${progress}%)` : 'AIコーチングを生成'}
+                  {generating ? '生成中...' : 'AIコーチングを生成'}
                 </button>
-                {generating && (
-                  <div style={{ marginTop: '12px', textAlign: 'center' }}>
-                    <div style={{
-                      width: '100%',
-                      maxWidth: '400px',
-                      margin: '0 auto',
-                      height: '4px',
-                      background: 'var(--line)',
-                      borderRadius: '2px',
-                      overflow: 'hidden'
-                    }}>
-                      <div style={{
-                        width: `${progress}%`,
-                        height: '100%',
-                        background: 'var(--accent)',
-                        transition: 'width 0.3s ease'
-                      }} />
-                    </div>
-                    <p style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '8px' }}>
-                      ページを離れても生成は継続されます
-                    </p>
-                  </div>
-                )}
               </div>
             </div>
           </section>
@@ -457,7 +221,6 @@ export default function AiEvaluationPage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
               <button
                 onClick={() => {
-                  clearCoachingCache(dataset);
                   setCoachingData(null);
                   setError(null);
                 }}
