@@ -102,6 +102,8 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
         position: 'relative',
         cursor: ex.ticket ? 'pointer' : 'default',
         transition: 'all 0.2s ease',
+        maxWidth: 'calc(100% - 20px)',
+        margin: '0 auto',
       }}
       onMouseEnter={(e) => {
         if (ex.ticket) {
