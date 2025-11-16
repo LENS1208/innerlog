@@ -9,6 +9,7 @@ import { computeMetrics } from '../utils/evaluation-metrics';
 import { HelpIcon } from '../components/common/HelpIcon';
 import { CoachingSheetView } from '../components/ai-coaching/CoachingSheetView';
 import { callAutoReviewAI, generateMockCoachingSheet } from '../services/ai-coaching/callAutoReviewAI';
+import { startCoachingJob, checkCoachingJob, getJobStatus } from '../services/ai-coaching/coachingJob.service';
 import type { AIResponse } from '../services/ai-coaching/types';
 import { getCoachingCache, setCoachingCache, clearCoachingCache } from '../services/coaching-storage';
 import '../styles/journal-notebook.css';
@@ -20,6 +21,8 @@ export default function AiEvaluationPage() {
   const [coachingData, setCoachingData] = useState<AIResponse | null>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [progress, setProgress] = useState<number>(0);
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -57,6 +60,28 @@ export default function AiEvaluationPage() {
       }
       setCoachingData(null);
     }
+
+    (async () => {
+      try {
+        const existingJob = await checkCoachingJob(dataset);
+        if (existingJob) {
+          if (existingJob.status === 'completed' && existingJob.result) {
+            setCoachingData(existingJob.result);
+            setCoachingCache(dataset, existingJob.result);
+            setGenerating(false);
+          } else if (existingJob.status === 'processing' || existingJob.status === 'pending') {
+            setJobId(existingJob.id);
+            setGenerating(true);
+            setProgress(existingJob.progress);
+          } else if (existingJob.status === 'failed') {
+            setError(existingJob.error_message || '生成に失敗しました');
+            setGenerating(false);
+          }
+        }
+      } catch (err) {
+        console.error('ジョブチェックエラー:', err);
+      }
+    })();
   }, [dataset, isInitialized]);
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
@@ -78,6 +103,34 @@ export default function AiEvaluationPage() {
   const scoreData = useMemo(() => {
     return scoreFromMetrics(baseMetrics, 'capital', INIT_CAPITAL);
   }, [baseMetrics]);
+
+  useEffect(() => {
+    if (!jobId || !generating) return;
+
+    const intervalId = setInterval(async () => {
+      try {
+        const job = await getJobStatus(jobId);
+        setProgress(job.progress);
+
+        if (job.status === 'completed' && job.result) {
+          setGenerating(false);
+          setCoachingData(job.result);
+          setCoachingCache(dataset, job.result);
+          setJobId(null);
+          clearInterval(intervalId);
+        } else if (job.status === 'failed') {
+          setGenerating(false);
+          setError(job.error_message || '生成に失敗しました');
+          setJobId(null);
+          clearInterval(intervalId);
+        }
+      } catch (err) {
+        console.error('ポーリングエラー:', err);
+      }
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [jobId, generating, dataset]);
 
   if (!isInitialized || loading) {
     return (
@@ -328,20 +381,16 @@ export default function AiEvaluationPage() {
                       console.log('🎯 送信するトレードデータ（通貨ペア別）:', tradesJson.bySymbol);
                       console.log('🎯 送信するトレードデータ（セットアップ別）:', tradesJson.bySetup);
 
-                      const result = await callAutoReviewAI(tradesJson, {
+                      const jobResponse = await startCoachingJob(dataset, tradesJson, {
                         dateRange: `Dataset ${dataset}`,
                       });
 
-                      console.log('📦 AI結果:', result);
-                      console.log('📦 AI結果のsheet:', result?.sheet);
-                      console.log('📦 AI結果のsummary:', result?.sheet?.summary);
-
-                      setCoachingData(result);
-                      setCoachingCache(dataset, result);
+                      console.log('📦 ジョブ開始:', jobResponse);
+                      setJobId(jobResponse.jobId);
+                      setProgress(0);
                     } catch (error) {
                       console.error('コーチング生成エラー:', error);
                       setError('AIコーチングの生成中にエラーが発生しました。しばらくしてから再度お試しください。');
-                    } finally {
                       setGenerating(false);
                     }
                   }}
@@ -357,8 +406,31 @@ export default function AiEvaluationPage() {
                     cursor: generating || dataRows.length === 0 ? 'not-allowed' : 'pointer',
                   }}
                 >
-                  {generating ? '生成中...' : 'AIコーチングを生成'}
+                  {generating ? `生成中... (${progress}%)` : 'AIコーチングを生成'}
                 </button>
+                {generating && (
+                  <div style={{ marginTop: '12px', textAlign: 'center' }}>
+                    <div style={{
+                      width: '100%',
+                      maxWidth: '400px',
+                      margin: '0 auto',
+                      height: '4px',
+                      background: 'var(--line)',
+                      borderRadius: '2px',
+                      overflow: 'hidden'
+                    }}>
+                      <div style={{
+                        width: `${progress}%`,
+                        height: '100%',
+                        background: 'var(--accent)',
+                        transition: 'width 0.3s ease'
+                      }} />
+                    </div>
+                    <p style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '8px' }}>
+                      ページを離れても生成は継続されます
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </section>
