@@ -619,20 +619,9 @@ export default function ReportsMarket() {
                   }} />
 
                   <div style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    marginBottom: 12,
-                    justifyContent: "center"
+                    textAlign: "center",
+                    marginBottom: 12
                   }}>
-                    <div style={{
-                      border: `2px solid ${getLongColor()}`,
-                      borderRadius: 16,
-                      padding: "4px 12px",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: getLongColor(),
-                    }}>買い</div>
                     <div style={{
                       fontSize: 18,
                       fontWeight: 700,
@@ -640,14 +629,6 @@ export default function ReportsMarket() {
                     }}>
                       {item.symbol}
                     </div>
-                    <div style={{
-                      border: `2px solid ${getShortColor()}`,
-                      borderRadius: 16,
-                      padding: "4px 12px",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: getShortColor(),
-                    }}>売り</div>
                   </div>
 
                   <div style={{
