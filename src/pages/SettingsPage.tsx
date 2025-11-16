@@ -25,11 +25,9 @@ interface ImportHistory {
   id: string;
   filename: string;
   rows: number;
-  timestamp: number;
+  created_at: string;
   format: string;
 }
-
-const STORAGE_KEY = 'csv_import_history';
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
@@ -121,25 +119,27 @@ export default function SettingsPage() {
     }
   };
 
-  const loadImportHistory = () => {
+  const loadImportHistory = async () => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setImportHistory(JSON.parse(stored));
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('import_history')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+      if (data) {
+        setImportHistory(data);
       }
     } catch (err) {
       console.error('インポート履歴の読み込みエラー:', err);
     }
   };
 
-  const saveImportHistory = (history: ImportHistory[]) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-      setImportHistory(history);
-    } catch (err) {
-      console.error('インポート履歴の保存エラー:', err);
-    }
-  };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -294,9 +294,27 @@ export default function SettingsPage() {
     }
   };
 
-  const handleClearHistory = () => {
-    if (confirm('インポート履歴をすべて削除しますか？')) {
-      saveImportHistory([]);
+  const handleClearHistory = async () => {
+    if (!confirm('インポート履歴をすべて削除しますか？')) {
+      return;
+    }
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('import_history')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      setImportHistory([]);
+      showToast('インポート履歴をクリアしました', 'success');
+    } catch (err) {
+      console.error('履歴削除エラー:', err);
+      showToast('履歴の削除に失敗しました', 'error');
     }
   };
 
@@ -643,7 +661,7 @@ export default function SettingsPage() {
                             <td style={{ padding: '8px 12px', fontSize: 13 }}>{item.format}</td>
                             <td style={{ padding: '8px 12px', fontSize: 13, textAlign: 'right' }}>{item.rows}</td>
                             <td style={{ padding: '8px 12px', fontSize: 13 }}>
-                              {new Date(item.timestamp).toLocaleString('ja-JP')}
+                              {new Date(item.created_at).toLocaleString('ja-JP')}
                             </td>
                           </tr>
                         ))}

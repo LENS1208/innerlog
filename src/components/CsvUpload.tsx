@@ -179,20 +179,15 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       const dbTrades = trades.map(tradeToDb);
       await insertTrades(dbTrades);
 
-      const STORAGE_KEY = 'csv_import_history';
-      const stored = localStorage.getItem(STORAGE_KEY);
-      const history = stored ? JSON.parse(stored) : [];
-
-      const newEntry = {
-        id: Date.now().toString(),
-        filename: file.name,
-        rows: trades.length,
-        timestamp: Date.now(),
-        format: fileName.endsWith('.html') || fileName.endsWith('.htm') ? 'HTML' : 'CSV',
-      };
-
-      history.unshift(newEntry);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, 50)));
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('import_history').insert({
+          user_id: user.id,
+          filename: file.name,
+          rows: trades.length,
+          format: fileName.endsWith('.html') || fileName.endsWith('.htm') ? 'HTML' : 'CSV',
+        });
+      }
 
       setMessage(`✅ ${trades.length}件の取引データをアップロードしました`);
       showToast('取引データをアップロードしました', 'success');
