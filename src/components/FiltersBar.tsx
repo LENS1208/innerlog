@@ -39,6 +39,14 @@ export default function FiltersBar() {
         let trades: Trade[] = [];
 
         if (useDatabase) {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            console.error('No authenticated user');
+            setAvailableSymbols([]);
+            setLoadingSymbols(false);
+            return;
+          }
+
           const PAGE_SIZE = 1000;
           let allData: any[] = [];
           let currentPage = 0;
@@ -51,6 +59,7 @@ export default function FiltersBar() {
             const { data, error } = await supabase
               .from('trades')
               .select('item')
+              .eq('user_id', user.id)
               .order('close_time', { ascending: true })
               .range(start, end);
 
