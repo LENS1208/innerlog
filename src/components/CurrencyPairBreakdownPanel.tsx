@@ -204,7 +204,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.hourCounts,
-      backgroundColor: stats.hourProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor()),
+      backgroundColor: stats.hourProfits.map(p => p >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor()),
     }],
   };
 
@@ -213,7 +213,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor()),
+      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor()),
     }],
   };
 
@@ -223,7 +223,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       {
         label: '勝ちトレード',
         data: stats.holdingTimeWinCounts,
-        backgroundColor: 'rgba(22, 163, 74, 1)',
+        backgroundColor: 'rgba(0, 162, 24, 1)',
       },
       {
         label: '負けトレード',
@@ -240,7 +240,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       data: stats.sortedTrades.map(t => getProfit(t)),
       borderColor: (context: any) => {
         if (!context.raw) return getAccentColor();
-        return context.raw >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor();
+        return context.raw >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
       },
       backgroundColor: (context: any) => {
         if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
@@ -251,7 +251,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       pointHoverRadius: 6,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor();
+          return ctx.p1.parsed.y >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
         }
       }
     }]
@@ -542,9 +542,9 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                   padding: '8px',
                   borderRadius: 8,
                   background: stats.longTotalPnL > stats.shortTotalPnL
-                    ? 'rgba(22, 163, 74, 0.1)'
+                    ? 'rgba(0, 162, 24, 0.1)'
                     : stats.shortTotalPnL > stats.longTotalPnL
-                    ? 'rgba(249, 115, 22, 0.1)'
+                    ? 'rgba(229, 142, 3, 0.1)'
                     : 'rgba(100, 116, 139, 0.1)',
                   color: stats.longTotalPnL > stats.shortTotalPnL
                     ? getGreenColor()

@@ -161,7 +161,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
       backgroundColor: [
         getAccentColor(),
         getLossColor(),
-        'rgba(22, 163, 74, 1)',
+        'rgba(0, 162, 24, 1)',
         'rgba(245, 158, 11, 0.8)',
         'rgba(139, 92, 246, 0.8)',
         'rgba(6, 182, 212, 0.8)',
@@ -185,7 +185,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor()),
+      backgroundColor: stats.weekdayProfits.map(p => p >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor()),
     }],
   };
 
@@ -195,7 +195,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
       {
         label: '勝ちトレード',
         data: stats.holdingTimeWinCounts,
-        backgroundColor: 'rgba(22, 163, 74, 1)',
+        backgroundColor: 'rgba(0, 162, 24, 1)',
       },
       {
         label: '負けトレード',
@@ -212,7 +212,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
       data: stats.sortedTrades.map(t => getProfit(t)),
       borderColor: (context: any) => {
         if (!context.raw) return getAccentColor();
-        return context.raw >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor();
+        return context.raw >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
       },
       backgroundColor: (context: any) => {
         if (!context.raw) return 'rgba(0, 132, 199, 0.3)';
@@ -223,7 +223,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
       pointHoverRadius: 6,
       segment: {
         borderColor: (ctx: any) => {
-          return ctx.p1.parsed.y >= 0 ? 'rgba(22, 163, 74, 1)' : getLossColor();
+          return ctx.p1.parsed.y >= 0 ? 'rgba(0, 162, 24, 1)' : getLossColor();
         }
       }
     }]

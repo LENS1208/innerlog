@@ -137,7 +137,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
       backgroundColor: [
         getAccentColor(),
         getLossColor(),
-        'rgba(22, 163, 74)',
+        'rgba(0, 162, 24)',
         getWarningColor(),
         'rgba(139, 92, 246)',
         'rgba(6, 182, 212)',
@@ -171,7 +171,7 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: 'rgba(22, 163, 74)',
+      backgroundColor: 'rgba(0, 162, 24)',
     }],
   };
 

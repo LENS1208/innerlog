@@ -219,13 +219,13 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
       {
         label: 'R:R比',
         data: [0, stats.riskRewardRatio, 0],
-        backgroundColor: 'rgba(22, 163, 74, 1)',
+        backgroundColor: 'rgba(0, 162, 24, 1)',
         yAxisID: 'y1',
       },
       {
         label: '最大連勝数',
         data: [0, 0, stats.maxConsecutiveWins],
-        backgroundColor: 'rgba(251, 146, 60, 1)',
+        backgroundColor: 'rgba(245, 158, 66, 1)',
         yAxisID: 'y2',
       },
     ],
@@ -424,7 +424,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                 </div>
               </div>
               <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                <div style={{ textAlign: 'center', padding: 12, background: 'rgba(22, 163, 74, 0.1)', borderRadius: 8 }}>
+                <div style={{ textAlign: 'center', padding: 12, background: 'rgba(0, 162, 24, 0.1)', borderRadius: 8 }}>
                   <div style={{ fontSize: 12, color: 'var(--muted)' }}>平均利益</div>
                   <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--gain)' }}>
                     {Math.round(stats.avgWin).toLocaleString('ja-JP')} 円
@@ -504,7 +504,7 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                         if (data.count > 0) {
                           if (avgProfit > 0) {
                             const intensity = Math.min(Math.abs(avgProfit) / 5000, 1);
-                            bgColor = `rgba(22, 163, 74, ${intensity * 0.8})`;
+                            bgColor = `rgba(0, 162, 24, ${intensity * 0.8})`;
                           } else {
                             const intensity = Math.min(Math.abs(avgProfit) / 5000, 1);
                             bgColor = getLossColor(intensity * 0.8);

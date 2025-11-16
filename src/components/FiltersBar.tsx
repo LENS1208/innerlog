@@ -306,7 +306,7 @@ export default function FiltersBar() {
                         padding: "8px 24px",
                         border: "none",
                         borderRadius: 8,
-                        background: "#4ade80",
+                        background: "#00a218",
                         color: "white",
                         cursor: "pointer"
                       }}

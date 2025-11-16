@@ -129,7 +129,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
       backgroundColor: [
         getAccentColor(),
         getLossColor(),
-        'rgba(22, 163, 74, 1)',
+        'rgba(0, 162, 24, 1)',
         'rgba(245, 158, 11, 0.8)',
         'rgba(139, 92, 246, 0.8)',
         'rgba(6, 182, 212, 0.8)',
@@ -162,7 +162,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
     datasets: [{
       label: '取引回数',
       data: stats.weekdayCounts,
-      backgroundColor: 'rgba(22, 163, 74, 1)',
+      backgroundColor: 'rgba(0, 162, 24, 1)',
     }],
   };
 
@@ -176,7 +176,7 @@ export default function HoldingTimeBreakdownPanel({ trades, rangeLabel, onClose 
       datasets: [{
         label: '損益',
         data: [...losses, ...wins],
-        backgroundColor: [...losses.map(() => getLossColor()), ...wins.map(() => 'rgba(22, 163, 74, 1)')],
+        backgroundColor: [...losses.map(() => getLossColor()), ...wins.map(() => 'rgba(0, 162, 24, 1)')],
       }],
     };
   }, [stats.pnlBuckets]);

@@ -88,7 +88,7 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
                           : 'rgba(239, 68, 68, 0.1)',
                       color:
                         row.score >= 80
-                          ? '#22c55e'
+                          ? '#00a218'
                           : row.score >= 60
                           ? '#3b82f6'
                           : row.score >= 40

@@ -69,39 +69,39 @@ export function getPurpleColor(alpha: number = 1): string {
 }
 
 export function getOrangeColor(alpha: number = 1): string {
-  if (typeof window === 'undefined') return `rgba(249, 115, 22, ${alpha})`
+  if (typeof window === 'undefined') return `rgba(229, 142, 3, ${alpha})`
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
   if (alpha === 1) {
     if (isDark) {
-      return '#fb923c'
+      return '#f59e42'
     }
-    return '#f97316'
+    return '#e58e03'
   }
 
   if (isDark) {
-    return `rgba(251, 146, 60, ${alpha})`
+    return `rgba(245, 158, 66, ${alpha})`
   }
-  return `rgba(249, 115, 22, ${alpha})`
+  return `rgba(229, 142, 3, ${alpha})`
 }
 
 export function getGreenColor(alpha: number = 1): string {
-  if (typeof window === 'undefined') return `rgba(34, 197, 94, ${alpha})`
+  if (typeof window === 'undefined') return `rgba(0, 162, 24, ${alpha})`
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
   if (alpha === 1) {
     if (isDark) {
-      return '#4ade80'
+      return '#33c947'
     }
-    return '#22c55e'
+    return '#00a218'
   }
 
   if (isDark) {
-    return `rgba(74, 222, 128, ${alpha})`
+    return `rgba(51, 201, 71, ${alpha})`
   }
-  return `rgba(34, 197, 94, ${alpha})`
+  return `rgba(0, 162, 24, ${alpha})`
 }
 
 export function getLongColor(alpha: number = 1): string {
