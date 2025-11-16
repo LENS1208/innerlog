@@ -616,7 +616,7 @@ export default function ReportsMarket() {
                         textAlign: "center"
                       }}>
                         <div style={{ marginBottom: 8 }}>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>買い</span>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>買い</span>
                           <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.longCount}回)</span>
                         </div>
                         <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
@@ -647,7 +647,7 @@ export default function ReportsMarket() {
                         textAlign: "center"
                       }}>
                         <div style={{ marginBottom: 8 }}>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>売り</span>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>売り</span>
                           <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.shortCount}回)</span>
                         </div>
                         <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
