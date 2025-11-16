@@ -550,9 +550,10 @@ export default function ReportsMarket() {
           </table>
         </div>
 
-        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--line)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
-            {pairStatsData.slice(0, 6).map((item, idx) => {
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, marginBottom: 16 }}>
+        {pairStatsData.slice(0, 6).map((item, idx) => {
               const totalProfit = item.longProfit + item.shortProfit;
               const longAvgPnL = item.longCount > 0 ? item.longProfit / item.longCount : 0;
               const shortAvgPnL = item.shortCount > 0 ? item.shortProfit / item.shortCount : 0;
@@ -573,7 +574,7 @@ export default function ReportsMarket() {
                 <div
                   key={idx}
                   style={{
-                    background: "transparent",
+                    background: "var(--surface)",
                     borderRadius: 12,
                     padding: 16,
                     border: "1px solid var(--line)",
@@ -682,8 +683,6 @@ export default function ReportsMarket() {
                 </div>
               );
             })}
-          </div>
-        </div>
       </div>
 
       <div
