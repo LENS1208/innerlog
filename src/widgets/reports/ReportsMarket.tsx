@@ -1285,7 +1285,7 @@ export default function ReportsMarket() {
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
         <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-          市場・銘柄 明細
+          セグメント別
           <HelpIcon text="全通貨ペアと価格帯の詳細データテーブルです。細かい数値を確認して戦略を調整できます。" />
         </h3>
         <MarketSegmentTabs

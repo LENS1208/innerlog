@@ -1174,7 +1174,7 @@ export default function ReportsTimeAxis() {
         <TimeSymbolAnalysis trades={filteredTrades} />
       </Card>
 
-      <Card title="セグメント別明細" helpText="全曜日・時間帯の詳細データテーブルです。細かい数値を確認して取引時間を最適化できます。">
+      <Card title="セグメント別" helpText="全曜日・時間帯の詳細データテーブルです。細かい数値を確認して取引時間を最適化できます。">
         <SegmentDetailsTabs
           dayOfWeekData={dayOfWeekData}
           hourData={hourData}
