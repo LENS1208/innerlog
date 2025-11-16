@@ -15,7 +15,7 @@ export default function OverallScore({ score, rank }: OverallScoreProps) {
       alignItems: 'center',
       justifyContent: 'center',
       textAlign: 'center',
-      padding: '32px 16px'
+      padding: '16px 8px'
     }}>
       <div
         style={{
