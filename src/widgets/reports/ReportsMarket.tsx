@@ -861,22 +861,6 @@ export default function ReportsMarket() {
                 labels: symbolData.slice(0, 6).map((s) => s.symbol),
                 datasets: [
                   {
-                    type: 'bar' as const,
-                    label: '勝ちトレード',
-                    data: symbolData.slice(0, 6).map((s) => s.wins),
-                    backgroundColor: '#0084C7',
-                    stack: 'trades',
-                    yAxisID: 'y',
-                  },
-                  {
-                    type: 'bar' as const,
-                    label: '負けトレード',
-                    data: symbolData.slice(0, 6).map((s) => s.losses),
-                    backgroundColor: '#EF4444',
-                    stack: 'trades',
-                    yAxisID: 'y',
-                  },
-                  {
                     type: 'line' as const,
                     label: '勝率(%)',
                     data: symbolData.slice(0, 6).map((s) => s.winRate),
@@ -887,6 +871,25 @@ export default function ReportsMarket() {
                     pointHoverRadius: 6,
                     yAxisID: 'y1',
                     tension: 0.3,
+                    order: 1,
+                  },
+                  {
+                    type: 'bar' as const,
+                    label: '勝ちトレード',
+                    data: symbolData.slice(0, 6).map((s) => s.wins),
+                    backgroundColor: '#0084C7',
+                    stack: 'trades',
+                    yAxisID: 'y',
+                    order: 2,
+                  },
+                  {
+                    type: 'bar' as const,
+                    label: '負けトレード',
+                    data: symbolData.slice(0, 6).map((s) => s.losses),
+                    backgroundColor: '#EF4444',
+                    stack: 'trades',
+                    yAxisID: 'y',
+                    order: 3,
                   },
                 ],
               }}
