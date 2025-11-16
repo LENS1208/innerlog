@@ -162,7 +162,7 @@ function Section({ title, comment, children }: SectionProps) {
         background: 'var(--surface)',
         border: '1px solid var(--line)',
         borderRadius: '12px',
-        padding: '20px',
+        padding: '12px',
         height: '100%',
         minWidth: 0,
         overflow: 'hidden',
