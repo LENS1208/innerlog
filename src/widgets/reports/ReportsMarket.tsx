@@ -582,26 +582,40 @@ export default function ReportsMarket() {
                 >
                   <div style={{
                     position: "absolute",
-                    top: 0,
                     left: 0,
-                    bottom: 0,
                     width: 8,
-                    background: item.longProfit >= 0
-                      ? `linear-gradient(to bottom, ${getLongColor()}, ${getLongColor(0.3)})`
-                      : "transparent",
-                    borderRadius: "12px 0 0 12px",
+                    ...(item.longProfit >= 0 ? {
+                      bottom: "50%",
+                      height: `${longBarWidth * 0.5}%`,
+                      maxHeight: "50%",
+                      background: `linear-gradient(to top, ${getLongColor(0.3)}, ${getLongColor()})`,
+                      borderRadius: "0 0 0 12px",
+                    } : {
+                      top: "50%",
+                      height: `${longBarWidth * 0.5}%`,
+                      maxHeight: "50%",
+                      background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                      borderRadius: "12px 0 0 0",
+                    })
                   }} />
 
                   <div style={{
                     position: "absolute",
-                    top: 0,
                     right: 0,
-                    bottom: 0,
                     width: 8,
-                    background: item.shortProfit < 0
-                      ? `linear-gradient(to bottom, ${getLossColor()}, ${getLossColor(0.3)})`
-                      : "transparent",
-                    borderRadius: "0 12px 12px 0",
+                    ...(item.shortProfit >= 0 ? {
+                      bottom: "50%",
+                      height: `${shortBarWidth * 0.5}%`,
+                      maxHeight: "50%",
+                      background: `linear-gradient(to top, ${getShortColor(0.3)}, ${getShortColor()})`,
+                      borderRadius: "0 0 12px 0",
+                    } : {
+                      top: "50%",
+                      height: `${shortBarWidth * 0.5}%`,
+                      maxHeight: "50%",
+                      background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                      borderRadius: "0 12px 0 0",
+                    })
                   }} />
 
                   <div style={{
