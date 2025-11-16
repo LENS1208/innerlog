@@ -13,7 +13,7 @@ import Card from "../../components/common/Card";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 
-type MarketSegmentTab = "資産クラス" | "通貨ペア" | "価格帯" | "相場状態";
+type MarketSegmentTab = "資産クラス" | "価格帯" | "相場状態";
 
 function MarketSegmentTabs({
   assetTypeData,
@@ -28,7 +28,7 @@ function MarketSegmentTabs({
 }) {
   const [activeTab, setActiveTab] = React.useState<MarketSegmentTab>("資産クラス");
 
-  const tabs: MarketSegmentTab[] = ["資産クラス", "通貨ペア", "価格帯", "相場状態"];
+  const tabs: MarketSegmentTab[] = ["資産クラス", "価格帯", "相場状態"];
 
   const renderTable = () => {
     let data: any[] = [];
@@ -53,17 +53,6 @@ function MarketSegmentTabs({
           avgProfit: item.data.count > 0 ? item.data.profit / item.data.count : 0
         }));
         segmentLabel = "資産クラス";
-        break;
-      case "通貨ペア":
-        data = symbolData.map(s => ({
-          label: s.symbol,
-          count: s.count,
-          profit: s.profit,
-          winRate: s.winRate,
-          pf: s.pf,
-          avgProfit: s.avgProfit
-        }));
-        segmentLabel = "通貨ペア";
         break;
       case "価格帯":
         data = pipsRangeData.map(r => ({
