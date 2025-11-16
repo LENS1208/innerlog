@@ -560,16 +560,20 @@ export default function ReportsMarket() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
           {pairStatsData.slice(0, 6).map((item, idx) => {
                 const totalProfit = item.longProfit + item.shortProfit;
-                const longAvgPnL = item.longCount > 0 ? item.longProfit / item.longCount : 0;
-                const shortAvgPnL = item.shortCount > 0 ? item.shortProfit / item.shortCount : 0;
 
-                const longGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
-                const longGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
-                const longPF = longGrossLoss > 0 ? longGrossProfit / longGrossLoss : (longGrossProfit > 0 ? 999 : 0);
+                const longTrades = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG');
+                const longWins = longTrades.filter(t => getTradeProfit(t) > 0);
+                const longLosses = longTrades.filter(t => getTradeProfit(t) < 0);
+                const longAvgWin = longWins.length > 0 ? longWins.reduce((sum, t) => sum + getTradeProfit(t), 0) / longWins.length : 0;
+                const longAvgLoss = longLosses.length > 0 ? Math.abs(longLosses.reduce((sum, t) => sum + getTradeProfit(t), 0) / longLosses.length) : 0;
+                const longRR = longAvgLoss > 0 ? longAvgWin / longAvgLoss : (longAvgWin > 0 ? 999 : 0);
 
-                const shortGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
-                const shortGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
-                const shortPF = shortGrossLoss > 0 ? shortGrossProfit / shortGrossLoss : (shortGrossProfit > 0 ? 999 : 0);
+                const shortTrades = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT');
+                const shortWins = shortTrades.filter(t => getTradeProfit(t) > 0);
+                const shortLosses = shortTrades.filter(t => getTradeProfit(t) < 0);
+                const shortAvgWin = shortWins.length > 0 ? shortWins.reduce((sum, t) => sum + getTradeProfit(t), 0) / shortWins.length : 0;
+                const shortAvgLoss = shortLosses.length > 0 ? Math.abs(shortLosses.reduce((sum, t) => sum + getTradeProfit(t), 0) / shortLosses.length) : 0;
+                const shortRR = shortAvgLoss > 0 ? shortAvgWin / shortAvgLoss : (shortAvgWin > 0 ? 999 : 0);
 
                 const maxAbsProfit = Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit));
                 const longBarWidth = maxAbsProfit > 0 ? (Math.abs(item.longProfit) / maxAbsProfit) * 100 : 0;
@@ -619,14 +623,14 @@ export default function ReportsMarket() {
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>買い</span>
                           <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.longCount}回)</span>
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>期待値</div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
-                          color: longAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
+                          color: longRR >= 1 ? "var(--gain)" : "var(--muted)",
                           marginBottom: 8
                         }}>
-                          {longAvgPnL >= 0 ? '+' : ''}{Math.round(longAvgPnL).toLocaleString()}円
+                          {longRR >= 999 ? '∞' : longRR.toFixed(2)}
                         </div>
                         <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                         <div style={{
@@ -650,14 +654,14 @@ export default function ReportsMarket() {
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>売り</span>
                           <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.shortCount}回)</span>
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>期待値</div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
-                          color: shortAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
+                          color: shortRR >= 1 ? "var(--gain)" : "var(--muted)",
                           marginBottom: 8
                         }}>
-                          {shortAvgPnL >= 0 ? '+' : ''}{Math.round(shortAvgPnL).toLocaleString()}円
+                          {shortRR >= 999 ? '∞' : shortRR.toFixed(2)}
                         </div>
                         <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                         <div style={{
