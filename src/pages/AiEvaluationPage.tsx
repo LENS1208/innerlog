@@ -5,20 +5,22 @@ import OverallScore from '../components/evaluation/OverallScore';
 import { EvaluationRadarChart } from '../components/evaluation/EvaluationRadarChart';
 import { getDataMetrics, getDataRows, INIT_CAPITAL } from '../services/demoData';
 import { useDataset } from '../lib/dataset.context';
+import { useAICoaching } from '../lib/aiCoaching.context';
 import { computeMetrics } from '../utils/evaluation-metrics';
 import { HelpIcon } from '../components/common/HelpIcon';
 import { CoachingSheetView } from '../components/ai-coaching/CoachingSheetView';
-import { callAutoReviewAI } from '../services/ai-coaching/callAutoReviewAI';
 import type { AIResponse } from '../services/ai-coaching/types';
 import '../styles/journal-notebook.css';
 
 export default function AiEvaluationPage() {
   const { dataset, useDatabase, isInitialized } = useDataset();
+  const { currentTask, startGeneration, getResult, isGenerating, clearResult } = useAICoaching();
   const [dataRows, setDataRows] = useState<TradeRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [coachingData, setCoachingData] = useState<AIResponse | null>(null);
-  const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const coachingData = getResult(dataset);
+  const generating = isGenerating(dataset);
 
 
   useEffect(() => {
@@ -182,21 +184,12 @@ export default function AiEvaluationPage() {
                 )}
                 <button
                   onClick={async () => {
-                    setGenerating(true);
                     setError(null);
                     try {
-                      console.log('🚀 AI分析を開始します...');
-                      console.log('📊 取引データ件数:', dataRows.length);
-
-                      const result = await callAutoReviewAI(dataRows, dataset);
-
-                      console.log('✅ AI分析完了');
-                      setCoachingData(result);
+                      await startGeneration(dataset, dataRows);
                     } catch (error) {
                       console.error('コーチング生成エラー:', error);
-                      setError('AIコーチングの生成中にエラーが発生しました。しばらくしてから再度お試しください。');
-                    } finally {
-                      setGenerating(false);
+                      setError('AIコーチングの生成中にエラーが発生しました。');
                     }
                   }}
                   disabled={generating || dataRows.length === 0}
@@ -211,8 +204,13 @@ export default function AiEvaluationPage() {
                     cursor: generating || dataRows.length === 0 ? 'not-allowed' : 'pointer',
                   }}
                 >
-                  {generating ? '生成中...' : 'AIコーチングを生成'}
+                  {generating ? 'バックグラウンドで生成中...' : 'AIコーチングを生成'}
                 </button>
+                {generating && (
+                  <p style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '12px', textAlign: 'center' }}>
+                    他のページに移動しても生成は継続されます
+                  </p>
+                )}
               </div>
             </div>
           </section>
@@ -221,7 +219,7 @@ export default function AiEvaluationPage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
               <button
                 onClick={() => {
-                  setCoachingData(null);
+                  clearResult(dataset);
                   setError(null);
                 }}
                 style={{

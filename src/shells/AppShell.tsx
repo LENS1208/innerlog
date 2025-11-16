@@ -1,6 +1,8 @@
 // src/shells/AppShell.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { DatasetProvider, useDataset } from "../lib/dataset.context";
+import { AICoachingProvider } from "../lib/aiCoaching.context";
+import { CoachingNotification } from "../components/CoachingNotification";
 import FiltersBar from "../components/FiltersBar";
 import UserMenu from "../components/UserMenu";
 import { useTheme } from "../lib/theme.context";
@@ -675,14 +677,16 @@ export default function AppShell({ children }: Props) {
 
   return (
     <DatasetProvider>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".csv,.html,.htm"
-        onChange={handleFileChange}
-        style={{ display: 'none' }}
-      />
-      <div style={{ display: "flex", minHeight: "100vh", width: "100%", position: "relative" }}>
+      <AICoachingProvider>
+        <CoachingNotification />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".csv,.html,.htm"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+        <div style={{ display: "flex", minHeight: "100vh", width: "100%", position: "relative" }}>
         {/* 左メニュー：デスクトップは固定、モバイルはドロワー */}
         <div
           className="desktop-sidenav"
@@ -802,7 +806,8 @@ export default function AppShell({ children }: Props) {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      </AICoachingProvider>
     </DatasetProvider>
   );
 }
