@@ -588,179 +588,184 @@ export default function ReportsMarket() {
                     </div>
                   </div>
 
-                  <div style={{ marginBottom: 16 }}>
-                    <div style={{ display: "flex", justifyContent: "space-around", marginBottom: 8, fontSize: 11 }}>
-                      <span style={{ color: getLongColor(), fontWeight: 700 }}>買い</span>
-                      <span style={{ color: getShortColor(), fontWeight: 700 }}>売り</span>
-                    </div>
-
-                    <div style={{ display: "flex", gap: 24, justifyContent: "center", alignItems: "center", height: 120 }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                        <div style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "flex-end",
-                          height: 100,
-                          width: 60,
-                          position: "relative"
-                        }}>
-                          <div style={{
-                            position: "absolute",
-                            bottom: "50%",
-                            left: 0,
-                            right: 0,
-                            height: 1,
-                            background: "var(--line)",
-                            zIndex: 1
-                          }} />
-                          {item.longProfit >= 0 ? (
-                            <div style={{
-                              height: `${Math.min((Math.abs(item.longProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
-                              background: `linear-gradient(to top, ${getLongColor(0.3)}, ${getLongColor()})`,
-                              borderRadius: "6px 6px 0 0",
-                              display: "flex",
-                              alignItems: "flex-start",
-                              justifyContent: "center",
-                              alignSelf: "flex-end",
-                              marginBottom: "50%",
-                              transition: "height 0.3s ease",
-                              position: "relative",
-                              zIndex: 2
-                            }} />
-                          ) : (
-                            <div style={{
-                              height: `${Math.min((Math.abs(item.longProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
-                              background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
-                              borderRadius: "0 0 6px 6px",
-                              display: "flex",
-                              alignItems: "flex-end",
-                              justifyContent: "center",
-                              alignSelf: "flex-start",
-                              marginTop: "50%",
-                              transition: "height 0.3s ease",
-                              position: "relative",
-                              zIndex: 2
-                            }} />
-                          )}
-                        </div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: item.longProfit >= 0 ? getLongColor() : getLossColor(), textAlign: "center" }}>
-                          {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit).toLocaleString()}
-                        </div>
-                      </div>
-
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                        <div style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "flex-end",
-                          height: 100,
-                          width: 60,
-                          position: "relative"
-                        }}>
-                          <div style={{
-                            position: "absolute",
-                            bottom: "50%",
-                            left: 0,
-                            right: 0,
-                            height: 1,
-                            background: "var(--line)",
-                            zIndex: 1
-                          }} />
-                          {item.shortProfit >= 0 ? (
-                            <div style={{
-                              height: `${Math.min((Math.abs(item.shortProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
-                              background: `linear-gradient(to top, ${getShortColor(0.3)}, ${getShortColor()})`,
-                              borderRadius: "6px 6px 0 0",
-                              display: "flex",
-                              alignItems: "flex-start",
-                              justifyContent: "center",
-                              alignSelf: "flex-end",
-                              marginBottom: "50%",
-                              transition: "height 0.3s ease",
-                              position: "relative",
-                              zIndex: 2
-                            }} />
-                          ) : (
-                            <div style={{
-                              height: `${Math.min((Math.abs(item.shortProfit) / Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit)) * 50), 50)}%`,
-                              background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
-                              borderRadius: "0 0 6px 6px",
-                              display: "flex",
-                              alignItems: "flex-end",
-                              justifyContent: "center",
-                              alignSelf: "flex-start",
-                              marginTop: "50%",
-                              transition: "height 0.3s ease",
-                              position: "relative",
-                              zIndex: 2
-                            }} />
-                          )}
-                        </div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: item.shortProfit >= 0 ? getShortColor() : getLossColor(), textAlign: "center" }}>
-                          {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit).toLocaleString()}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <div style={{
                     display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
+                    gridTemplateColumns: "60px 1fr 1fr 60px",
                     gap: 8,
-                    marginBottom: 12,
+                    marginBottom: 16,
+                    alignItems: "center"
                   }}>
                     <div style={{
-                      background: "var(--surface)",
-                      borderRadius: 6,
-                      padding: 8,
-                      border: "1px solid var(--line)",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      height: 80
                     }}>
-                      <div style={{ marginBottom: 4 }}>
-                        <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
+                      <div style={{
+                        fontSize: 10,
+                        color: getLongColor(),
+                        fontWeight: 700,
+                        marginBottom: 4
+                      }}>買い</div>
+                      <div style={{
+                        flex: 1,
+                        width: 40,
+                        background: "var(--surface)",
+                        borderRadius: 6,
+                        border: "1px solid var(--line)",
+                        position: "relative",
+                        overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center"
+                      }}>
                         <div style={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                        }}>
-                          {item.longWinRate.toFixed(1)}%
-                        </div>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 9, color: "var(--muted)" }}>平均損益</div>
-                        <div style={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: longAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
-                        }}>
-                          {longAvgPnL >= 0 ? '+' : ''}{Math.round(longAvgPnL).toLocaleString()}円
-                        </div>
+                          position: "absolute",
+                          top: "50%",
+                          left: 0,
+                          right: 0,
+                          height: 2,
+                          background: "var(--line)",
+                          zIndex: 1
+                        }} />
+                        {item.longProfit >= 0 ? (
+                          <div style={{
+                            position: "absolute",
+                            bottom: "50%",
+                            left: 0,
+                            right: 0,
+                            height: `${longBarWidth}%`,
+                            maxHeight: "50%",
+                            background: `linear-gradient(to top, ${getLongColor(0.4)}, ${getLongColor()})`,
+                            transition: "height 0.3s ease",
+                            zIndex: 2
+                          }} />
+                        ) : (
+                          <div style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: 0,
+                            right: 0,
+                            height: `${longBarWidth}%`,
+                            maxHeight: "50%",
+                            background: `linear-gradient(to bottom, ${getLossColor(0.4)}, ${getLossColor()})`,
+                            transition: "height 0.3s ease",
+                            zIndex: 2
+                          }} />
+                        )}
                       </div>
                     </div>
+
                     <div style={{
                       background: "var(--surface)",
                       borderRadius: 6,
                       padding: 8,
                       border: "1px solid var(--line)",
+                      textAlign: "center"
                     }}>
-                      <div style={{ marginBottom: 4 }}>
-                        <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
-                        <div style={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                        }}>
-                          {item.shortWinRate.toFixed(1)}%
-                        </div>
+                      <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
+                      <div style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                        marginBottom: 4
+                      }}>
+                        {item.longWinRate.toFixed(1)}%
                       </div>
-                      <div>
-                        <div style={{ fontSize: 9, color: "var(--muted)" }}>平均損益</div>
+                      <div style={{ fontSize: 9, color: "var(--muted)" }}>平均損益</div>
+                      <div style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: item.longProfit >= 0 ? getLongColor() : getLossColor()
+                      }}>
+                        {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()}円
+                      </div>
+                    </div>
+
+                    <div style={{
+                      background: "var(--surface)",
+                      borderRadius: 6,
+                      padding: 8,
+                      border: "1px solid var(--line)",
+                      textAlign: "center"
+                    }}>
+                      <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
+                      <div style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                        marginBottom: 4
+                      }}>
+                        {item.shortWinRate.toFixed(1)}%
+                      </div>
+                      <div style={{ fontSize: 9, color: "var(--muted)" }}>平均損益</div>
+                      <div style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: item.shortProfit >= 0 ? getShortColor() : getLossColor()
+                      }}>
+                        {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()}円
+                      </div>
+                    </div>
+
+                    <div style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      height: 80
+                    }}>
+                      <div style={{
+                        fontSize: 10,
+                        color: getShortColor(),
+                        fontWeight: 700,
+                        marginBottom: 4
+                      }}>売り</div>
+                      <div style={{
+                        flex: 1,
+                        width: 40,
+                        background: "var(--surface)",
+                        borderRadius: 6,
+                        border: "1px solid var(--line)",
+                        position: "relative",
+                        overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center"
+                      }}>
                         <div style={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: shortAvgPnL >= 0 ? "var(--gain)" : "var(--loss)",
-                        }}>
-                          {shortAvgPnL >= 0 ? '+' : ''}{Math.round(shortAvgPnL).toLocaleString()}円
-                        </div>
+                          position: "absolute",
+                          top: "50%",
+                          left: 0,
+                          right: 0,
+                          height: 2,
+                          background: "var(--line)",
+                          zIndex: 1
+                        }} />
+                        {item.shortProfit >= 0 ? (
+                          <div style={{
+                            position: "absolute",
+                            bottom: "50%",
+                            left: 0,
+                            right: 0,
+                            height: `${shortBarWidth}%`,
+                            maxHeight: "50%",
+                            background: `linear-gradient(to top, ${getShortColor(0.4)}, ${getShortColor()})`,
+                            transition: "height 0.3s ease",
+                            zIndex: 2
+                          }} />
+                        ) : (
+                          <div style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: 0,
+                            right: 0,
+                            height: `${shortBarWidth}%`,
+                            maxHeight: "50%",
+                            background: `linear-gradient(to bottom, ${getLossColor(0.4)}, ${getLossColor()})`,
+                            transition: "height 0.3s ease",
+                            zIndex: 2
+                          }} />
+                        )}
                       </div>
                     </div>
                   </div>
