@@ -518,7 +518,7 @@ export default function ReportsRisk() {
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
               {Math.round(riskMetrics.maxLoss).toLocaleString()}円
             </div>
-            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>1トレード最悪損失</div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>1取引最悪損失</div>
           </div>
         </div>
 
@@ -617,7 +617,7 @@ export default function ReportsRisk() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             平均勝ち / 平均負け
-            <HelpIcon text="勝ちトレードと負けトレードの平均額です。利益と損失のバランスを確認できます。" />
+            <HelpIcon text="勝ち取引と負け取引の平均額です。利益と損失のバランスを確認できます。" />
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>

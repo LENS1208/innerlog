@@ -1055,7 +1055,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
   if (!trades || trades.length === 0) {
     return (
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>戦略タグ別</h3>
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
           データがありません
         </div>
@@ -1066,7 +1066,7 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
   if (setupData.items.length === 0) {
     return (
       <div className="dash-card">
-        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>セットアップ別</h3>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)' }}>戦略タグ別</h3>
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)', fontSize: 14 }}>
           戦略タグが見つかりません<br/>
           <span style={{ fontSize: 12 }}>メモに「ブレイクアウト」「トレンド」などを記載してください</span>
@@ -1078,8 +1078,8 @@ export function SetupChart({ trades, onSetupClick }: { trades?: TradeWithProfit[
   return (
     <div className="dash-card">
       <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-        セットアップ別
-        <HelpIcon text="取引のセットアップ（戦略パターン）ごとに損益を分類したグラフです。どの戦略が有効か確認できます。" />
+        戦略タグ別
+        <HelpIcon text="取引の戦略タグ（戦略パターン）ごとに損益を分類したグラフです。どの戦略が有効か確認できます。" />
       </h3>
       <div style={{ height: 240, cursor: onSetupClick ? 'pointer' : 'default' }}>
         <Bar
@@ -1278,12 +1278,12 @@ export function HoldingTimeDistributionChart({ trades, onRangeClick }: { trades:
     labels: distributionData.ranges.map(r => r.label),
     datasets: [
       {
-        label: '勝ちトレード',
+        label: '勝ち取引',
         data: distributionData.winCounts,
         backgroundColor: getAccentColor(),
       },
       {
-        label: '負けトレード',
+        label: '負け取引',
         data: distributionData.lossCounts,
         backgroundColor: getLossColor(),
       }

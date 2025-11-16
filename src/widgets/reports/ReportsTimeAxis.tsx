@@ -517,7 +517,7 @@ export default function ReportsTimeAxis() {
     return hours > 0 ? `${days}日${hours}時間` : `${days}日`;
   };
 
-  // トレードスタイル別統計
+  // 取引スタイル別統計
   const tradeStyleData = useMemo(() => {
     const styles = [
       { label: "スキャルピング", min: 0, max: 30 },
@@ -594,7 +594,7 @@ export default function ReportsTimeAxis() {
 
       <Card
         title="保有時間別の統計"
-        helpText="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたのトレードスタイルを分析できます。"
+        helpText="ポジション保有時間の長さで分類した統計です。スキャルピング・デイトレード・スイングなど、あなたの取引スタイルを分析できます。"
         annotation="スキャルピング(0〜30分) | デイトレード(30分〜8時間) | スイング(8時間〜7日) | 長期投資(7日以上)"
         style={{ marginBottom: 16 }}
       >
@@ -647,7 +647,7 @@ export default function ReportsTimeAxis() {
                 datasets: [
                   {
                     type: 'bar' as const,
-                    label: '勝ちトレード',
+                    label: '勝ち取引',
                     data: tradeStyleData.map((s) => s.wins),
                     backgroundColor: getAccentColor(),
                     yAxisID: 'y',
@@ -656,7 +656,7 @@ export default function ReportsTimeAxis() {
                   },
                   {
                     type: 'bar' as const,
-                    label: '負けトレード',
+                    label: '負け取引',
                     data: tradeStyleData.map((s) => s.losses),
                     backgroundColor: getLossColor(),
                     yAxisID: 'y',
@@ -730,14 +730,14 @@ export default function ReportsTimeAxis() {
           }}
         >
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝ちトレード平均保有時間</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>勝ち取引平均保有時間</h4>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
               {formatHoldTime(holdTimeStats.avgWinHoldTime)}
             </div>
           </div>
 
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
-            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>負けトレード平均保有時間</h4>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>負け取引平均保有時間</h4>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
               {formatHoldTime(holdTimeStats.avgLossHoldTime)}
             </div>

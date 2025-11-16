@@ -300,7 +300,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
             {tradePeriod}
           </div>
         )}
-        <div className="kpi-desc">アクティブなトレード件数</div>
+        <div className="kpi-desc">アクティブな取引件数</div>
       </div>
 
       <div className="kpi-card">

@@ -919,7 +919,7 @@ export default function ReportsMarket() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             通貨ペア別 取引回数
-            <HelpIcon text="通貨ペアごとの取引回数と勝率を比較したグラフです。勝ちトレード（青）、負けトレード（赤）の積み上げと勝率の推移を確認できます。" />
+            <HelpIcon text="通貨ペアごとの取引回数と勝率を比較したグラフです。勝ち取引（青）、負け取引（赤）の積み上げと勝率の推移を確認できます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -941,7 +941,7 @@ export default function ReportsMarket() {
                   },
                   {
                     type: 'bar' as const,
-                    label: '勝ちトレード',
+                    label: '勝ち取引',
                     data: symbolData.slice(0, 6).map((s) => s.wins),
                     backgroundColor: '#0084C7',
                     stack: 'trades',
@@ -950,7 +950,7 @@ export default function ReportsMarket() {
                   },
                   {
                     type: 'bar' as const,
-                    label: '負けトレード',
+                    label: '負け取引',
                     data: symbolData.slice(0, 6).map((s) => s.losses),
                     backgroundColor: '#EF4444',
                     stack: 'trades',
@@ -985,7 +985,7 @@ export default function ReportsMarket() {
                         const s = symbolData.slice(0, 6)[context.dataIndex];
                         if (context.dataset.label === '勝率(%)') {
                           return `勝率: ${s.winRate.toFixed(1)}%`;
-                        } else if (context.dataset.label === '勝ちトレード') {
+                        } else if (context.dataset.label === '勝ち取引') {
                           return `勝ち: ${s.wins}回`;
                         } else {
                           return `負け: ${s.losses}回`;

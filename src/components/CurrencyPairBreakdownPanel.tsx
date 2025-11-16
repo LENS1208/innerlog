@@ -221,12 +221,12 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
     labels: stats.holdingTimeRanges.map(r => r.label),
     datasets: [
       {
-        label: '勝ちトレード',
+        label: '勝ち取引',
         data: stats.holdingTimeWinCounts,
         backgroundColor: 'rgba(0, 162, 24, 1)',
       },
       {
-        label: '負けトレード',
+        label: '負け取引',
         data: stats.holdingTimeLossCounts,
         backgroundColor: getLossColor(),
       }

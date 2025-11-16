@@ -21,7 +21,7 @@ export const UI_TEXT = {
   maxDrawdown: '最大ドローダウン',
   tradeList: '取引一覧',
   tradeDetail: '取引の詳細',
-  tradeDiary: 'トレード日記',
+  tradeDiary: '取引日記',
   winOnly: '勝ちのみ',
   lossOnly: '負けのみ',
   noTrades: '取引なし',

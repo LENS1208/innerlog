@@ -1154,9 +1154,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
-          {/* トレード日記 */}
+          {/* 取引日記 */}
           <div className="td-diary-heading" style={{ marginTop: 0, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>取引日記</h2>
             <button className="td-btn" onClick={savePayload}>保存</button>
           </div>
 
@@ -1209,7 +1209,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
                 </label>
                 <label>
                   <select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
-                    <option value="">トレードの判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
+                    <option value="">取引の判断</option><option>従った</option><option>一部従った</option><option>従わなかった</option>
                   </select>
                 </label>
               </div>
@@ -1301,7 +1301,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
         {/* 右列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* トレード日記見出しと高さを揃える */}
+          {/* 取引日記見出しと高さを揃える */}
           <div className="td-diary-heading" style={{ marginTop: 0 }}>
             <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700, opacity: 0, pointerEvents: "none" }}>スペーサー</h2>
           </div>

@@ -236,7 +236,7 @@ export default function ReportsStrategy() {
 
   const filteredTrades = useMemo(() => filterTrades(trades, filters), [trades, filters]);
 
-  // セットアップ抽出（comment または memo から）
+  // 戦略タグ抽出（comment または memo から）
   const extractSetup = (t: Trade): string => {
     const text = (t.comment || t.memo || "").toLowerCase();
     if (text.includes("breakout") || text.includes("ブレイクアウト")) return "ブレイクアウト";

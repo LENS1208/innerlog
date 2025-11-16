@@ -127,7 +127,7 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 2. 月別・日次損益と今月のトレード（時系列パフォーマンス） */}
+            {/* 2. 月別・日次損益と今月の取引（時系列パフォーマンス） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -145,18 +145,18 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 3. 今月のトレードカレンダー */}
+            {/* 3. 今月の取引カレンダー */}
             <section style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  今月のトレード
+                  今月の取引
                   <HelpIcon text="カレンダー形式で今月の取引状況を表示します。日ごとの損益と取引回数が分かります。" />
                 </h3>
                 <MonthCalendar trades={filteredTrades as any} />
               </div>
             </section>
 
-            {/* 4. 損益分布と保有時間分布（トレードの特性分析） */}
+            {/* 4. 損益分布と保有時間分布（取引の特性分析） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <ProfitDistributionChart
                 trades={filteredTrades as any}
@@ -188,7 +188,7 @@ const EquityCurvePage: React.FC = () => {
               />
             </section>
 
-            {/* 6. セットアップ別とベスト/ワーストトレード（戦略分析と個別取引） */}
+            {/* 6. 戦略タグ別とベスト/ワースト取引（戦略分析と個別取引） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <SetupChart
                 trades={filteredTrades as any}
@@ -199,7 +199,7 @@ const EquityCurvePage: React.FC = () => {
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   直近の取引（上位/下位）
-                  <HelpIcon text="損益の絶対値が大きい取引トップ5を表示します。勝ちトレードと負けトレードの傾向を把握できます。" />
+                  <HelpIcon text="損益の絶対値が大きい取引トップ5を表示します。勝ち取引と負け取引の傾向を把握できます。" />
                 </h3>
                 <RecentTradesTable trades={filteredTrades as any} />
               </div>

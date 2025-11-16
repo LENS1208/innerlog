@@ -106,7 +106,7 @@ function Header({
                 }
                 if (k === "ai-evaluation") return "AI評価";
                 if (k === "forecast" || k === "ai-proposal") return "相場予想";
-                if (k === "notebook") return "トレード日記";
+                if (k === "notebook") return "取引日記";
                 if (k === "settings") return "設定";
                 return "ダッシュボード";
               })()}
@@ -647,7 +647,7 @@ export default function AppShell({ children }: Props) {
           { key: "reports/strategy", label: "戦略・行動" },
           { key: "ai-evaluation", label: "AI評価" },
           { key: "calendar", label: "カレンダー" },
-          { key: "notebook", label: "トレード日記" },
+          { key: "notebook", label: "取引日記" },
           { key: "ai-proposal", label: "相場予想" },
           { key: "trades", label: "取引一覧" },
         ]);
@@ -783,7 +783,7 @@ export default function AppShell({ children }: Props) {
             <div className="panel" onClick={(e) => e.stopPropagation()}>
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>新規日記</div>
               <div style={{ color: "var(--muted)", fontSize: 14 }}>
-                このモーダルはトレード日記ページ（個別トレード）から実装を移行します。
+                このモーダルは取引日記ページ（個別取引）から実装を移行します。
               </div>
               <div style={{ marginTop: 16, display: "flex", gap: 8, justifyContent: "flex-end" }}>
                 <button

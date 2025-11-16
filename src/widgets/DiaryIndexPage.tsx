@@ -201,7 +201,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
           <label><div className="muted small">AIの方向感</div><select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
             <option>設定なし</option><option>買い</option><option>売り</option><option>様子見</option></select></label>
 
-          <label><div className="muted small">トレードの判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
+          <label><div className="muted small">取引の判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
             <option>選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option></select></label>
           <label><div className="muted small">ファンダメモ（自由入力）</div><input className="input" placeholder="例）CPI直後の乱高下を想定、要人発言あり など" value={note} onChange={(e) => setNote(e.target.value)} /></label>
         </div>
@@ -332,7 +332,7 @@ export default function DiaryIndexPage() {
       <div className="td-card diary-list">
         <div className="td-section-title">
           <h2>リンク待ちの日記一覧</h2>
-          <div className="small muted">トレードにまだリンクしていない日記です。候補から紐付けできます。　<strong>{rows.length} 件</strong></div>
+          <div className="small muted">取引にまだリンクしていない日記です。候補から紐付けできます。　<strong>{rows.length} 件</strong></div>
         </div>
 
         {rows.length === 0 && <div className="muted small">まだ日記がありません。</div>}
