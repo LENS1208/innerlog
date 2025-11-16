@@ -12,10 +12,10 @@ type EvaluationRadarChartProps = {
 
 export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChartProps) {
   const W = 400;
-  const H = 400;
+  const H = 280;
   const cx = W / 2;
   const cy = H / 2;
-  const R = 140;
+  const R = 100;
   const axes = parts.length;
 
   const webLevels = useMemo(() => {
@@ -66,7 +66,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
   }, [parts, axes]);
 
   return (
-    <div style={{ padding: '12px 0', position: 'relative' }}>
+    <div style={{ padding: '4px 0', position: 'relative' }}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         style={{ width: '100%', height: 'auto' }}
@@ -132,8 +132,8 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
         {centerScore !== undefined && (
           <text
             x={cx}
-            y={cy + 10}
-            fontSize="72"
+            y={cy + 5}
+            fontSize="29"
             fontWeight="900"
             textAnchor="middle"
             fill="var(--ink)"
