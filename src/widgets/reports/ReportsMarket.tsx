@@ -552,137 +552,142 @@ export default function ReportsMarket() {
 
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, marginBottom: 16 }}>
-        {pairStatsData.slice(0, 6).map((item, idx) => {
-              const totalProfit = item.longProfit + item.shortProfit;
-              const longAvgPnL = item.longCount > 0 ? item.longProfit / item.longCount : 0;
-              const shortAvgPnL = item.shortCount > 0 ? item.shortProfit / item.shortCount : 0;
+      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 16, marginBottom: 16 }}>
+        <h3 style={{ margin: "0 0 16px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
+          方向（買い/売り）別の統計
+        </h3>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
+          {pairStatsData.slice(0, 6).map((item, idx) => {
+                const totalProfit = item.longProfit + item.shortProfit;
+                const longAvgPnL = item.longCount > 0 ? item.longProfit / item.longCount : 0;
+                const shortAvgPnL = item.shortCount > 0 ? item.shortProfit / item.shortCount : 0;
 
-              const longGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
-              const longGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
-              const longPF = longGrossLoss > 0 ? longGrossProfit / longGrossLoss : (longGrossProfit > 0 ? 999 : 0);
+                const longGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
+                const longGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
+                const longPF = longGrossLoss > 0 ? longGrossProfit / longGrossLoss : (longGrossProfit > 0 ? 999 : 0);
 
-              const shortGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
-              const shortGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
-              const shortPF = shortGrossLoss > 0 ? shortGrossProfit / shortGrossLoss : (shortGrossProfit > 0 ? 999 : 0);
+                const shortGrossProfit = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) > 0).reduce((sum, t) => sum + getTradeProfit(t), 0);
+                const shortGrossLoss = Math.abs(filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'SHORT' && getTradeProfit(t) < 0).reduce((sum, t) => sum + getTradeProfit(t), 0));
+                const shortPF = shortGrossLoss > 0 ? shortGrossProfit / shortGrossLoss : (shortGrossProfit > 0 ? 999 : 0);
 
-              const maxAbsProfit = Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit));
-              const longBarWidth = maxAbsProfit > 0 ? (Math.abs(item.longProfit) / maxAbsProfit) * 100 : 0;
-              const shortBarWidth = maxAbsProfit > 0 ? (Math.abs(item.shortProfit) / maxAbsProfit) * 100 : 0;
+                const maxAbsProfit = Math.max(Math.abs(item.longProfit), Math.abs(item.shortProfit));
+                const longBarWidth = maxAbsProfit > 0 ? (Math.abs(item.longProfit) / maxAbsProfit) * 100 : 0;
+                const shortBarWidth = maxAbsProfit > 0 ? (Math.abs(item.shortProfit) / maxAbsProfit) * 100 : 0;
 
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    background: "var(--surface)",
-                    borderRadius: 12,
-                    padding: 16,
-                    border: "1px solid var(--line)",
-                    position: "relative",
-                  }}
-                >
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: "transparent",
+                      borderRadius: 12,
+                      padding: 16,
+                      border: "1px solid var(--line)",
+                      position: "relative",
+                    }}
+                  >
 
-                  <div style={{
-                    textAlign: "center",
-                    marginBottom: 16
-                  }}>
                     <div style={{
-                      fontSize: 18,
-                      fontWeight: 700,
-                      color: "var(--text)",
-                      marginBottom: 8
+                      textAlign: "center",
+                      marginBottom: 16
                     }}>
-                      {item.symbol}
+                      <div style={{
+                        fontSize: 18,
+                        fontWeight: 700,
+                        color: "var(--text)",
+                        marginBottom: 8
+                      }}>
+                        {item.symbol}
+                      </div>
                     </div>
-                  </div>
 
-                  <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 12,
-                    marginBottom: 16,
-                  }}>
                     <div style={{
-                      background: item.longProfit >= 0
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: 12,
+                      marginBottom: 16,
+                    }}>
+                      <div style={{
+                        background: item.longProfit >= 0
+                          ? 'rgba(0, 132, 199, 0.1)'
+                          : 'rgba(239, 68, 68, 0.1)',
+                        borderRadius: 8,
+                        padding: 12,
+                        textAlign: "center"
+                      }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>買い ({item.longCount}回)</div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
+                        <div style={{
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                          marginBottom: 8
+                        }}>
+                          {item.longWinRate.toFixed(1)}%
+                        </div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
+                        <div style={{
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: item.longProfit >= 0 ? '#0084C7' : '#EF4444'
+                        }}>
+                          {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()}円
+                        </div>
+                      </div>
+
+                      <div style={{
+                        background: item.shortProfit >= 0
+                          ? 'rgba(0, 132, 199, 0.1)'
+                          : 'rgba(239, 68, 68, 0.1)',
+                        borderRadius: 8,
+                        padding: 12,
+                        textAlign: "center"
+                      }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>売り ({item.shortCount}回)</div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
+                        <div style={{
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                          marginBottom: 8
+                        }}>
+                          {item.shortWinRate.toFixed(1)}%
+                        </div>
+                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
+                        <div style={{
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444'
+                        }}>
+                          {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()}円
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      background: totalProfit >= 0
                         ? 'rgba(0, 132, 199, 0.1)'
                         : 'rgba(239, 68, 68, 0.1)',
                       borderRadius: 8,
                       padding: 12,
-                      textAlign: "center"
+                      textAlign: "center",
                     }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>買い ({item.longCount}回)</div>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
+                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>合計損益</div>
                       <div style={{
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: 700,
-                        color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                        marginBottom: 8
+                        color: totalProfit >= 0 ? '#0084C7' : '#EF4444',
+                        marginBottom: 4
                       }}>
-                        {item.longWinRate.toFixed(1)}%
+                        {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
                       </div>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
-                      <div style={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: item.longProfit >= 0 ? '#0084C7' : '#EF4444'
-                      }}>
-                        {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()}円
-                      </div>
-                    </div>
-
-                    <div style={{
-                      background: item.shortProfit >= 0
-                        ? 'rgba(0, 132, 199, 0.1)'
-                        : 'rgba(239, 68, 68, 0.1)',
-                      borderRadius: 8,
-                      padding: 12,
-                      textAlign: "center"
-                    }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>売り ({item.shortCount}回)</div>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>勝率</div>
-                      <div style={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
-                        marginBottom: 8
-                      }}>
-                        {item.shortWinRate.toFixed(1)}%
-                      </div>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
-                      <div style={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444'
-                      }}>
-                        {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()}円
+                      <div style={{ fontSize: 10, color: "var(--muted)" }}>
+                        平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円 / PF: {item.pf.toFixed(2)}
                       </div>
                     </div>
                   </div>
-
-                  <div style={{
-                    background: totalProfit >= 0
-                      ? 'rgba(0, 132, 199, 0.1)'
-                      : 'rgba(239, 68, 68, 0.1)',
-                    borderRadius: 8,
-                    padding: 12,
-                    textAlign: "center",
-                  }}>
-                    <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>合計損益</div>
-                    <div style={{
-                      fontSize: 18,
-                      fontWeight: 700,
-                      color: totalProfit >= 0 ? '#0084C7' : '#EF4444',
-                      marginBottom: 4
-                    }}>
-                      {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
-                    </div>
-                    <div style={{ fontSize: 10, color: "var(--muted)" }}>
-                      平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円 / PF: {item.pf.toFixed(2)}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+        </div>
       </div>
 
       <div
