@@ -26,7 +26,11 @@ export default function DayTradesTable({ trades }: DayTradesTableProps) {
             >
               <td style={{ padding: '14px 16px', fontSize: 13 }}>{trade.time}</td>
               <td style={{ padding: '14px 16px', fontSize: 13 }}>{trade.symbol}</td>
-              <td style={{ padding: '14px 16px', fontSize: 13 }}>{trade.sideJp}</td>
+              <td style={{ padding: '14px 16px', fontSize: 13 }}>
+                <span className={trade.sideJp === '買い' ? 'side-badge side-long' : 'side-badge side-short'}>
+                  {trade.sideJp}
+                </span>
+              </td>
               <td
                 className={trade.pnlYen >= 0 ? 'pnl-pos' : 'pnl-neg'}
                 style={{

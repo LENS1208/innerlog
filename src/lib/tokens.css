@@ -113,6 +113,39 @@ body {
   font-size: 15px;
 }
 
+.side-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.side-long {
+  background-color: rgba(0, 162, 24, 0.1);
+  color: #00a218;
+  border: 1px solid rgba(0, 162, 24, 0.3);
+}
+
+:root[data-theme="dark"] .side-long {
+  background-color: rgba(51, 201, 71, 0.1);
+  color: #33c947;
+  border: 1px solid rgba(51, 201, 71, 0.3);
+}
+
+.side-short {
+  background-color: rgba(229, 142, 3, 0.1);
+  color: #e58e03;
+  border: 1px solid rgba(229, 142, 3, 0.3);
+}
+
+:root[data-theme="dark"] .side-short {
+  background-color: rgba(245, 158, 66, 0.1);
+  color: #f59e42;
+  border: 1px solid rgba(245, 158, 66, 0.3);
+}
+
 .trades-table tbody tr {
   transition: background-color 0.15s ease;
 }
