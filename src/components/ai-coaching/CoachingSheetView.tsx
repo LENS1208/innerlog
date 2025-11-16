@@ -7,6 +7,7 @@ import { PlaybookView } from './PlaybookView';
 import { DiaryGuideTable } from './DiaryGuideTable';
 import { KPITable } from './KPITable';
 import { FourWeekPlanTable } from './FourWeekPlanTable';
+import { CoachBubble } from './CoachBubble';
 
 interface CoachingSheetViewProps {
   sheet: CoachingSheet;
@@ -78,15 +79,18 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         <PlaybookView playbook={sheet.playbook} />
       </Section>
 
-      <Section title="オンライン日記の活用法" comment={sheet.diaryGuide.comment}>
+      <Section title="オンライン日記の活用法">
+        {sheet.diaryGuide.comment && <CoachBubble message={sheet.diaryGuide.comment} />}
         <DiaryGuideTable rows={sheet.diaryGuide.rows} />
       </Section>
 
-      <Section title="KPI（数値で見る改善指標）" comment={sheet.kpisComment}>
+      <Section title="KPI（数値で見る改善指標）">
+        {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
         <KPITable kpis={sheet.kpis} />
       </Section>
 
-      <Section title="4週間リセットプラン" comment={sheet.fourWeekPlanComment}>
+      <Section title="4週間リセットプラン">
+        {sheet.fourWeekPlanComment && <CoachBubble message={sheet.fourWeekPlanComment} />}
         <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
       </Section>
 
