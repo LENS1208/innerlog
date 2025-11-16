@@ -162,7 +162,7 @@ export default function ReportsTimeAxis() {
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../../lib/db.service');
-          const data = await getAllTrades(dataset);
+          const data = await getAllTrades(null);
 
           const normalizeSide = (side: string): 'LONG' | 'SHORT' => {
             const s = side?.toUpperCase();
