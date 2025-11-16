@@ -369,7 +369,7 @@ export default function SettingsPage() {
 
   return (
     <div style={{ width: '100%', padding: 16 }}>
-      <div style={{ display: 'grid', gap: 16, maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ display: 'grid', gap: 16, maxWidth: 900 }}>
 
         <section className="panel">
           <div
