@@ -672,7 +672,7 @@ export default function ReportsMarket() {
                       padding: 12,
                       textAlign: "center",
                     }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>合計損益</div>
+                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>合計損益 ({item.count}回)</div>
                       <div style={{
                         fontSize: 18,
                         fontWeight: 700,
