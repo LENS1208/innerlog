@@ -453,10 +453,10 @@ export default function ReportsStrategy() {
             <HelpIcon text="最も稼げている取引パターンです。この戦略タグを増やすことで収益を伸ばせます。" />
           </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: topSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {topSetup.setup}：{formatValue(topSetup.profit, "profit")}
+            {topSetup.setup}：{topSetup.profit >= 0 ? '+' : ''}{Math.round(topSetup.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: topSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
-            勝率 {topSetup.winRate.toFixed(0)}% / 取引 {topSetup.count}件
+            勝率 {topSetup.winRate.toFixed(0)}<span style={{ fontSize: 11 }}>%</span> / 取引 {topSetup.count}<span style={{ fontSize: 11 }}>件</span>
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
@@ -465,10 +465,10 @@ export default function ReportsStrategy() {
             <HelpIcon text="最も損失が出ている取引パターンです。このパターンを避けるか改善する必要があります。" />
           </h3>
           <div style={{ fontSize: 18, fontWeight: 700, color: bottomSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-            {bottomSetup.setup}：{formatValue(bottomSetup.profit, "profit")}
+            {bottomSetup.setup}：{bottomSetup.profit >= 0 ? '+' : ''}{Math.round(bottomSetup.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: bottomSetup.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>
-            勝率 {bottomSetup.winRate.toFixed(0)}% / 取引 {bottomSetup.count}件
+            勝率 {bottomSetup.winRate.toFixed(0)}<span style={{ fontSize: 11 }}>%</span> / 取引 {bottomSetup.count}<span style={{ fontSize: 11 }}>件</span>
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
@@ -478,10 +478,10 @@ export default function ReportsStrategy() {
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 18, fontWeight: 700, color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              買い：{formatValue(sideData.long.profit, "profit")}
+              買い：{sideData.long.profit >= 0 ? '+' : ''}{Math.round(sideData.long.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: sideData.long.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: sideData.short.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-              売り：{formatValue(sideData.short.profit, "profit")}
+              売り：{sideData.short.profit >= 0 ? '+' : ''}{Math.round(sideData.short.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: sideData.short.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
             </div>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>
@@ -495,10 +495,10 @@ export default function ReportsStrategy() {
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-              勝ち：{formatValue(avgWinLoss.avgWin, "profit")}
+              勝ち：+{Math.round(avgWinLoss.avgWin).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: "var(--gain)" }}>円</span>
             </div>
             <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-              負け：{formatValue(avgWinLoss.avgLoss, "profit")}
+              負け：{Math.round(avgWinLoss.avgLoss).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: "var(--loss)" }}>円</span>
             </div>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>各戦略横断の平均</div>
