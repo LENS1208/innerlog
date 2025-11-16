@@ -664,7 +664,6 @@ export default function ReportsMarket() {
                       padding: 8,
                       border: "1px solid var(--line)",
                     }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>買い</div>
                       <div style={{ marginBottom: 4 }}>
                         <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
                         <div style={{
@@ -692,7 +691,6 @@ export default function ReportsMarket() {
                       padding: 8,
                       border: "1px solid var(--line)",
                     }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>売り</div>
                       <div style={{ marginBottom: 4 }}>
                         <div style={{ fontSize: 9, color: "var(--muted)" }}>勝率</div>
                         <div style={{
@@ -718,7 +716,7 @@ export default function ReportsMarket() {
 
                   <div style={{
                     background: totalProfit >= 0
-                      ? getLongColor(0.1)
+                      ? getProfitColor(0.1)
                       : getLossColor(0.1),
                     borderRadius: 6,
                     padding: 8,
@@ -728,7 +726,7 @@ export default function ReportsMarket() {
                     <div style={{
                       fontSize: 16,
                       fontWeight: 700,
-                      color: totalProfit >= 0 ? getLongColor() : getLossColor(),
+                      color: totalProfit >= 0 ? getProfitColor() : getLossColor(),
                     }}>
                       {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
                     </div>
