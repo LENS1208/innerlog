@@ -1,5 +1,5 @@
 import React from 'react';
-import coachIcon from '../../assets/inner-log-logo-l.png';
+import coachIcon from '../../assets/image copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy.png';
 
 interface CoachBubbleProps {
   message: string;
