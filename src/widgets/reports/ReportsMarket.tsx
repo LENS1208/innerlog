@@ -809,16 +809,6 @@ export default function ReportsMarket() {
             通貨ペア別（上位6）
             <HelpIcon text="主要6銘柄の損益と勝率を比較したグラフです。どの銘柄を優先すべきか見えてきます。" />
           </h3>
-          <div style={{ display: 'flex', gap: 12, marginBottom: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <div style={{ width: 12, height: 12, background: '#10B981', border: '2px solid #10B981', borderRadius: '50%' }}></div>
-              <span style={{ fontSize: 12, color: 'var(--muted)' }}>勝率(%)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <div style={{ width: 12, height: 12, background: '#0084C7' }}></div>
-              <span style={{ fontSize: 12, color: 'var(--muted)' }}>損益</span>
-            </div>
-          </div>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -858,7 +848,13 @@ export default function ReportsMarket() {
                 },
                 plugins: {
                   legend: {
-                    display: false,
+                    display: true,
+                    position: 'top' as const,
+                    labels: {
+                      boxWidth: 12,
+                      padding: 10,
+                      font: { size: 11 },
+                    },
                   },
                   tooltip: {
                     callbacks: {
@@ -925,20 +921,6 @@ export default function ReportsMarket() {
             通貨ペア別 取引回数
             <HelpIcon text="通貨ペアごとの取引回数と勝率を比較したグラフです。勝ちトレード（青）、負けトレード（赤）の積み上げと勝率の推移を確認できます。" />
           </h3>
-          <div style={{ display: 'flex', gap: 12, marginBottom: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <div style={{ width: 12, height: 12, background: '#10B981', border: '2px solid #10B981', borderRadius: '50%' }}></div>
-              <span style={{ fontSize: 12, color: 'var(--muted)' }}>勝率(%)</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <div style={{ width: 12, height: 12, background: '#0084C7' }}></div>
-              <span style={{ fontSize: 12, color: 'var(--muted)' }}>勝ちトレード</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <div style={{ width: 12, height: 12, background: '#EF4444' }}></div>
-              <span style={{ fontSize: 12, color: 'var(--muted)' }}>負けトレード</span>
-            </div>
-          </div>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -986,7 +968,13 @@ export default function ReportsMarket() {
                 },
                 plugins: {
                   legend: {
-                    display: false,
+                    display: true,
+                    position: 'top' as const,
+                    labels: {
+                      boxWidth: 12,
+                      padding: 10,
+                      font: { size: 11 },
+                    },
                   },
                   tooltip: {
                     callbacks: {
