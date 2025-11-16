@@ -625,37 +625,6 @@ export default function ReportsMarket() {
                       marginBottom: 16,
                     }}>
                       <div style={{
-                        background: item.longProfit >= 0
-                          ? 'rgba(0, 132, 199, 0.1)'
-                          : 'rgba(239, 68, 68, 0.1)',
-                        borderRadius: 8,
-                        padding: 12,
-                        textAlign: "center"
-                      }}>
-                        <div style={{ marginBottom: 8 }}>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>買い</span>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)", marginLeft: 4 }}>({item.longCount} <span style={{ fontSize: 11 }}>回</span>)</span>
-                        </div>
-                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
-                        <div style={{
-                          fontSize: 16,
-                          fontWeight: 700,
-                          color: longRR >= 1 ? "var(--gain)" : "var(--muted)",
-                          marginBottom: 8
-                        }}>
-                          {longRR >= 999 ? '∞' : longRR.toFixed(2)}
-                        </div>
-                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
-                        <div style={{
-                          fontSize: 16,
-                          fontWeight: 700,
-                          color: item.longProfit >= 0 ? '#0084C7' : '#EF4444'
-                        }}>
-                          {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()} <span style={{ fontSize: 13, color: item.longProfit >= 0 ? '#0084C7' : '#EF4444' }}>円</span>
-                        </div>
-                      </div>
-
-                      <div style={{
                         background: item.shortProfit >= 0
                           ? 'rgba(0, 132, 199, 0.1)'
                           : 'rgba(239, 68, 68, 0.1)',
@@ -683,6 +652,37 @@ export default function ReportsMarket() {
                           color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444'
                         }}>
                           {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()} <span style={{ fontSize: 13, color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444' }}>円</span>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        background: item.longProfit >= 0
+                          ? 'rgba(0, 132, 199, 0.1)'
+                          : 'rgba(239, 68, 68, 0.1)',
+                        borderRadius: 8,
+                        padding: 12,
+                        textAlign: "center"
+                      }}>
+                        <div style={{ marginBottom: 8 }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>買い</span>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)", marginLeft: 4 }}>({item.longCount} <span style={{ fontSize: 11 }}>回</span>)</span>
+                        </div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
+                        <div style={{
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: longRR >= 1 ? "var(--gain)" : "var(--muted)",
+                          marginBottom: 8
+                        }}>
+                          {longRR >= 999 ? '∞' : longRR.toFixed(2)}
+                        </div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
+                        <div style={{
+                          fontSize: 16,
+                          fontWeight: 700,
+                          color: item.longProfit >= 0 ? '#0084C7' : '#EF4444'
+                        }}>
+                          {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()} <span style={{ fontSize: 13, color: item.longProfit >= 0 ? '#0084C7' : '#EF4444' }}>円</span>
                         </div>
                       </div>
                     </div>
