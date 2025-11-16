@@ -58,7 +58,7 @@ export function CoachBubble({ message }: CoachBubbleProps) {
         height: '80px',
         borderRadius: '50%',
         border: '3px solid var(--line)',
-        background: 'var(--surface)',
+        background: '#ffffff',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

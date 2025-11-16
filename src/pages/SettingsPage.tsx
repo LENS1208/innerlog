@@ -542,7 +542,7 @@ export default function SettingsPage() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  backgroundColor: 'var(--bg-secondary)',
+                  backgroundColor: '#ffffff',
                   cursor: 'pointer',
                   marginBottom: 16,
                 }}
@@ -796,6 +796,7 @@ export default function SettingsPage() {
                         height: 60,
                         borderRadius: '50%',
                         objectFit: 'cover',
+                        backgroundColor: '#ffffff',
                         border: '2px solid var(--line)',
                       }}
                     />
