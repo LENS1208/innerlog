@@ -290,26 +290,19 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
-            <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              {(stats.longCount > 0 || stats.shortCount > 0) ? (
-                <Doughnut
-                  data={sideChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: { position: 'right' },
-                      tooltip: {
-                        callbacks: {
-                          label: (context: any) => `${context.label}: ${context.parsed}件`,
-                        },
-                      },
-                    },
-                  }}
-                />
-              ) : (
-                <div style={{ color: 'var(--muted)' }}>データがありません</div>
-              )}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>買い</div>
+                <div style={{ fontSize: 32, fontWeight: 700, color: getGreenColor(), textAlign: 'center' }}>
+                  {stats.longCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
+                </div>
+              </div>
+              <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>売り</div>
+                <div style={{ fontSize: 32, fontWeight: 700, color: getOrangeColor(), textAlign: 'center' }}>
+                  {stats.shortCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
+                </div>
+              </div>
             </div>
           </section>
 
