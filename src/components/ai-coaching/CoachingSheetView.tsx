@@ -26,7 +26,30 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', alignItems: 'start' }}>
+      <style>{`
+        .coaching-top-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+          align-items: start;
+        }
+        @media (min-width: 640px) {
+          .coaching-top-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        .trade-examples-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        @media (min-width: 640px) {
+          .trade-examples-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+      `}</style>
+      <div className="coaching-top-grid">
         {radarComponent && (
           <Section title="総合評価">
             {radarComponent}
@@ -56,13 +79,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
       {sheet.examples && Array.isArray(sheet.examples) && sheet.examples.length > 0 && (
         <Section title="あなたの注目トレード">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '12px',
-            }}
-          >
+          <div className="trade-examples-grid">
             {sheet.examples.map((ex, i) => (
               <TradeExampleCard key={i} ex={ex} />
             ))}
@@ -146,6 +163,8 @@ function Section({ title, comment, children }: SectionProps) {
         borderRadius: '12px',
         padding: '20px',
         height: '100%',
+        minWidth: 0,
+        overflow: 'hidden',
       }}
     >
       <h3
