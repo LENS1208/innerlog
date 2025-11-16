@@ -621,9 +621,9 @@ export default function ReportsMarket() {
                       }}>
                         <div style={{ marginBottom: 8 }}>
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>買い</span>
-                          <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.longCount}回)</span>
+                          <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: 4 }}>({item.longCount} <span style={{ fontSize: 11 }}>回</span>)</span>
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
@@ -632,13 +632,13 @@ export default function ReportsMarket() {
                         }}>
                           {longRR >= 999 ? '∞' : longRR.toFixed(2)}
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
                           color: item.longProfit >= 0 ? '#0084C7' : '#EF4444'
                         }}>
-                          {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()}円
+                          {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()} <span style={{ fontSize: 13, color: item.longProfit >= 0 ? '#0084C7' : '#EF4444' }}>円</span>
                         </div>
                       </div>
 
@@ -652,9 +652,9 @@ export default function ReportsMarket() {
                       }}>
                         <div style={{ marginBottom: 8 }}>
                           <span style={{ fontSize: 13, fontWeight: 700, color: "var(--muted)" }}>売り</span>
-                          <span style={{ fontSize: 10, color: "var(--muted)", marginLeft: 4 }}>({item.shortCount}回)</span>
+                          <span style={{ fontSize: 12, color: "var(--muted)", marginLeft: 4 }}>({item.shortCount} <span style={{ fontSize: 11 }}>回</span>)</span>
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>リスクリワード比</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
@@ -663,13 +663,13 @@ export default function ReportsMarket() {
                         }}>
                           {shortRR >= 999 ? '∞' : shortRR.toFixed(2)}
                         </div>
-                        <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
+                        <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>平均損益</div>
                         <div style={{
                           fontSize: 16,
                           fontWeight: 700,
                           color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444'
                         }}>
-                          {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()}円
+                          {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()} <span style={{ fontSize: 13, color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444' }}>円</span>
                         </div>
                       </div>
                     </div>
@@ -682,17 +682,17 @@ export default function ReportsMarket() {
                       padding: 12,
                       textAlign: "center",
                     }}>
-                      <div style={{ fontSize: 10, color: "var(--muted)", marginBottom: 4 }}>合計損益 ({item.count}回)</div>
+                      <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>合計損益 ({item.count} <span style={{ fontSize: 11 }}>回</span>)</div>
                       <div style={{
                         fontSize: 18,
                         fontWeight: 700,
                         color: totalProfit >= 0 ? '#0084C7' : '#EF4444',
                         marginBottom: 4
                       }}>
-                        {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
+                        {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()} <span style={{ fontSize: 13, color: totalProfit >= 0 ? '#0084C7' : '#EF4444' }}>円</span>
                       </div>
-                      <div style={{ fontSize: 10, color: "var(--muted)" }}>
-                        RRR: {item.pf.toFixed(2)} / 平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円
+                      <div style={{ fontSize: 12, color: "var(--muted)" }}>
+                        RRR: {item.pf.toFixed(2)} / 平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()} <span style={{ fontSize: 11 }}>円</span>
                       </div>
                     </div>
                   </div>
