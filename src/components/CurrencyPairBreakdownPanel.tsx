@@ -47,8 +47,31 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
 
     const winRate = trades.length > 0 ? (winTrades.length / trades.length) * 100 : 0;
 
-    const longCount = trades.filter(t => t.side === 'LONG').length;
-    const shortCount = trades.filter(t => t.side === 'SHORT').length;
+    const longTrades = trades.filter(t => t.side === 'LONG');
+    const shortTrades = trades.filter(t => t.side === 'SHORT');
+
+    const longCount = longTrades.length;
+    const shortCount = shortTrades.length;
+
+    const longWinTrades = longTrades.filter(t => getProfit(t) > 0);
+    const shortWinTrades = shortTrades.filter(t => getProfit(t) > 0);
+
+    const longWinRate = longCount > 0 ? (longWinTrades.length / longCount) * 100 : 0;
+    const shortWinRate = shortCount > 0 ? (shortWinTrades.length / shortCount) * 100 : 0;
+
+    const longTotalPnL = longTrades.reduce((sum, t) => sum + getProfit(t), 0);
+    const shortTotalPnL = shortTrades.reduce((sum, t) => sum + getProfit(t), 0);
+
+    const longAvgPnL = longCount > 0 ? longTotalPnL / longCount : 0;
+    const shortAvgPnL = shortCount > 0 ? shortTotalPnL / shortCount : 0;
+
+    const longGrossProfit = longTrades.filter(t => getProfit(t) > 0).reduce((sum, t) => sum + getProfit(t), 0);
+    const longGrossLoss = Math.abs(longTrades.filter(t => getProfit(t) <= 0).reduce((sum, t) => sum + getProfit(t), 0));
+    const longPF = longGrossLoss > 0 ? longGrossProfit / longGrossLoss : (longGrossProfit > 0 ? Infinity : 0);
+
+    const shortGrossProfit = shortTrades.filter(t => getProfit(t) > 0).reduce((sum, t) => sum + getProfit(t), 0);
+    const shortGrossLoss = Math.abs(shortTrades.filter(t => getProfit(t) <= 0).reduce((sum, t) => sum + getProfit(t), 0));
+    const shortPF = shortGrossLoss > 0 ? shortGrossProfit / shortGrossLoss : (shortGrossProfit > 0 ? Infinity : 0);
 
     const hourMap = new Map<number, { profit: number; count: number }>();
     for (let i = 0; i < 24; i++) {
@@ -151,6 +174,14 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
       winRate,
       longCount,
       shortCount,
+      longWinRate,
+      shortWinRate,
+      longAvgPnL,
+      shortAvgPnL,
+      longPF,
+      shortPF,
+      longTotalPnL,
+      shortTotalPnL,
       hourLabels,
       hourCounts,
       hourProfits,
@@ -348,27 +379,197 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
 
           <section style={{ marginBottom: 32 }}>
             <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
-            <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              {(stats.longCount > 0 || stats.shortCount > 0) ? (
-                <Doughnut
-                  data={sideChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: { position: 'right' },
-                      tooltip: {
-                        callbacks: {
-                          label: (context: any) => `${context.label}: ${context.parsed}件`,
-                        },
-                      },
-                    },
-                  }}
-                />
-              ) : (
-                <div style={{ color: 'var(--muted)' }}>データがありません</div>
-              )}
-            </div>
+            {(stats.longCount > 0 || stats.shortCount > 0) ? (
+              <div style={{
+                padding: '20px',
+                background: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderRadius: 12
+              }}>
+                <div style={{
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: 'var(--ink)',
+                  marginBottom: 8,
+                  textAlign: 'center'
+                }}>
+                  {pairLabel} ({stats.tradeCount}回)
+                </div>
+                <div style={{
+                  height: 1,
+                  background: 'var(--line)',
+                  margin: '12px 0'
+                }} />
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr auto 1fr',
+                  gap: 16,
+                  alignItems: 'center'
+                }}>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: getGreenColor(),
+                      marginBottom: 12
+                    }}>
+                      買い ({stats.longCount}回)
+                    </div>
+                  </div>
+                  <div style={{
+                    width: 1,
+                    height: 180,
+                    background: 'var(--line)'
+                  }} />
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{
+                      fontSize: 14,
+                      fontWeight: 700,
+                      color: getOrangeColor(),
+                      marginBottom: 12
+                    }}>
+                      売り ({stats.shortCount}回)
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr auto 1fr',
+                  gap: 16,
+                  marginTop: -168
+                }}>
+                  <div>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>勝率</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.longWinRate >= 50 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'right'
+                      }}>
+                        {stats.longWinRate.toFixed(1)}%
+                      </div>
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>EV</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.longAvgPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'right'
+                      }}>
+                        {stats.longAvgPnL >= 0 ? '+' : ''}{Math.round(stats.longAvgPnL).toLocaleString('ja-JP')}円
+                      </div>
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>PF</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.longPF >= 1 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'right'
+                      }}>
+                        {stats.longPF === Infinity ? '∞' : stats.longPF.toFixed(2)}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>合計</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.longTotalPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'right'
+                      }}>
+                        {stats.longTotalPnL >= 0 ? '+' : ''}{Math.round(stats.longTotalPnL).toLocaleString('ja-JP')}円
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ width: 1 }} />
+
+                  <div>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>勝率</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.shortWinRate >= 50 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'left'
+                      }}>
+                        {stats.shortWinRate.toFixed(1)}%
+                      </div>
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>EV</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.shortAvgPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'left'
+                      }}>
+                        {stats.shortAvgPnL >= 0 ? '+' : ''}{Math.round(stats.shortAvgPnL).toLocaleString('ja-JP')}円
+                      </div>
+                    </div>
+                    <div style={{ marginBottom: 16 }}>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>PF</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.shortPF >= 1 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'left'
+                      }}>
+                        {stats.shortPF === Infinity ? '∞' : stats.shortPF.toFixed(2)}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 4 }}>合計</div>
+                      <div style={{
+                        fontSize: 20,
+                        fontWeight: 700,
+                        color: stats.shortTotalPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        textAlign: 'left'
+                      }}>
+                        {stats.shortTotalPnL >= 0 ? '+' : ''}{Math.round(stats.shortTotalPnL).toLocaleString('ja-JP')}円
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{
+                  height: 1,
+                  background: 'var(--line)',
+                  margin: '16px 0'
+                }} />
+
+                <div style={{
+                  textAlign: 'center',
+                  fontSize: 14,
+                  fontWeight: 700,
+                  padding: '8px',
+                  borderRadius: 8,
+                  background: stats.longTotalPnL > stats.shortTotalPnL
+                    ? 'rgba(22, 163, 74, 0.1)'
+                    : stats.shortTotalPnL > stats.longTotalPnL
+                    ? 'rgba(249, 115, 22, 0.1)'
+                    : 'rgba(100, 116, 139, 0.1)',
+                  color: stats.longTotalPnL > stats.shortTotalPnL
+                    ? getGreenColor()
+                    : stats.shortTotalPnL > stats.longTotalPnL
+                    ? getOrangeColor()
+                    : 'var(--muted)'
+                }}>
+                  {stats.longTotalPnL > stats.shortTotalPnL
+                    ? '買い優位'
+                    : stats.shortTotalPnL > stats.longTotalPnL
+                    ? '売り優位'
+                    : '同等'}
+                </div>
+              </div>
+            ) : (
+              <div style={{ color: 'var(--muted)', textAlign: 'center', padding: 32 }}>データがありません</div>
+            )}
           </section>
 
           <section style={{ marginBottom: 32 }}>
