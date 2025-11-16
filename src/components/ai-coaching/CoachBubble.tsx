@@ -1,4 +1,5 @@
 import React from 'react';
+import coachIcon from '../../assets/image copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy.png';
 
 interface CoachBubbleProps {
   message: string;
@@ -24,15 +25,15 @@ export function CoachBubble({ message }: CoachBubbleProps) {
         justifyContent: 'center',
         overflow: 'hidden',
       }}>
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="40" cy="40" r="38" fill="var(--surface)" stroke="var(--line)" strokeWidth="2"/>
-          <circle cx="40" cy="26" r="12" fill="#D2691E"/>
-          <ellipse cx="40" cy="50" rx="20" ry="15" fill="#FFF5E1"/>
-          <circle cx="35" cy="48" r="2" fill="#333"/>
-          <circle cx="45" cy="48" r="2" fill="#333"/>
-          <path d="M 35 54 Q 40 57 45 54" stroke="#333" strokeWidth="2" fill="none" strokeLinecap="round"/>
-          <path d="M 20 22 Q 30 15 40 22" stroke="#D2691E" strokeWidth="4" fill="none" strokeLinecap="round"/>
-        </svg>
+        <img
+          src={coachIcon}
+          alt="コーチ"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover'
+          }}
+        />
       </div>
 
       <div style={{
