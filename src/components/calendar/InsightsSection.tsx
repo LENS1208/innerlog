@@ -50,7 +50,9 @@ const formatJapaneseDate = (dateStr: string | null | undefined) => {
   const match = dateStr.match(/(\d{4})-(\d{2})-(\d{2})/);
   if (!match) return dateStr;
   const [, year, month, day] = match;
-  return `${year}年${month}月${day}日`;
+  const date = new Date(dateStr);
+  const weekday = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+  return `${year}年${month}月${day}日（${weekday}）`;
 };
 
 const formatDateTime = (dateStr: string) => {
