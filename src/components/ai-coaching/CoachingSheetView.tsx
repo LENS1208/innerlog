@@ -45,7 +45,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         }
         @media (min-width: 640px) {
           .trade-examples-grid {
-            grid-template-columns: repeat(2, minmax(0, 340px));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 16px;
           }
         }
