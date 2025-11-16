@@ -826,7 +826,7 @@ export default function ReportsStrategy() {
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>平均決済効率</h4>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
-              {exitEfficiencyData.avgEfficiency.toFixed(1)}%
+              {exitEfficiencyData.avgEfficiency.toFixed(1)} <span style={{ fontSize: 14, color: "var(--accent)" }}>%</span>
             </div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>実現利益/最大可能利益</div>
           </div>
@@ -834,7 +834,7 @@ export default function ReportsStrategy() {
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>早期決済回数</h4>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
-              {exitEfficiencyData.earlyExits}件
+              {exitEfficiencyData.earlyExits} <span style={{ fontSize: 14, color: "var(--loss)" }}>件</span>
             </div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>効率30%未満の勝ちトレード</div>
           </div>
@@ -842,7 +842,7 @@ export default function ReportsStrategy() {
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>保有率実績</h4>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--gain)" }}>
-              {exitEfficiencyData.holdRatio.toFixed(1)}%
+              {exitEfficiencyData.holdRatio.toFixed(1)} <span style={{ fontSize: 14, color: "var(--gain)" }}>%</span>
             </div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>効率50%以上の割合</div>
           </div>
