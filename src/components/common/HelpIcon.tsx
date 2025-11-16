@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface HelpIconProps {
   text: string;
@@ -6,10 +6,38 @@ interface HelpIconProps {
 
 export function HelpIcon({ text }: HelpIconProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const tooltipWidth = 320;
+      const tooltipHeight = 150;
+      const padding = 8;
+
+      let top = rect.bottom + padding;
+      let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+
+      if (left + tooltipWidth > window.innerWidth - padding) {
+        left = window.innerWidth - tooltipWidth - padding;
+      }
+      if (left < padding) {
+        left = padding;
+      }
+
+      if (top + tooltipHeight > window.innerHeight - padding) {
+        top = rect.top - tooltipHeight - padding;
+      }
+
+      setPosition({ top, left });
+    }
+  }, [isOpen]);
 
   return (
     <div style={{ position: 'relative', display: 'inline-block', marginLeft: 6, zIndex: 10 }}>
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
         style={{
@@ -46,9 +74,8 @@ export function HelpIcon({ text }: HelpIconProps) {
         <div
           style={{
             position: 'fixed',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            top: position.top,
+            left: position.left,
             background: 'var(--surface)',
             border: '1px solid var(--line)',
             borderRadius: 8,
