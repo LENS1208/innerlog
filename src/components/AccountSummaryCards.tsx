@@ -109,8 +109,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
           入金総額
           <HelpIcon text="口座に入金した総額です。取引資金の元手を把握するための指標です。" />
         </div>
-        <div className="kpi-value" style={{ color: getAccentColor(), fontWeight: 700 }}>
-          +{summaryData.total_deposits.toLocaleString('ja-JP')} <span style={{ fontSize: '12px', fontWeight: 600, color: getAccentColor() }}>円</span>
+        <div className="kpi-value" style={{ color: getAccentColor() }}>
+          +{summaryData.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getAccentColor() }}>円</span>
         </div>
         <div className="kpi-desc">累計入金額の合計</div>
       </div>
@@ -120,8 +120,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
           出金総額
           <HelpIcon text="口座から出金した総額です。利益の引き出しや資金移動の記録です。" />
         </div>
-        <div className="kpi-value" style={{ color: getLossColor(), fontWeight: 700 }}>
-          -{Math.abs(summaryData.total_withdrawals).toLocaleString('ja-JP')} <span style={{ fontSize: '12px', fontWeight: 600, color: getLossColor() }}>円</span>
+        <div className="kpi-value" style={{ color: getLossColor() }}>
+          -{Math.abs(summaryData.total_withdrawals).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getLossColor() }}>円</span>
         </div>
         <div className="kpi-desc">累計出金額の合計</div>
       </div>
@@ -132,8 +132,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
             最高資産
             <HelpIcon text="累積損益の最高到達点です。過去に達成した最大の資産額を示します。" />
           </div>
-          <div className="kpi-value" style={{ color: getAccentColor(), fontWeight: 700 }}>
-            +{peakEquity.toLocaleString('ja-JP')} <span style={{ fontSize: '12px', fontWeight: 600, color: getAccentColor() }}>円</span>
+          <div className="kpi-value" style={{ color: getAccentColor() }}>
+            +{peakEquity.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getAccentColor() }}>円</span>
           </div>
           <div className="kpi-desc">累積損益のピーク値</div>
         </div>
@@ -144,14 +144,14 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
           累計スワップ
           <HelpIcon text="ポジションを保有したことで発生したスワップポイントの総額です。プラスなら収入になります。" />
         </div>
-        <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor(), fontWeight: 700 }}>
-          {summaryData.total_swap >= 0 ? '+' : ''}{summaryData.total_swap.toLocaleString('ja-JP')} <span style={{ fontSize: '12px', fontWeight: 600, color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor() }}>円</span>
+        <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor() }}>
+          {summaryData.total_swap >= 0 ? '+' : ''}{summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor() }}>円</span>
         </div>
         {hasSwapBreakdown ? (
           <div className="kpi-desc" style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>
-            <span style={{ color: getAccentColor(), fontWeight: 700 }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')}<span style={{ color: getAccentColor(), fontWeight: 600 }}>円</span></span>
+            <span style={{ color: getAccentColor(), fontWeight: 700 }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')}<span style={{ fontSize: 11, color: getAccentColor(), fontWeight: 600 }}>円</span></span>
             {' / '}
-            <span style={{ color: getLossColor(), fontWeight: 700 }}>-{Math.abs(summaryData.swap_negative || 0).toLocaleString('ja-JP')}<span style={{ color: getLossColor(), fontWeight: 600 }}>円</span></span>
+            <span style={{ color: getLossColor(), fontWeight: 700 }}>-{Math.abs(summaryData.swap_negative || 0).toLocaleString('ja-JP')}<span style={{ fontSize: 11, color: getLossColor(), fontWeight: 600 }}>円</span></span>
           </div>
         ) : (
           <div className="kpi-desc">スワップポイントの累計</div>
@@ -165,8 +165,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
               XMポイント獲得
               <HelpIcon text="XMのロイヤルティプログラムで獲得したポイントを現金化した金額です。取引に応じて貯まります。" />
             </div>
-            <div className="kpi-value" style={{ color: getAccentColor(), fontWeight: 700 }}>
-              +{summaryData.xm_points_earned.toLocaleString('ja-JP')} <span style={{ fontSize: '12px', fontWeight: 600, color: getAccentColor() }}>円</span>
+            <div className="kpi-value" style={{ color: getAccentColor() }}>
+              +{summaryData.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getAccentColor() }}>円</span>
             </div>
             <div className="kpi-desc">XMPで獲得した金額</div>
           </div>
@@ -177,7 +177,7 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
               <HelpIcon text="獲得したXMポイントを取引口座に移して使用した金額です。ボーナスとして活用できます。" />
             </div>
             <div className="kpi-value" style={{ color: 'var(--ink)' }}>
-              {summaryData.xm_points_used.toLocaleString('ja-JP')} <span style={{ fontSize: '12px', color: 'var(--muted)' }}>円</span>
+              {summaryData.xm_points_used.toLocaleString('ja-JP')} <span className="kpi-unit">円</span>
             </div>
             <div className="kpi-desc">XMPから使用した金額</div>
           </div>
