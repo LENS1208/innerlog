@@ -667,8 +667,8 @@ export default function ReportsMarket() {
                   }}>
                     <div style={{
                       background: item.longProfit >= 0
-                        ? getLongColor(0.1)
-                        : getLossColor(0.1),
+                        ? 'rgba(0, 132, 199, 0.1)'
+                        : 'rgba(239, 68, 68, 0.1)',
                       borderRadius: 8,
                       padding: 12,
                       textAlign: "center"
@@ -686,7 +686,7 @@ export default function ReportsMarket() {
                       <div style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        color: item.longProfit >= 0 ? getLongColor() : getLossColor()
+                        color: item.longProfit >= 0 ? '#0084C7' : '#EF4444'
                       }}>
                         {item.longProfit >= 0 ? '+' : ''}{Math.round(item.longProfit / (item.longCount || 1)).toLocaleString()}円
                       </div>
@@ -694,8 +694,8 @@ export default function ReportsMarket() {
 
                     <div style={{
                       background: item.shortProfit >= 0
-                        ? getShortColor(0.1)
-                        : getLossColor(0.1),
+                        ? 'rgba(0, 132, 199, 0.1)'
+                        : 'rgba(239, 68, 68, 0.1)',
                       borderRadius: 8,
                       padding: 12,
                       textAlign: "center"
@@ -713,7 +713,7 @@ export default function ReportsMarket() {
                       <div style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        color: item.shortProfit >= 0 ? getShortColor() : getLossColor()
+                        color: item.shortProfit >= 0 ? '#0084C7' : '#EF4444'
                       }}>
                         {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()}円
                       </div>
@@ -722,8 +722,8 @@ export default function ReportsMarket() {
 
                   <div style={{
                     background: totalProfit >= 0
-                      ? getProfitColor(0.1)
-                      : getLossColor(0.1),
+                      ? 'rgba(0, 132, 199, 0.1)'
+                      : 'rgba(239, 68, 68, 0.1)',
                     borderRadius: 8,
                     padding: 12,
                     textAlign: "center",
@@ -732,7 +732,7 @@ export default function ReportsMarket() {
                     <div style={{
                       fontSize: 18,
                       fontWeight: 700,
-                      color: totalProfit >= 0 ? getProfitColor() : getLossColor(),
+                      color: totalProfit >= 0 ? '#0084C7' : '#EF4444',
                       marginBottom: 4
                     }}>
                       {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
