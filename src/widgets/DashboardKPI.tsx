@@ -387,7 +387,18 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           <HelpIcon text="リスク1単位あたりのリターンを示す指標です。1.0以上で良好、1.5以上で優秀とされます。" />
         </div>
         <div className="kpi-value" style={{ color: 'var(--ink)' }}>
-          {dash.sharpeRatio.toFixed(2)}
+          {(() => {
+            const value = dash.sharpeRatio.toFixed(3);
+            const parts = value.split('.');
+            const integer = parts[0];
+            const decimal = parts[1] || '000';
+            return (
+              <>
+                {integer}.{decimal[0]}
+                <span style={{ fontSize: '0.65em' }}>{decimal[1]}{decimal[2]}</span>
+              </>
+            );
+          })()}
         </div>
         <div className="kpi-desc">リターン / リスク</div>
       </div>
