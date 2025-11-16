@@ -109,7 +109,7 @@ function SegmentDetailsTabs({
                   style={{
                     padding: 10,
                     textAlign: "right",
-                    fontSize: 18,
+                    fontSize: 15,
                     fontWeight: 700,
                     color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
                   }}
@@ -631,8 +631,8 @@ export default function ReportsTimeAxis() {
                       {style.ev >= 0 ? '+' : ''}{Math.round(style.ev).toLocaleString()}円
                     </td>
                     <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{formatHoldTime(style.avgHoldTime)}</td>
-                    <td style={{ padding: 10, textAlign: "right", fontSize: 13, fontWeight: 700, color: style.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                      {style.profit >= 0 ? '+' : ''}{Math.round(style.profit).toLocaleString()}円
+                    <td style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: 700, color: style.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
+                      {style.profit >= 0 ? '+' : ''}{Math.round(style.profit).toLocaleString()} <span style={{ fontSize: 13, color: style.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
                     </td>
                   </tr>
                 ))}
