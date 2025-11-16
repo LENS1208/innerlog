@@ -114,21 +114,13 @@ body {
 }
 
 .side-long {
-  background: #10b981;
-  color: white;
+  color: #10b981;
   font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 6px;
-  display: inline-block;
 }
 
 .side-short {
-  background: #f97316;
-  color: white;
+  color: #f97316;
   font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 6px;
-  display: inline-block;
 }
 
 .trades-table tbody tr {
