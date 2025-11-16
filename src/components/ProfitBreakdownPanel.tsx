@@ -261,9 +261,6 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                 </div>
               </div>
             </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              この損益レンジでの基本的なパフォーマンス指標
-            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -289,9 +286,6 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                 <div style={{ color: 'var(--muted)' }}>データがありません</div>
               )}
             </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              この損益レンジで取引した通貨ペアの内訳
-            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -309,9 +303,6 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                   {stats.shortCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
                 </div>
               </div>
-            </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              買い・売りのポジション方向ごとの取引回数
             </div>
           </section>
 
@@ -357,9 +348,6 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                 }}
               />
             </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              この損益レンジでの取引が何時頃に発生したかの分布
-            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -393,9 +381,6 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
                   },
                 }}
               />
-            </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              この損益レンジでの取引が何曜日に発生したかの分布
             </div>
           </section>
         </div>

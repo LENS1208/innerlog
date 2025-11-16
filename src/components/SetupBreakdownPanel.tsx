@@ -386,9 +386,6 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                 }}
               />
             </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              3つの主要パフォーマンス指標（勝率・R:R比・最大連勝数）を同時に表示
-            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -441,9 +438,6 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                 </div>
               </div>
             </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              損益の統計的分布（中央値、四分位数、最大・最小値）
-            </div>
           </section>
 
           <section style={{ marginBottom: 32 }}>
@@ -478,9 +472,6 @@ export default function SetupBreakdownPanel({ trades, setupLabel, onClose }: Set
                   },
                 }}
               />
-            </div>
-            <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
-              取引ごとの累積損益（右肩上がりなら安定した成長を示す）
             </div>
           </section>
 
