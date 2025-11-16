@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 import type { AIResponse, TradeRow } from '../services/ai-coaching/types';
 import { callAutoReviewAI } from '../services/ai-coaching/callAutoReviewAI';
-import { getCoachingJob, saveCoachingJob, deleteCoachingJob } from './db.service';
+import { getCoachingJob, saveCoachingJob, deleteCoachingJob, getUserSettings } from './db.service';
+import { supabase } from './supabase';
 
 interface CoachingTask {
   dataset: string;
@@ -65,7 +66,19 @@ export function AICoachingProvider({ children }: { children: React.ReactNode }) 
     abortControllerRef.current = new AbortController();
 
     try {
-      const result = await callAutoReviewAI(dataRows, dataset);
+      const { data: { user } } = await supabase.auth.getUser();
+      let coachAvatarPreset = 'teacher';
+
+      if (user) {
+        const settings = await getUserSettings(user.id);
+        if (settings?.coach_avatar_preset) {
+          coachAvatarPreset = settings.coach_avatar_preset;
+        }
+      }
+
+      const result = await callAutoReviewAI(dataRows, {
+        coachAvatarPreset,
+      });
 
       console.log('✅ AI分析完了:', dataset);
 

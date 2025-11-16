@@ -1,9 +1,11 @@
 import { SYSTEM_TXT, buildPrompt, type PromptInput } from './buildPrompt';
 import type { AIResponse } from './types';
+import { getCoachSystemPromptModifier } from '../../lib/coachAvatars';
 
 interface CallHints {
   dateRange?: string;
   focus?: string;
+  coachAvatarPreset?: string;
 }
 
 export async function callAutoReviewAI(
@@ -16,9 +18,18 @@ export async function callAutoReviewAI(
     focusHint: hints?.focus,
   });
 
+  const coachModifier = hints?.coachAvatarPreset
+    ? getCoachSystemPromptModifier(hints.coachAvatarPreset)
+    : '';
+
+  const finalSystemPrompt = coachModifier
+    ? `${SYSTEM_TXT}\n\n${coachModifier}`
+    : SYSTEM_TXT;
+
   console.log('📊 トレードデータ件数:', Array.isArray(tradesJson) ? tradesJson.length : 'unknown');
   console.log('📝 プロンプト長:', userPrompt.length, '文字');
-  console.log('🎯 システムプロンプト長:', SYSTEM_TXT.length, '文字');
+  console.log('🎯 システムプロンプト長:', finalSystemPrompt.length, '文字');
+  console.log('👤 コーチアバター:', hints?.coachAvatarPreset || 'デフォルト');
 
   try {
     const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
@@ -37,7 +48,7 @@ export async function callAutoReviewAI(
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: SYSTEM_TXT },
+          { role: 'system', content: finalSystemPrompt },
           { role: 'user', content: userPrompt },
         ],
         temperature: 0.2,

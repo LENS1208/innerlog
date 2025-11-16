@@ -572,3 +572,14 @@ export async function deleteCoachingJob(dataset: string): Promise<void> {
 
   if (error) throw error;
 }
+
+export async function getUserSettings(userId: string): Promise<any> {
+  const { data, error } = await supabase
+    .from('user_settings')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (error) throw error;
+  return data;
+}
