@@ -70,6 +70,7 @@ export type Trade = {
 
 // src/lib/csv.ts もしくは TradeListPage.tsx の parseCsvText を置換
 import type { Trade } from "./types";
+import { calculatePips } from "./formatters";
 
 const norm = (s: string) =>
   s.toLowerCase().replace(/\s+/g, "").replace(/[／\/]/g, "/").replace(/[（）()]/g, "");
@@ -79,8 +80,6 @@ const toNumLoose = (s: string) => {
   const n = Number(t);
   return Number.isFinite(n) ? n : 0;
 };
-
-const isJpyCross = (pair: string) => /JPY$/i.test((pair || "").trim());
 
 export function parseCsvText(text: string): Trade[] {
   const lines = text.split(/\r?\n/).filter(Boolean);
@@ -141,9 +140,7 @@ export function parseCsvText(text: string): Trade[] {
 
     // pips 自動計算（CSVになければ Open/Close から）
     if (!pips && entry && exit) {
-      const mult = isJpyCross(pair) ? 100 : 10000;
-      const diff = side === "LONG" ? (exit - entry) : (entry - exit);
-      pips = +(diff * mult).toFixed(1);
+      pips = calculatePips(entry, exit, side, pair);
     }
 
     // 保有時間計算（分）

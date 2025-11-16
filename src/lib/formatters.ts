@@ -66,3 +66,48 @@ export function getPnLColor(value: number): string {
 export const pnlStyle = {
   fontWeight: 700 as const
 };
+
+export function getPipMultiplier(symbol: string): number {
+  const sym = (symbol || '').toUpperCase();
+
+  if (sym.includes('JPY')) {
+    return 100;
+  }
+
+  if (sym.includes('GOLD') || sym.includes('XAU')) {
+    return 10;
+  }
+
+  if (sym.includes('SILVER') || sym.includes('XAG')) {
+    return 1000;
+  }
+
+  if (sym.includes('OIL') || sym.includes('WTI') || sym.includes('BRENT')) {
+    return 100;
+  }
+
+  if (sym.includes('BTC') || sym.includes('ETH') || sym.includes('CRYPTO')) {
+    return 1;
+  }
+
+  if (sym.match(/^(US|JP|DE|UK|FR)\d+/)) {
+    return 1;
+  }
+
+  return 10000;
+}
+
+export function calculatePips(openPrice: number, closePrice: number, side: 'LONG' | 'SHORT' | 'BUY' | 'SELL', symbol: string): number {
+  if (!openPrice || !closePrice) return 0;
+
+  const normalizedSide = side.toUpperCase();
+  const isLong = normalizedSide === 'LONG' || normalizedSide === 'BUY';
+
+  const priceDiff = isLong
+    ? (closePrice - openPrice)
+    : (openPrice - closePrice);
+
+  const multiplier = getPipMultiplier(symbol);
+
+  return +(priceDiff * multiplier).toFixed(1);
+}

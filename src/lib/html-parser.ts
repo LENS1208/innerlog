@@ -1,3 +1,5 @@
+import { calculatePips } from './formatters';
+
 export type ParsedTrade = {
   ticket: string;
   openTime: string;
@@ -155,12 +157,8 @@ export function parseHtmlStatement(htmlText: string): ParsedTrade[] {
         }
 
         if (trade.openPrice > 0 && trade.closePrice > 0) {
-          const priceDiff = trade.type === 'buy'
-            ? trade.closePrice - trade.openPrice
-            : trade.openPrice - trade.closePrice;
-
-          const pipMultiplier = trade.item.includes('jpy') ? 100 : 10000;
-          trade.pips = priceDiff * pipMultiplier;
+          const side = trade.type === 'buy' ? 'LONG' : 'SHORT';
+          trade.pips = calculatePips(trade.openPrice, trade.closePrice, side, trade.item);
         }
 
         if (trade.ticket && trade.openTime && trade.closeTime && !isNaN(trade.pnl)) {
