@@ -108,7 +108,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
         <polygon
           points={dataPoints}
           fill="var(--accent)"
-          fillOpacity="0.5"
+          fillOpacity="0.6"
           stroke="var(--accent)"
           strokeWidth="2"
         />
