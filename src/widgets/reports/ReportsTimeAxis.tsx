@@ -91,7 +91,7 @@ function SegmentDetailsTabs({
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
                 <td style={{ padding: 10, fontSize: 13 }}>{label}</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.count}<span style={{ fontSize: 11, color: "var(--muted)" }}>回</span></td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.count} <span style={{ fontSize: 11, color: "var(--muted)" }}>回</span></td>
                 <td
                   style={{
                     padding: 10,
@@ -101,9 +101,9 @@ function SegmentDetailsTabs({
                     color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)",
                   }}
                 >
-                  {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")}<span style={{ fontSize: 11, color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                  {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")} <span style={{ fontSize: 11, color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
                 </td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.winRate.toFixed(0)}<span style={{ fontSize: 11, color: "var(--muted)" }}>%</span></td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.winRate.toFixed(0)} <span style={{ fontSize: 11, color: "var(--muted)" }}>%</span></td>
                 <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.pf.toFixed(2)}</td>
                 <td
                   style={{
@@ -114,7 +114,7 @@ function SegmentDetailsTabs({
                     color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
                   }}
                 >
-                  {item.profit >= 0 ? '+' : ''}{Math.round(item.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: item.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                  {item.profit >= 0 ? '+' : ''}{Math.round(item.profit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: item.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
                 </td>
               </tr>
             );
@@ -772,19 +772,19 @@ export default function ReportsTimeAxis() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {topDayOfWeek.day}曜日：{topDayOfWeek.profit >= 0 ? '+' : ''}{Math.round(topDayOfWeek.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                {topDayOfWeek.day}曜日：{topDayOfWeek.profit >= 0 ? '+' : ''}{Math.round(topDayOfWeek.profit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: topDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                勝率 {topDayOfWeek.winRate.toFixed(0)}<span style={{ fontSize: 11 }}>%</span> | 取引 {topDayOfWeek.count}<span style={{ fontSize: 11 }}>件</span>
+                勝率 {topDayOfWeek.winRate.toFixed(0)} <span style={{ fontSize: 11 }}>%</span> | 取引 {topDayOfWeek.count} <span style={{ fontSize: 11 }}>件</span>
               </div>
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {bottomDayOfWeek.day}曜日：{bottomDayOfWeek.profit >= 0 ? '+' : ''}{Math.round(bottomDayOfWeek.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                {bottomDayOfWeek.day}曜日：{bottomDayOfWeek.profit >= 0 ? '+' : ''}{Math.round(bottomDayOfWeek.profit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: bottomDayOfWeek.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
-                勝率 {bottomDayOfWeek.winRate.toFixed(0)}<span style={{ fontSize: 11 }}>%</span> | 取引 {bottomDayOfWeek.count}<span style={{ fontSize: 11 }}>件</span>
+                勝率 {bottomDayOfWeek.winRate.toFixed(0)} <span style={{ fontSize: 11 }}>%</span> | 取引 {bottomDayOfWeek.count} <span style={{ fontSize: 11 }}>件</span>
               </div>
             </div>
           </div>
@@ -835,7 +835,7 @@ export default function ReportsTimeAxis() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {topHour.label}時：{topHour.profit >= 0 ? '+' : ''}{Math.round(topHour.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                {topHour.label}時：{topHour.profit >= 0 ? '+' : ''}{Math.round(topHour.profit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: topHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {topHour.winRate.toFixed(0)}% | 取引 {topHour.count}件
@@ -844,7 +844,7 @@ export default function ReportsTimeAxis() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {bottomHour.label}時：{bottomHour.profit >= 0 ? '+' : ''}{Math.round(bottomHour.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                {bottomHour.label}時：{bottomHour.profit >= 0 ? '+' : ''}{Math.round(bottomHour.profit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: bottomHour.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {bottomHour.winRate.toFixed(0)}% | 取引 {bottomHour.count}件
@@ -896,7 +896,7 @@ export default function ReportsTimeAxis() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ベスト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: topDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {formatDateJapanese(topDay.date)}：{topDay.profit >= 0 ? '+' : ''}{Math.round(topDay.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: topDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                {formatDateJapanese(topDay.date)}：{topDay.profit >= 0 ? '+' : ''}{Math.round(topDay.profit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: topDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {topDay.winRate.toFixed(0)}% | 取引 {topDay.count}件
@@ -905,7 +905,7 @@ export default function ReportsTimeAxis() {
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 4 }}>ワースト</div>
               <div style={{ fontSize: 18, fontWeight: 700, color: bottomDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>
-                {formatDateJapanese(bottomDay.date)}：{bottomDay.profit >= 0 ? '+' : ''}{Math.round(bottomDay.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: bottomDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
+                {formatDateJapanese(bottomDay.date)}：{bottomDay.profit >= 0 ? '+' : ''}{Math.round(bottomDay.profit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: bottomDay.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
               </div>
               <div style={{ fontSize: 12, color: "var(--muted)" }}>
                 勝率 {bottomDay.winRate.toFixed(0)}% | 取引 {bottomDay.count}件
