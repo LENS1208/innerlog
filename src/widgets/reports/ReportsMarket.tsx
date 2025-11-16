@@ -588,13 +588,13 @@ export default function ReportsMarket() {
                       bottom: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to top, ${getLongColor(0.3)}, ${getLongColor()})`,
+                      background: getLongColor(),
                       borderRadius: "0 0 0 12px",
                     } : {
                       top: "50%",
                       height: `${longBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                      background: getLossColor(),
                       borderRadius: "12px 0 0 0",
                     })
                   }} />
@@ -607,13 +607,13 @@ export default function ReportsMarket() {
                       bottom: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to top, ${getShortColor(0.3)}, ${getShortColor()})`,
+                      background: getLongColor(),
                       borderRadius: "0 0 12px 0",
                     } : {
                       top: "50%",
                       height: `${shortBarWidth * 0.5}%`,
                       maxHeight: "50%",
-                      background: `linear-gradient(to bottom, ${getLossColor(0.3)}, ${getLossColor()})`,
+                      background: getLossColor(),
                       borderRadius: "0 12px 0 0",
                     })
                   }} />
@@ -626,12 +626,12 @@ export default function ReportsMarket() {
                     justifyContent: "center"
                   }}>
                     <div style={{
-                      border: `2px solid ${getLongColor()}`,
+                      border: "2px solid var(--muted)",
                       borderRadius: 16,
                       padding: "4px 12px",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: getLongColor(),
+                      color: "var(--text)",
                     }}>買い</div>
                     <div style={{
                       fontSize: 18,
@@ -641,12 +641,12 @@ export default function ReportsMarket() {
                       {item.symbol}
                     </div>
                     <div style={{
-                      border: `2px solid ${getShortColor()}`,
+                      border: "2px solid var(--muted)",
                       borderRadius: 16,
                       padding: "4px 12px",
                       fontSize: 11,
                       fontWeight: 700,
-                      color: getShortColor(),
+                      color: "var(--text)",
                     }}>売り</div>
                   </div>
 
@@ -666,9 +666,6 @@ export default function ReportsMarket() {
                     marginBottom: 16,
                   }}>
                     <div style={{
-                      background: item.longProfit >= 0
-                        ? getLongColor(0.1)
-                        : getLossColor(0.1),
                       borderRadius: 8,
                       padding: 12,
                       textAlign: "center"
@@ -677,7 +674,7 @@ export default function ReportsMarket() {
                       <div style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        color: item.longWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                        color: item.longWinRate >= 50 ? getLongColor() : getLossColor(),
                         marginBottom: 8
                       }}>
                         {item.longWinRate.toFixed(1)}%
@@ -693,9 +690,6 @@ export default function ReportsMarket() {
                     </div>
 
                     <div style={{
-                      background: item.shortProfit >= 0
-                        ? getShortColor(0.1)
-                        : getLossColor(0.1),
                       borderRadius: 8,
                       padding: 12,
                       textAlign: "center"
@@ -704,7 +698,7 @@ export default function ReportsMarket() {
                       <div style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        color: item.shortWinRate >= 50 ? "var(--gain)" : "var(--muted)",
+                        color: item.shortWinRate >= 50 ? getLongColor() : getLossColor(),
                         marginBottom: 8
                       }}>
                         {item.shortWinRate.toFixed(1)}%
@@ -713,7 +707,7 @@ export default function ReportsMarket() {
                       <div style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        color: item.shortProfit >= 0 ? getShortColor() : getLossColor()
+                        color: item.shortProfit >= 0 ? getLongColor() : getLossColor()
                       }}>
                         {item.shortProfit >= 0 ? '+' : ''}{Math.round(item.shortProfit / (item.shortCount || 1)).toLocaleString()}円
                       </div>
@@ -721,9 +715,6 @@ export default function ReportsMarket() {
                   </div>
 
                   <div style={{
-                    background: totalProfit >= 0
-                      ? getProfitColor(0.1)
-                      : getLossColor(0.1),
                     borderRadius: 8,
                     padding: 12,
                     textAlign: "center",
@@ -732,7 +723,7 @@ export default function ReportsMarket() {
                     <div style={{
                       fontSize: 18,
                       fontWeight: 700,
-                      color: totalProfit >= 0 ? getProfitColor() : getLossColor(),
+                      color: totalProfit >= 0 ? getLongColor() : getLossColor(),
                       marginBottom: 4
                     }}>
                       {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
