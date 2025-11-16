@@ -39,22 +39,26 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
           </Section>
         )}
 
-        <Section title="現状サマリー">
-          <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
-            {sheet.summary.map((s, i) => (
-              <li key={i} style={{ fontSize: '15px', color: 'var(--ink)', marginBottom: '6px' }}>{s}</li>
-            ))}
-          </ul>
-        </Section>
+        {sheet.summary && sheet.summary.length > 0 && (
+          <Section title="現状サマリー">
+            <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
+              {sheet.summary.map((s, i) => (
+                <li key={i} style={{ fontSize: '15px', color: 'var(--ink)', marginBottom: '6px' }}>{s}</li>
+              ))}
+            </ul>
+          </Section>
+        )}
       </div>
 
-      <Section title="強みと課題">
-        {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
-        <StrengthsWeaknessesTable
-          rows={sheet.strengthsWeaknesses}
-          evaluationScore={sheet.evaluationScore}
-        />
-      </Section>
+      {sheet.strengthsWeaknesses && (
+        <Section title="強みと課題">
+          {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
+          <StrengthsWeaknessesTable
+            rows={sheet.strengthsWeaknesses}
+            evaluationScore={sheet.evaluationScore}
+          />
+        </Section>
+      )}
 
       {sheet.examples && sheet.examples.length > 0 && (
         <Section title="あなたの注目トレード">
@@ -72,36 +76,48 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
         </Section>
       )}
 
-      <Section title="改善のための5ルール" comment={sheet.rulesComment}>
-        <RulesTable rules={sheet.rules} />
-      </Section>
+      {sheet.rules && (
+        <Section title="改善のための5ルール" comment={sheet.rulesComment}>
+          <RulesTable rules={sheet.rules} />
+        </Section>
+      )}
 
-      <Section title="プレイブック（戦略型）" comment={sheet.playbookComment}>
-        <PlaybookView playbook={sheet.playbook} />
-      </Section>
+      {sheet.playbook && (
+        <Section title="プレイブック（戦略型）" comment={sheet.playbookComment}>
+          <PlaybookView playbook={sheet.playbook} />
+        </Section>
+      )}
 
-      <Section title="オンライン日記の活用法">
-        {sheet.diaryGuide.comment && <CoachBubble message={sheet.diaryGuide.comment} />}
-        <DiaryGuideTable rows={sheet.diaryGuide.rows} />
-      </Section>
+      {sheet.diaryGuide && (
+        <Section title="オンライン日記の活用法">
+          {sheet.diaryGuide.comment && <CoachBubble message={sheet.diaryGuide.comment} />}
+          <DiaryGuideTable rows={sheet.diaryGuide.rows} />
+        </Section>
+      )}
 
-      <Section title="KPI（数値で見る改善指標）">
-        {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
-        <KPITable kpis={sheet.kpis} />
-      </Section>
+      {sheet.kpis && (
+        <Section title="KPI（数値で見る改善指標）">
+          {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
+          <KPITable kpis={sheet.kpis} />
+        </Section>
+      )}
 
-      <Section title="4週間リセットプラン">
-        {sheet.fourWeekPlanComment && <CoachBubble message={sheet.fourWeekPlanComment} />}
-        <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
-      </Section>
+      {sheet.fourWeekPlan && (
+        <Section title="4週間リセットプラン">
+          {sheet.fourWeekPlanComment && <CoachBubble message={sheet.fourWeekPlanComment} />}
+          <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
+        </Section>
+      )}
 
-      <Section title="コーチングメッセージ">
-        {sheet.coachingMessage.map((text, i) => (
-          <p key={i} style={{ margin: '0 0 12px 0', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink)' }}>
-            {text}
-          </p>
-        ))}
-      </Section>
+      {sheet.coachingMessage && sheet.coachingMessage.length > 0 && (
+        <Section title="コーチングメッセージ">
+          {sheet.coachingMessage.map((text, i) => (
+            <p key={i} style={{ margin: '0 0 12px 0', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink)' }}>
+              {text}
+            </p>
+          ))}
+        </Section>
+      )}
 
       <footer
         style={{
