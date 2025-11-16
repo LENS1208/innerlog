@@ -1,11 +1,50 @@
-import React from 'react';
-import coachIcon from '../../assets/image copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy copy.png';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../lib/supabase';
+import { getCoachAvatarById } from '../../lib/coachAvatars';
 
 interface CoachBubbleProps {
   message: string;
 }
 
 export function CoachBubble({ message }: CoachBubbleProps) {
+  const [coachIcon, setCoachIcon] = useState<string>('');
+
+  useEffect(() => {
+    loadCoachAvatar();
+  }, []);
+
+  const loadCoachAvatar = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setCoachIcon(getCoachAvatarById('teacher'));
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('user_settings')
+        .select('coach_avatar_preset')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Failed to load coach avatar setting:', error);
+        setCoachIcon(getCoachAvatarById('teacher'));
+        return;
+      }
+
+      const presetId = data?.coach_avatar_preset || 'teacher';
+      setCoachIcon(getCoachAvatarById(presetId));
+    } catch (err) {
+      console.error('Error loading coach avatar:', err);
+      setCoachIcon(getCoachAvatarById('teacher'));
+    }
+  };
+
+  if (!coachIcon) {
+    return null;
+  }
+
   return (
     <div style={{
       display: 'flex',

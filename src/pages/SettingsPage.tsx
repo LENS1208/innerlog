@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme.context';
 import '../styles/journal-notebook.css';
 import { showToast } from '../lib/toast';
+import { COACH_AVATAR_PRESETS } from '../lib/coachAvatars';
 
 interface UserSettings {
   theme: string;
@@ -17,6 +18,7 @@ interface UserSettings {
   ai_evaluation_enabled: boolean;
   ai_proposal_enabled: boolean;
   ai_advice_enabled: boolean;
+  coach_avatar_preset: string;
 }
 
 interface ImportHistory {
@@ -56,6 +58,7 @@ export default function SettingsPage() {
     ai_evaluation_enabled: true,
     ai_proposal_enabled: true,
     ai_advice_enabled: true,
+    coach_avatar_preset: 'teacher',
   });
 
   const [importHistory, setImportHistory] = useState<ImportHistory[]>([]);
@@ -102,6 +105,7 @@ export default function SettingsPage() {
             ai_evaluation_enabled: data.ai_evaluation_enabled ?? true,
             ai_proposal_enabled: data.ai_proposal_enabled ?? true,
             ai_advice_enabled: data.ai_advice_enabled ?? true,
+            coach_avatar_preset: data.coach_avatar_preset || 'teacher',
           });
         } else {
           setSettings({
@@ -275,6 +279,7 @@ export default function SettingsPage() {
           ai_evaluation_enabled: settings.ai_evaluation_enabled,
           ai_proposal_enabled: settings.ai_proposal_enabled,
           ai_advice_enabled: settings.ai_advice_enabled,
+          coach_avatar_preset: settings.coach_avatar_preset,
         }, {
           onConflict: 'user_id'
         });
@@ -769,6 +774,55 @@ export default function SettingsPage() {
                   <option value="EUR">ユーロ (EUR)</option>
                   <option value="GBP">ポンド (GBP)</option>
                 </select>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>コーチアバター</div>
+              <div style={{ display: 'grid', gap: 12 }}>
+                {COACH_AVATAR_PRESETS.map((preset) => (
+                  <label
+                    key={preset.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 12,
+                      padding: 12,
+                      border: settings.coach_avatar_preset === preset.id ? '2px solid var(--accent)' : '1px solid var(--line)',
+                      borderRadius: 8,
+                      cursor: 'pointer',
+                      backgroundColor: settings.coach_avatar_preset === preset.id ? 'var(--chip)' : 'transparent',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    <input
+                      type="radio"
+                      name="coach_avatar"
+                      value={preset.id}
+                      checked={settings.coach_avatar_preset === preset.id}
+                      onChange={(e) => setSettings({ ...settings, coach_avatar_preset: e.target.value })}
+                      style={{ width: 18, height: 18 }}
+                    />
+                    <img
+                      src={preset.image}
+                      alt={preset.name}
+                      style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        border: '2px solid var(--line)',
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>{preset.name}</div>
+                      <div style={{ fontSize: 12, color: 'var(--muted)' }}>{preset.description}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8, padding: 12, backgroundColor: 'var(--bg-secondary)', borderRadius: 4 }}>
+                AI評価ページのコーチング吹き出しに表示されるアバター画像を選択できます
               </div>
             </div>
           </div>
