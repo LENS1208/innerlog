@@ -554,7 +554,7 @@ export default function ReportsMarket() {
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 16, marginBottom: 16 }}>
         <h3 style={{ margin: "0 0 16px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
-          方向（買い/売り）別の統計
+          方向（買い / 売り）別の統計
           <HelpIcon text="各通貨ペアの買い（ロング）と売り（ショート）の成績を比較します。どちらの方向が得意か、通貨ペアごとの傾向を把握できます。" />
         </h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
@@ -692,7 +692,7 @@ export default function ReportsMarket() {
                         {totalProfit >= 0 ? '+' : ''}{Math.round(totalProfit).toLocaleString()}円
                       </div>
                       <div style={{ fontSize: 10, color: "var(--muted)" }}>
-                        平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円 / PF: {item.pf.toFixed(2)}
+                        RRR: {item.pf.toFixed(2)} / 平均損益: {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString()}円
                       </div>
                     </div>
                   </div>
