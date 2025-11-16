@@ -5,6 +5,7 @@ import { showToast } from '../lib/toast';
 import type { AiProposalData } from '../types/ai-proposal.types';
 import { supabase } from '../lib/supabase';
 import StarRating from '../components/ai/StarRating';
+import { HelpIcon } from '../components/common/HelpIcon';
 
 type AiProposalListPageProps = {
   onSelectProposal: (id: string) => void;
@@ -244,12 +245,10 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           }}
         >
         <div>
-          <h3 style={{ margin: '0 0 12px 0', fontSize: 18, fontWeight: 600, color: 'var(--ink)' }}>
+          <h3 style={{ margin: '0 0 12px 0', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
             新しい予想を生成
+            <HelpIcon text="相場状況やトレードアイデアを入力してAIに分析を依頼できます。銘柄・分析足・予想期間を選択して生成してください。" />
           </h3>
-          <p style={{ margin: 0, fontSize: 14, color: 'var(--muted)', lineHeight: 1.6 }}>
-            相場状況やトレードアイデアを入力してAIに分析を依頼できます
-          </p>
         </div>
 
         <div style={{ display: 'grid', gap: 24 }}>
