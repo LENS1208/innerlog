@@ -507,16 +507,16 @@ export default function ReportsRisk() {
 
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>連続最大負け数</h4>
-            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
-              {streakData.maxLossStreak} <span style={{ fontSize: 13, color: "var(--loss)" }}>回</span>
+            <div className="kpi-value" style={{ color: "var(--loss)" }}>
+              {streakData.maxLossStreak} <span className="kpi-unit" style={{ color: "var(--loss)" }}>回</span>
             </div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>メンタル負荷指標</div>
           </div>
 
           <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
             <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>最大損失額</h4>
-            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--loss)" }}>
-              {Math.round(riskMetrics.maxLoss).toLocaleString()} <span style={{ fontSize: 13, color: "var(--loss)" }}>円</span>
+            <div className="kpi-value" style={{ color: "var(--loss)" }}>
+              {Math.round(riskMetrics.maxLoss).toLocaleString()} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
             </div>
             <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>1取引最悪損失</div>
           </div>
@@ -569,8 +569,8 @@ export default function ReportsRisk() {
             最大ドローダウン
             <HelpIcon text="資金が最も減った金額です。この数値が大きいほど、大きな含み損に耐える必要があります。" />
           </h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            最大DD：{Math.round(drawdownData.maxDD).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: "var(--loss)" }}>円</span>
+          <div className="kpi-value" style={{ color: "var(--loss)" }}>
+            最大DD：{Math.round(drawdownData.maxDD).toLocaleString("ja-JP")} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>ピーク→ボトムの最大下落</div>
         </div>
@@ -579,8 +579,8 @@ export default function ReportsRisk() {
             連敗（最大）
             <HelpIcon text="連続で負けた最大回数です。メンタル面の耐久力と資金管理の見直しに使います。" />
           </h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            連敗：{streakData.maxLossStreak} <span style={{ fontSize: 13, color: "var(--loss)" }}>回</span>
+          <div className="kpi-value" style={{ color: "var(--loss)" }}>
+            連敗：{streakData.maxLossStreak} <span className="kpi-unit" style={{ color: "var(--loss)" }}>回</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での負け数</div>
         </div>
@@ -589,8 +589,8 @@ export default function ReportsRisk() {
             連勝（最大）
             <HelpIcon text="連続で勝った最大回数です。調子が良い時期を知り、過信を防ぐ目安になります。" />
           </h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-            連勝：{streakData.maxWinStreak} <span style={{ fontSize: 13, color: "var(--gain)" }}>回</span>
+          <div className="kpi-value" style={{ color: "var(--gain)" }}>
+            連勝：{streakData.maxWinStreak} <span className="kpi-unit" style={{ color: "var(--gain)" }}>回</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での勝ち数</div>
         </div>
@@ -599,8 +599,8 @@ export default function ReportsRisk() {
             単取引の最大損失
             <HelpIcon text="1回の取引で出た最大の損失額です。最悪のケースを把握して損切りルールを見直せます。" />
           </h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            最大損失：{Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: "var(--loss)" }}>円</span>
+          <div className="kpi-value" style={{ color: "var(--loss)" }}>
+            最大損失：{Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最悪1件の損失</div>
         </div>
@@ -609,8 +609,8 @@ export default function ReportsRisk() {
             単取引の最大利益
             <HelpIcon text="1回の取引で出た最大の利益額です。ベストケースを知ることで期待値を調整できます。" />
           </h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-            最大利益：+{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")} <span style={{ fontSize: 13, color: "var(--gain)" }}>円</span>
+          <div className="kpi-value" style={{ color: "var(--gain)" }}>
+            最大利益：+{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")} <span className="kpi-unit" style={{ color: "var(--gain)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最高1件の利益</div>
         </div>
@@ -620,11 +620,11 @@ export default function ReportsRisk() {
             <HelpIcon text="勝ち取引と負け取引の平均額です。利益と損失のバランスを確認できます。" />
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-              勝ち：+{Math.round(riskMetrics.avgWin).toLocaleString()} <span style={{ fontSize: 13, color: "var(--gain)" }}>円</span>
+            <div className="kpi-value" style={{ color: "var(--gain)" }}>
+              勝ち：+{Math.round(riskMetrics.avgWin).toLocaleString()} <span className="kpi-unit" style={{ color: "var(--gain)" }}>円</span>
             </div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-              負け：{Math.round(riskMetrics.avgLoss).toLocaleString()} <span style={{ fontSize: 13, color: "var(--loss)" }}>円</span>
+            <div className="kpi-value" style={{ color: "var(--loss)" }}>
+              負け：{Math.round(riskMetrics.avgLoss).toLocaleString()} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
             </div>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>分布の歪み把握</div>
@@ -634,8 +634,8 @@ export default function ReportsRisk() {
             R-multiple 平均
             <HelpIcon text="リスク1単位あたりのリターンです。1.0以上なら損失より利益が大きいことを示します。" />
           </h3>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>
-            {riskMetrics.rMultipleAvg.toFixed(2)} R/件
+          <div className="kpi-value">
+            {riskMetrics.rMultipleAvg.toFixed(2)} <span className="kpi-unit">R/件</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>損益をRで正規化</div>
         </div>
@@ -644,8 +644,8 @@ export default function ReportsRisk() {
             取引回数
             <HelpIcon text="分析対象の取引回数です。数が多いほど統計的に信頼できる分析になります。" />
           </h3>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>
-            {filteredTrades.length} <span style={{ fontSize: 13, color: "var(--muted)" }}>回</span>
+          <div className="kpi-value">
+            {filteredTrades.length} <span className="kpi-unit">回</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>フィルター適用後</div>
         </div>
