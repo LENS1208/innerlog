@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 
 interface HelpIconProps {
   text: string;
@@ -34,8 +35,34 @@ export function HelpIcon({ text }: HelpIconProps) {
     }
   }, [isOpen]);
 
+  const tooltip = isOpen ? (
+    <div
+      style={{
+        position: 'fixed',
+        top: position.top,
+        left: position.left,
+        background: 'var(--surface)',
+        border: '1px solid var(--line)',
+        borderRadius: 8,
+        padding: 12,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        zIndex: 2147483647,
+        width: 320,
+        maxWidth: '90vw',
+        fontSize: 13,
+        lineHeight: 1.6,
+        color: 'var(--muted)',
+        whiteSpace: 'normal',
+        fontFamily: 'inherit',
+        wordBreak: 'normal',
+      }}
+    >
+      {text}
+    </div>
+  ) : null;
+
   return (
-    <div style={{ position: 'relative', display: 'inline-block', marginLeft: 6, zIndex: 10 }}>
+    <div style={{ position: 'relative', display: 'inline-block', marginLeft: 6 }}>
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
@@ -70,31 +97,7 @@ export function HelpIcon({ text }: HelpIconProps) {
       >
         ?
       </button>
-      {isOpen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: position.top,
-            left: position.left,
-            background: 'var(--surface)',
-            border: '1px solid var(--line)',
-            borderRadius: 8,
-            padding: 12,
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            zIndex: 99999,
-            width: 320,
-            maxWidth: '90vw',
-            fontSize: 13,
-            lineHeight: 1.6,
-            color: 'var(--muted)',
-            whiteSpace: 'normal',
-            fontFamily: 'inherit',
-            wordBreak: 'normal',
-          }}
-        >
-          {text}
-        </div>
-      )}
+      {tooltip && createPortal(tooltip, document.body)}
     </div>
   );
 }
