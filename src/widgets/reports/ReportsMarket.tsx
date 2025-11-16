@@ -803,7 +803,7 @@ export default function ReportsMarket() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             通貨ペア別（上位6）
-            <HelpIcon text="主要6銘柄の損益を比較したグラフです。どの銘柄を優先すべきか見えてきます。" />
+            <HelpIcon text="主要6銘柄の損益と勝率を比較したグラフです。どの銘柄を優先すべきか見えてきます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -811,18 +811,47 @@ export default function ReportsMarket() {
                 labels: symbolData.slice(0, 6).map((s) => s.symbol),
                 datasets: [
                   {
+                    type: 'line' as const,
+                    label: '勝率(%)',
+                    data: symbolData.slice(0, 6).map((s) => s.winRate),
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    yAxisID: 'y1',
+                    tension: 0.3,
+                    order: 1,
+                  },
+                  {
+                    type: 'bar' as const,
+                    label: '損益',
                     data: symbolData.slice(0, 6).map(getMetricValue),
                     backgroundColor: symbolData.slice(0, 6).map((s) =>
                       s.profit >= 0 ? '#0084C7' : '#EF4444'
                     ),
+                    yAxisID: 'y',
+                    order: 2,
                   },
                 ],
               }}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                  mode: 'index' as const,
+                  intersect: false,
+                },
                 plugins: {
-                  legend: { display: false },
+                  legend: {
+                    display: true,
+                    position: 'top' as const,
+                    labels: {
+                      boxWidth: 12,
+                      padding: 10,
+                      font: { size: 11 },
+                    },
+                  },
                   tooltip: {
                     callbacks: {
                       title: (context) => {
@@ -831,19 +860,52 @@ export default function ReportsMarket() {
                       label: (context) => {
                         const dataIndex = context.dataIndex;
                         const s = symbolData.slice(0, 6)[dataIndex];
-                        return [
-                          `損益: ${s.profit.toLocaleString()}円`,
-                          `勝率: ${s.winRate.toFixed(1)}%`,
-                          `取引回数: ${s.count}回`
-                        ];
+                        if (context.dataset.label === '勝率(%)') {
+                          return `勝率: ${s.winRate.toFixed(1)}%`;
+                        } else {
+                          return [
+                            `損益: ${s.profit.toLocaleString()}円`,
+                            `取引回数: ${s.count}回`
+                          ];
+                        }
                       }
                     }
                   }
                 },
                 scales: {
                   y: {
+                    type: 'linear' as const,
+                    display: true,
+                    position: 'left' as const,
                     beginAtZero: true,
-                    ticks: { callback: (value) => formatValue(value as number, "profit") },
+                    title: {
+                      display: true,
+                      text: '損益(円)',
+                      font: { size: 11 },
+                    },
+                    ticks: {
+                      callback: (value) => formatValue(value as number, "profit"),
+                      font: { size: 10 },
+                    },
+                  },
+                  y1: {
+                    type: 'linear' as const,
+                    display: true,
+                    position: 'right' as const,
+                    min: 0,
+                    max: 100,
+                    title: {
+                      display: true,
+                      text: '勝率(%)',
+                      font: { size: 11 },
+                    },
+                    ticks: {
+                      callback: (value) => `${value}%`,
+                      font: { size: 10 },
+                    },
+                    grid: {
+                      drawOnChartArea: false,
+                    },
                   },
                 },
               }}
