@@ -46,26 +46,12 @@ export default function AiEvaluationPage() {
   useEffect(() => {
     if (!isInitialized || !dataset) return;
 
-    const cached = getCoachingCache(dataset);
-    console.log('💾 キャッシュデータ:', cached);
-    console.log('💾 キャッシュのsheet:', cached?.sheet);
-    console.log('💾 キャッシュのsummary:', cached?.sheet?.summary);
-
-    if (cached && cached.sheet && cached.sheet.summary) {
-      setCoachingData(cached);
-      setError(null);
-    } else {
-      if (cached) {
-        console.warn('⚠️ キャッシュデータが不完全です。クリアします。');
-      }
-      setCoachingData(null);
-    }
-
     (async () => {
       try {
         const existingJob = await checkCoachingJob(dataset);
         if (existingJob) {
           if (existingJob.status === 'completed' && existingJob.result) {
+            console.log('📦 データベースから最新の結果を取得しました');
             setCoachingData(existingJob.result);
             setCoachingCache(dataset, existingJob.result);
             setGenerating(false);
@@ -77,9 +63,28 @@ export default function AiEvaluationPage() {
             setError(existingJob.error_message || '生成に失敗しました');
             setGenerating(false);
           }
+        } else {
+          const cached = getCoachingCache(dataset);
+          console.log('💾 データベースに結果なし、キャッシュをチェック:', cached);
+
+          if (cached && cached.sheet && cached.sheet.summary) {
+            console.log('💾 キャッシュから結果を表示');
+            setCoachingData(cached);
+            setError(null);
+          } else {
+            if (cached) {
+              console.warn('⚠️ キャッシュデータが不完全です。クリアします。');
+            }
+            setCoachingData(null);
+          }
         }
       } catch (err) {
         console.error('ジョブチェックエラー:', err);
+        const cached = getCoachingCache(dataset);
+        if (cached && cached.sheet && cached.sheet.summary) {
+          console.log('💾 エラー発生、キャッシュにフォールバック');
+          setCoachingData(cached);
+        }
       }
     })();
   }, [dataset, isInitialized]);
