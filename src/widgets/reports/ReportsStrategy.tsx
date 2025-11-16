@@ -590,7 +590,10 @@ export default function ReportsStrategy() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                  legend: { position: "bottom" },
+                  legend: {
+                    position: "bottom",
+                    reverse: true
+                  },
                   tooltip: {
                     callbacks: {
                       label: (context) => {
