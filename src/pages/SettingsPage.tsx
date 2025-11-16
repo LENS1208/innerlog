@@ -607,36 +607,6 @@ export default function SettingsPage() {
 
           <div style={{ padding: 16, display: 'grid', gap: 24 }}>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>CSVインポート設定</div>
-              <div style={{ display: 'grid', gap: 12 }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
-                    ファイル形式プリセット
-                  </label>
-                  <select
-                    value={settings.csv_format_preset}
-                    onChange={(e) => setSettings({ ...settings, csv_format_preset: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '8px 12px',
-                      border: '1px solid var(--line)',
-                      borderRadius: 4,
-                      fontSize: 14,
-                    }}
-                  >
-                    <option value="XM">XM</option>
-                    <option value="MT4">MT4</option>
-                    <option value="MT5">MT5</option>
-                    <option value="custom">カスタム</option>
-                  </select>
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--muted)', padding: 12, backgroundColor: 'var(--bg-secondary)', borderRadius: 4 }}>
-                  選択した形式に応じて、CSVのカラムが自動的にマッピングされます
-                </div>
-              </div>
-            </div>
-
-            <div>
               <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>インポート履歴</div>
               {importHistory.length === 0 ? (
                 <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
