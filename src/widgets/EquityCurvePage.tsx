@@ -49,7 +49,7 @@ const EquityCurvePage: React.FC = () => {
           // データベースから読み込む
           console.log('📊 Loading trades from database...');
           const { getAllTrades } = await import('../lib/db.service');
-          const data = await getAllTrades(contextDataset);
+          const data = await getAllTrades(null);
 
           const dbTrades: FilteredTrade[] = (data || []).map((t: any) => ({
             id: String(t.ticket || t.id),

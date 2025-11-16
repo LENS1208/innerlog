@@ -123,7 +123,8 @@ export async function getAllTrades(dataset?: string | null): Promise<DbTrade[]> 
 export async function getTradesCount(): Promise<number> {
   const { count, error } = await supabase
     .from('trades')
-    .select('*', { count: 'exact', head: true });
+    .select('*', { count: 'exact', head: true })
+    .is('dataset', null);
 
   if (error) throw error;
   return count || 0;
