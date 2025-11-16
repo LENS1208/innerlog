@@ -91,7 +91,7 @@ function SegmentDetailsTabs({
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
                 <td style={{ padding: 10, fontSize: 13 }}>{label}</td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.count}回</td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.count}<span style={{ fontSize: 11, color: "var(--muted)" }}>回</span></td>
                 <td
                   style={{
                     padding: 10,
@@ -101,9 +101,9 @@ function SegmentDetailsTabs({
                     color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)",
                   }}
                 >
-                  {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")}円
+                  {item.avgProfit >= 0 ? '+' : ''}{Math.round(item.avgProfit).toLocaleString("ja-JP")}<span style={{ fontSize: 11, color: item.avgProfit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
                 </td>
-                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.winRate.toFixed(0)}%</td>
+                <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.winRate.toFixed(0)}<span style={{ fontSize: 11, color: "var(--muted)" }}>%</span></td>
                 <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.pf.toFixed(2)}</td>
                 <td
                   style={{
@@ -114,7 +114,7 @@ function SegmentDetailsTabs({
                     color: item.profit >= 0 ? "var(--gain)" : "var(--loss)",
                   }}
                 >
-                  {item.profit >= 0 ? '+' : ''}{Math.round(item.profit).toLocaleString("ja-JP")}円
+                  {item.profit >= 0 ? '+' : ''}{Math.round(item.profit).toLocaleString("ja-JP")}<span style={{ fontSize: 13, color: item.profit >= 0 ? "var(--gain)" : "var(--loss)" }}>円</span>
                 </td>
               </tr>
             );
