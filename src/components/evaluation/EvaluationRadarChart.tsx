@@ -11,11 +11,11 @@ type EvaluationRadarChartProps = {
 };
 
 export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChartProps) {
-  const W = 400;
-  const H = 280;
+  const W = 200;
+  const H = 140;
   const cx = W / 2;
   const cy = H / 2;
-  const R = 100;
+  const R = 50;
   const axes = parts.length;
 
   const webLevels = useMemo(() => {
@@ -47,8 +47,8 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
   const labelPositions = useMemo(() => {
     return parts.map((item, i) => {
       const ang = -Math.PI / 2 + (i * 2 * Math.PI) / axes;
-      const x = cx + (R + 30) * Math.cos(ang);
-      const y = cy + (R + 30) * Math.sin(ang);
+      const x = cx + (R + 15) * Math.cos(ang);
+      const y = cy + (R + 15) * Math.sin(ang);
       return { label: item.label, value: item.value, x, y };
     });
   }, [axes, parts]);
@@ -66,7 +66,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
   }, [parts, axes]);
 
   return (
-    <div style={{ padding: '4px 0', position: 'relative' }}>
+    <div style={{ padding: '2px 0', position: 'relative' }}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         style={{ width: '100%', height: 'auto' }}
@@ -78,7 +78,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
             points={web.points}
             fill="none"
             stroke={idx === 4 ? "#9ca3af" : "#e5e7eb"}
-            strokeWidth={idx === 4 ? "1.5" : "1"}
+            strokeWidth={idx === 4 ? "0.75" : "0.5"}
           />
         ))}
         {axisLines.map((line, idx) => (
@@ -89,7 +89,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
             x2={line.x2}
             y2={line.y2}
             stroke="#d1d5db"
-            strokeWidth="1.5"
+            strokeWidth="0.75"
           />
         ))}
         {labelPositions.map((pos, idx) => (
@@ -97,7 +97,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
             key={`label-${idx}`}
             x={pos.x}
             y={pos.y}
-            fontSize="14"
+            fontSize="7"
             fontWeight="600"
             textAnchor="middle"
             fill="var(--ink)"
@@ -110,7 +110,7 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
           fill="var(--accent)"
           fillOpacity="0.3"
           stroke="var(--accent)"
-          strokeWidth="2.5"
+          strokeWidth="1.25"
         />
         {parts.map((item, idx) => {
           const v = Math.max(0, Math.min(100, item.value)) / 100;
@@ -122,18 +122,18 @@ export function EvaluationRadarChart({ parts, centerScore }: EvaluationRadarChar
               key={`point-${idx}`}
               cx={x}
               cy={y}
-              r="4"
+              r="2"
               fill="var(--accent)"
               stroke="#fff"
-              strokeWidth="2"
+              strokeWidth="1"
             />
           );
         })}
         {centerScore !== undefined && (
           <text
             x={cx}
-            y={cy + 5}
-            fontSize="29"
+            y={cy + 2.5}
+            fontSize="14.5"
             fontWeight="900"
             textAnchor="middle"
             fill="var(--ink)"
