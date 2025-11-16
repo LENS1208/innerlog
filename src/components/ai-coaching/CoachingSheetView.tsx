@@ -8,6 +8,7 @@ import { DiaryGuideTable } from './DiaryGuideTable';
 import { KPITable } from './KPITable';
 import { FourWeekPlanTable } from './FourWeekPlanTable';
 import { CoachBubble } from './CoachBubble';
+import { HelpIcon } from '../common/HelpIcon';
 
 interface CoachingSheetViewProps {
   sheet: CoachingSheet;
@@ -52,13 +53,13 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
       `}</style>
       <div className="coaching-top-grid">
         {radarComponent && (
-          <Section title="総合評価">
+          <Section title="総合評価" helpText="AIがあなたの取引パフォーマンスを多角的に評価した結果です。">
             {radarComponent}
           </Section>
         )}
 
         {sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0 && (
-          <Section title="現状サマリー">
+          <Section title="現状サマリー" helpText="あなたの取引スタイルと現在の状況をまとめた概要です。">
             <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
               {sheet.summary.map((s, i) => (
                 <li key={i} style={{ fontSize: '15px', color: 'var(--ink)', marginBottom: '6px' }}>{s}</li>
@@ -69,7 +70,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
       </div>
 
       {sheet.strengthsWeaknesses && Array.isArray(sheet.strengthsWeaknesses) && sheet.strengthsWeaknesses.length > 0 && (
-        <Section title="強みと課題">
+        <Section title="強みと課題" helpText="あなたの取引における強みと改善すべき課題を整理しています。">
           {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
           <StrengthsWeaknessesTable
             rows={sheet.strengthsWeaknesses}
@@ -79,7 +80,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
       )}
 
       {sheet.examples && Array.isArray(sheet.examples) && sheet.examples.length > 0 && (
-        <Section title="あなたの注目トレード">
+        <Section title="あなたの注目トレード" helpText="学びに繋がる代表的なトレード事例を抽出しました。">
           <div className="trade-examples-grid">
             {sheet.examples.map((ex, i) => (
               <TradeExampleCard key={i} ex={ex} />
@@ -89,40 +90,40 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
       )}
 
       {sheet.rules && Array.isArray(sheet.rules) && sheet.rules.length > 0 && (
-        <Section title="改善のための5ルール" comment={sheet.rulesComment}>
+        <Section title="改善のための5ルール" helpText="今すぐ実践できる具体的なトレードルールを提案します。" comment={sheet.rulesComment}>
           <RulesTable rules={sheet.rules} />
         </Section>
       )}
 
       {sheet.playbook && typeof sheet.playbook === 'object' && (
-        <Section title="プレイブック（戦略型）" comment={sheet.playbookComment}>
+        <Section title="プレイブック（戦略型）" helpText="セットアップごとの勝率や統計データから最適な戦略を導きます。" comment={sheet.playbookComment}>
           <PlaybookView playbook={sheet.playbook} />
         </Section>
       )}
 
       {sheet.diaryGuide && sheet.diaryGuide.rows && Array.isArray(sheet.diaryGuide.rows) && sheet.diaryGuide.rows.length > 0 && (
-        <Section title="オンライン日記の活用法">
+        <Section title="オンライン日記の活用法" helpText="トレード日記を効果的に活用するための具体的なアドバイスです。">
           {sheet.diaryGuide.comment && <CoachBubble message={sheet.diaryGuide.comment} />}
           <DiaryGuideTable rows={sheet.diaryGuide.rows} />
         </Section>
       )}
 
       {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
-        <Section title="KPI（数値で見る改善指標）">
+        <Section title="KPI（数値で見る改善指標）" helpText="目標達成のために追跡すべき重要な数値指標です。">
           {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
           <KPITable kpis={sheet.kpis} />
         </Section>
       )}
 
       {sheet.fourWeekPlan && Array.isArray(sheet.fourWeekPlan) && sheet.fourWeekPlan.length > 0 && (
-        <Section title="4週間リセットプラン">
+        <Section title="4週間リセットプラン" helpText="段階的にスキルアップするための4週間の実践プランです。">
           {sheet.fourWeekPlanComment && <CoachBubble message={sheet.fourWeekPlanComment} />}
           <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
         </Section>
       )}
 
       {sheet.coachingMessage && Array.isArray(sheet.coachingMessage) && sheet.coachingMessage.length > 0 && (
-        <Section title="コーチングメッセージ">
+        <Section title="コーチングメッセージ" helpText="AIコーチからのパーソナルメッセージです。">
           {sheet.coachingMessage.map((text, i) => (
             <p key={i} style={{ margin: '0 0 12px 0', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink)' }}>
               {text}
@@ -151,11 +152,12 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
 
 interface SectionProps {
   title: string;
+  helpText?: string;
   comment?: string;
   children: React.ReactNode;
 }
 
-function Section({ title, comment, children }: SectionProps) {
+function Section({ title, helpText, comment, children }: SectionProps) {
   return (
     <section
       style={{
@@ -171,12 +173,16 @@ function Section({ title, comment, children }: SectionProps) {
       <h3
         style={{
           margin: '0 0 16px 0',
-          fontSize: '18px',
-          fontWeight: 700,
-          color: 'var(--ink)',
+          fontSize: 15,
+          fontWeight: 'bold',
+          color: 'var(--muted)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
         }}
       >
         {title}
+        {helpText && <HelpIcon text={helpText} />}
       </h3>
       {comment && (
         <p
