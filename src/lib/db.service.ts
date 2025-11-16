@@ -80,7 +80,7 @@ export type DbNoteLink = {
   created_at: string;
 };
 
-export async function getAllTrades(dataset?: string): Promise<DbTrade[]> {
+export async function getAllTrades(dataset?: string | null): Promise<DbTrade[]> {
   const PAGE_SIZE = 1000;
   let allTrades: DbTrade[] = [];
   let currentPage = 0;
@@ -95,8 +95,12 @@ export async function getAllTrades(dataset?: string): Promise<DbTrade[]> {
       .select('*')
       .order('close_time', { ascending: false });
 
-    if (dataset) {
-      query = query.eq('dataset', dataset);
+    if (dataset !== undefined) {
+      if (dataset === null) {
+        query = query.is('dataset', null);
+      } else {
+        query = query.eq('dataset', dataset);
+      }
     }
 
     const { data, error } = await query.range(start, end);
@@ -112,7 +116,7 @@ export async function getAllTrades(dataset?: string): Promise<DbTrade[]> {
     }
   }
 
-  console.log(`✅ Loaded from database: ${allTrades.length} trades${dataset ? ` (dataset: ${dataset})` : ''}`);
+  console.log(`✅ Loaded from database: ${allTrades.length} trades${dataset !== undefined ? ` (dataset: ${dataset})` : ''}`);
   return allTrades;
 }
 

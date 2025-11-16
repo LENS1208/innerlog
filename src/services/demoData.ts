@@ -37,10 +37,10 @@ function generateMockTrades(): TradeRow[] {
   return mockTrades;
 }
 
-export async function getDataRows(useDatabase: boolean, dataset: string = 'A'): Promise<TradeRow[]> {
+export async function getDataRows(useDatabase: boolean, dataset?: string | null): Promise<TradeRow[]> {
   try {
     if (useDatabase) {
-      const dbTrades = await getAllTrades(dataset);
+      const dbTrades = await getAllTrades(dataset !== undefined ? dataset : null);
       const trades = dbTrades.map(dbToTrade);
       return trades.map(t => ({
         ticket: t.id,
@@ -65,7 +65,8 @@ export async function getDataRows(useDatabase: boolean, dataset: string = 'A'): 
         dayOfWeek: new Date(t.datetime).getUTCDay(),
       }));
     } else {
-      const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: 'no-store' });
+      const datasetName = dataset || 'A';
+      const res = await fetch(`/demo/${datasetName}.csv?t=${Date.now()}`, { cache: 'no-store' });
       if (res.ok) {
         const text = await res.text();
         const trades = parseCsvText(text);
@@ -88,7 +89,7 @@ export async function getDataRows(useDatabase: boolean, dataset: string = 'A'): 
   return generateMockTrades();
 }
 
-export async function getDataMetrics(useDatabase: boolean, dataset: string = 'A'): Promise<TradeMetrics> {
+export async function getDataMetrics(useDatabase: boolean, dataset?: string | null): Promise<TradeMetrics> {
   const rows = await getDataRows(useDatabase, dataset);
   return computeMetrics(rows);
 }
