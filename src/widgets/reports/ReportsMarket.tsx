@@ -853,7 +853,7 @@ export default function ReportsMarket() {
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
           <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
             通貨ペア別 取引回数
-            <HelpIcon text="通貨ペアごとの取引回数を比較したグラフです。どの銘柄を多く取引しているか把握できます。" />
+            <HelpIcon text="通貨ペアごとの取引回数と勝率を比較したグラフです。勝ちトレード（青）、負けトレード（赤）の積み上げと勝率の推移を確認できます。" />
           </h3>
           <div style={{ height: 180 }}>
             <Bar
@@ -861,16 +861,52 @@ export default function ReportsMarket() {
                 labels: symbolData.slice(0, 6).map((s) => s.symbol),
                 datasets: [
                   {
-                    data: symbolData.slice(0, 6).map((s) => s.count),
-                    backgroundColor: getAccentColor(),
+                    type: 'bar' as const,
+                    label: '勝ちトレード',
+                    data: symbolData.slice(0, 6).map((s) => s.wins),
+                    backgroundColor: '#0084C7',
+                    stack: 'trades',
+                    yAxisID: 'y',
+                  },
+                  {
+                    type: 'bar' as const,
+                    label: '負けトレード',
+                    data: symbolData.slice(0, 6).map((s) => s.losses),
+                    backgroundColor: '#EF4444',
+                    stack: 'trades',
+                    yAxisID: 'y',
+                  },
+                  {
+                    type: 'line' as const,
+                    label: '勝率(%)',
+                    data: symbolData.slice(0, 6).map((s) => s.winRate),
+                    borderColor: '#10B981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    yAxisID: 'y1',
+                    tension: 0.3,
                   },
                 ],
               }}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: {
+                  mode: 'index' as const,
+                  intersect: false,
+                },
                 plugins: {
-                  legend: { display: false },
+                  legend: {
+                    display: true,
+                    position: 'top' as const,
+                    labels: {
+                      boxWidth: 12,
+                      padding: 10,
+                      font: { size: 11 },
+                    },
+                  },
                   tooltip: {
                     callbacks: {
                       title: (context) => {
@@ -878,18 +914,58 @@ export default function ReportsMarket() {
                       },
                       label: (context) => {
                         const s = symbolData.slice(0, 6)[context.dataIndex];
-                        return [
-                          `取引回数: ${s.count}回`,
-                          `勝率: ${s.winRate.toFixed(1)}%`
-                        ];
+                        if (context.dataset.label === '勝率(%)') {
+                          return `勝率: ${s.winRate.toFixed(1)}%`;
+                        } else if (context.dataset.label === '勝ちトレード') {
+                          return `勝ち: ${s.wins}回`;
+                        } else {
+                          return `負け: ${s.losses}回`;
+                        }
+                      },
+                      afterLabel: (context) => {
+                        if (context.datasetIndex === 0) {
+                          const s = symbolData.slice(0, 6)[context.dataIndex];
+                          return `合計: ${s.count}回`;
+                        }
+                        return '';
                       }
                     }
                   }
                 },
                 scales: {
                   y: {
+                    type: 'linear' as const,
+                    display: true,
+                    position: 'left' as const,
                     beginAtZero: true,
-                    ticks: { callback: (value) => `${value}回` },
+                    title: {
+                      display: true,
+                      text: '取引回数',
+                      font: { size: 11 },
+                    },
+                    ticks: {
+                      callback: (value) => `${value}回`,
+                      font: { size: 10 },
+                    },
+                  },
+                  y1: {
+                    type: 'linear' as const,
+                    display: true,
+                    position: 'right' as const,
+                    min: 0,
+                    max: 100,
+                    title: {
+                      display: true,
+                      text: '勝率(%)',
+                      font: { size: 11 },
+                    },
+                    ticks: {
+                      callback: (value) => `${value}%`,
+                      font: { size: 10 },
+                    },
+                    grid: {
+                      drawOnChartArea: false,
+                    },
                   },
                 },
               }}
