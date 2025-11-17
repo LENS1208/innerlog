@@ -24,6 +24,8 @@ import WeekdayBreakdownPanel from "../components/WeekdayBreakdownPanel";
 import TimeOfDayBreakdownPanel from "../components/TimeOfDayBreakdownPanel";
 import CurrencyPairBreakdownPanel from "../components/CurrencyPairBreakdownPanel";
 import SetupBreakdownPanel from "../components/SetupBreakdownPanel";
+import MonthlyProfitBreakdownPanel from "../components/MonthlyProfitBreakdownPanel";
+import DailyProfitBreakdownPanel from "../components/DailyProfitBreakdownPanel";
 import "../lib/dashboard.css";
 const EquityCurvePage: React.FC = () => {
   console.log("🔄 EquityCurvePage render");
@@ -36,6 +38,8 @@ const EquityCurvePage: React.FC = () => {
   const [timeOfDayPanel, setTimeOfDayPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
   const [currencyPairPanel, setCurrencyPairPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
   const [setupPanel, setSetupPanel] = useState<{ rangeLabel: string; trades: any[] } | null>(null);
+  const [monthlyPanel, setMonthlyPanel] = useState<{ monthLabel: string; trades: any[] } | null>(null);
+  const [dailyPanel, setDailyPanel] = useState<{ dateLabel: string; trades: any[] } | null>(null);
 
   useEffect(() => {
     const loadTrades = async () => {
@@ -132,16 +136,26 @@ const EquityCurvePage: React.FC = () => {
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   月別損益
-                  <HelpIcon text="月ごとの損益合計を棒グラフで表示します。長期トレンドと月次パフォーマンスを確認できます。" />
+                  <HelpIcon text="月ごとの損益合計を棒グラフで表示します。クリックで詳細分析を開きます。" />
                 </h3>
-                <MonthlyProfitChart trades={filteredTrades as any} />
+                <MonthlyProfitChart
+                  trades={filteredTrades as any}
+                  onMonthClick={(monthLabel, monthTrades) => {
+                    setMonthlyPanel({ monthLabel, trades: monthTrades });
+                  }}
+                />
               </div>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   日次損益
-                  <HelpIcon text="日ごとの損益合計を棒グラフで表示します。日々の成績を一目で確認できます。" />
+                  <HelpIcon text="日ごとの損益合計を棒グラフで表示します。クリックで詳細分析を開きます。" />
                 </h3>
-                <DailyProfitChart trades={filteredTrades as any} />
+                <DailyProfitChart
+                  trades={filteredTrades as any}
+                  onDayClick={(dateLabel, dayTrades) => {
+                    setDailyPanel({ dateLabel, trades: dayTrades });
+                  }}
+                />
               </div>
             </section>
 
@@ -253,6 +267,22 @@ const EquityCurvePage: React.FC = () => {
           trades={setupPanel.trades}
           setupLabel={setupPanel.rangeLabel}
           onClose={() => setSetupPanel(null)}
+        />
+      )}
+
+      {monthlyPanel && (
+        <MonthlyProfitBreakdownPanel
+          trades={monthlyPanel.trades}
+          monthLabel={monthlyPanel.monthLabel}
+          onClose={() => setMonthlyPanel(null)}
+        />
+      )}
+
+      {dailyPanel && (
+        <DailyProfitBreakdownPanel
+          trades={dailyPanel.trades}
+          dateLabel={dailyPanel.dateLabel}
+          onClose={() => setDailyPanel(null)}
         />
       )}
     </div>

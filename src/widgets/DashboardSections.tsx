@@ -213,10 +213,11 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
   )
 }
 
-export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
+export function MonthlyProfitChart({ trades, onMonthClick }: { trades: TradeWithProfit[]; onMonthClick?: (monthLabel: string, monthTrades: TradeWithProfit[]) => void }) {
   const { theme } = useTheme()
-  const { labels, profits, tradesCounts, winRates } = useMemo(() => {
+  const { labels, profits, tradesCounts, winRates, monthlyTradesMap } = useMemo(() => {
     const monthlyMap = new Map<string, { profit: number; count: number; wins: number }>()
+    const monthlyTradesMap = new Map<string, TradeWithProfit[]>()
 
     trades.forEach(t => {
       const date = parseDateTime(t.datetime || t.time)
@@ -231,6 +232,10 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
         count: current.count + 1,
         wins: current.wins + (getProfit(t) > 0 ? 1 : 0)
       })
+
+      const monthTrades = monthlyTradesMap.get(monthKey) || []
+      monthTrades.push(t)
+      monthlyTradesMap.set(monthKey, monthTrades)
     })
 
     const sorted = Array.from(monthlyMap.entries()).sort((a, b) => a[0].localeCompare(b[0]))
@@ -239,7 +244,7 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
     const tradesCounts = sorted.map(([, data]) => data.count)
     const winRates = sorted.map(([, data]) => data.count > 0 ? (data.wins / data.count) * 100 : 0)
 
-    return { labels, profits, tradesCounts, winRates }
+    return { labels, profits, tradesCounts, winRates, monthlyTradesMap }
   }, [trades])
 
   const data = {
@@ -256,6 +261,14 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    onClick: onMonthClick ? (event: any, elements: any) => {
+      if (elements.length > 0) {
+        const index = elements[0].index
+        const monthKey = labels[index]
+        const monthTrades = monthlyTradesMap.get(monthKey) || []
+        onMonthClick(monthKey, monthTrades)
+      }
+    } : undefined,
     scales: {
       x: {
         ticks: { maxRotation: 45, minRotation: 45 }
@@ -299,23 +312,28 @@ export function MonthlyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
   )
 }
 
-export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
+export function DailyProfitChart({ trades, onDayClick }: { trades: TradeWithProfit[]; onDayClick?: (dateLabel: string, dayTrades: TradeWithProfit[]) => void }) {
   const { theme } = useTheme()
-  const { labels, profits } = useMemo(() => {
+  const { labels, profits, dailyTradesMap } = useMemo(() => {
     const dailyMap = new Map<string, number>()
+    const dailyTradesMap = new Map<string, TradeWithProfit[]>()
 
     trades.forEach(t => {
       const date = parseDateTime(t.datetime || t.time)
       if (isNaN(date.getTime())) return
       const dateStr = date.toISOString().split('T')[0]
       dailyMap.set(dateStr, (dailyMap.get(dateStr) || 0) + getProfit(t))
+
+      const dayTrades = dailyTradesMap.get(dateStr) || []
+      dayTrades.push(t)
+      dailyTradesMap.set(dateStr, dayTrades)
     })
 
     const sorted = Array.from(dailyMap.entries()).sort((a, b) => a[0].localeCompare(b[0]))
     const labels = sorted.map(([date]) => new Date(date).getTime())
     const profits = sorted.map(([, profit]) => profit)
 
-    return { labels, profits }
+    return { labels, profits, dailyTradesMap }
   }, [trades])
 
   const data = {
@@ -332,6 +350,17 @@ export function DailyProfitChart({ trades }: { trades: TradeWithProfit[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    onClick: onDayClick ? (event: any, elements: any) => {
+      if (elements.length > 0) {
+        const index = elements[0].index
+        const timestamp = labels[index]
+        const date = new Date(timestamp)
+        const dateStr = date.toISOString().split('T')[0]
+        const dayTrades = dailyTradesMap.get(dateStr) || []
+        const dateLabel = date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+        onDayClick(dateLabel, dayTrades)
+      }
+    } : undefined,
     scales: {
       x: {
         type: 'time' as const,
