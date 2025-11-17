@@ -13,22 +13,24 @@ import Card from "../../components/common/Card";
 
 type MetricType = "profit" | "winRate" | "pf" | "avgProfit";
 
-type MarketSegmentTab = "資産クラス" | "価格帯" | "相場状態";
+type MarketSegmentTab = "資産クラス" | "価格帯" | "相場状態" | "スワップ損益";
 
 function MarketSegmentTabs({
   assetTypeData,
   symbolData,
   pipsRangeData,
-  marketConditionData
+  marketConditionData,
+  swapData
 }: {
   assetTypeData: any;
   symbolData: any[];
   pipsRangeData: any[];
   marketConditionData: any[];
+  swapData: any[];
 }) {
   const [activeTab, setActiveTab] = React.useState<MarketSegmentTab>("資産クラス");
 
-  const tabs: MarketSegmentTab[] = ["資産クラス", "価格帯", "相場状態"];
+  const tabs: MarketSegmentTab[] = ["資産クラス", "価格帯", "相場状態", "スワップ損益"];
 
   const renderTable = () => {
     let data: any[] = [];
@@ -76,7 +78,20 @@ function MarketSegmentTabs({
         }));
         segmentLabel = "相場状態（β）";
         break;
+      case "スワップ損益":
+        data = swapData.map(s => ({
+          label: s.symbol,
+          count: s.count,
+          profit: s.totalSwap,
+          winRate: s.swapPositiveRate,
+          pf: '-',
+          avgProfit: s.avgSwap
+        }));
+        segmentLabel = "通貨ペア";
+        break;
     }
+
+    const isSwapTab = activeTab === "スワップ損益";
 
     return (
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -86,10 +101,16 @@ function MarketSegmentTabs({
               {segmentLabel}
             </th>
             <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引回数</th>
-            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>平均損益</th>
-            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>勝率</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
+              {isSwapTab ? "平均スワップ" : "平均損益"}
+            </th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
+              {isSwapTab ? "スワップ＋比率" : "勝率"}
+            </th>
             <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>PF</th>
-            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>合計損益</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
+              {isSwapTab ? "累計スワップ" : "合計損益"}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -335,6 +356,27 @@ export default function ReportsMarket() {
 
   const marketConditionData = useMemo(() => {
     return analyzeMarketConditions(filteredTrades);
+  }, [filteredTrades]);
+
+  const swapData = useMemo(() => {
+    const map = new Map<string, { totalSwap: number; count: number; positiveCount: number }>();
+    filteredTrades.forEach((t) => {
+      const symbol = getTradePair(t);
+      const swap = t.swap || 0;
+      const current = map.get(symbol) || { totalSwap: 0, count: 0, positiveCount: 0 };
+      map.set(symbol, {
+        totalSwap: current.totalSwap + swap,
+        count: current.count + 1,
+        positiveCount: current.positiveCount + (swap > 0 ? 1 : 0),
+      });
+    });
+    return Array.from(map.entries())
+      .map(([symbol, data]) => {
+        const avgSwap = data.count > 0 ? data.totalSwap / data.count : 0;
+        const swapPositiveRate = data.count > 0 ? (data.positiveCount / data.count) * 100 : 0;
+        return { symbol, ...data, avgSwap, swapPositiveRate };
+      })
+      .sort((a, b) => b.totalSwap - a.totalSwap);
   }, [filteredTrades]);
 
   const topSymbol = symbolData[0] || { symbol: "-", profit: 0, winRate: 0, count: 0 };
@@ -1282,6 +1324,7 @@ export default function ReportsMarket() {
           symbolData={symbolData}
           pipsRangeData={pipsRangeData}
           marketConditionData={marketConditionData}
+          swapData={swapData}
         />
       </div>
     </div>
