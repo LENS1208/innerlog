@@ -95,7 +95,7 @@ export default function LoginPage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#f8fafc',
+        background: 'var(--bg)',
         padding: 20,
       }}
     >
@@ -103,11 +103,11 @@ export default function LoginPage() {
         style={{
           width: '100%',
           maxWidth: 440,
-          background: '#fff',
+          background: 'var(--surface)',
           borderRadius: 16,
           padding: '48px 40px',
           boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-          border: '1px solid #e2e8f0',
+          border: '1px solid var(--line)',
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -120,20 +120,20 @@ export default function LoginPage() {
             style={{
               fontSize: 32,
               fontWeight: 700,
-              color: '#1a202c',
+              color: 'var(--ink)',
               marginBottom: 8,
             }}
           >
             ログイン
           </h1>
-          <p style={{ fontSize: 15, color: '#718096' }}>
+          <p style={{ fontSize: 15, color: 'var(--muted)' }}>
             新規ユーザーですか？{' '}
             <button
               onClick={() => (window.location.hash = '#/signup')}
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#0084c7',
+                color: 'var(--accent)',
                 fontWeight: 600,
                 cursor: 'pointer',
                 textDecoration: 'underline',
@@ -152,9 +152,9 @@ export default function LoginPage() {
             padding: '14px',
             fontSize: 15,
             fontWeight: 600,
-            color: '#1a202c',
-            background: '#fff',
-            border: '2px solid #e2e8f0',
+            color: 'var(--button-secondary-text)',
+            background: 'var(--button-secondary-bg)',
+            border: '2px solid var(--button-secondary-border)',
             borderRadius: 12,
             cursor: loading ? 'not-allowed' : 'pointer',
             transition: 'all 0.2s',
@@ -165,10 +165,10 @@ export default function LoginPage() {
             gap: 12,
           }}
           onMouseEnter={(e) => {
-            if (!loading) e.currentTarget.style.background = '#f8fafc';
+            if (!loading) e.currentTarget.style.background = 'var(--button-secondary-hover)';
           }}
           onMouseLeave={(e) => {
-            if (!loading) e.currentTarget.style.background = '#fff';
+            if (!loading) e.currentTarget.style.background = 'var(--button-secondary-bg)';
           }}
         >
           <svg width="18" height="18" viewBox="0 0 18 18">
@@ -200,9 +200,9 @@ export default function LoginPage() {
             marginBottom: 24,
           }}
         >
-          <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-          <span style={{ fontSize: 14, color: '#a0aec0' }}>または</span>
-          <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+          <div style={{ flex: 1, height: 1, background: 'var(--line)' }} />
+          <span style={{ fontSize: 14, color: 'var(--muted)' }}>または</span>
+          <div style={{ flex: 1, height: 1, background: 'var(--line)' }} />
         </div>
 
         <form onSubmit={handleLogin}>
@@ -212,7 +212,7 @@ export default function LoginPage() {
                 display: 'block',
                 fontSize: 14,
                 fontWeight: 600,
-                color: '#4a5568',
+                color: 'var(--ink)',
                 marginBottom: 8,
               }}
             >
@@ -228,16 +228,18 @@ export default function LoginPage() {
                 width: '100%',
                 padding: '14px 16px',
                 fontSize: 16,
-                border: '2px solid #e2e8f0',
+                border: '2px solid var(--input-border)',
                 borderRadius: 12,
+                background: 'var(--input-bg)',
+                color: 'var(--input-text)',
                 outline: 'none',
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#0084c7';
+                e.target.style.borderColor = 'var(--input-border-focus)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e2e8f0';
+                e.target.style.borderColor = 'var(--input-border)';
               }}
             />
           </div>
@@ -248,7 +250,7 @@ export default function LoginPage() {
                 display: 'block',
                 fontSize: 14,
                 fontWeight: 600,
-                color: '#4a5568',
+                color: 'var(--ink)',
                 marginBottom: 8,
               }}
             >
@@ -266,16 +268,18 @@ export default function LoginPage() {
                 width: '100%',
                 padding: '14px 16px',
                 fontSize: 16,
-                border: '2px solid #e2e8f0',
+                border: '2px solid var(--input-border)',
                 borderRadius: 12,
+                background: 'var(--input-bg)',
+                color: 'var(--input-text)',
                 outline: 'none',
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#0084c7';
+                e.target.style.borderColor = 'var(--input-border-focus)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e2e8f0';
+                e.target.style.borderColor = 'var(--input-border)';
               }}
             />
           </div>
@@ -295,7 +299,7 @@ export default function LoginPage() {
                 gap: 8,
                 cursor: 'pointer',
                 fontSize: 14,
-                color: '#4a5568',
+                color: 'var(--ink)',
               }}
             >
               <input
@@ -306,7 +310,7 @@ export default function LoginPage() {
                   width: 18,
                   height: 18,
                   cursor: 'pointer',
-                  accentColor: '#0084c7',
+                  accentColor: 'var(--accent)',
                 }}
               />
               ログイン状態を保持
@@ -317,7 +321,7 @@ export default function LoginPage() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#0084c7',
+                color: 'var(--accent)',
                 fontSize: 14,
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -352,8 +356,8 @@ export default function LoginPage() {
               padding: '16px',
               fontSize: 16,
               fontWeight: 700,
-              color: '#fff',
-              background: loading ? '#a0aec0' : '#0084c7',
+              color: loading ? 'var(--button-disabled-text)' : 'var(--button-primary-text)',
+              background: loading ? 'var(--button-disabled-bg)' : 'var(--button-primary-bg)',
               border: 'none',
               borderRadius: 12,
               cursor: loading ? 'not-allowed' : 'pointer',
@@ -361,18 +365,18 @@ export default function LoginPage() {
               marginBottom: 16,
             }}
             onMouseEnter={(e) => {
-              if (!loading) e.currentTarget.style.background = '#006ba3';
+              if (!loading) e.currentTarget.style.background = 'var(--button-primary-hover)';
             }}
             onMouseLeave={(e) => {
-              if (!loading) e.currentTarget.style.background = '#0084c7';
+              if (!loading) e.currentTarget.style.background = 'var(--button-primary-bg)';
             }}
           >
             {loading ? '処理中...' : 'ログイン'}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: 24, padding: '16px', background: '#f8fafc', borderRadius: 8 }}>
-          <p style={{ fontSize: 13, color: '#4a5568', marginBottom: 12, fontWeight: 600 }}>
+        <div style={{ textAlign: 'center', marginTop: 24, padding: '16px', background: 'var(--bg-secondary)', borderRadius: 8 }}>
+          <p style={{ fontSize: 13, color: 'var(--ink)', marginBottom: 12, fontWeight: 600 }}>
             テストアカウント
           </p>
           <button
@@ -400,7 +404,7 @@ export default function LoginPage() {
           >
             kan.yamaji@gmail.com / test2025
           </button>
-          <p style={{ fontSize: 12, color: '#718096', marginTop: 12, lineHeight: '1.6' }}>
+          <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 12, lineHeight: '1.6' }}>
             クリックするとテストアカウント情報が自動入力されます
           </p>
         </div>
