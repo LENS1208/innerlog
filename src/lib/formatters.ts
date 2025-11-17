@@ -29,6 +29,12 @@ export const fmt = {
     const cls  = n >= 0 ? "pnl-pos" : "pnl-neg";
     return { text: `${sign}${Math.abs(n).toFixed(1)}`, cls };
   },
+  swap_signed_colored: (n?: number) => {
+    if (n == null || n === 0) return { text: "—", cls: "" };
+    const sign = n >= 0 ? "+" : "−";
+    const cls  = n >= 0 ? "pnl-pos" : "pnl-neg";
+    return { text: `${sign}${Math.abs(n).toLocaleString("ja-JP")}円`, cls };
+  },
   r_1: (n?: number) => (n==null ? "—" : `${n.toFixed(1)}R`),
   int: (n?: number) => (n==null ? "—" : Math.round(n).toString()),
   lots: (n?: number) => (n==null ? "—" : n.toFixed(2)),

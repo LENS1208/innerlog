@@ -5,7 +5,7 @@ import { fmt } from "../lib/formatters";
 type Row = Record<string, any>;
 type SortConfig = { key: string; direction: 'asc' | 'desc' } | null;
 
-const SORTABLE_COLUMNS = ['datetime', 'symbol', 'side', 'pnl_jpy', 'pips', 'size'];
+const SORTABLE_COLUMNS = ['datetime', 'symbol', 'side', 'pnl_jpy', 'pips', 'size', 'swap'];
 
 interface TradesTableProps {
   rows: Row[];
