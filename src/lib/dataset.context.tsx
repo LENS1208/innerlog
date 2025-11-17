@@ -4,7 +4,7 @@ import { parseFiltersFromUrl, syncFiltersToUrl, abortPreviousRequest } from './u
 import { showToast } from './toast';
 import { getTradesCount } from './db.service';
 
-type DS = "A"|"B"|"C";
+type DS = "A"|"B"|"C"|null;
 export type Filters = {
   symbol?:string; session?:string; weekday?:string;
   side?:string; pnl?:string; from?:string; to?:string;
@@ -32,7 +32,7 @@ export const useDataset = () => {
 };
 
 export function DatasetProvider({children}:{children:React.ReactNode}) {
-  const [dataset, setDataset] = React.useState<DS>("A");
+  const [dataset, setDataset] = React.useState<DS>(null);
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
   const [useDatabase, setUseDatabaseState] = React.useState<boolean>(false);
