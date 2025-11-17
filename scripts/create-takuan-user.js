@@ -1,7 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://zcflpkmxeupharqbaymc.supabase.co';
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl) {
+  console.error('VITE_SUPABASE_URL is not set');
+  process.exit(1);
+}
 
 if (!supabaseServiceKey) {
   console.error('SUPABASE_SERVICE_ROLE_KEY is not set');
