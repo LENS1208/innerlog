@@ -29,8 +29,13 @@ export default function AiEvaluationPage() {
     setLoading(true);
     (async () => {
       try {
+        console.log('🔍 データ取得開始:', { useDatabase, dataset, isInitialized });
         const rows = await getDataRows(useDatabase, dataset);
         console.log('📥 取得したトレード件数:', rows.length);
+        if (rows.length === 0) {
+          console.warn('⚠️ トレードデータが0件です。ボタンが無効化されます。');
+          console.warn('⚠️ useDatabase:', useDatabase, 'dataset:', dataset);
+        }
         console.log('📥 最初のトレードデータサンプル:', rows[0]);
         setDataRows(rows);
 

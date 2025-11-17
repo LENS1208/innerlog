@@ -40,7 +40,9 @@ function generateMockTrades(): TradeRow[] {
 export async function getDataRows(useDatabase: boolean, dataset?: string | null): Promise<TradeRow[]> {
   try {
     if (useDatabase) {
+      console.log('🔍 getDataRows: データベースからデータ取得開始', { dataset });
       const dbTrades = await getAllTrades(dataset !== undefined ? dataset : null);
+      console.log('🔍 getDataRows: データベースから取得した件数:', dbTrades.length);
       const trades = dbTrades.map(dbToTrade);
       return trades.map(t => ({
         ticket: t.id,
