@@ -18,12 +18,6 @@ export default function SignupPage() {
     if (password.length < 8) {
       return 'パスワードは8文字以上にしてください';
     }
-    if (!/^[a-zA-Z0-9]+$/.test(password)) {
-      return 'パスワードは半角英数字のみ使用できます';
-    }
-    if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
-      return 'パスワードは英字と数字を両方含める必要があります';
-    }
     return null;
   };
 
@@ -279,7 +273,7 @@ export default function SignupPage() {
                 marginTop: 6,
               }}
             >
-              8文字以上の半角英数字（英字と数字を両方含む）
+              8文字以上
             </p>
           </div>
 

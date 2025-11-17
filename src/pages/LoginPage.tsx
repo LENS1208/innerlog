@@ -261,8 +261,7 @@ export default function LoginPage() {
               placeholder="••••••••"
               required
               minLength={8}
-              pattern="[a-zA-Z0-9]+"
-              title="半角英数字8文字以上（英字と数字を両方含む）"
+              title="8文字以上"
               style={{
                 width: '100%',
                 padding: '14px 16px',
