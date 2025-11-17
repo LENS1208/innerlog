@@ -529,20 +529,20 @@ export default function MonthlyCalendar() {
       <style>{`
         .calendar-header-grid {
           display: grid;
-          grid-template-columns: repeat(7, 1fr) 6px 1fr;
+          grid-template-columns: repeat(7, minmax(0, 1fr)) 6px minmax(0, 1fr);
           gap: 2px;
           margin-bottom: 2px;
         }
 
-        .calendar-week-row {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr) 6px 1fr;
-          gap: 2px;
-          min-height: 110px;
+        .calendar-header-grid > *:nth-child(8) {
+          grid-column: 9;
         }
 
-        .calendar-week-row > *:nth-child(7) {
-          margin-right: 0;
+        .calendar-week-row {
+          display: grid;
+          grid-template-columns: repeat(7, minmax(0, 1fr)) 6px minmax(0, 1fr);
+          gap: 2px;
+          min-height: 110px;
         }
 
         .calendar-week-row > *:nth-child(8) {
