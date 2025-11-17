@@ -240,6 +240,6 @@ ${actualExamples}
 **繰り返し：上記のJSON構造（markdown + sheet + meta）で出力してください。**
 `.trim();
 
-  const jsonStr = JSON.stringify(input.tradesJson).slice(0, 200_000);
+  const jsonStr = JSON.stringify(input.tradesJson).slice(0, 50_000);
   return userTemplate.replaceAll('<<TRADES_JSON>>', jsonStr);
 }
