@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AppShell from "./shells/AppShell";
 import { supabase } from "./lib/supabase";
-import { BasicAuth } from "./components/BasicAuth";
 
 import DashboardKPI from "./widgets/DashboardKPI";
 import ForecastHybrid from "./widgets/ForecastHybrid";
@@ -151,9 +150,5 @@ export default function App() {
     return <SignupPage />;
   }
 
-  return (
-    <BasicAuth>
-      <AppShell>{Page}</AppShell>
-    </BasicAuth>
-  );
+  return <AppShell>{Page}</AppShell>;
 }
