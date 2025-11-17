@@ -372,13 +372,36 @@ export default function LoginPage() {
         </form>
 
         <div style={{ textAlign: 'center', marginTop: 24, padding: '16px', background: '#f8fafc', borderRadius: 8 }}>
-          <p style={{ fontSize: 13, color: '#4a5568', marginBottom: 8, fontWeight: 600 }}>
-            初めての方へ
+          <p style={{ fontSize: 13, color: '#4a5568', marginBottom: 12, fontWeight: 600 }}>
+            テストアカウント
           </p>
-          <p style={{ fontSize: 12, color: '#718096', lineHeight: '1.6' }}>
-            アカウントをお持ちでない方は、上部の「新規登録」ボタンから
-            <br />
-            無料でアカウントを作成できます
+          <button
+            onClick={() => {
+              setEmail('kan.yamaji@gmail.com');
+              setPassword('test2025');
+            }}
+            style={{
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600,
+              color: '#fff',
+              background: '#48bb78',
+              border: 'none',
+              borderRadius: 8,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#38a169';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = '#48bb78';
+            }}
+          >
+            kan.yamaji@gmail.com / test2025
+          </button>
+          <p style={{ fontSize: 12, color: '#718096', marginTop: 12, lineHeight: '1.6' }}>
+            クリックするとテストアカウント情報が自動入力されます
           </p>
         </div>
       </div>
