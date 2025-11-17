@@ -780,17 +780,17 @@
   font-size:11px; line-height:1; border:1px solid var(--line); cursor:help;
 }
 
-/* info tooltip button */
-.info {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:16px; height:16px; border-radius:999px; background:#f3f4f6; color:#374151;
-  font-size:11px; line-height:1; border:1px solid #e5e7eb; cursor:help;
-}
+/* info tooltip button - consolidated with previous definition */
 
 :root{
-  --c-bg:#fff; --c-surface:#f7f7f8; --c-border:#e5e7eb;
-  --c-text:#111; --c-muted:#6b7280;
-  --c-pos:#059669; --c-neg:#dc2626; --c-accent:var(--accent);
+  --c-bg: var(--surface);
+  --c-surface: var(--bg-secondary);
+  --c-border: var(--line);
+  --c-text: var(--ink);
+  --c-muted: var(--muted);
+  --c-pos: var(--gain);
+  --c-neg: var(--loss);
+  --c-accent: var(--accent);
 
   --radii:12px;
   --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.06);

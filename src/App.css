@@ -62,8 +62,8 @@
 /* 予想UIの親に最大幅を与えて中央配置（AppShellの中でも効くようにセレクタを強める） */
 main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 
-.fh-card{background:#fff;border:1px solid #e6e6e6;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.fh-card--header{background:#f8fbff;border-color:#dfe8ff}
+.fh-card{background: var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.fh-card--header{background: var(--bg-secondary);border-color: var(--line)}
 .fh-card--chat{position:sticky;top:72px;height:fit-content}
 .fh-card--scenario{border-left:5px solid #eef2f7}
 .fh-card--foot{display:flex;gap:8px;flex-wrap:wrap}
@@ -73,10 +73,10 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 .fh-caption{color:#6b7280;font-size:12px;margin-bottom:2px}
 .fh-headline{font-size:18px;font-weight:800}
 .fh-subtle{color:#6b7280;font-size:12.5px}
-.fh-hint{color:#6b7280;font-size:12px;margin:4px 0 0}
+.fh-hint{color: var(--muted);font-size:12px;margin:4px 0 0}
 .fh-strong{font-weight:800}
 .fh-emoji{font-size:18px;line-height:1}
-.fh-chip{display:inline-block;border:1px solid #d1d5db;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700}
+.fh-chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700;color: var(--ink)}
 
 .fh-row{display:flex;align-items:center}
 .fh-center{align-items:center}
@@ -90,14 +90,14 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 .fh-mt8{margin-top:8px}
 .fh-mt10{margin-top:10px}
 
-.fh-input{flex:1;min-width:140px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;outline:none;font-size:14px}
-.fh-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
-.fh-btn{padding:9px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#111827;color:#fff;cursor:pointer;font-size:13px}
-.fh-btn--ghost{background:#fff;color:#111827}
-.fh-pill-group{display:flex;background:#f3f4f6;border-radius:999px;padding:4px}
-.fh-pill{border:none;background:transparent;border-radius:999px;padding:6px 10px;cursor:pointer;font-size:13px}
-.fh-pill--on{background:#111827;color:#fff}
-.fh-badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;background:#f3f4f6;border:1px solid #e5e7eb}
+.fh-input{flex:1;min-width:140px;padding:10px 12px;border:1px solid var(--input-border);background: var(--input-bg);color: var(--input-text);border-radius:10px;outline:none;font-size:14px}
+.fh-input:focus{border-color: var(--input-border-focus);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.fh-btn{padding:9px 12px;border-radius:10px;border:1px solid var(--button-secondary-border);background: var(--button-primary-bg);color: var(--button-primary-text);cursor:pointer;font-size:13px}
+.fh-btn--ghost{background: var(--button-secondary-bg);color: var(--button-secondary-text)}
+.fh-pill-group{display:flex;background: var(--chip);border-radius:999px;padding:4px}
+.fh-pill{border:none;background:transparent;border-radius:999px;padding:6px 10px;cursor:pointer;font-size:13px;color: var(--ink)}
+.fh-pill--on{background: var(--button-primary-bg);color: var(--button-primary-text)}
+.fh-badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;background: var(--chip);border:1px solid var(--line);color: var(--ink)}
 .fh-badge--ghost{background:#f6f7fb;border-color:#e0e7ff}
 .fh-badge--warn{background:#fde68a;border-color:#f59e0b}
 .fh-badge--outline{background:transparent}
@@ -137,9 +137,9 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 .kpi-card {
   width: 100%;
   padding: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--surface);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -152,7 +152,7 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
   gap: 6px;
   font-size: 15px;
   font-weight: normal;
-  color: #6b7280;
+  color: var(--muted);
   margin: 0 0 8px;
 }
 
@@ -171,20 +171,20 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
   color: var(--loss, #ef4444);
 }
 
-.kpi-unit { font-size: 14px; margin-left: 4px; color:#6b7280; }
+.kpi-unit { font-size: 14px; margin-left: 4px; color: var(--muted); }
 
 .kpi-desc {
   margin-top: 6px;
   font-size: 12px;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 /* info tooltip (？) */
 .info {
   display:inline-flex; align-items:center; justify-content:center;
   width:16px; height:16px; border-radius:999px;
-  background:#f3f4f6; color:#374151; font-size:11px; line-height:1;
-  border:1px solid #e5e7eb; cursor:help;
+  background: var(--chip); color: var(--ink); font-size:11px; line-height:1;
+  border:1px solid var(--line); cursor:help;
 }
 
 /* Trade row hover effect */
@@ -193,5 +193,5 @@ main .fh-wrap, main .fh-root { max-width: 1100px; margin: 0 auto; }
 }
 
 .trade-row:hover {
-  background-color: #f9fafb;
+  background-color: var(--subtle-bg);
 }
