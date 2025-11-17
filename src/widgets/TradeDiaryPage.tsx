@@ -1085,7 +1085,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4, 20px)', minHeight: 56 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <div style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
-              {row.item}｜{fmtJPY(row.openPrice)}｜{row.side === "BUY" ? "BUY" : "SELL"}｜<span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 400 }}>Ticket:{row.ticket}</span>
+              {row.item}｜{fmtJPY(row.openPrice)}｜{row.side === "BUY" ? "買い" : "売り"}｜<span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 400 }}>Ticket:{row.ticket}</span>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
