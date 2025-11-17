@@ -64,10 +64,7 @@
 .fh-grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:720px){.fh-grid{grid-template-columns:repeat(3,1fr)}}
 
-:root[data-theme="dark"] .fh-card{background:#1a1f2e;border-color:#2d3748;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-:root[data-theme="dark"] .fh-badge{background:#252d3d;border-color:#2d3748;color:#a0aec0}
-:root[data-theme="dark"] .fh-chip{border-color:#2d3748;color:#a0aec0}
-:root[data-theme="dark"] .fh-bar{background:#2d3748}
+/* ダークモード定義は削除：CSS変数で自動的に対応 */
 
 /* 6) v0.2の見栄え（任意だけど推奨） */
 .fh-card--header{background:var(--bg-secondary);border-color:var(--line);transition:background-color 0.3s ease, border-color 0.3s ease}
@@ -78,9 +75,7 @@
 .fh-subtle{color:var(--muted);font-size:12.5px;transition:color 0.3s ease}
 .fh-list li{line-height:1.5}
 
-:root[data-theme="dark"] .fh-card--header{background:#1f2637;border-color:#2d3748}
-:root[data-theme="dark"] .fh-card--scenario{border-left-color:#2d3748}
-:root[data-theme="dark"] .fh-subtle{color:#a0aec0}
+/* ダークモード定義は削除：CSS変数で自動的に対応 */
 .fh-gauge{margin-top:8px}
 .fh-gauge__label{display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:6px}
 .fh-emoji{font-size:18px;line-height:1}

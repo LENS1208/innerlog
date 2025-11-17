@@ -17,10 +17,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    const root = document.getElementById('root');
-    if (root) {
-      root.setAttribute('data-theme', theme);
-    }
+    // data-theme属性をhtml要素に設定（:root[data-theme="dark"]セレクタが機能する）
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
