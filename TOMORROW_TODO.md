@@ -1,166 +1,193 @@
-# 🌅 明日やること - データベース統合作業
+# 明日やること - データベース統合
 
-## ⏰ 作業開始前
+## 📌 やること（簡単バージョン）
 
-1. **このファイルを開く**
-   - `docs/DATABASE_CONSOLIDATION_GUIDE.md` - 詳細手順
-   - `docs/QUICK_REFERENCE.md` - クイックガイド
-   - `docs/DATABASE_CURRENT_STATE.md` - 現状確認
-
-2. **コーヒーを飲む** ☕
+### 目的
+古いSupabaseのデータベースを削除して、1つにまとめる
 
 ---
 
-## ✅ 作業チェックリスト（30分）
+## ステップ1: Supabaseで古いデータベースを削除（5分）
 
-### Phase 1: 事前確認（5分）
+### 手順
 
-```bash
-# バックアップ確認
-ls -la backups/20251117_020034/
+1. ブラウザで https://supabase.com/dashboard を開く
 
-# 設定ファイル確認
-cat .env | grep SUPABASE
-cat .env.production | grep SUPABASE
+2. ログインする
 
-# 両方が xvqpsnrcmkvngxrinjyf を指していることを確認
-```
+3. プロジェクト一覧が表示される
+   - 2つのプロジェクトがあるはず
+   - **削除するプロジェクト**: 名前に `zcflpkmxeupharqbaymc` が含まれているもの
+   - **残すプロジェクト**: 名前に `xvqpsnrcmkvngxrinjyf` が含まれているもの
 
-- [ ] バックアップファイルが存在する
-- [ ] .env が正しいDB（xvqpsnrcmkvngxrinjyf）を指している
-- [ ] .env.production が正しいDB（xvqpsnrcmkvngxrinjyf）を指している
+4. 削除するプロジェクト（`zcflpkmxeupharqbaymc`）をクリック
 
----
+5. 左側のメニューから「Settings」をクリック
 
-### Phase 2: 古いデータベースの削除（5分）
+6. 「General」タブをクリック
 
-**URL**: https://supabase.com/dashboard
+7. ページの一番下までスクロール
 
-1. [ ] Supabaseダッシュボードにログイン
-2. [ ] プロジェクト一覧で `zcflpkmxeupharqbaymc` を見つける
-3. [ ] プロジェクトを開く
-4. [ ] Settings → General に移動
-5. [ ] 一番下の "Delete Project" セクションまでスクロール
-6. [ ] プロジェクト名を入力して削除
-7. [ ] 削除完了を確認
+8. 「Delete Project」というセクションがある
+
+9. プロジェクト名を入力する欄があるので、プロジェクト名を入力
+
+10. 「Delete Project」ボタンをクリック
+
+11. 完了！
 
 ---
 
-### Phase 3: 認証設定の最適化（3分）
+## ステップ2: 残ったデータベースの設定を変更（3分）
 
-**URL**: https://supabase.com/dashboard
+### 手順
 
-1. [ ] プロジェクト `xvqpsnrcmkvngxrinjyf` を開く
-2. [ ] 左メニューから "Authentication" を選択
-3. [ ] "Providers" タブをクリック
-4. [ ] "Email" を選択
-5. [ ] **"Confirm email" をOFF**にする
-6. [ ] "Save" をクリック
+1. Supabaseダッシュボードで、残ったプロジェクト（`xvqpsnrcmkvngxrinjyf`）を開く
 
----
+2. 左側のメニューから「Authentication」をクリック
 
-### Phase 4: Vercel設定の確認（5分）
+3. 上部のタブから「Providers」をクリック
 
-**URL**: https://vercel.com/dashboard
+4. 「Email」をクリック
 
-1. [ ] Vercelダッシュボードにログイン
-2. [ ] プロジェクトを選択
-3. [ ] Settings → Environment Variables に移動
-4. [ ] `VITE_SUPABASE_URL` を確認
-   - 期待値: `https://xvqpsnrcmkvngxrinjyf.supabase.co`
-5. [ ] `VITE_SUPABASE_ANON_KEY` を確認
-   - 期待値: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`（.env.productionと同じ）
-6. [ ] 違っていたら修正して "Save"
-7. [ ] Deployments → 最新デプロイ → "Redeploy" をクリック
+5. 「Confirm email」というトグルスイッチを探す
+
+6. このスイッチを**OFF**にする（グレーになればOK）
+
+7. 「Save」ボタンをクリック
+
+8. 完了！
 
 ---
 
-### Phase 5: 動作確認（12分）
+## ステップ3: Vercelの設定を確認（5分）
 
-#### Bolt環境（6分）
+### 手順
 
-```bash
-# アプリケーションを開く（既に起動している場合はリロード）
-```
+1. ブラウザで https://vercel.com/dashboard を開く
 
-1. [ ] アプリケーションを開く
-2. [ ] ログインページで `kan.yamaji@gmail.com` / `test2025` でログイン
-3. [ ] ログイン成功を確認
-4. [ ] ダッシュボードでトレードデータが表示されることを確認
-5. [ ] カレンダーページを開いて動作を確認
-6. [ ] 設定ページを開いて動作を確認
+2. ログインする
 
-#### Vercel環境（6分）
+3. あなたのプロジェクトをクリック
 
-1. [ ] Vercelのデプロイが完了したらURLを開く
-2. [ ] ログインページで `kan.yamaji@gmail.com` / `test2025` でログイン
-3. [ ] ログイン成功を確認
-4. [ ] ダッシュボードでトレードデータが表示されることを確認
-5. [ ] カレンダーページを開いて動作を確認
-6. [ ] 設定ページを開いて動作を確認
+4. 上部のメニューから「Settings」をクリック
+
+5. 左側のメニューから「Environment Variables」をクリック
+
+6. `VITE_SUPABASE_URL` という変数を探す
+
+7. この値が `https://xvqpsnrcmkvngxrinjyf.supabase.co` になっているか確認
+
+8. もし違っていたら：
+   - 右側の「Edit」をクリック
+   - `https://xvqpsnrcmkvngxrinjyf.supabase.co` に変更
+   - 「Save」をクリック
+
+9. `VITE_SUPABASE_ANON_KEY` という変数も確認
+   - これが以下と同じか確認:
+   ```
+   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cXBzbnJjbWt2bmd4cmluanlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3OTAzNTEsImV4cCI6MjA3ODM2NjM1MX0.1Mp4Do6fX_7Q_WsKipbDkxHbeNCVGWB6fqiWVForBfc
+   ```
+   - 違っていたら同じように編集
+
+10. 変更した場合は再デプロイが必要：
+    - 上部のメニューから「Deployments」をクリック
+    - 一番上のデプロイメントの右側にある「...」をクリック
+    - 「Redeploy」をクリック
+    - 「Redeploy」を再度クリックして確認
+
+11. 完了！
 
 ---
 
-## 🚨 問題が発生したら
+## ステップ4: 動作確認（10分）
 
-### エラー: "Email not confirmed"
+### Bolt（このアプリ）で確認
 
+1. アプリのログイン画面を開く
+
+2. 以下でログイン:
+   - メール: `kan.yamaji@gmail.com`
+   - パスワード: `test2025`
+
+3. ログインできたらOK
+
+4. ダッシュボードでトレードが表示されるか確認
+
+5. カレンダーを開いて表示されるか確認
+
+### Vercel（本番環境）で確認
+
+1. Vercelのデプロイが完了するまで待つ（5-10分）
+
+2. Vercelのプロジェクトページで「Visit」ボタンをクリック
+
+3. ログイン画面が開く
+
+4. 以下でログイン:
+   - メール: `kan.yamaji@gmail.com`
+   - パスワード: `test2025`
+
+5. ログインできたらOK
+
+6. ダッシュボードでトレードが表示されるか確認
+
+---
+
+## 🚨 エラーが出たら
+
+### 「Email not confirmed」というエラー
+
+1. Supabaseダッシュボードを開く
+2. プロジェクト `xvqpsnrcmkvngxrinjyf` を開く
+3. 左メニューから「SQL Editor」をクリック
+4. 「New query」をクリック
+5. 以下をコピー&ペーストして実行:
 ```sql
--- Supabase SQLエディタで実行
 UPDATE auth.users
 SET email_confirmed_at = COALESCE(email_confirmed_at, now())
 WHERE email_confirmed_at IS NULL;
 ```
 
-### エラー: "Invalid API key"
+### データが表示されない
 
-- `.env` ファイルの `VITE_SUPABASE_ANON_KEY` を確認
-- Vercelの環境変数を確認
+1. 設定ページを開く
+2. 「データソース」が「demo」になっているか確認
+3. なっていなければ「demo」に変更
 
-### エラー: データが表示されない
+### その他のエラー
 
-```sql
--- Supabase SQLエディタで実行
-SELECT COUNT(*) FROM trades WHERE user_id = auth.uid();
-```
-
-結果が 0 の場合:
-- データソースが "demo" になっているか確認（設定ページ）
+- `docs/DATABASE_CONSOLIDATION_GUIDE.md` を開いて詳細を確認
+- または私に質問してください
 
 ---
 
-## ✅ 完了後
-
-すべてのチェックが完了したら：
-
-1. [ ] このファイルに完了日時を記録
-2. [ ] スクリーンショットを撮る（証拠として）
-3. [ ] 深呼吸する 😌
-
----
-
-## 📝 作業メモ
-
-作業中に気づいたことをメモ：
+## ✅ 完了したらここにメモ
 
 ```
-開始時刻: ___:___
-終了時刻: ___:___
+完了日時: 2025年__月__日 __時__分
 
-問題点:
-
-
-解決方法:
+問題があった？:
+□ なかった
+□ あった → 内容:
 
 
+所要時間: ____分
 ```
 
 ---
 
-## 🎉 完了
+## 📚 詳しく知りたい場合
 
-お疲れ様でした！
+- `docs/DATABASE_CONSOLIDATION_GUIDE.md` - 超詳しい説明
+- `docs/QUICK_REFERENCE.md` - クイックリファレンス
+- `docs/DATABASE_CURRENT_STATE.md` - 現在の状態
 
-データベースが1つに統合され、Bolt/Vercel両方で正しく動作しています。
+---
 
-**完了日時**: _______________
+## 重要ポイント（覚えておくこと）
+
+**削除するDB**: `zcflpkmxeupharqbaymc`（古い方）
+**残すDB**: `xvqpsnrcmkvngxrinjyf`（新しい方）
+
+間違えないように！
