@@ -283,7 +283,7 @@ function Header({
 
 // 左メニュー（左上に固定）
 function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }: { menu: MenuItem[]; activeKey: string; onUploadClick?: () => void; logoImg: string; theme: 'light' | 'dark'; toggleTheme: () => void }) {
-  const { dataset, setDataset, useDatabase, dataCount } = useDataset();
+  const { dataset, setDataset, useDatabase, dataCount, isInitialized } = useDataset();
 
   return (
     <aside
@@ -458,54 +458,38 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }
           );
         })}
       </ul>
-      <div style={{ marginTop: 12, padding: "0 4px" }}>
-        <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6, paddingLeft: 4 }}>
-          {useDatabase ? 'データセット' : 'デモデータ'}
+      {/* デモデータボタン: データベースにデータがない場合のみ表示 */}
+      {isInitialized && !useDatabase && (
+        <div style={{ marginTop: 12, padding: "0 4px" }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6, paddingLeft: 4 }}>
+            デモデータ
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 4, border: "1px solid var(--line)", borderRadius: 8, overflow: "hidden", padding: 4 }}>
+            {(["A", "B", "C"] as const).map((d) => (
+              <button
+                key={d}
+                onClick={() => {
+                  setDataset(d);
+                  window.dispatchEvent(new CustomEvent("fx:preset", { detail: d }));
+                }}
+                style={{
+                  padding: "8px 4px",
+                  height: 36,
+                  background: dataset === d ? "var(--accent)" : "var(--surface)",
+                  color: dataset === d ? "#fff" : "var(--ink)",
+                  border: 0,
+                  cursor: "pointer",
+                  fontSize: 13,
+                  fontWeight: dataset === d ? 600 : 400,
+                  borderRadius: 4,
+                }}
+              >
+                {d}
+              </button>
+            ))}
+          </div>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 4, border: "1px solid var(--line)", borderRadius: 8, overflow: "hidden", padding: 4 }}>
-          <button
-            onClick={() => {
-              setDataset(null);
-              window.dispatchEvent(new CustomEvent("fx:preset", { detail: null }));
-            }}
-            style={{
-              padding: "8px 4px",
-              height: 36,
-              background: dataset === null ? "var(--accent)" : "var(--surface)",
-              color: dataset === null ? "#fff" : "var(--ink)",
-              border: 0,
-              cursor: "pointer",
-              fontSize: 13,
-              fontWeight: dataset === null ? 600 : 400,
-              borderRadius: 4,
-            }}
-          >
-            全て
-          </button>
-          {(["A", "B", "C"] as const).map((d) => (
-            <button
-              key={d}
-              onClick={() => {
-                setDataset(d);
-                window.dispatchEvent(new CustomEvent("fx:preset", { detail: d }));
-              }}
-              style={{
-                padding: "8px 4px",
-                height: 36,
-                background: dataset === d ? "var(--accent)" : "var(--surface)",
-                color: dataset === d ? "#fff" : "var(--ink)",
-                border: 0,
-                cursor: "pointer",
-                fontSize: 13,
-                fontWeight: dataset === d ? 600 : 400,
-                borderRadius: 4,
-              }}
-            >
-              {d}
-            </button>
-          ))}
-        </div>
-      </div>
+      )}
       {onUploadClick && (
         <button
           onClick={onUploadClick}
