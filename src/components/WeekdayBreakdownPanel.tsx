@@ -147,10 +147,10 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
   }), [topPairs, theme]);
 
   const sideChartData = useMemo(() => ({
-    labels: ['買い', '売り'],
+    labels: ['売り', '買い'],
     datasets: [{
-      data: [stats.longCount, stats.shortCount],
-      backgroundColor: [getLongColor(), getShortColor()],
+      data: [stats.shortCount, stats.longCount],
+      backgroundColor: [getShortColor(), getLongColor()],
       borderWidth: 0,
     }],
   }), [stats.longCount, stats.shortCount, theme]);
@@ -318,7 +318,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>売り vs 買い</h3>
             <div style={{ height: 180, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {(stats.longCount > 0 || stats.shortCount > 0) ? (
                 <Doughnut

@@ -291,18 +291,18 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>売り vs 買い</h3>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-              <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
-                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>買い</div>
-                <div style={{ fontSize: 32, fontWeight: 700, color: getLongColor(), textAlign: 'center' }}>
-                  {stats.longCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
-                </div>
-              </div>
               <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
                 <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>売り</div>
                 <div style={{ fontSize: 32, fontWeight: 700, color: getShortColor(), textAlign: 'center' }}>
                   {stats.shortCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
+                </div>
+              </div>
+              <div style={{ padding: 16, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 12 }}>
+                <div style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 8, textAlign: 'center' }}>買い</div>
+                <div style={{ fontSize: 32, fontWeight: 700, color: getLongColor(), textAlign: 'center' }}>
+                  {stats.longCount} <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--muted)' }}>回</span>
                 </div>
               </div>
             </div>

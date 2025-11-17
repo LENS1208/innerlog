@@ -373,7 +373,7 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
           </section>
 
           <section style={{ marginBottom: 32 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>買い vs 売り</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 16 }}>売り vs 買い</h3>
             {(stats.longCount > 0 || stats.shortCount > 0) ? (
               <div style={{
                 padding: '20px',
@@ -406,10 +406,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                     <div style={{
                       fontSize: 14,
                       fontWeight: 700,
-                      color: getLongColor(),
+                      color: getShortColor(),
                       marginBottom: 12
                     }}>
-                      買い ({stats.longCount}回)
+                      売り ({stats.shortCount}回)
                     </div>
                   </div>
                   <div style={{
@@ -421,10 +421,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                     <div style={{
                       fontSize: 14,
                       fontWeight: 700,
-                      color: getShortColor(),
+                      color: getLongColor(),
                       marginBottom: 12
                     }}>
-                      売り ({stats.shortCount}回)
+                      買い ({stats.longCount}回)
                     </div>
                   </div>
                 </div>
@@ -441,10 +441,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.longWinRate >= 50 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.shortWinRate >= 50 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'right'
                       }}>
-                        {stats.longWinRate.toFixed(1)}%
+                        {stats.shortWinRate.toFixed(1)}%
                       </div>
                     </div>
                     <div style={{ marginBottom: 16 }}>
@@ -452,10 +452,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.longAvgPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.shortAvgPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'right'
                       }}>
-                        {stats.longAvgPnL >= 0 ? '+' : ''}{Math.round(stats.longAvgPnL).toLocaleString('ja-JP')}円
+                        {stats.shortAvgPnL >= 0 ? '+' : ''}{Math.round(stats.shortAvgPnL).toLocaleString('ja-JP')}円
                       </div>
                     </div>
                     <div style={{ marginBottom: 16 }}>
@@ -463,10 +463,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.longPF >= 1 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.shortPF >= 1 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'right'
                       }}>
-                        {stats.longPF === Infinity ? '∞' : stats.longPF.toFixed(2)}
+                        {stats.shortPF === Infinity ? '∞' : stats.shortPF.toFixed(2)}
                       </div>
                     </div>
                     <div>
@@ -474,10 +474,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.longTotalPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.shortTotalPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'right'
                       }}>
-                        {stats.longTotalPnL >= 0 ? '+' : ''}{Math.round(stats.longTotalPnL).toLocaleString('ja-JP')}円
+                        {stats.shortTotalPnL >= 0 ? '+' : ''}{Math.round(stats.shortTotalPnL).toLocaleString('ja-JP')}円
                       </div>
                     </div>
                   </div>
@@ -490,10 +490,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.shortWinRate >= 50 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.longWinRate >= 50 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'left'
                       }}>
-                        {stats.shortWinRate.toFixed(1)}%
+                        {stats.longWinRate.toFixed(1)}%
                       </div>
                     </div>
                     <div style={{ marginBottom: 16 }}>
@@ -501,10 +501,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.shortAvgPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.longAvgPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'left'
                       }}>
-                        {stats.shortAvgPnL >= 0 ? '+' : ''}{Math.round(stats.shortAvgPnL).toLocaleString('ja-JP')}円
+                        {stats.longAvgPnL >= 0 ? '+' : ''}{Math.round(stats.longAvgPnL).toLocaleString('ja-JP')}円
                       </div>
                     </div>
                     <div style={{ marginBottom: 16 }}>
@@ -512,10 +512,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.shortPF >= 1 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.longPF >= 1 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'left'
                       }}>
-                        {stats.shortPF === Infinity ? '∞' : stats.shortPF.toFixed(2)}
+                        {stats.longPF === Infinity ? '∞' : stats.longPF.toFixed(2)}
                       </div>
                     </div>
                     <div>
@@ -523,10 +523,10 @@ export default function CurrencyPairBreakdownPanel({ trades, pairLabel, onClose 
                       <div style={{
                         fontSize: 20,
                         fontWeight: 700,
-                        color: stats.shortTotalPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
+                        color: stats.longTotalPnL >= 0 ? 'var(--gain)' : 'var(--loss)',
                         textAlign: 'left'
                       }}>
-                        {stats.shortTotalPnL >= 0 ? '+' : ''}{Math.round(stats.shortTotalPnL).toLocaleString('ja-JP')}円
+                        {stats.longTotalPnL >= 0 ? '+' : ''}{Math.round(stats.longTotalPnL).toLocaleString('ja-JP')}円
                       </div>
                     </div>
                   </div>
