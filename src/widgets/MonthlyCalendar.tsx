@@ -755,7 +755,7 @@ export default function MonthlyCalendar() {
                       : getLossColor(0.1)
                     : day.isCurrentMonth
                     ? "var(--surface)"
-                    : "#f9fafb";
+                    : "var(--chip)";
 
                   const borderColor = hasTradesValue
                     ? day.profitYen >= 0
@@ -825,7 +825,7 @@ export default function MonthlyCalendar() {
                 <div
                   className="week-summary week-summary-cell"
                   style={{
-                    background: "#f9fafb",
+                    background: "var(--chip)",
                     border: "1px solid var(--line)",
                     borderRadius: 8,
                     padding: 8,
