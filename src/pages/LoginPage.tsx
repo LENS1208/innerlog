@@ -371,12 +371,14 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: 24 }}>
-          <p style={{ fontSize: 13, color: '#a0aec0', marginBottom: 8 }}>
-            テストアカウント
+        <div style={{ textAlign: 'center', marginTop: 24, padding: '16px', background: '#f8fafc', borderRadius: 8 }}>
+          <p style={{ fontSize: 13, color: '#4a5568', marginBottom: 8, fontWeight: 600 }}>
+            初めての方へ
           </p>
-          <p style={{ fontSize: 12, color: '#718096' }}>
-            test@innerlog.app / test2025
+          <p style={{ fontSize: 12, color: '#718096', lineHeight: '1.6' }}>
+            アカウントをお持ちでない方は、上部の「新規登録」ボタンから
+            <br />
+            無料でアカウントを作成できます
           </p>
         </div>
       </div>
