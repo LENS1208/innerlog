@@ -1,5 +1,7 @@
 # 緊急時対応：データベース接続エラー
 
+**最終更新: 2025-11-17**
+
 ## 🚨 症状
 
 以下のエラーが表示される場合：
@@ -11,7 +13,7 @@ This database should NOT be used.
 Error: Invalid database connection detected.
 ```
 
-または、アプリが起動しない、データが表示されない、など。
+または、アプリが起動しない、データが表示されない、ログインできない、など。
 
 ---
 
@@ -20,56 +22,79 @@ Error: Invalid database connection detected.
 ### パターン1: 開発環境でエラーが出る場合
 
 ```
-.envファイルが古いデータベース(zcflpkmxeupharqbaymc)を参照しています。
-正しいデータベース(xvqpsnrcmkvngxrinjyf)に修正してください。
+データベース接続エラーが発生しています。
 
-以下を実行してください：
-1. .envファイルのVITE_SUPABASE_URLを確認
-2. 古いDB(zcflpkmxeupharqbaymc)になっている場合、.env.productionから正しい値をコピー
+DATABASE_CONFIG.mdを参照して、以下を実行してください：
+1. .envファイルが正しいデータベース(xvqpsnrcmkvngxrinjyf)を指しているか確認
+2. 間違っている場合、.env.exampleから正しい設定をコピー
 3. check-db.shを実行して検証
-4. npm run buildで動作確認
+4. Viteキャッシュをクリア: rm -rf dist node_modules/.vite .vite
+5. npm run buildで動作確認
+6. ブラウザのキャッシュもクリアして再テスト
 ```
 
 ### パターン2: 本番環境でエラーが出る場合
 
 ```
-本番環境のデータベース接続エラーを修正してください。
+本番環境でデータベース接続エラーが発生しています。
 
 プラットフォーム: [Vercel/Netlify/その他]
 
-以下を確認・修正してください：
+DATABASE_CONFIG.mdとDEPLOYMENT.mdを参照して、以下を実行してください：
 1. 本番環境の環境変数設定を確認
-2. VITE_SUPABASE_URLが正しいか(xvqpsnrcmkvngxrinjyf)
-3. VITE_SUPABASE_ANON_KEYが正しいか
-4. DEPLOYMENT.mdの手順に従って再設定
+2. VITE_SUPABASE_URLが https://xvqpsnrcmkvngxrinjyf.supabase.co になっているか
+3. VITE_SUPABASE_ANON_KEYが正しいか（DATABASE_CONFIG.md参照）
+4. 環境変数を修正後、キャッシュをクリアして再デプロイ
+5. デプロイ後、ブラウザのキャッシュもクリア
 ```
 
-### パターン3: どちらのDBが正しいか不明な場合
+### パターン3: ログインできない・データが見えない
 
 ```
-現在2つのSupabaseデータベースがあります。どちらが正しいか判断してください。
+ログインエラーまたはデータ表示エラーが発生しています。
 
-データベースA: zcflpkmxeupharqbaymc
-データベースB: xvqpsnrcmkvngxrinjyf
-
-以下を実行してください：
-1. 両方のデータベースに接続してテーブル一覧を取得
-2. データ件数を確認
-3. 最新のデータがある方を正しいDBとして特定
-4. 正しいDBに接続するよう.envとenv-validator.tsを更新
+以下を確認・実行してください：
+1. DATABASE_CONFIG.mdでテストユーザーアカウント情報を確認
+2. ブラウザのDevToolsでコンソールエラーを確認
+3. データベース接続先が xvqpsnrcmkvngxrinjyf か確認
+4. .envファイルの認証情報が正しいか確認
+5. ブラウザのキャッシュを完全にクリア（DevTools → Application → Clear storage）
+6. ハードリフレッシュ（Cmd+Shift+R または Ctrl+Shift+R）
 ```
 
-### パターン4: .envファイルが自動的に上書きされる問題
+### パターン4: キャッシュ問題で古いDBに接続し続ける
 
 ```
-.envファイルが自動的に古い値に戻ってしまいます。根本的な解決をしてください。
+正しい設定のはずなのに、古いデータベースに接続してしまいます。
 
-以下を調査・実行してください：
-1. .envがgitで管理されているか確認
-2. システムやエディタの自動同期機能を確認
-3. .envファイルにファイル保護を設定
-4. 環境変数を.envファイル以外から読み込む方法を実装
-5. 代替案として、環境変数をシステム環境変数で管理する方法を提案
+以下のクリーンアップを実行してください：
+1. Viteキャッシュを完全削除: rm -rf dist node_modules/.vite .vite
+2. .envファイルを再確認（DATABASE_CONFIG.md参照）
+3. クリーンビルド: npm run build
+4. ブラウザのキャッシュを完全クリア:
+   - DevToolsを開く（F12）
+   - Application タブ → Clear storage → Clear site data
+5. ブラウザを完全に再起動
+6. ハードリフレッシュでページを再読み込み
+```
+
+### パターン5: 完全リセットが必要な場合（最終手段）
+
+```
+データベース接続を完全にリセットしてください。
+
+以下の手順を実行：
+1. DATABASE_CONFIG.mdで正しい認証情報を確認
+2. すべての.envファイルを正しい値に更新:
+   - .env
+   - .env.production
+3. src/lib/supabase.tsにハードコーディングがないか確認
+4. すべてのキャッシュをクリア:
+   - rm -rf dist node_modules/.vite .vite
+   - ブラウザのキャッシュもクリア
+5. check-db.shで検証
+6. npm run buildでクリーンビルド
+7. 問題が解決しない場合は、根本原因を調査して報告
 ```
 
 ---
@@ -84,27 +109,39 @@ cat .env | grep VITE_SUPABASE_URL
 
 # データベースチェックスクリプトを実行
 ./check-db.sh
+
+# DATABASE_CONFIG.mdで正しい設定を確認
+cat DATABASE_CONFIG.md | grep -A5 "Environment Variables"
 ```
 
 ### ステップ2: 正しいDBに修正
 
 ```bash
 # 正しい設定を.envにコピー
-cp .env.production .env
+cp .env.example .env
 
 # 再度確認
 ./check-db.sh
 ```
 
-### ステップ3: 動作確認
+### ステップ3: キャッシュクリア
 
 ```bash
+# Viteキャッシュを完全削除
+rm -rf dist node_modules/.vite .vite
+
 # ビルドテスト
 npm run build
-
-# 開発サーバー起動（自動で起動している場合は不要）
-# npm run dev
 ```
+
+### ステップ4: ブラウザキャッシュクリア
+
+1. **DevToolsを開く** (F12 または右クリック → Inspect)
+2. **Application タブ** を開く
+3. **Clear storage** を選択
+4. **Clear site data** をクリック
+5. ブラウザを再起動
+6. **ハードリフレッシュ** (Mac: Cmd+Shift+R, Windows: Ctrl+Shift+R)
 
 ---
 
@@ -115,7 +152,15 @@ npm run build
 ```
 Database ID: xvqpsnrcmkvngxrinjyf
 URL: https://xvqpsnrcmkvngxrinjyf.supabase.co
-Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cXBzbnJjbWt2bmd4cmluanlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3OTAzNTEsImV4cCI6MjA3ODM2NjM1MX0.1Mp4Do6fX_7Q_WsKipbDkxHbeNCVGWB6fqiWVForBfc
+Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cXBzbnJjbWt2bmd4cmluanlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MDQyOTksImV4cCI6MjA0NzM4MDI5OX0.kgzf7yWMwzg9Y1IHpRmYAVD-CJWQQ_yxZTLxzUq_4Jw
+```
+
+### ✅ テストユーザーアカウント
+
+```
+Email: takuan_1000@yahoo.co.jp
+Password: test2025
+User ID: 4e4b6842-84ea-45a4-a8d0-e31a133bf054
 ```
 
 ### ❌ 古いデータベース（使用禁止）
@@ -123,7 +168,7 @@ Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6I
 ```
 Database ID: zcflpkmxeupharqbaymc
 URL: https://zcflpkmxeupharqbaymc.supabase.co
-Status: DEPRECATED - DO NOT USE
+Status: ⛔ DEPRECATED - DO NOT USE
 ```
 
 ---
@@ -137,14 +182,20 @@ Status: DEPRECATED - DO NOT USE
 3. 以下を設定（既存の値を上書き）：
    - `VITE_SUPABASE_URL` = `https://xvqpsnrcmkvngxrinjyf.supabase.co`
    - `VITE_SUPABASE_ANON_KEY` = （上記の正しいAnon Key）
-4. 再デプロイ（Deployments → ... → Redeploy）
+4. **重要**: Deployments → ... → Redeploy → **Clear cache and redeploy**
 
 ### Netlify
 
 1. サイトダッシュボードを開く
 2. Site settings → Environment variables
 3. 上記と同じ環境変数を設定
-4. Deploys → Trigger deploy → Clear cache and deploy
+4. **重要**: Deploys → Trigger deploy → **Clear cache and deploy**
+
+### その他のプラットフォーム
+
+1. DATABASE_CONFIG.mdから正しい認証情報をコピー
+2. プラットフォームの環境変数設定に追加
+3. **必ずキャッシュをクリアして再デプロイ**
 
 ---
 
@@ -155,14 +206,54 @@ Status: DEPRECATED - DO NOT USE
 ```
 データベース接続エラーが解決しません。以下の情報を確認してください：
 
-1. 現在の.envファイルの内容（機密情報は一部マスク可）
+1. 現在の.envファイルの内容:
+   $(cat .env | grep VITE_SUPABASE)
+
 2. ブラウザコンソールのエラーメッセージ（スクリーンショット可）
-3. npm run buildの実行結果
-4. check-db.shの実行結果
-5. 環境（開発/本番、プラットフォーム名）
+
+3. check-db.shの実行結果:
+   $(./check-db.sh)
+
+4. ビルドの実行結果:
+   $(npm run build 2>&1 | tail -20)
+
+5. 環境: [開発/本番]、プラットフォーム: [ローカル/Vercel/Netlify/その他]
+
+6. 試したこと:
+   - [ ] .envファイルの確認・修正
+   - [ ] Viteキャッシュのクリア
+   - [ ] ブラウザキャッシュのクリア
+   - [ ] ハードリフレッシュ
+   - [ ] クリーンビルド
 
 これらの情報を基に、根本的な解決策を提案してください。
 ```
+
+---
+
+## 📚 関連ドキュメント
+
+- **DATABASE_CONFIG.md** - データベース設定の完全ガイド
+- **DEPLOYMENT.md** - 本番デプロイ手順
+- **check-db.sh** - データベース接続チェックスクリプト
+- **.env.example** - 正しい環境変数のテンプレート
+
+---
+
+## 🔒 重要な注意事項
+
+1. **キャッシュは2箇所ある**:
+   - Viteのビルドキャッシュ (node_modules/.vite, dist)
+   - ブラウザのキャッシュ
+   - **両方クリアしないと古い設定が残る**
+
+2. **環境変数はビルド時に埋め込まれる**:
+   - .envを変更したら**必ず再ビルド**
+   - 本番環境では環境変数変更後**必ず再デプロイ**
+
+3. **ハードコーディングは禁止**:
+   - src/lib/supabase.tsで直接URLを書かない
+   - 必ず`import.meta.env`から読み込む
 
 ---
 
