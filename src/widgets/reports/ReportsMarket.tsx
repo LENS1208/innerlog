@@ -100,7 +100,9 @@ function MarketSegmentTabs({
             <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
               {segmentLabel}
             </th>
-            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>取引回数</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
+              {isSwapTab ? "発生日数" : "取引回数"}
+            </th>
             <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>
               {isSwapTab ? "平均スワップ" : "平均損益"}
             </th>
@@ -126,7 +128,9 @@ function MarketSegmentTabs({
               onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
             >
               <td style={{ padding: 10, fontSize: 13 }}>{item.label}</td>
-              <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>{item.count} <span style={{ fontSize: 11, color: "var(--muted)" }}>回</span></td>
+              <td style={{ padding: 10, textAlign: "right", fontSize: 13, color: "var(--muted)" }}>
+                {item.count} <span style={{ fontSize: 11, color: "var(--muted)" }}>{isSwapTab ? "日" : "回"}</span>
+              </td>
               <td
                 style={{
                   padding: 10,
@@ -359,22 +363,31 @@ export default function ReportsMarket() {
   }, [filteredTrades]);
 
   const swapData = useMemo(() => {
-    const map = new Map<string, { totalSwap: number; count: number; positiveCount: number }>();
+    const map = new Map<string, { totalSwap: number; count: number; positiveCount: number; daysSet: Set<string> }>();
     filteredTrades.forEach((t) => {
       const symbol = getTradePair(t);
       const swap = t.swap || 0;
-      const current = map.get(symbol) || { totalSwap: 0, count: 0, positiveCount: 0 };
+
+      if (swap === 0) return;
+
+      const dateKey = t.datetime ? new Date(t.datetime).toISOString().split('T')[0] : '';
+      const current = map.get(symbol) || { totalSwap: 0, count: 0, positiveCount: 0, daysSet: new Set<string>() };
+
+      if (dateKey) current.daysSet.add(dateKey);
+
       map.set(symbol, {
         totalSwap: current.totalSwap + swap,
         count: current.count + 1,
         positiveCount: current.positiveCount + (swap > 0 ? 1 : 0),
+        daysSet: current.daysSet,
       });
     });
     return Array.from(map.entries())
       .map(([symbol, data]) => {
         const avgSwap = data.count > 0 ? data.totalSwap / data.count : 0;
         const swapPositiveRate = data.count > 0 ? (data.positiveCount / data.count) * 100 : 0;
-        return { symbol, ...data, avgSwap, swapPositiveRate };
+        const swapDays = data.daysSet.size;
+        return { symbol, totalSwap: data.totalSwap, count: swapDays, positiveCount: data.positiveCount, avgSwap, swapPositiveRate };
       })
       .sort((a, b) => b.totalSwap - a.totalSwap);
   }, [filteredTrades]);
