@@ -377,7 +377,7 @@ export default function LoginPage() {
             テストアカウント
           </p>
           <p style={{ fontSize: 12, color: '#718096' }}>
-            kan.yamaji@gmail.com / test2025
+            takuan_1000@yahoo.co.jp / test2025
           </p>
         </div>
       </div>
