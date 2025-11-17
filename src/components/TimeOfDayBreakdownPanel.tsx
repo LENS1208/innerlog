@@ -170,6 +170,7 @@ export default function TimeOfDayBreakdownPanel({ trades, rangeLabel, onClose }:
         getAccentColor(),
         'rgba(236, 72, 153, 0.8)',
       ],
+      borderWidth: 0,
     }],
   }), [topPairs, theme]);
 

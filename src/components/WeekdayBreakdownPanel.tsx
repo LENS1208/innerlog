@@ -143,6 +143,7 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
         getAccentColor(),
         'rgba(236, 72, 153, 0.8)',
       ],
+      borderWidth: 0,
     }],
   }), [topPairs, theme]);
 
