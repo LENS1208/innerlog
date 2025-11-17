@@ -127,6 +127,36 @@ body {
   background: #0a0e14;
 }
 
+/* Global input, textarea, select styling */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  background: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus,
+select:focus {
+  border-color: var(--input-border-focus);
+  background: var(--input-bg);
+  color: var(--input-text);
+  outline: none;
+}
+
+input:not([type="checkbox"]):not([type="radio"])::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+
+select option {
+  background: var(--input-bg);
+  color: var(--input-text);
+}
+
 .pnl-pos {
   color: var(--gain);
   font-weight: 700;
