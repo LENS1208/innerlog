@@ -19,8 +19,9 @@ export default function AiEvaluationPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const coachingData = getResult(dataset);
-  const generating = isGenerating(dataset);
+  const datasetKey = dataset || 'all';
+  const coachingData = getResult(datasetKey);
+  const generating = isGenerating(datasetKey);
 
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function AiEvaluationPage() {
         console.log('📥 最初のトレードデータサンプル:', rows[0]);
         setDataRows(rows);
 
-        await loadCachedResult(dataset);
+        await loadCachedResult(datasetKey);
       } catch (err) {
         console.error('データ取得エラー:', err);
         setError('データの取得に失敗しました');
@@ -47,7 +48,7 @@ export default function AiEvaluationPage() {
         setLoading(false);
       }
     })();
-  }, [dataset, useDatabase, isInitialized, loadCachedResult]);
+  }, [dataset, useDatabase, isInitialized, datasetKey, loadCachedResult]);
 
 
   const baseMetrics = useMemo<TradeMetrics>(() => {
@@ -193,7 +194,7 @@ export default function AiEvaluationPage() {
                   onClick={async () => {
                     setError(null);
                     try {
-                      await startGeneration(dataset, dataRows);
+                      await startGeneration(datasetKey, dataRows);
                     } catch (error) {
                       console.error('コーチング生成エラー:', error);
                       setError('AIコーチングの生成中にエラーが発生しました。');
@@ -226,7 +227,7 @@ export default function AiEvaluationPage() {
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
               <button
                 onClick={() => {
-                  clearResult(dataset);
+                  clearResult(datasetKey);
                   setError(null);
                 }}
                 style={{
