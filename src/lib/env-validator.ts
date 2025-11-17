@@ -1,5 +1,4 @@
-const CORRECT_DB = 'xvqpsnrcmkvngxrinjyf';
-const OLD_DB = 'zcflpkmxeupharqbaymc';
+const EXPECTED_DB = 'xvqpsnrcmkvngxrinjyf';
 
 export function validateEnvironment() {
   const url = import.meta.env.VITE_SUPABASE_URL;
@@ -9,23 +8,14 @@ export function validateEnvironment() {
     throw new Error('❌ Supabase environment variables are missing!');
   }
 
-  if (url.includes(OLD_DB)) {
-    console.error('❌ CRITICAL ERROR: Connected to OLD database!');
-    console.error('Current URL:', url);
-    console.error('This database should NOT be used.');
-    throw new Error(
-      'Invalid database connection detected. Please update .env file with correct database credentials.'
-    );
-  }
-
-  if (!url.includes(CORRECT_DB)) {
-    console.warn('⚠️ WARNING: Unknown database detected');
+  if (!url.includes(EXPECTED_DB)) {
+    console.warn('⚠️ WARNING: Unexpected database detected');
     console.warn('Current URL:', url);
-    console.warn('Expected URL should contain:', CORRECT_DB);
+    console.warn('Expected database ID:', EXPECTED_DB);
+  } else {
+    console.log('✅ Environment validation passed');
+    console.log('Database:', EXPECTED_DB);
   }
-
-  console.log('✅ Environment validation passed');
-  console.log('Database:', url.match(/https:\/\/([^.]+)/)?.[1] || 'unknown');
 
   return {
     url,
@@ -40,8 +30,7 @@ export function getEnvironmentInfo() {
 
   return {
     databaseId: dbId,
-    isCorrect: dbId === CORRECT_DB,
-    isOld: dbId === OLD_DB,
+    isExpected: dbId === EXPECTED_DB,
     fullUrl: url,
   };
 }
