@@ -205,8 +205,8 @@ export default function AiEvaluationPage() {
                     padding: '12px 24px',
                     fontSize: '14px',
                     fontWeight: 600,
-                    color: 'white',
-                    background: generating || dataRows.length === 0 ? 'var(--muted)' : 'var(--accent)',
+                    color: generating || dataRows.length === 0 ? 'var(--button-disabled-text)' : 'var(--button-primary-text)',
+                    background: generating || dataRows.length === 0 ? 'var(--button-disabled-bg)' : 'var(--button-primary-bg)',
                     border: 'none',
                     borderRadius: '8px',
                     cursor: generating || dataRows.length === 0 ? 'not-allowed' : 'pointer',
@@ -233,9 +233,9 @@ export default function AiEvaluationPage() {
                 style={{
                   padding: '8px 16px',
                   fontSize: '13px',
-                  color: 'var(--muted)',
-                  background: 'var(--chip)',
-                  border: '1px solid var(--line)',
+                  color: 'var(--button-secondary-text)',
+                  background: 'var(--button-secondary-bg)',
+                  border: '1px solid var(--button-secondary-border)',
                   borderRadius: '6px',
                   cursor: 'pointer',
                 }}

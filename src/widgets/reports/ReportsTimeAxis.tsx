@@ -126,7 +126,7 @@ function SegmentDetailsTabs({
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--line)" }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--line)", background: "var(--surface)" }}>
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -135,8 +135,8 @@ function SegmentDetailsTabs({
               padding: "10px 20px",
               fontSize: 14,
               fontWeight: activeTab === tab ? 600 : 400,
-              color: activeTab === tab ? "var(--fg)" : "var(--muted)",
-              background: "transparent",
+              color: activeTab === tab ? "var(--accent)" : "var(--ink)",
+              background: activeTab === tab ? "var(--chip)" : "transparent",
               border: "none",
               borderBottom: activeTab === tab ? "2px solid var(--accent)" : "2px solid transparent",
               cursor: "pointer",

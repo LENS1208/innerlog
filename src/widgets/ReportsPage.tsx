@@ -41,6 +41,7 @@ export default function ReportsPage() {
           borderBottom: "1px solid var(--line)",
           marginBottom: 20,
           overflowX: "auto",
+          background: "var(--surface)",
         }}
       >
         {tabs.map((tab) => (
@@ -59,6 +60,7 @@ export default function ReportsPage() {
               fontWeight: activeTab === tab.key ? 600 : 400,
               whiteSpace: "nowrap",
               transition: "all 0.2s",
+              background: activeTab === tab.key ? "var(--chip)" : "transparent",
             }}
           >
             {tab.label}

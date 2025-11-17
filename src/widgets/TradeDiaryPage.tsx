@@ -302,9 +302,9 @@ function AIAdviceSection({ tradeData, kpi, diaryData }: AIAdviceSectionProps) {
         <div
           style={{
             padding: 16,
-            backgroundColor: "var(--bg-light, #f9fafb)",
+            backgroundColor: "var(--chip)",
             borderRadius: 8,
-            border: "1px solid var(--border, #e5e7eb)",
+            border: "1px solid var(--line)",
             whiteSpace: "pre-line",
             lineHeight: 1.6,
           }}
