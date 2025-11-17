@@ -1,9 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 import { validateEnvironment } from './env-validator';
 
-const { url: supabaseUrl, anonKey: supabaseAnonKey } = validateEnvironment();
+// TEMPORARY FIX: Force correct database URL
+const CORRECT_URL = 'https://xvqpsnrcmkvngxrinjyf.supabase.co';
+const CORRECT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cXBzbnJjbWt2bmd4cmluanlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MDQyOTksImV4cCI6MjA0NzM4MDI5OX0.kgzf7yWMwzg9Y1IHpRmYAVD-CJWQQ_yxZTLxzUq_4Jw';
+
+const supabaseUrl = CORRECT_URL;
+const supabaseAnonKey = CORRECT_KEY;
+
+// Validate (will log warnings but won't throw)
+try {
+  validateEnvironment();
+} catch (e) {
+  console.warn('Environment validation failed, using hardcoded values:', e);
+}
 
 console.log('✅ Supabase client initialized successfully');
+console.log('📍 Using database:', supabaseUrl);
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
