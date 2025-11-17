@@ -18,6 +18,7 @@ function mapToRow(t: Trade) {
     size: t.volume,
     entry: t.openPrice,
     exit: t.closePrice,
+    swap: t.swap,
     note: t.memo || t.comment || "",
   };
 }
@@ -85,7 +86,7 @@ function sortRows(rows: any[], sortConfig: SortConfig) {
       return sortConfig.direction === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
     }
 
-    if (['pnl_jpy', 'pips', 'size'].includes(sortConfig.key)) {
+    if (['pnl_jpy', 'pips', 'size', 'swap'].includes(sortConfig.key)) {
       const aNum = Number(aVal) || 0;
       const bNum = Number(bVal) || 0;
       return sortConfig.direction === 'asc' ? aNum - bNum : bNum - aNum;
@@ -270,7 +271,7 @@ export default function TradeListPage() {
   const paginatedRows = allRows.slice(startIdx, endIdx);
 
   const handleSort = (columnId: string) => {
-    const SORTABLE_COLUMNS = ['datetime', 'symbol', 'side', 'pnl_jpy', 'pips', 'size'];
+    const SORTABLE_COLUMNS = ['datetime', 'symbol', 'side', 'pnl_jpy', 'pips', 'size', 'swap'];
     if (!SORTABLE_COLUMNS.includes(columnId)) return;
 
     let direction: 'asc' | 'desc' = 'asc';
