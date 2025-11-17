@@ -268,7 +268,6 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 lineHeight: 1.6,
                 padding: 14,
                 background: 'var(--input-bg)',
-                color: '#000',
                 border: '1px solid var(--line)',
                 borderRadius: 8,
               }}
@@ -293,7 +292,6 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                   boxSizing: 'border-box',
                   padding: '14px 14px',
                   fontSize: 14,
-                  color: '#000',
                   lineHeight: '1.5',
                   height: '48px',
                   background: 'var(--input-bg)',
@@ -302,12 +300,12 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 }}
                 disabled={generating}
               >
-                <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
-                <option style={{ color: '#000' }}>USD/JPY</option>
-                <option style={{ color: '#000' }}>EUR/USD</option>
-                <option style={{ color: '#000' }}>GBP/JPY</option>
-                <option style={{ color: '#000' }}>EUR/JPY</option>
-                <option style={{ color: '#000' }}>GBP/USD</option>
+                <option value="" disabled>選択してください</option>
+                <option>USD/JPY</option>
+                <option>EUR/USD</option>
+                <option>GBP/JPY</option>
+                <option>EUR/JPY</option>
+                <option>GBP/USD</option>
               </select>
             </div>
             <div>
@@ -323,7 +321,6 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                   boxSizing: 'border-box',
                   padding: '14px 14px',
                   fontSize: 14,
-                  color: '#000',
                   lineHeight: '1.5',
                   height: '48px',
                   background: 'var(--input-bg)',
@@ -332,10 +329,10 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 }}
                 disabled={generating}
               >
-                <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
-                <option style={{ color: '#000' }}>1H</option>
-                <option style={{ color: '#000' }}>4H</option>
-                <option style={{ color: '#000' }}>1D</option>
+                <option value="" disabled>選択してください</option>
+                <option>1H</option>
+                <option>4H</option>
+                <option>1D</option>
               </select>
             </div>
             <div>
@@ -351,7 +348,6 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                   boxSizing: 'border-box',
                   padding: '14px 14px',
                   fontSize: 14,
-                  color: '#000',
                   lineHeight: '1.5',
                   height: '48px',
                   background: 'var(--input-bg)',
@@ -360,10 +356,10 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
                 }}
                 disabled={generating}
               >
-                <option value="" disabled style={{ color: '#9ca3af' }}>選択してください</option>
-                <option value="短期" style={{ color: '#000' }}>短期（24時間）</option>
-                <option value="中期" style={{ color: '#000' }}>中期（1週間）</option>
-                <option value="長期" style={{ color: '#000' }}>長期（1ヶ月）</option>
+                <option value="" disabled>選択してください</option>
+                <option value="短期">短期（24時間）</option>
+                <option value="中期">中期（1週間）</option>
+                <option value="長期">長期（1ヶ月）</option>
               </select>
             </div>
           </div>
@@ -403,15 +399,14 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           style={{
             fontSize: 14,
             padding: '8px 12px',
-            color: '#000',
             background: 'var(--input-bg)',
             border: '1px solid var(--line)',
             borderRadius: 8,
           }}
         >
-          <option value="all" style={{ color: '#000' }}>全通貨ペア</option>
+          <option value="all">全通貨ペア</option>
           {uniquePairs.map((pair) => (
-            <option key={pair} value={pair} style={{ color: '#000' }}>{pair}</option>
+            <option key={pair} value={pair}>{pair}</option>
           ))}
         </select>
 
@@ -422,16 +417,15 @@ export default function AiProposalListPage({ onSelectProposal }: AiProposalListP
           style={{
             fontSize: 14,
             padding: '8px 12px',
-            color: '#000',
             background: 'var(--input-bg)',
             border: '1px solid var(--line)',
             borderRadius: 8,
           }}
         >
-          <option value="all" style={{ color: '#000' }}>全バイアス</option>
-          <option value="BUY" style={{ color: '#000' }}>買い</option>
-          <option value="SELL" style={{ color: '#000' }}>売り</option>
-          <option value="NEUTRAL" style={{ color: '#000' }}>中立</option>
+          <option value="all">全バイアス</option>
+          <option value="BUY">買い</option>
+          <option value="SELL">売り</option>
+          <option value="NEUTRAL">中立</option>
         </select>
       </div>
 
