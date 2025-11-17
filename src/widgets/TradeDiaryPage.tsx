@@ -1154,9 +1154,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
         {/* 左列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
-          {/* 取引日記 */}
+          {/* トレード日記 */}
           <div className="td-diary-heading" style={{ marginTop: 0, display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>取引日記</h2>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700 }}>トレード日記</h2>
             <button className="td-btn" onClick={savePayload}>保存</button>
           </div>
 
@@ -1301,7 +1301,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
         {/* 右列 */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {/* 取引日記見出しと高さを揃える */}
+          {/* トレード日記見出しと高さを揃える */}
           <div className="td-diary-heading" style={{ marginTop: 0 }}>
             <h2 style={{ margin: "0 0 16px 0", fontSize: 20, fontWeight: 700, opacity: 0, pointerEvents: "none" }}>スペーサー</h2>
           </div>

@@ -108,7 +108,7 @@ function Header({
                 }
                 if (k === "ai-evaluation") return "AI評価";
                 if (k === "forecast" || k === "ai-proposal") return "相場予想";
-                if (k === "notebook") return "取引日記";
+                if (k === "notebook") return "トレード日記";
                 if (k === "settings") return "設定";
                 return "ダッシュボード";
               })()}
