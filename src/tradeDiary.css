@@ -30,7 +30,7 @@
 
 /* KPI */
 .td-root .kpi{ display:grid !important; grid-template-columns:repeat(2, 1fr) !important; gap:10px; width:100vw; margin-left:calc(-1 * var(--px-mobile)); padding:0 var(--px-mobile); box-sizing:border-box; }
-.td-root .kpi .i{ border-radius:12px; padding:16px; background:var(--surface); min-width:0; }
+.td-root .kpi .i{ border-radius:12px; padding:16px; background:var(--surface); border:1px solid var(--line); box-shadow:0 1px 3px rgba(0,0,0,0.02); min-width:0; }
 .td-root .kpi .lab{ font-size:11px; color:var(--muted); margin-bottom:6px; font-weight:500; text-transform:uppercase; letter-spacing:0.5px; }
 .td-root .kpi .val{ font-weight:700; font-size:20px; line-height:1.2; word-break:break-word; }
 @media (min-width: 640px) { .td-root .kpi{ grid-template-columns:repeat(4, 1fr) !important; } }
