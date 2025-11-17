@@ -1,14 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
+import { validateEnvironment } from './env-validator';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const { url: supabaseUrl, anonKey: supabaseAnonKey } = validateEnvironment();
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase configuration missing:', { supabaseUrl, supabaseAnonKey });
-  throw new Error('Supabase URL and Anon Key are required');
-}
-
-console.log('Initializing Supabase client with URL:', supabaseUrl);
+console.log('✅ Supabase client initialized successfully');
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
