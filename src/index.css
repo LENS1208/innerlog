@@ -92,20 +92,20 @@
 @media (min-width: 840px){
   .fh-root{ grid-template-columns: minmax(300px, 360px) 1fr; column-gap:20px; }
 }
-.fh-card{ background:#fff; border:1px solid #e6e6e6; border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:#f8fbff; border-color:#dfe8ff; }
+.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.fh-card--header{ background:var(--bg-secondary); border-color:var(--line); }
 .fh-card--chat{ position:sticky; top:72px; height:fit-content; }
 .fh-disabled{ opacity:.5; }
 
 /* --- バー --- */
-.fh-bar{ width:100%; height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden }
+.fh-bar{ width:100%; height:10px; background:var(--line); border-radius:6px; overflow:hidden }
 .fh-bar__fill{ height:100%; background:var(--accent) }
 
 /* --- 見出し/文字 --- */
 .fh-title{ margin:0 0 4px; font-size:16px; font-weight:700 }
 .fh-headline{ font-size:18px; font-weight:800 }
 .fh-caption{ color:var(--muted); font-size:12px; margin-bottom:2px }
-.fh-subtle{ color:#6b7280; font-size:12.5px }
+.fh-subtle{ color:var(--muted); font-size:12.5px }
 .fh-strong{ font-weight:800 }
 .fh-paragraph{ margin:0; line-height:1.6; }
 
@@ -118,13 +118,13 @@
 .fh-mt8{ margin-top:8px } .fh-mt10{ margin-top:10px }
 
 /* --- 入力/ボタン --- */
-.fh-input{ flex:1; min-width:160px; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; outline:none; font-size:14px }
+.fh-input{ flex:1; min-width:160px; padding:10px 12px; border:1px solid var(--input-border); border-radius:10px; outline:none; font-size:14px; background:var(--input-bg); color:var(--input-text); }
 .fh-input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12) }
-.fh-btn{ padding:9px 12px; border-radius:10px; border:1px solid #e5e7eb; background:#111827; color:#fff; cursor:pointer; font-size:13px }
-.fh-btn--ghost{ background:#fff; color:#111827 }
-.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:#f3f4f6; border:1px solid #e5e7eb }
-.fh-badge--ghost{ background:#f6f7fb; border-color:#e0e7ff }
-.fh-chip{ display:inline-block; border:1px solid #d1d5db; border-radius:999px; padding:2px 8px; font-size:12px; font-weight:700 }
+.fh-btn{ padding:9px 12px; border-radius:10px; border:1px solid var(--button-secondary-border); background:var(--button-primary-bg); color:var(--button-primary-text); cursor:pointer; font-size:13px }
+.fh-btn--ghost{ background:var(--button-secondary-bg); color:var(--button-secondary-text); }
+.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
+.fh-badge--ghost{ background:var(--chip); border-color:var(--line); }
+.fh-chip{ display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 8px; font-size:12px; font-weight:700; color:var(--ink); background:var(--chip); }
 
 /* --- ゲージまとめ --- */
 .fh-gauge{ margin-top:8px }
@@ -142,14 +142,14 @@
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin-top:6px }
 
 /* --- アイコンボタン（＋／マイク） --- */
-.fh-iconbtn{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center }
-.fh-iconbtn--on{ background:#111827; color:#fff; }
+.fh-iconbtn{ width:36px; height:36px; border-radius:10px; border:1px solid var(--input-border); background:var(--surface); cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; color:var(--ink); }
+.fh-iconbtn--on{ background:var(--button-primary-bg); color:var(--button-primary-text); }
 
 /* --- 既存の fh- スタイルがある前提。足りない分だけ追加してください --- */
 
 /* タイムライン */
 .fh-timeline{ list-style:none; padding:0; margin:0 }
-.fh-timeline li + li{ border-top:1px solid #ececec }
+.fh-timeline li + li{ border-top:1px solid var(--line); }
 .fh-tl-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0 }
 .fh-tl-main{ display:flex; flex-direction:column; gap:2px }
 .fh-tl-title{ font-size:14px; font-weight:700 }
@@ -173,7 +173,7 @@
 /* タイムライン・パネル */
 .fh-tl-panel{ margin-top:10px; border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface) }
 .fh-timeline{ list-style:none; margin:0; padding:0 }
-.fh-timeline li + li{ border-top:1px solid #ececec }
+.fh-timeline li + li{ border-top:1px solid var(--line); }
 .fh-tl-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0 }
 .fh-tl-main{ display:flex; flex-direction:column; gap:2px }
 .fh-tl-title{ font-size:14px; font-weight:700 }
@@ -181,7 +181,7 @@
 .fh-tl-actions .fh-btn{ padding:6px 10px; font-size:12px }
 
 /* 詳細セクションの区切り線 */
-.fh-sep{ border:0; border-top:1px solid #ececec; margin:14px 0 0 }
+.fh-sep{ border:0; border-top:1px solid var(--line); margin:14px 0 0 }
 
 /* 既存のボタン・入力・バッジ・バーなどは前回の v0.3.x と同等でOK */
 
@@ -371,7 +371,7 @@
 
 /* 添付チップ（＋で選んだファイル名） */
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin: 8px 0; }
-.fh-chip{ background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px 8px; font-size:12px; }
+.fh-chip{ background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px 8px; font-size:12px; color:var(--ink); }
 
 /* トグル（タイトル直下）の余白 */
 .fh-toggle--top{ margin-bottom: 8px; }
@@ -379,7 +379,7 @@
 /* 評価（三択） */
 .fh-rate{ display:flex; gap:6px; }
 .fh-rate__btn{
-  border:1px solid #e5e7eb; background:#fff; color:#374151;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink);
   border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer;
 }
 .fh-rate__btn:hover{ background:var(--chip); }
@@ -392,13 +392,13 @@
 .fh-memo{ display:flex; gap:8px; align-items:center; margin:10px 0 6px; }
 .fh-memo__input{
   flex:1 1 auto; height:36px; padding:0 10px;
-  border:1px solid #e5e7eb; border-radius:10px; outline:none; background:#fff;
+  border:1px solid var(--input-border); border-radius:10px; outline:none; background:var(--input-bg); color:var(--input-text);
   font-size:13px;
 }
 .fh-memo__input:focus{ border-color:var(--input-border-focus); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
 .fh-memo__save{
   height:36px; padding:0 12px; border-radius:10px; cursor:pointer;
-  border:1px solid #e5e7eb; background:#111827; color:#fff; font-size:12px;
+  border:1px solid var(--button-secondary-border); background:var(--button-primary-bg); color:var(--button-primary-text); font-size:12px;
 }
 
 /* ===== Layout ===== */
@@ -407,17 +407,17 @@
 .fh-left{ display:flex; flex-direction:column; gap:10px; }
 
 /* ===== Cards / badges ===== */
-.fh-card{ background:#fff; border:1px solid #e6e6e6; border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:#f8fbff; border-color:#dfe8ff; }
+.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.fh-card--header{ background:var(--bg-secondary); border-color:var(--line); }
 .fh-disabled{ opacity:.6; }
-.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:#f3f4f6; border:1px solid #e5e7eb; }
+.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
 .fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
 
 /* ===== Typography ===== */
 .fh-title{ margin:0 0 4px; font-size:16px; font-weight:700 }
 .fh-caption{ color:var(--muted); font-size:12px; margin-bottom:2px }
 .fh-headline{ font-size:18px; font-weight:800 }
-.fh-subtle{ color:#6b7280; font-size:12.5px }
+.fh-subtle{ color:var(--muted); font-size:12.5px }
 .fh-strong{ font-weight:800 }
 .fh-paragraph{ margin:0; line-height:1.6; }
 
@@ -428,7 +428,7 @@
 .fh-gap8{ gap:8px } .fh-gap12{ gap:12px }
 .fh-mb4{ margin-bottom:4px } .fh-mb8{ margin-bottom:8px }
 .fh-mt10{ margin-top:10px }
-.fh-sep{ border:0; border-top:1px solid #ececec; margin:14px 0 0 }
+.fh-sep{ border:0; border-top:1px solid var(--line); margin:14px 0 0 }
 
 /* ===== Toggle (top) ===== */
 .fh-toggle{ align-self:flex-start; display:flex; gap:0; background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px; }
@@ -440,9 +440,9 @@
 /* ===== Chat card ===== */
 .fh-card--chat{ display:flex; flex-direction:column; min-height:560px; padding:18px; border-radius:16px; }
 .fh-chat{ flex:1 1 auto; overflow:auto; padding-right:6px; padding-bottom:12px; scroll-behavior:smooth; }
-.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; }
-.fh-msg--me .fh-msg__bubble{ background:#111827; color:#fff; border-color:#111827; }
-.fh-time{ font-size:11px; color:#9ca3af; margin-top:4px; }
+.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:var(--surface); border:1px solid var(--line); box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; color:var(--ink); }
+.fh-msg--me .fh-msg__bubble{ background:var(--button-primary-bg); color:var(--button-primary-text); border-color:var(--button-primary-bg); }
+.fh-time{ font-size:11px; color:var(--muted); margin-top:4px; }
 .fh-link{ all:unset; color:var(--accent); cursor:pointer; }
 .fh-link:hover{ text-decoration:underline; }
 
@@ -455,13 +455,13 @@
 .fh-composer__send{ height:36px; min-width:56px; padding:0 12px; border-radius:10px; border:1px solid var(--button-primary-bg); background:var(--button-primary-bg); color:var(--button-primary-text); cursor:pointer; }
 .fh-composer__send:disabled{ opacity:.6; cursor:default; }
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
-.fh-chip{ background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px 8px; font-size:12px; }
+.fh-chip{ background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px 8px; font-size:12px; color:var(--ink); }
 
 /* ===== Summary ===== */
-.fh-summary{ display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fff; border:1px dashed #e5e7eb; border-radius:10px; padding:8px 10px; margin:8px 0; }
-.fh-summary__text{ font-size:13px; color:#374151; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.fh-summary__copy{ border:1px solid #e5e7eb; background:#fff; color:#374151; border-radius:10px; padding:6px 10px; font-size:12px; cursor:pointer; }
-.fh-summary__copy:hover{ background:#f3f4f6; }
+.fh-summary{ display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--surface); border:1px dashed var(--line); border-radius:10px; padding:8px 10px; margin:8px 0; }
+.fh-summary__text{ font-size:13px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.fh-summary__copy{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:6px 10px; font-size:12px; cursor:pointer; }
+.fh-summary__copy:hover{ background:var(--chip); }
 
 /* ===== 評価・メモ ===== */
 .fh-rate{ display:flex; gap:6px; }
@@ -478,21 +478,21 @@
 .fh-memo__save{ height:36px; padding:0 12px; border-radius:10px; cursor:pointer; border:1px solid var(--button-secondary-border); background:var(--button-primary-bg); color:var(--button-primary-text); font-size:12px; }
 
 /* ===== Bars / tags / trades ===== */
-.fh-bar{ width:100%; height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden }
+.fh-bar{ width:100%; height:10px; background:var(--line); border-radius:6px; overflow:hidden }
 .fh-bar__fill{ height:100%; background:var(--accent) }
 
 .fh-tags{ display:flex; gap:6px; flex-wrap:wrap; }
-.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:#eef2ff; color:#374151; border:1px solid #e5e7eb; }
+.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:var(--chip); color:var(--ink); border:1px solid var(--line); }
 
 .fh-trades{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
 .fh-trade{ display:flex; gap:8px; align-items:center; font-size:12px; }
-.fh-trade__side{ display:inline-block; min-width:46px; text-align:center; padding:2px 6px; border-radius:6px; color:#fff; }
+.fh-trade__side{ display:inline-block; min-width:46px; text-align:center; padding:2px 6px; border-radius:6px; color:var(--button-primary-text); }
 .fh-trade__side.long{ background:var(--accent); }
 .fh-trade__side.short{ background:#dc2626; }
-.fh-trade__time{ color:#374151; }
-.fh-trade__pips{ color:#374151; }
-.fh-trade__pnl{ color:#374151; }
-.fh-trade__note{ color:#6b7280; }
+.fh-trade__time{ color:var(--ink); }
+.fh-trade__pips{ color:var(--ink); }
+.fh-trade__pnl{ color:var(--ink); }
+.fh-trade__note{ color:var(--muted); }
 
 /* ===== Layout ===== */
 .fh-root{ display:grid; gap:16px; grid-template-columns:1fr; }
@@ -500,17 +500,17 @@
 .fh-left{ display:flex; flex-direction:column; gap:10px; }
 
 /* ===== Cards / badges ===== */
-.fh-card{ background:#fff; border:1px solid #e6e6e6; border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:#f8fbff; border-color:#dfe8ff; }
+.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.fh-card--header{ background:var(--bg-secondary); border-color:var(--line); }
 .fh-disabled{ opacity:.6; }
-.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:#f3f4f6; border:1px solid #e5e7eb; }
+.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
 .fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
 
 /* ===== Typography ===== */
 .fh-title{ margin:0 0 4px; font-size:16px; font-weight:700 }
 .fh-caption{ color:var(--muted); font-size:12px; margin-bottom:2px }
 .fh-headline{ font-size:18px; font-weight:800 }
-.fh-subtle{ color:#6b7280; font-size:12.5px }
+.fh-subtle{ color:var(--muted); font-size:12.5px }
 .fh-strong{ font-weight:800 }
 .fh-paragraph{ margin:0; line-height:1.6; }
 
@@ -521,7 +521,7 @@
 .fh-gap8{ gap:8px } .fh-gap12{ gap:12px }
 .fh-mb4{ margin-bottom:4px } .fh-mb8{ margin-bottom:8px }
 .fh-mt10{ margin-top:10px }
-.fh-sep{ border:0; border-top:1px solid #ececec; margin:14px 0 0 }
+.fh-sep{ border:0; border-top:1px solid var(--line); margin:14px 0 0 }
 
 /* ===== Toggle (top) ===== */
 .fh-toggle{ align-self:flex-start; display:flex; gap:0; background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px; }
@@ -533,10 +533,10 @@
 /* ===== Chat card ===== */
 .fh-card--chat{ display:flex; flex-direction:column; min-height:560px; padding:18px; border-radius:16px; }
 .fh-chat{ flex:1 1 auto; overflow:auto; padding-right:6px; padding-bottom:12px; scroll-behavior:smooth; }
-.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; }
-.fh-msg--me .fh-msg__bubble{ background:#111827; color:#fff; border-color:#111827; }
+.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:var(--surface); border:1px solid var(--line); box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; color:var(--ink); }
+.fh-msg--me .fh-msg__bubble{ background:var(--button-primary-bg); color:var(--button-primary-text); border-color:var(--button-primary-bg); }
 .fh-msg__bubble.is-trade{ border-color:var(--accent); background:var(--accent-bg); }
-.fh-time{ font-size:11px; color:#9ca3af; margin-top:4px; }
+.fh-time{ font-size:11px; color:var(--muted); margin-top:4px; }
 .fh-link{ color:var(--accent); text-decoration:none; }
 .fh-link:hover{ text-decoration:underline; }
 
@@ -549,15 +549,15 @@
 .fh-composer__send{ height:36px; min-width:56px; padding:0 12px; border-radius:10px; border:1px solid var(--button-primary-bg); background:var(--button-primary-bg); color:var(--button-primary-text); cursor:pointer; }
 .fh-composer__send:disabled{ opacity:.6; cursor:default; }
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
-.fh-chip{ background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px 8px; font-size:12px; }
+.fh-chip{ background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px 8px; font-size:12px; color:var(--ink); }
 
 /* ===== Bars / tags ===== */
-.fh-bar{ width:100%; height:14px; background:#e5e7eb; border-radius:6px; overflow:hidden } /* ← 高さUP */
+.fh-bar{ width:100%; height:14px; background:var(--line); border-radius:6px; overflow:hidden } /* ← 高さUP */
 .fh-bar__fill{ height:100%; background:var(--accent) }
 .fh-gauge__label{ display:flex; align-items:center; justify-content:space-between; font-size:14px; margin-bottom:6px }
 .fh-gauge__pct{ font-weight:800; font-size:18px } /* ← ％大きく */
 .fh-tags{ display:flex; gap:6px; flex-wrap:wrap; }
-.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:#eef2ff; color:#374151; border:1px solid #e5e7eb; }
+.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:var(--chip); color:var(--ink); border:1px solid var(--line); }
 
 /* ===== Top probability big ring ===== */
 .fh-topprob{ display:flex; align-items:center; gap:14px; margin:8px 0 6px; }
@@ -565,11 +565,11 @@
   --v: 56%;
   width:42px; height:42px; border-radius:50%;
   background:
-    conic-gradient(var(--accent) var(--v), #e5e7eb 0);
+    conic-gradient(var(--accent) var(--v), var(--line) 0);
 }
 .fh-topprob__meta{ display:flex; gap:6px; align-items:baseline }
 .fh-topprob__num{ font-size:28px; font-weight:800; line-height:1 }
-.fh-topprob__label{ font-size:13px; color:#374151 }
+.fh-topprob__label{ font-size:13px; color:var(--ink) }
 
 /* ===== 評価・メモ ===== */
 .fh-rate{ display:flex; gap:6px; }

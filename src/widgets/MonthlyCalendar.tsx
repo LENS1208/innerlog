@@ -817,7 +817,7 @@ export default function MonthlyCalendar() {
                           <div className="calendar-day-trades" style={{ fontSize: 11, color: "var(--muted)", textAlign: "center" }}>取引：{day.tradeCount}</div>
                         </>
                       ) : day.isCurrentMonth ? (
-                        <div style={{ fontSize: 11, color: "#d1d5db", textAlign: "center", marginTop: "auto", marginBottom: "auto" }}>取引なし</div>
+                        <div style={{ fontSize: 11, color: "var(--muted)", textAlign: "center", marginTop: "auto", marginBottom: "auto" }}>取引なし</div>
                       ) : null}
                     </div>
                   );
