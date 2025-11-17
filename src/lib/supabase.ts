@@ -1,18 +1,23 @@
 import { createClient } from '@supabase/supabase-js';
 import { validateEnvironment } from './env-validator';
 
-// TEMPORARY FIX: Force correct database URL
-const CORRECT_URL = 'https://xvqpsnrcmkvngxrinjyf.supabase.co';
-const CORRECT_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh2cXBzbnJjbWt2bmd4cmluanlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE4MDQyOTksImV4cCI6MjA0NzM4MDI5OX0.kgzf7yWMwzg9Y1IHpRmYAVD-CJWQQ_yxZTLxzUq_4Jw';
+// Get environment variables from Vite's import.meta.env
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const supabaseUrl = CORRECT_URL;
-const supabaseAnonKey = CORRECT_KEY;
+// Validate environment variables
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing Supabase environment variables. ' +
+    'Please check your .env file and ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.'
+  );
+}
 
-// Validate (will log warnings but won't throw)
+// Validate environment (will log warnings but won't throw)
 try {
   validateEnvironment();
 } catch (e) {
-  console.warn('Environment validation failed, using hardcoded values:', e);
+  console.warn('Environment validation warning:', e);
 }
 
 console.log('✅ Supabase client initialized successfully');
