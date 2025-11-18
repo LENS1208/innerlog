@@ -121,23 +121,34 @@ export async function getAllTrades(dataset?: string | null): Promise<DbTrade[]> 
 }
 
 export async function getTradesCount(): Promise<number> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return 0;
+
+  // Only count user-uploaded trades (dataset is null)
   const { count, error } = await supabase
     .from('trades')
-    .select('*', { count: 'exact', head: true });
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .is('dataset', null);
 
   if (error) throw error;
+  console.log(`📊 User-uploaded trades count: ${count || 0}`);
   return count || 0;
 }
 
 export async function deleteAllTrades(): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
 
+  // Only delete user-uploaded trades (dataset is null), keep demo data (A, B, C)
   const { error } = await supabase
     .from('trades')
     .delete()
-    .neq('id', '00000000-0000-0000-0000-000000000000');
+    .eq('user_id', user.id)
+    .is('dataset', null);
 
   if (error) throw error;
+  console.log('🗑️ Deleted all user-uploaded trades (dataset=null)');
 }
 
 export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> {

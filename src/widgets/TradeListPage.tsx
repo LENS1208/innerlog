@@ -4,7 +4,7 @@ import type { Trade } from "../lib/types";
 import TradesTable from "../components/TradesTable";
 import { parseCsvText } from "../lib/csv";
 import { useDataset, Filters } from "../lib/dataset.context";
-import { getAllTrades, dbToTrade, tradeToDb, insertTrades } from "../lib/db.service";
+import { getAllTrades, dbToTrade, tradeToDb, insertTrades, deleteAllTrades } from "../lib/db.service";
 import { showToast } from "../lib/toast";
 
 function mapToRow(t: Trade) {
@@ -231,20 +231,25 @@ export default function TradeListPage() {
 
       const tradesToUpload = trades.slice(0, MAX_TRADES);
 
-      if (useDatabase && tradesToUpload.length > 0) {
+      if (tradesToUpload.length > 0) {
         console.log('💾 Saving to database...');
+
+        // Delete existing user-uploaded trades first
+        await deleteAllTrades();
+        console.log('🗑️ Deleted existing user-uploaded trades');
+
         const dbTrades = tradesToUpload.map(tradeToDb);
         console.log('🔄 Converted to DB format:', dbTrades.length);
 
         await insertTrades(dbTrades);
         console.log(`✅ Uploaded ${tradesToUpload.length} trades to database`);
 
-        const dbData = await getAllTrades(dataset);
-        console.log('📥 Retrieved from database:', dbData.length, { dataset });
-        setSrcRows(dbData.map(dbToTrade));
-      } else {
-        console.log('📝 Setting trades in memory (useDatabase=' + useDatabase + ')');
-        setSrcRows(tradesToUpload);
+        showToast(`${tradesToUpload.length}件の取引履歴をアップロードしました`, 'success');
+
+        // Reload page to refresh all data
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       }
     } catch (err) {
       console.error('❌ Error uploading file:', err);

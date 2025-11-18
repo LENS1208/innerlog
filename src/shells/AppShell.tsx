@@ -613,11 +613,16 @@ export default function AppShell({ children }: Props) {
           console.log('📊 Account summary saved to database');
         }
 
+        // Show success message
+        showToast(`${trades.length}件の取引履歴をアップロードしました`, 'success');
+
         // TradeListPageや他のコンポーネントにイベント発火して再読み込みを促す
         window.dispatchEvent(new CustomEvent("fx:tradesUpdated"));
 
         // ページをリロードしてデータを反映
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         console.warn('⚠️ No trades parsed');
         showToast('有効な取引データが見つかりませんでした', 'error');

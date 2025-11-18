@@ -32,7 +32,7 @@ export const useDataset = () => {
 };
 
 export function DatasetProvider({children}:{children:React.ReactNode}) {
-  const [dataset, setDataset] = React.useState<DS>('A');
+  const [dataset, setDataset] = React.useState<DS>(null);
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
   const [useDatabase, setUseDatabaseState] = React.useState<boolean>(false);
@@ -53,18 +53,23 @@ export function DatasetProvider({children}:{children:React.ReactNode}) {
         setDataCount(count);
 
         if (count > 0) {
-          console.log(`📊 Database has ${count} trades, switching to database mode`);
+          console.log(`📊 Database has ${count} user-uploaded trades, switching to database mode`);
           setUseDatabaseState(true);
+          setDataset(null); // Use uploaded data (dataset=null)
           localStorage.setItem('useDatabase', 'true');
         } else {
-          console.log('📭 No trades in database, using demo data');
+          console.log('📭 No user-uploaded trades, using demo data');
           setUseDatabaseState(false);
+          setDataset('A'); // Default to demo dataset A
           localStorage.setItem('useDatabase', 'false');
         }
       } catch (error) {
         console.error('Error checking database:', error);
         const stored = localStorage.getItem('useDatabase');
         setUseDatabaseState(stored === 'true');
+        if (stored !== 'true') {
+          setDataset('A'); // Default to demo dataset A on error
+        }
       } finally {
         setIsInitialized(true);
       }
