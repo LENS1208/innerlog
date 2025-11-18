@@ -142,13 +142,6 @@ export default function App() {
     );
   }
 
-  if (!user && route !== "/signup") {
-    return <LoginPage />;
-  }
-
-  if (!user && route === "/signup") {
-    return <SignupPage />;
-  }
-
+  // Skip login screen - start directly from dashboard (temporary until DB issue is resolved)
   return <AppShell>{Page}</AppShell>;
 }
