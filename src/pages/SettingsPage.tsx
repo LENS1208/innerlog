@@ -167,7 +167,6 @@ export default function SettingsPage() {
     if (!user || !avatarFile) return null;
 
     try {
-      // Try uploading to storage first
       const fileExt = avatarFile.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
       const filePath = `avatars/${fileName}`;
@@ -179,11 +178,7 @@ export default function SettingsPage() {
           upsert: true
         });
 
-      if (uploadError) {
-        console.warn('Storage upload failed, using base64 instead:', uploadError);
-        // Fallback: Use the preview (base64) directly
-        return avatarPreview;
-      }
+      if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
         .from('user-avatars')
@@ -192,8 +187,7 @@ export default function SettingsPage() {
       return publicUrl;
     } catch (err) {
       console.error('アップロードエラー:', err);
-      // Fallback: Use the preview (base64) directly
-      return avatarPreview;
+      throw err;
     }
   };
 
@@ -220,20 +214,9 @@ export default function SettingsPage() {
 
       if (error) throw error;
 
-      // Reload user data to reflect the changes
-      const { data: { user: updatedUser } } = await supabase.auth.getUser();
-      if (updatedUser) {
-        setUser(updatedUser);
-        setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
-      }
-
       setAvatarFile(null);
+      setAvatarPreview(avatarUrl || '');
       showToast('プロフィールを保存しました', 'success');
-
-      // Force reload the page to update all components
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
     } catch (err) {
       console.error('プロフィール保存エラー:', err);
       showToast('保存に失敗しました', 'error');
@@ -411,298 +394,296 @@ export default function SettingsPage() {
     <div style={{ width: '100%', padding: 16 }}>
       <div style={{ display: 'grid', gap: 16, maxWidth: 900 }}>
 
-        <>
-            <section className="panel">
-              <div
-                style={{
-                  padding: '14px 16px',
-                  borderBottom: '1px solid var(--line)',
-                }}
-              >
-                <div style={{ fontSize: 18, fontWeight: 700 }}>アカウント・セキュリティ</div>
-              </div>
+        <section className="panel">
+          <div
+            style={{
+              padding: '14px 16px',
+              borderBottom: '1px solid var(--line)',
+            }}
+          >
+            <div style={{ fontSize: 18, fontWeight: 700 }}>アカウント・セキュリティ</div>
+          </div>
 
-              <div style={{ padding: 16, display: 'flex', gap: 24 }}>
-                <div style={{ flex: '0 0 50%', display: 'grid', gap: 24 }}>
+          <div style={{ padding: 16, display: 'flex', gap: 24 }}>
+            <div style={{ flex: '0 0 50%', display: 'grid', gap: 24 }}>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>プロフィール情報</div>
+                <div style={{ display: 'grid', gap: 12 }}>
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>プロフィール情報</div>
-                    <div style={{ display: 'grid', gap: 12 }}>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
-                          トレーダー名
-                        </label>
-                        <input
-                          type="text"
-                          value={traderName}
-                          onChange={(e) => setTraderName(e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            border: '1px solid var(--line)',
-                            borderRadius: 4,
-                            fontSize: 14,
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
-                          メールアドレス
-                        </label>
-                        <input
-                          type="email"
-                          value={email}
-                          disabled
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            border: '1px solid var(--line)',
-                            borderRadius: 4,
-                            fontSize: 14,
-                            backgroundColor: 'var(--bg-secondary)',
-                            color: 'var(--muted)',
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <button
-                          onClick={handleSaveProfile}
-                          disabled={saving}
-                          style={{
-                            padding: '8px 16px',
-                            backgroundColor: 'var(--accent)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: 4,
-                            fontSize: 14,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          {saving ? '保存中...' : 'プロフィールを保存'}
-                        </button>
-                      </div>
-                    </div>
+                    <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
+                      トレーダー名
+                    </label>
+                    <input
+                      type="text"
+                      value={traderName}
+                      onChange={(e) => setTraderName(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid var(--line)',
+                        borderRadius: 4,
+                        fontSize: 14,
+                      }}
+                    />
                   </div>
-
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>パスワード変更</div>
-                    <div style={{ display: 'grid', gap: 12 }}>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
-                          新しいパスワード
-                        </label>
-                        <input
-                          type="password"
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            border: '1px solid var(--line)',
-                            borderRadius: 4,
-                            fontSize: 14,
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
-                          新しいパスワード（確認）
-                        </label>
-                        <input
-                          type="password"
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '8px 12px',
-                            border: '1px solid var(--line)',
-                            borderRadius: 4,
-                            fontSize: 14,
-                          }}
-                        />
-                      </div>
-                      {passwordMessage && (
-                        <div style={{ fontSize: 13, color: passwordMessage.includes('成功') ? 'var(--success)' : 'var(--error)' }}>
-                          {passwordMessage}
-                        </div>
-                      )}
-                      <div>
-                        <button
-                          onClick={handleChangePassword}
-                          disabled={saving || !newPassword || !confirmPassword}
-                          style={{
-                            padding: '8px 16px',
-                            backgroundColor: 'var(--accent)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: 4,
-                            fontSize: 14,
-                            cursor: 'pointer',
-                            opacity: (!newPassword || !confirmPassword) ? 0.5 : 1,
-                          }}
-                        >
-                          {saving ? '変更中...' : 'パスワードを変更'}
-                        </button>
-                      </div>
-                    </div>
+                    <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
+                      メールアドレス
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      disabled
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid var(--line)',
+                        borderRadius: 4,
+                        fontSize: 14,
+                        backgroundColor: 'var(--bg-secondary)',
+                        color: 'var(--muted)',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <button
+                      onClick={handleSaveProfile}
+                      disabled={saving}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: 'var(--accent)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 4,
+                        fontSize: 14,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {saving ? '保存中...' : 'プロフィールを保存'}
+                    </button>
                   </div>
                 </div>
+              </div>
 
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', paddingTop: 32 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, textAlign: 'center' }}>アイコン画像</div>
-                  <label
-                    htmlFor="avatar-upload"
-                    style={{
-                      width: 160,
-                      height: 160,
-                      borderRadius: '50%',
-                      border: '3px solid var(--line)',
-                      overflow: 'hidden',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: '#ffffff',
-                      cursor: 'pointer',
-                      marginBottom: 16,
-                    }}
-                  >
-                    {avatarPreview ? (
-                      <img
-                        src={avatarPreview}
-                        alt="Avatar preview"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    ) : (
-                      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <circle cx="12" cy="8" r="4"></circle>
-                        <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
-                      </svg>
-                    )}
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/png,image/gif,image/webp"
-                    onChange={handleAvatarChange}
-                    style={{ display: 'none' }}
-                    id="avatar-upload"
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>パスワード変更</div>
+                <div style={{ display: 'grid', gap: 12 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
+                      新しいパスワード
+                    </label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid var(--line)',
+                        borderRadius: 4,
+                        fontSize: 14,
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, marginBottom: 4, color: 'var(--muted)' }}>
+                      新しいパスワード（確認）
+                    </label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '8px 12px',
+                        border: '1px solid var(--line)',
+                        borderRadius: 4,
+                        fontSize: 14,
+                      }}
+                    />
+                  </div>
+                  {passwordMessage && (
+                    <div style={{ fontSize: 13, color: passwordMessage.includes('成功') ? 'var(--success)' : 'var(--error)' }}>
+                      {passwordMessage}
+                    </div>
+                  )}
+                  <div>
+                    <button
+                      onClick={handleChangePassword}
+                      disabled={saving || !newPassword || !confirmPassword}
+                      style={{
+                        padding: '8px 16px',
+                        backgroundColor: 'var(--accent)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 4,
+                        fontSize: 14,
+                        cursor: 'pointer',
+                        opacity: (!newPassword || !confirmPassword) ? 0.5 : 1,
+                      }}
+                    >
+                      {saving ? '変更中...' : 'パスワードを変更'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', paddingTop: 32 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 16, textAlign: 'center' }}>アイコン画像</div>
+              <label
+                htmlFor="avatar-upload"
+                style={{
+                  width: 160,
+                  height: 160,
+                  borderRadius: '50%',
+                  border: '3px solid var(--line)',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#ffffff',
+                  cursor: 'pointer',
+                  marginBottom: 16,
+                }}
+              >
+                {avatarPreview ? (
+                  <img
+                    src={avatarPreview}
+                    alt="Avatar preview"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
-                  <label
-                    htmlFor="avatar-upload"
-                    style={{
-                      display: 'inline-block',
-                      padding: '10px 20px',
-                      backgroundColor: 'var(--surface)',
-                      border: '1px solid var(--line)',
-                      borderRadius: 4,
-                      fontSize: 14,
-                      cursor: 'pointer',
-                      marginBottom: 12,
-                    }}
-                  >
-                    画像を選択
-                  </label>
-                  <div style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center', maxWidth: 200 }}>
-                    JPEG、PNG、GIF、WebP形式、2MB以下
-                  </div>
-                  {avatarFile && (
-                    <div style={{ fontSize: 12, color: 'var(--accent)', marginTop: 8, textAlign: 'center', maxWidth: 200 }}>
-                      ✓ 画像が選択されました。「プロフィールを保存」ボタンで確定してください。
-                    </div>
-                  )}
-                </div>
-
-              </div>
-            </section>
-
-            <section className="panel">
-              <div
+                ) : (
+                  <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="8" r="4"></circle>
+                    <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                  </svg>
+                )}
+              </label>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                onChange={handleAvatarChange}
+                style={{ display: 'none' }}
+                id="avatar-upload"
+              />
+              <label
+                htmlFor="avatar-upload"
                 style={{
-                  padding: '14px 16px',
-                  borderBottom: '1px solid var(--line)',
+                  display: 'inline-block',
+                  padding: '10px 20px',
+                  backgroundColor: 'var(--surface)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 4,
+                  fontSize: 14,
+                  cursor: 'pointer',
+                  marginBottom: 12,
                 }}
               >
-                <div style={{ fontSize: 18, fontWeight: 700 }}>データソース設定</div>
+                画像を選択
+              </label>
+              <div style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center', maxWidth: 200 }}>
+                JPEG、PNG、GIF、WebP形式、2MB以下
               </div>
-
-              <div style={{ padding: 16, display: 'grid', gap: 24 }}>
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>インポート履歴</div>
-                  {importHistory.length === 0 ? (
-                    <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
-                      履歴がありません
-                    </div>
-                  ) : (
-                    <>
-                      <div style={{ border: '1px solid var(--line)', borderRadius: 4, overflow: 'hidden' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                          <thead>
-                            <tr style={{ backgroundColor: 'var(--bg-secondary)' }}>
-                              <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>ファイル名</th>
-                              <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>形式</th>
-                              <th style={{ padding: '8px 12px', textAlign: 'right', fontSize: 13, fontWeight: 600 }}>行数</th>
-                              <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>日時</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {importHistory.slice(0, 10).map((item) => (
-                              <tr key={item.id} style={{ borderTop: '1px solid var(--line)' }}>
-                                <td style={{ padding: '8px 12px', fontSize: 13 }}>{item.filename}</td>
-                                <td style={{ padding: '8px 12px', fontSize: 13 }}>{item.format}</td>
-                                <td style={{ padding: '8px 12px', fontSize: 13, textAlign: 'right' }}>{item.rows}</td>
-                                <td style={{ padding: '8px 12px', fontSize: 13 }}>
-                                  {new Date(item.created_at).toLocaleString('ja-JP')}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
-                        <button
-                          onClick={handleClearHistory}
-                          style={{
-                            padding: '6px 12px',
-                            backgroundColor: 'transparent',
-                            color: 'var(--error)',
-                            border: '1px solid var(--error)',
-                            borderRadius: 4,
-                            fontSize: 13,
-                            cursor: 'pointer',
-                          }}
-                        >
-                          履歴をクリア
-                        </button>
-                      </div>
-                    </>
-                  )}
+              {avatarFile && (
+                <div style={{ fontSize: 12, color: 'var(--accent)', marginTop: 8, textAlign: 'center', maxWidth: 200 }}>
+                  ✓ 画像が選択されました。「プロフィールを保存」ボタンで確定してください。
                 </div>
+              )}
+            </div>
 
-                <div>
-                  <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>取引データ管理</div>
-                  <button
-                    onClick={handleDeleteAllTrades}
-                    disabled={saving}
-                    style={{
-                      padding: '10px 16px',
-                      backgroundColor: 'var(--danger)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: 4,
-                      fontSize: 14,
-                      fontWeight: 600,
-                      cursor: saving ? 'default' : 'pointer',
-                      opacity: saving ? 0.5 : 1,
-                      display: 'inline-block',
-                    }}
-                  >
-                    {saving ? '削除中...' : '現在アップロード中の取引履歴を削除'}
-                  </button>
-                  <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 8 }}>
-                    データベースに保存されている取引履歴をすべて削除します。この操作は元に戻せません。
+          </div>
+        </section>
+
+        <section className="panel">
+          <div
+            style={{
+              padding: '14px 16px',
+              borderBottom: '1px solid var(--line)',
+            }}
+          >
+            <div style={{ fontSize: 18, fontWeight: 700 }}>データソース設定</div>
+          </div>
+
+          <div style={{ padding: 16, display: 'grid', gap: 24 }}>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>インポート履歴</div>
+              {importHistory.length === 0 ? (
+                <div style={{ padding: 16, textAlign: 'center', color: 'var(--muted)' }}>
+                  履歴がありません
+                </div>
+              ) : (
+                <>
+                  <div style={{ border: '1px solid var(--line)', borderRadius: 4, overflow: 'hidden' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr style={{ backgroundColor: 'var(--bg-secondary)' }}>
+                          <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>ファイル名</th>
+                          <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>形式</th>
+                          <th style={{ padding: '8px 12px', textAlign: 'right', fontSize: 13, fontWeight: 600 }}>行数</th>
+                          <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>日時</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {importHistory.slice(0, 10).map((item) => (
+                          <tr key={item.id} style={{ borderTop: '1px solid var(--line)' }}>
+                            <td style={{ padding: '8px 12px', fontSize: 13 }}>{item.filename}</td>
+                            <td style={{ padding: '8px 12px', fontSize: 13 }}>{item.format}</td>
+                            <td style={{ padding: '8px 12px', fontSize: 13, textAlign: 'right' }}>{item.rows}</td>
+                            <td style={{ padding: '8px 12px', fontSize: 13 }}>
+                              {new Date(item.created_at).toLocaleString('ja-JP')}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                </div>
+                  <div style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                    <button
+                      onClick={handleClearHistory}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: 'transparent',
+                        color: 'var(--error)',
+                        border: '1px solid var(--error)',
+                        borderRadius: 4,
+                        fontSize: 13,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      履歴をクリア
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>取引データ管理</div>
+              <button
+                onClick={handleDeleteAllTrades}
+                disabled={saving}
+                style={{
+                  padding: '10px 16px',
+                  backgroundColor: 'var(--danger)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: 4,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  cursor: saving ? 'default' : 'pointer',
+                  opacity: saving ? 0.5 : 1,
+                  display: 'inline-block',
+                }}
+              >
+                {saving ? '削除中...' : '現在アップロード中の取引履歴を削除'}
+              </button>
+              <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 8 }}>
+                データベースに保存されている取引履歴をすべて削除します。この操作は元に戻せません。
               </div>
-            </section>
-          </>
+            </div>
+          </div>
+        </section>
 
         <section className="panel">
           <div
