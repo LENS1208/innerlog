@@ -305,7 +305,7 @@ export default function JournalNotesPage() {
         getAllDailyNotes(),
         getAllTradeNotes(),
         getAllFreeMemos(),
-        getAllTrades(null),
+        getAllTrades(dataset),
       ]);
 
       const tradesMap = new Map(allTrades.map(t => [t.ticket, t]));

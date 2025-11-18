@@ -86,7 +86,7 @@ export default function MonthlyCalendar() {
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../lib/db.service');
-          const data = await getAllTrades(null);
+          const data = await getAllTrades(dataset);
 
           const mappedTrades: Trade[] = (data || []).map((t: any) => ({
               id: t.id || t.ticket,
