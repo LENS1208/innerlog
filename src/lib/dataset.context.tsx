@@ -32,7 +32,7 @@ export const useDataset = () => {
 };
 
 export function DatasetProvider({children}:{children:React.ReactNode}) {
-  const [dataset, setDataset] = React.useState<DS>(null);
+  const [dataset, setDataset] = React.useState<DS>('A');
   const [filters, setFilters] = React.useState<Filters>({});
   const [uiFilters, setUiFiltersState] = React.useState<Filters>(() => parseFiltersFromUrl());
   const [useDatabase, setUseDatabaseState] = React.useState<boolean>(false);

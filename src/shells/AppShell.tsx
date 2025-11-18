@@ -458,11 +458,11 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }
           );
         })}
       </ul>
-      {/* デモデータボタン: データベースにデータがない場合のみ表示 */}
-      {isInitialized && !useDatabase && (
+      {/* デモデータボタン: 常に表示 */}
+      {isInitialized && (
         <div style={{ marginTop: 12, padding: "0 4px" }}>
           <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6, paddingLeft: 4 }}>
-            デモデータ
+            {useDatabase ? 'データセット' : 'デモデータ'}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 4, border: "1px solid var(--line)", borderRadius: 8, overflow: "hidden", padding: 4 }}>
             {(["A", "B", "C"] as const).map((d) => (

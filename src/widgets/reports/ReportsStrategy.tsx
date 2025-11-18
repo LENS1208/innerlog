@@ -162,7 +162,7 @@ export default function ReportsStrategy() {
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../../lib/db.service');
-          const data = await getAllTrades(null);
+          const data = await getAllTrades(dataset);
 
           const { data: notesData } = await supabase
             .from('trade_notes')
