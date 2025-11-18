@@ -10,18 +10,28 @@
    - 既存のデータを削除しない（DROP文の使用禁止）
    - マイグレーションファイルを削除しない
    - RLS（Row Level Security）を無効化しない
-   - **以下の旧データベースID/URLは絶対に使用禁止（コード・設定ファイルへの記述も含む）：**
-     - `zcflpkmxeupharqbaymc` （文字列としても使用禁止）
-     - `xvqpsnrcmkvngxrinjyf` （文字列としても使用禁止）
-     - https://zcflpkmxeupharqbaymc.supabase.co
-     - https://xvqpsnrcmkvngxrinjyf.supabase.co
-   - **現在の正式データベース（必ずこれを使用）：**
+
+   - **🚨 重要: データベースURL厳守 🚨**
+     - **使用可能なデータベースは xjviqzyhephwkytwjmwd のみ**
+     - **以下のデータベースID/URLは完全使用禁止：**
+       - ❌ `zcflpkmxeupharqbaymc` （絶対に使用しない）
+       - ❌ `xvqpsnrcmkvngxrinjyf` （絶対に使用しない）
+       - ❌ https://zcflpkmxeupharqbaymc.supabase.co
+       - ❌ https://xvqpsnrcmkvngxrinjyf.supabase.co
+     - **違反した場合、即座にエラーを報告してユーザーに通知すること**
+
+   - **✅ 必ず使用するデータベース（これ以外は使用禁止）：**
      - Database ID: `xjviqzyhephwkytwjmwd`
      - URL: https://xjviqzyhephwkytwjmwd.supabase.co
-   - **環境変数ファイル（.env, .env.production）の変更時は必ず検証：**
-     - VITE_SUPABASE_URLが `https://xjviqzyhephwkytwjmwd.supabase.co` であること
-     - 禁止されたURLが含まれていないこと
-     - 変更後は必ず内容を確認してユーザーに報告すること
+     - Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdmlxenloZXBod2t5dHdqbXdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0MTQwMDEsImV4cCI6MjA3ODk5MDAwMX0.dPEren_T08S80QEy4ZiqJvOTxB5w8cP13RHUakFl4yE
+
+   - **環境変数ファイル（.env, .env.production）の操作ルール：**
+     - 変更前に必ず現在の内容を確認すること
+     - VITE_SUPABASE_URLは必ず `https://xjviqzyhephwkytwjmwd.supabase.co` であること
+     - 禁止されたURL（zcflpkmxeupharqbaymc, xvqpsnrcmkvngxrinjyf）が含まれていないこと
+     - 変更後は必ずファイル内容を読み取って検証すること
+     - 禁止されたURLを検出したら、即座に正しいURLに修正すること
+     - 変更内容をユーザーに明確に報告すること
 
 3. **ファイル操作の禁止事項**
    - バックアップファイルを削除しない
