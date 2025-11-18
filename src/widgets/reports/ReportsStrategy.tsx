@@ -197,15 +197,18 @@ export default function ReportsStrategy() {
 
           const mapped: Trade[] = (data || []).map((t: any) => {
             const setup = notesMap.get(t.ticket) || '';
+            const openTime = typeof t.open_time === 'string' ? t.open_time : new Date(t.open_time).toISOString();
+            const closeTime = typeof t.close_time === 'string' ? t.close_time : new Date(t.close_time).toISOString();
+
             return {
               id: t.ticket,
-              datetime: t.close_time,
+              datetime: closeTime,
               pair: t.item,
               side: normalizeSide(t.side),
               volume: Number(t.size),
               profitYen: Number(t.profit),
               pips: Number(t.pips || 0),
-              openTime: t.open_time,
+              openTime: openTime,
               openPrice: Number(t.open_price),
               closePrice: Number(t.close_price),
               stopPrice: t.sl ? Number(t.sl) : undefined,
@@ -217,7 +220,7 @@ export default function ReportsStrategy() {
               profit: Number(t.profit),
               comment: setup ? setup : (t.comment || ''),
               memo: t.memo || '',
-              holdTimeMin: calculateHoldTime(t.open_time, t.close_time),
+              holdTimeMin: calculateHoldTime(openTime, closeTime),
             };
           });
           setTrades(mapped);

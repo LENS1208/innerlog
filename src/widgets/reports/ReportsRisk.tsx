@@ -180,27 +180,32 @@ export default function ReportsRisk() {
             return 'LONG';
           };
 
-          const mapped: Trade[] = (data || []).map((t: any) => ({
-            id: t.ticket,
-            datetime: t.close_time,
-            pair: t.item,
-            side: normalizeSide(t.side),
-            volume: Number(t.size),
-            profitYen: Number(t.profit),
-            pips: Number(t.pips || 0),
-            openTime: t.open_time,
-            openPrice: Number(t.open_price),
-            closePrice: Number(t.close_price),
-            stopPrice: t.sl ? Number(t.sl) : undefined,
-            targetPrice: t.tp ? Number(t.tp) : undefined,
-            commission: Number(t.commission || 0),
-            swap: Number(t.swap || 0),
-            symbol: t.item,
-            action: normalizeSide(t.side),
-            profit: Number(t.profit),
-            comment: t.comment || '',
-            memo: t.memo || '',
-          }));
+          const mapped: Trade[] = (data || []).map((t: any) => {
+            const openTime = typeof t.open_time === 'string' ? t.open_time : new Date(t.open_time).toISOString();
+            const closeTime = typeof t.close_time === 'string' ? t.close_time : new Date(t.close_time).toISOString();
+
+            return {
+              id: t.ticket,
+              datetime: closeTime,
+              pair: t.item,
+              side: normalizeSide(t.side),
+              volume: Number(t.size),
+              profitYen: Number(t.profit),
+              pips: Number(t.pips || 0),
+              openTime: openTime,
+              openPrice: Number(t.open_price),
+              closePrice: Number(t.close_price),
+              stopPrice: t.sl ? Number(t.sl) : undefined,
+              targetPrice: t.tp ? Number(t.tp) : undefined,
+              commission: Number(t.commission || 0),
+              swap: Number(t.swap || 0),
+              symbol: t.item,
+              action: normalizeSide(t.side),
+              profit: Number(t.profit),
+              comment: t.comment || '',
+              memo: t.memo || '',
+            };
+          });
           setTrades(mapped);
         } else {
           const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: "no-store" });
