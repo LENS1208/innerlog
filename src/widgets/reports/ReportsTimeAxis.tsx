@@ -1388,7 +1388,11 @@ function LossStreakHeatmap({ trades }: { trades: Trade[] }) {
       hourBuckets.set(h, []);
     }
 
-    const sortedTrades = [...trades].sort((a, b) => getTradeTime(a) - getTradeTime(b));
+    const sortedTrades = [...trades].sort((a, b) => {
+      const timeA = new Date(getTradeTime(a)).getTime();
+      const timeB = new Date(getTradeTime(b)).getTime();
+      return timeA - timeB;
+    });
 
     let currentStreak = 0;
     sortedTrades.forEach((trade) => {
