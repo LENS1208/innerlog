@@ -394,12 +394,24 @@ export default function SettingsPage() {
     );
   }
 
+  if (!user) {
+    return (
+      <div style={{ padding: 16 }}>
+        <div className="panel" style={{ padding: 24, textAlign: 'center' }}>
+          <div style={{ fontSize: 16, marginBottom: 12 }}>ログインが必要です</div>
+          <div style={{ color: 'var(--muted)' }}>
+            設定を変更するにはログインしてください
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ width: '100%', padding: 16 }}>
       <div style={{ display: 'grid', gap: 16, maxWidth: 900 }}>
 
-        {user && (
-          <>
+        <>
             <section className="panel">
               <div
                 style={{
@@ -691,7 +703,6 @@ export default function SettingsPage() {
               </div>
             </section>
           </>
-        )}
 
         <section className="panel">
           <div

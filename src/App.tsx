@@ -69,8 +69,32 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-      setLoading(false);
+
+      if (session?.user) {
+        setUser(session.user);
+        setLoading(false);
+      } else {
+        // Auto-login with test user credentials (temporary until DB issue is resolved)
+        console.log('No session found, attempting auto-login with test user...');
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: 'kan.yamaji@gmail.com',
+            password: 'test2025',
+          });
+
+          if (error) {
+            console.error('Auto-login failed:', error);
+            setUser(null);
+          } else {
+            console.log('Auto-login successful:', data.user?.email);
+            setUser(data.user);
+          }
+        } catch (err) {
+          console.error('Auto-login exception:', err);
+          setUser(null);
+        }
+        setLoading(false);
+      }
     })();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -142,6 +166,13 @@ export default function App() {
     );
   }
 
-  // Skip login screen - start directly from dashboard (temporary until DB issue is resolved)
+  if (!user && route !== "/signup") {
+    return <LoginPage />;
+  }
+
+  if (!user && route === "/signup") {
+    return <SignupPage />;
+  }
+
   return <AppShell>{Page}</AppShell>;
 }
