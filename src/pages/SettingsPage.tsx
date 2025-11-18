@@ -167,6 +167,7 @@ export default function SettingsPage() {
     if (!user || !avatarFile) return null;
 
     try {
+      // Try uploading to storage first
       const fileExt = avatarFile.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
       const filePath = `avatars/${fileName}`;
@@ -178,7 +179,11 @@ export default function SettingsPage() {
           upsert: true
         });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.warn('Storage upload failed, using base64 instead:', uploadError);
+        // Fallback: Use the preview (base64) directly
+        return avatarPreview;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('user-avatars')
@@ -187,7 +192,8 @@ export default function SettingsPage() {
       return publicUrl;
     } catch (err) {
       console.error('アップロードエラー:', err);
-      throw err;
+      // Fallback: Use the preview (base64) directly
+      return avatarPreview;
     }
   };
 
@@ -214,9 +220,20 @@ export default function SettingsPage() {
 
       if (error) throw error;
 
+      // Reload user data to reflect the changes
+      const { data: { user: updatedUser } } = await supabase.auth.getUser();
+      if (updatedUser) {
+        setUser(updatedUser);
+        setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
+      }
+
       setAvatarFile(null);
-      setAvatarPreview(avatarUrl || '');
       showToast('プロフィールを保存しました', 'success');
+
+      // Force reload the page to update all components
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (err) {
       console.error('プロフィール保存エラー:', err);
       showToast('保存に失敗しました', 'error');
