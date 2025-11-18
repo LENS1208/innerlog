@@ -10,9 +10,18 @@
    - 既存のデータを削除しない（DROP文の使用禁止）
    - マイグレーションファイルを削除しない
    - RLS（Row Level Security）を無効化しない
-   - **以下の旧データベースURLは絶対に使用しないこと：**
+   - **以下の旧データベースID/URLは絶対に使用禁止（コード・設定ファイルへの記述も含む）：**
+     - `zcflpkmxeupharqbaymc` （文字列としても使用禁止）
+     - `xvqpsnrcmkvngxrinjyf` （文字列としても使用禁止）
      - https://zcflpkmxeupharqbaymc.supabase.co
      - https://xvqpsnrcmkvngxrinjyf.supabase.co
+   - **現在の正式データベース（必ずこれを使用）：**
+     - Database ID: `xjviqzyhephwkytwjmwd`
+     - URL: https://xjviqzyhephwkytwjmwd.supabase.co
+   - **環境変数ファイル（.env, .env.production）の変更時は必ず検証：**
+     - VITE_SUPABASE_URLが `https://xjviqzyhephwkytwjmwd.supabase.co` であること
+     - 禁止されたURLが含まれていないこと
+     - 変更後は必ず内容を確認してユーザーに報告すること
 
 3. **ファイル操作の禁止事項**
    - バックアップファイルを削除しない
