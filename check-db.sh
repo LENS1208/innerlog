@@ -3,7 +3,7 @@
 # Last updated: 2025-11-17
 
 CURRENT_URL=$(grep VITE_SUPABASE_URL .env | cut -d'=' -f2)
-EXPECTED_URL="https://xvqpsnrcmkvngxrinjyf.supabase.co"
+EXPECTED_URL="https://xjviqzyhephwkytwjmwd.supabase.co"
 
 echo "=========================================="
 echo "Database Connection Checker"
@@ -31,7 +31,7 @@ echo ""
 
 if [ "$CURRENT_URL" = "$EXPECTED_URL" ]; then
     echo "✅ OK: Connected to correct database"
-    echo "   Database ID: xvqpsnrcmkvngxrinjyf"
+    echo "   Database ID: xjviqzyhephwkytwjmwd"
     echo ""
     echo "✅ Configuration is correct!"
     exit 0

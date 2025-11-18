@@ -1,4 +1,4 @@
-const EXPECTED_DB = 'xvqpsnrcmkvngxrinjyf';
+const EXPECTED_DB = 'xjviqzyhephwkytwjmwd';
 
 export function validateEnvironment() {
   const url = import.meta.env.VITE_SUPABASE_URL;
