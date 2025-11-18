@@ -1,4 +1,8 @@
 const EXPECTED_DB = 'xjviqzyhephwkytwjmwd';
+const FORBIDDEN_DBS = [
+  'zcflpkmxeupharqbaymc',
+  'xvqpsnrcmkvngxrinjyf'
+];
 
 export function validateEnvironment() {
   const url = import.meta.env.VITE_SUPABASE_URL;
@@ -6,6 +10,25 @@ export function validateEnvironment() {
 
   if (!url || !anonKey) {
     throw new Error('❌ Supabase environment variables are missing!');
+  }
+
+  // Check for forbidden databases
+  for (const forbiddenDb of FORBIDDEN_DBS) {
+    if (url.includes(forbiddenDb)) {
+      const errorMsg = `
+🚨 FORBIDDEN DATABASE DETECTED! 🚨
+
+The database ID "${forbiddenDb}" is FORBIDDEN and cannot be used.
+
+Current URL: ${url}
+Expected URL: https://${EXPECTED_DB}.supabase.co
+
+Please update your .env file with the correct database URL.
+See .env.example for the correct configuration.
+      `;
+      console.error(errorMsg);
+      throw new Error(`Forbidden database detected: ${forbiddenDb}`);
+    }
   }
 
   if (!url.includes(EXPECTED_DB)) {
