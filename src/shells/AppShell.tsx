@@ -458,8 +458,8 @@ function SideNav({ menu, activeKey, onUploadClick, logoImg, theme, toggleTheme }
           );
         })}
       </ul>
-      {/* デモデータボタン: 常に表示 */}
-      {isInitialized && (
+      {/* デモデータボタン: アップロード済みデータがない場合のみ表示 */}
+      {isInitialized && !useDatabase && (
         <div style={{ marginTop: 12, padding: "0 4px" }}>
           <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 6, paddingLeft: 4 }}>
             デモデータ
