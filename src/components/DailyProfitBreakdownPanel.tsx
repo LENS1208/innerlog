@@ -161,6 +161,7 @@ export default function DailyProfitBreakdownPanel({ trades, dateLabel, onClose }
         label: '時間帯別損益',
         data: stats.hourlyData.map(d => d.profit),
         backgroundColor: stats.hourlyData.map(d => d.profit >= 0 ? getAccentColor() : getLossColor()),
+        useGradient: 'profit-bars',
         borderWidth: 0,
       },
     ],
@@ -197,6 +198,7 @@ export default function DailyProfitBreakdownPanel({ trades, dateLabel, onClose }
       label: 'セッション別損益',
       data: stats.sessionData.map(([, data]) => data.profit),
       backgroundColor: stats.sessionData.map(([, data]) => data.profit >= 0 ? getLongColor() : getLossColor()),
+      useGradient: 'profit-bars',
       borderWidth: 0,
     }],
   }), [stats.sessionData, theme]);
