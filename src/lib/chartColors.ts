@@ -131,13 +131,13 @@ export function createBlueGradient(
   }
 
   if (isDark) {
-    gradient.addColorStop(0, '#60b4e6')
-    gradient.addColorStop(0.5, '#3b82c8')
-    gradient.addColorStop(1, '#2d5580')
+    gradient.addColorStop(0, '#7dc8f0')
+    gradient.addColorStop(0.5, '#5aa3dd')
+    gradient.addColorStop(1, '#4280b8')
   } else {
-    gradient.addColorStop(0, '#3b9fd9')
-    gradient.addColorStop(0.5, '#1e5a8a')
-    gradient.addColorStop(1, '#0f3654')
+    gradient.addColorStop(0, '#5eb5e5')
+    gradient.addColorStop(0.5, '#3b8ac0')
+    gradient.addColorStop(1, '#2a6a92')
   }
 
   return gradient
@@ -158,13 +158,13 @@ export function createGreenGradient(
   }
 
   if (isDark) {
-    gradient.addColorStop(0, '#6ee7a7')
-    gradient.addColorStop(0.5, '#34a876')
-    gradient.addColorStop(1, '#1f6644')
+    gradient.addColorStop(0, '#8affb3')
+    gradient.addColorStop(0.5, '#5dd98e')
+    gradient.addColorStop(1, '#45b871')
   } else {
-    gradient.addColorStop(0, '#4ade80')
-    gradient.addColorStop(0.5, '#1e7a4e')
-    gradient.addColorStop(1, '#0f4d2e')
+    gradient.addColorStop(0, '#6ee88f')
+    gradient.addColorStop(0.5, '#42b568')
+    gradient.addColorStop(1, '#2f8a4d')
   }
 
   return gradient
@@ -185,13 +185,13 @@ export function createRedGradient(
   }
 
   if (isDark) {
-    gradient.addColorStop(0, '#ff9999')
-    gradient.addColorStop(0.5, '#d64545')
-    gradient.addColorStop(1, '#8a2828')
+    gradient.addColorStop(0, '#ffb3b3')
+    gradient.addColorStop(0.5, '#ff7a7a')
+    gradient.addColorStop(1, '#d65555')
   } else {
-    gradient.addColorStop(0, '#f87171')
-    gradient.addColorStop(0.5, '#c72020')
-    gradient.addColorStop(1, '#7a1414')
+    gradient.addColorStop(0, '#ff9999')
+    gradient.addColorStop(0.5, '#e85555')
+    gradient.addColorStop(1, '#b83838')
   }
 
   return gradient
@@ -212,13 +212,13 @@ export function createOrangeGradient(
   }
 
   if (isDark) {
-    gradient.addColorStop(0, '#ffb366')
-    gradient.addColorStop(0.5, '#d67f3c')
-    gradient.addColorStop(1, '#8a5228')
+    gradient.addColorStop(0, '#ffc885')
+    gradient.addColorStop(0.5, '#ffaa5c')
+    gradient.addColorStop(1, '#e89040')
   } else {
-    gradient.addColorStop(0, '#fb923c')
-    gradient.addColorStop(0.5, '#c76420')
-    gradient.addColorStop(1, '#7a3e14')
+    gradient.addColorStop(0, '#ffb570')
+    gradient.addColorStop(0.5, '#e88a38')
+    gradient.addColorStop(1, '#c26a25')
   }
 
   return gradient
