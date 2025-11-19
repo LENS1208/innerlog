@@ -120,108 +120,56 @@ export function createBlueGradient(
   ctx: CanvasRenderingContext2D,
   chartArea: any,
   direction: 'vertical' | 'horizontal' = 'vertical'
-): CanvasGradient {
+): string {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
-  let gradient: CanvasGradient
-  if (direction === 'vertical') {
-    gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-  } else {
-    gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0)
-  }
-
   if (isDark) {
-    gradient.addColorStop(0, '#a3d9ff')
-    gradient.addColorStop(0.5, '#70c0ff')
-    gradient.addColorStop(1, '#5098d9')
+    return '#5ba3d0'
   } else {
-    gradient.addColorStop(0, '#70c0ff')
-    gradient.addColorStop(0.5, '#3b8fd9')
-    gradient.addColorStop(1, '#1a5f9e')
+    return '#3b82c8'
   }
-
-  return gradient
 }
 
 export function createGreenGradient(
   ctx: CanvasRenderingContext2D,
   chartArea: any,
   direction: 'vertical' | 'horizontal' = 'vertical'
-): CanvasGradient {
+): string {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
-  let gradient: CanvasGradient
-  if (direction === 'vertical') {
-    gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-  } else {
-    gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0)
-  }
-
   if (isDark) {
-    gradient.addColorStop(0, '#a3ffc9')
-    gradient.addColorStop(0.5, '#6fff9f')
-    gradient.addColorStop(1, '#4dd57e')
+    return '#5dba7a'
   } else {
-    gradient.addColorStop(0, '#85ffaa')
-    gradient.addColorStop(0.5, '#4dd57e')
-    gradient.addColorStop(1, '#2a9e55')
+    return '#3d9e5a'
   }
-
-  return gradient
 }
 
 export function createRedGradient(
   ctx: CanvasRenderingContext2D,
   chartArea: any,
   direction: 'vertical' | 'horizontal' = 'vertical'
-): CanvasGradient {
+): string {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
-  let gradient: CanvasGradient
-  if (direction === 'vertical') {
-    gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-  } else {
-    gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0)
-  }
-
   if (isDark) {
-    gradient.addColorStop(0, '#ffcccc')
-    gradient.addColorStop(0.5, '#ff9999')
-    gradient.addColorStop(1, '#ff6666')
+    return '#d97070'
   } else {
-    gradient.addColorStop(0, '#ffb3b3')
-    gradient.addColorStop(0.5, '#ff6666')
-    gradient.addColorStop(1, '#d93333')
+    return '#c94d4d'
   }
-
-  return gradient
 }
 
 export function createOrangeGradient(
   ctx: CanvasRenderingContext2D,
   chartArea: any,
   direction: 'vertical' | 'horizontal' = 'vertical'
-): CanvasGradient {
+): string {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
-  let gradient: CanvasGradient
-  if (direction === 'vertical') {
-    gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
-  } else {
-    gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0)
-  }
-
   if (isDark) {
-    gradient.addColorStop(0, '#ffd9a3')
-    gradient.addColorStop(0.5, '#ffc070')
-    gradient.addColorStop(1, '#ffa347')
+    return '#d9a05d'
   } else {
-    gradient.addColorStop(0, '#ffc88a')
-    gradient.addColorStop(0.5, '#ff9f47')
-    gradient.addColorStop(1, '#d97929')
+    return '#c97f3d'
   }
-
-  return gradient
 }
 
 export function createProfitGradient(
@@ -239,17 +187,17 @@ export function createProfitGradient(
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
   if (isDark) {
-    gradient.addColorStop(0, 'rgba(248, 113, 113, 0.85)')
-    gradient.addColorStop(clampedZero * 0.95, 'rgba(248, 113, 113, 0.2)')
-    gradient.addColorStop(clampedZero, 'rgba(200, 200, 200, 0)')
-    gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.05, 'rgba(14, 165, 233, 0.2)')
-    gradient.addColorStop(1, 'rgba(14, 165, 233, 0.85)')
+    gradient.addColorStop(0, 'rgba(217, 112, 112, 0.85)')
+    gradient.addColorStop(clampedZero * 0.7, 'rgba(217, 112, 112, 0.5)')
+    gradient.addColorStop(clampedZero, 'rgba(120, 120, 120, 0.3)')
+    gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.3, 'rgba(91, 163, 208, 0.5)')
+    gradient.addColorStop(1, 'rgba(91, 163, 208, 0.85)')
   } else {
-    gradient.addColorStop(0, 'rgba(239, 68, 68, 0.85)')
-    gradient.addColorStop(clampedZero * 0.95, 'rgba(239, 68, 68, 0.2)')
-    gradient.addColorStop(clampedZero, 'rgba(200, 200, 200, 0)')
-    gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.05, 'rgba(56, 189, 248, 0.2)')
-    gradient.addColorStop(1, 'rgba(56, 189, 248, 0.85)')
+    gradient.addColorStop(0, 'rgba(201, 77, 77, 0.85)')
+    gradient.addColorStop(clampedZero * 0.7, 'rgba(201, 77, 77, 0.5)')
+    gradient.addColorStop(clampedZero, 'rgba(100, 100, 100, 0.3)')
+    gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.3, 'rgba(59, 130, 200, 0.5)')
+    gradient.addColorStop(1, 'rgba(59, 130, 200, 0.85)')
   }
 
   return gradient
