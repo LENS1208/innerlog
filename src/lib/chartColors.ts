@@ -116,62 +116,6 @@ export function getProfitColor(alpha: number = 1): string {
   return getAccentColor(alpha)
 }
 
-export function createBlueGradient(
-  ctx: CanvasRenderingContext2D,
-  chartArea: any,
-  direction: 'vertical' | 'horizontal' = 'vertical'
-): string {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-
-  if (isDark) {
-    return '#5ba3d0'
-  } else {
-    return '#3b82c8'
-  }
-}
-
-export function createGreenGradient(
-  ctx: CanvasRenderingContext2D,
-  chartArea: any,
-  direction: 'vertical' | 'horizontal' = 'vertical'
-): string {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-
-  if (isDark) {
-    return '#5dba7a'
-  } else {
-    return '#3d9e5a'
-  }
-}
-
-export function createRedGradient(
-  ctx: CanvasRenderingContext2D,
-  chartArea: any,
-  direction: 'vertical' | 'horizontal' = 'vertical'
-): string {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-
-  if (isDark) {
-    return '#d97070'
-  } else {
-    return '#c94d4d'
-  }
-}
-
-export function createOrangeGradient(
-  ctx: CanvasRenderingContext2D,
-  chartArea: any,
-  direction: 'vertical' | 'horizontal' = 'vertical'
-): string {
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-
-  if (isDark) {
-    return '#d9a05d'
-  } else {
-    return '#c97f3d'
-  }
-}
-
 export function createProfitGradient(
   ctx: CanvasRenderingContext2D,
   chartArea: any,
@@ -184,21 +128,11 @@ export function createProfitGradient(
   const zeroPosition = (chartArea.bottom - zeroPixel) / (chartArea.bottom - chartArea.top)
   const clampedZero = Math.max(0, Math.min(1, zeroPosition))
 
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-
-  if (isDark) {
-    gradient.addColorStop(0, 'rgba(217, 112, 112, 0.85)')
-    gradient.addColorStop(clampedZero * 0.7, 'rgba(217, 112, 112, 0.5)')
-    gradient.addColorStop(clampedZero, 'rgba(120, 120, 120, 0.3)')
-    gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.3, 'rgba(91, 163, 208, 0.5)')
-    gradient.addColorStop(1, 'rgba(91, 163, 208, 0.85)')
-  } else {
-    gradient.addColorStop(0, 'rgba(201, 77, 77, 0.85)')
-    gradient.addColorStop(clampedZero * 0.7, 'rgba(201, 77, 77, 0.5)')
-    gradient.addColorStop(clampedZero, 'rgba(100, 100, 100, 0.3)')
-    gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.3, 'rgba(59, 130, 200, 0.5)')
-    gradient.addColorStop(1, 'rgba(59, 130, 200, 0.85)')
-  }
+  gradient.addColorStop(0, getLossColor(0.85))
+  gradient.addColorStop(clampedZero * 0.95, getLossColor(0.2))
+  gradient.addColorStop(clampedZero, 'rgba(200, 200, 200, 0)')
+  gradient.addColorStop(clampedZero + (1 - clampedZero) * 0.05, getAccentColor(0.2))
+  gradient.addColorStop(1, getAccentColor(0.85))
 
   return gradient
 }
@@ -209,54 +143,8 @@ export function createDrawdownGradient(
 ): CanvasGradient {
   const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom)
 
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-
-  if (isDark) {
-    gradient.addColorStop(0, 'rgba(248, 113, 113, 0.15)')
-    gradient.addColorStop(1, 'rgba(185, 28, 28, 0.85)')
-  } else {
-    gradient.addColorStop(0, 'rgba(252, 165, 165, 0.15)')
-    gradient.addColorStop(1, 'rgba(153, 27, 27, 0.85)')
-  }
+  gradient.addColorStop(0, getLossColor(0.15))
+  gradient.addColorStop(1, getLossColor(0.85))
 
   return gradient
-}
-
-export const gradientPlugin = {
-  id: 'customGradients',
-  beforeUpdate: (chart: any) => {
-    const { ctx, chartArea, data } = chart
-
-    if (!chartArea || !data.datasets) {
-      return
-    }
-
-    data.datasets.forEach((dataset: any, datasetIndex: number) => {
-      if (dataset.useGradient === 'blue') {
-        dataset.backgroundColor = createBlueGradient(ctx, chartArea, 'vertical')
-      } else if (dataset.useGradient === 'green') {
-        dataset.backgroundColor = createGreenGradient(ctx, chartArea, 'vertical')
-      } else if (dataset.useGradient === 'red') {
-        dataset.backgroundColor = createRedGradient(ctx, chartArea, 'vertical')
-      } else if (dataset.useGradient === 'orange') {
-        dataset.backgroundColor = createOrangeGradient(ctx, chartArea, 'vertical')
-      } else if (dataset.useGradient === 'profit-bars' && Array.isArray(dataset.data)) {
-        dataset.backgroundColor = dataset.data.map((_: any, index: number) => {
-          const value = typeof dataset.data[index] === 'object'
-            ? dataset.data[index].y
-            : dataset.data[index]
-
-          if (value >= 0) {
-            return createBlueGradient(ctx, chartArea, 'vertical')
-          } else {
-            return createRedGradient(ctx, chartArea, 'vertical')
-          }
-        })
-      } else if (dataset.useGradient === 'blue-border') {
-        dataset.borderColor = createBlueGradient(ctx, chartArea, 'vertical')
-      } else if (dataset.useGradient === 'green-border') {
-        dataset.borderColor = createGreenGradient(ctx, chartArea, 'vertical')
-      }
-    })
-  }
 }

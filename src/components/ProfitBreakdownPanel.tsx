@@ -165,7 +165,6 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
       label: '取引回数',
       data: stats.hourCounts,
       backgroundColor: getAccentColor(),
-      useGradient: 'blue',
     }],
   }), [stats.hourCounts, theme]);
 
@@ -175,7 +174,6 @@ export default function ProfitBreakdownPanel({ trades, rangeLabel, onClose }: Pr
       label: '取引回数',
       data: stats.weekdayCounts,
       backgroundColor: getLongColor(),
-      useGradient: 'green',
     }],
   }), [stats.weekdayCounts, theme]);
 

@@ -162,7 +162,6 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
       label: '取引回数',
       data: stats.hourCounts,
       backgroundColor: getAccentColor(),
-      useGradient: 'blue',
     }],
   }), [stats.hourCounts, theme]);
 
@@ -173,13 +172,11 @@ export default function WeekdayBreakdownPanel({ trades, rangeLabel, onClose }: W
         label: '勝ち取引',
         data: stats.holdingTimeWinCounts,
         backgroundColor: getLongColor(),
-        useGradient: 'green',
       },
       {
         label: '負け取引',
         data: stats.holdingTimeLossCounts,
         backgroundColor: getLossColor(),
-        useGradient: 'red',
       }
     ]
   }), [stats.holdingTimeRanges, stats.holdingTimeWinCounts, stats.holdingTimeLossCounts, theme]);
