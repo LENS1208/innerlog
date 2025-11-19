@@ -26,6 +26,11 @@ export default function AiEvaluationPage() {
   const coachingData = getResult(datasetKey);
   const generating = isGenerating(datasetKey);
 
+  useEffect(() => {
+    if (coachingData?.sheet) {
+      setActiveTab("overview");
+    }
+  }, [coachingData?.sheet]);
 
   useEffect(() => {
     if (!isInitialized) return;
@@ -345,12 +350,14 @@ export default function AiEvaluationPage() {
                       padding: "12px 20px",
                       textDecoration: "none",
                       color: activeTab === tab.key ? "var(--accent)" : "var(--ink)",
+                      borderTop: "none",
+                      borderLeft: "none",
+                      borderRight: "none",
                       borderBottom: activeTab === tab.key ? "2px solid var(--accent)" : "2px solid transparent",
                       fontWeight: activeTab === tab.key ? 600 : 400,
                       whiteSpace: "nowrap",
                       transition: "all 0.2s",
                       background: activeTab === tab.key ? "var(--chip)" : "transparent",
-                      border: "none",
                       cursor: "pointer",
                       fontSize: "14px",
                     }}
