@@ -95,6 +95,26 @@ export default function AiEvaluationPage() {
           100% { transform: rotate(360deg); }
         }
 
+        @keyframes pulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.6;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 1;
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
         .eval-grid-2col {
           display: grid;
           grid-template-columns: 1fr;
@@ -196,17 +216,66 @@ export default function AiEvaluationPage() {
                   </p>
                 )}
                 {generating ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px' }}>
                     <div style={{
-                      width: '48px',
-                      height: '48px',
-                      border: '4px solid var(--line)',
-                      borderTopColor: 'var(--button-primary-bg)',
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite'
-                    }} />
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '16px',
+                      position: 'relative'
+                    }}>
+                      <div style={{
+                        width: '64px',
+                        height: '64px',
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: 'var(--button-primary-bg)',
+                        borderRadius: '50%',
+                        opacity: 0.1,
+                        animation: 'pulse 2s ease-in-out infinite'
+                      }} />
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        display: 'flex',
+                        gap: '8px',
+                        alignItems: 'center'
+                      }}>
+                        <div style={{
+                          width: '12px',
+                          height: '12px',
+                          background: 'var(--button-primary-bg)',
+                          borderRadius: '50%',
+                          animation: 'float 1.4s ease-in-out infinite',
+                          animationDelay: '0s'
+                        }} />
+                        <div style={{
+                          width: '12px',
+                          height: '12px',
+                          background: 'var(--button-primary-bg)',
+                          borderRadius: '50%',
+                          animation: 'float 1.4s ease-in-out infinite',
+                          animationDelay: '0.2s'
+                        }} />
+                        <div style={{
+                          width: '12px',
+                          height: '12px',
+                          background: 'var(--button-primary-bg)',
+                          borderRadius: '50%',
+                          animation: 'float 1.4s ease-in-out infinite',
+                          animationDelay: '0.4s'
+                        }} />
+                      </div>
+                    </div>
                     <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontSize: '14px', color: 'var(--text)', marginBottom: '8px', fontWeight: 500 }}>
+                      <p style={{ fontSize: '15px', color: 'var(--text)', marginBottom: '8px', fontWeight: 500 }}>
+                        AI が分析中です
+                      </p>
+                      <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '4px' }}>
                         数分かかる場合があります。
                       </p>
                       <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
