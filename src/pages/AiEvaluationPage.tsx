@@ -90,6 +90,11 @@ export default function AiEvaluationPage() {
   return (
     <div style={{ width: '100%' }}>
       <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
         .eval-grid-2col {
           display: grid;
           grid-template-columns: 1fr;
@@ -190,34 +195,50 @@ export default function AiEvaluationPage() {
                     {error}
                   </p>
                 )}
-                <button
-                  onClick={async () => {
-                    setError(null);
-                    try {
-                      await startGeneration(datasetKey, dataRows);
-                    } catch (error) {
-                      console.error('コーチング生成エラー:', error);
-                      setError('AIコーチングの生成中にエラーが発生しました。');
-                    }
-                  }}
-                  disabled={generating || dataRows.length === 0}
-                  style={{
-                    padding: '12px 24px',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: generating || dataRows.length === 0 ? 'var(--button-disabled-text)' : 'var(--button-primary-text)',
-                    background: generating || dataRows.length === 0 ? 'var(--button-disabled-bg)' : 'var(--button-primary-bg)',
-                    border: 'none',
-                    borderRadius: '8px',
-                    cursor: generating || dataRows.length === 0 ? 'not-allowed' : 'pointer',
-                  }}
-                >
-                  {generating ? 'バックグラウンドで生成中...' : 'AIコーチングを生成'}
-                </button>
-                {generating && (
-                  <p style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '12px', textAlign: 'center' }}>
-                    他のページに移動しても生成は継続されます
-                  </p>
+                {generating ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                    <div style={{
+                      width: '48px',
+                      height: '48px',
+                      border: '4px solid var(--line)',
+                      borderTopColor: 'var(--button-primary-bg)',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite'
+                    }} />
+                    <div style={{ textAlign: 'center' }}>
+                      <p style={{ fontSize: '14px', color: 'var(--text)', marginBottom: '8px', fontWeight: 500 }}>
+                        数分かかる場合があります。
+                      </p>
+                      <p style={{ fontSize: '13px', color: 'var(--muted)' }}>
+                        お待ちの間、他のページに移動しても生成は継続されます。
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      setError(null);
+                      try {
+                        await startGeneration(datasetKey, dataRows);
+                      } catch (error) {
+                        console.error('コーチング生成エラー:', error);
+                        setError('AIコーチングの生成中にエラーが発生しました。');
+                      }
+                    }}
+                    disabled={dataRows.length === 0}
+                    style={{
+                      padding: '12px 24px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: dataRows.length === 0 ? 'var(--button-disabled-text)' : 'var(--button-primary-text)',
+                      background: dataRows.length === 0 ? 'var(--button-disabled-bg)' : 'var(--button-primary-bg)',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: dataRows.length === 0 ? 'not-allowed' : 'pointer',
+                    }}
+                  >
+                    AIコーチングを生成
+                  </button>
                 )}
               </div>
             </div>
