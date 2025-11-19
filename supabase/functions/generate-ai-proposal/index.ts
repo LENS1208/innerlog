@@ -75,7 +75,7 @@ Deno.serve(async (req: Request) => {
       console.warn('Failed to fetch current rate:', error);
     }
 
-    const systemPrompt = `あなたはプロのFXトレーダーです。ユーザーの入力から、構造化された相場予想を生成してください。
+    const systemPrompt = `あなたはプロのFXトレーダーです。ユーザーの入力から、構造化された相場スキャンを生成してください。
 
 今日の日付: ${currentDate}
 ${currentRate ? `現在の${pair}レート: ${currentRate.toFixed(2)}` : ''}

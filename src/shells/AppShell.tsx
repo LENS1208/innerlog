@@ -106,8 +106,8 @@ function Header({
                   if (subPath === "strategy") return "トレード戦略";
                   return "レポート";
                 }
-                if (k === "ai-evaluation") return "AI評価";
-                if (k === "forecast" || k === "ai-proposal") return "相場予想";
+                if (k === "ai-evaluation") return "プロファイル";
+                if (k === "forecast" || k === "ai-proposal") return "相場スキャン";
                 if (k === "notebook") return "トレード日記";
                 if (k === "settings") return "設定";
                 return "ダッシュボード";
@@ -654,10 +654,10 @@ export default function AppShell({ children }: Props) {
           { key: "reports/market", label: "通貨ペア" },
           { key: "reports/risk", label: "リスク管理" },
           { key: "reports/strategy", label: "トレード戦略" },
-          { key: "ai-evaluation", label: "AI評価" },
+          { key: "ai-evaluation", label: "プロファイル" },
           { key: "calendar", label: "カレンダー" },
           { key: "notebook", label: "取引日記" },
-          { key: "ai-proposal", label: "相場予想" },
+          { key: "ai-proposal", label: "相場スキャン" },
           { key: "trades", label: "取引一覧" },
         ]);
         const fromHash = (location.hash.replace(/^#\//, "") || "").trim();

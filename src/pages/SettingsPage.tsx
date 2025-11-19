@@ -808,7 +808,7 @@ export default function SettingsPage() {
                 ))}
               </div>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8, padding: 12, backgroundColor: 'var(--bg-secondary)', borderRadius: 4 }}>
-                AI評価ページのコーチング吹き出しに表示されるアバター画像を選択できます
+                プロファイルページのコーチング吹き出しに表示されるアバター画像を選択できます
               </div>
             </div>
           </div>
