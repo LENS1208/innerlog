@@ -179,15 +179,21 @@ export function TradeExampleCard({ ex }: TradeExampleCardProps) {
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
               <td style={{ padding: '10px 8px 10px 0', color: 'var(--ink)', fontWeight: 600, fontSize: '14px' }}>ロット数</td>
-              <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>{ex.lots.toFixed(2)}</td>
+              <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>
+                {typeof ex.lots === 'number' ? ex.lots.toFixed(2) : Number(ex.lots || 0).toFixed(2)}
+              </td>
             </tr>
             <tr style={{ borderBottom: '1px solid var(--line)' }}>
               <td style={{ padding: '10px 8px 10px 0', color: 'var(--ink)', fontWeight: 600, fontSize: '14px' }}>建値</td>
-              <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>{ex.entry}</td>
+              <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>
+                {typeof ex.entry === 'number' ? ex.entry : ex.entry}
+              </td>
             </tr>
             <tr>
               <td style={{ padding: '10px 8px 10px 0', color: 'var(--ink)', fontWeight: 600, fontSize: '14px' }}>決済</td>
-              <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>{ex.exit}</td>
+              <td style={{ padding: '10px 0', color: 'var(--ink)', fontSize: '14px', fontWeight: 500 }}>
+                {typeof ex.exit === 'number' ? ex.exit : ex.exit}
+              </td>
             </tr>
           </tbody>
         </table>
