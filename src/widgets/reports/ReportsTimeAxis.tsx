@@ -655,6 +655,7 @@ export default function ReportsTimeAxis() {
                     label: '勝ち取引',
                     data: tradeStyleData.map((s) => s.wins),
                     backgroundColor: getAccentColor(),
+                    useGradient: 'blue',
                     yAxisID: 'y',
                     stack: 'stack1',
                     order: 2,
@@ -664,6 +665,7 @@ export default function ReportsTimeAxis() {
                     label: '負け取引',
                     data: tradeStyleData.map((s) => s.losses),
                     backgroundColor: getLossColor(),
+                    useGradient: 'red',
                     yAxisID: 'y',
                     stack: 'stack1',
                     order: 2,
@@ -803,6 +805,7 @@ export default function ReportsTimeAxis() {
                     backgroundColor: dayOfWeekData.map((d) =>
                       d.profit >= 0 ? getAccentColor() : getLossColor()
                     ),
+                    useGradient: 'profit-bars',
                   },
                 ],
               }}
@@ -864,6 +867,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: hourData.map(getMetricValue),
                     backgroundColor: hourData.map((h) => (h.profit >= 0 ? getAccentColor() : getLossColor())),
+                    useGradient: 'profit-bars',
                   },
                 ],
               }}
@@ -927,6 +931,7 @@ export default function ReportsTimeAxis() {
                     backgroundColor: dailyData.map(([_, d]) =>
                       d.profit >= 0 ? getAccentColor() : getLossColor()
                     ),
+                    useGradient: 'profit-bars',
                   },
                 ],
               }}
@@ -975,6 +980,7 @@ export default function ReportsTimeAxis() {
                     backgroundColor: weeklyData.map(([_, d]) =>
                       d.profit >= 0 ? getAccentColor() : getLossColor()
                     ),
+                    useGradient: 'profit-bars',
                   },
                 ],
               }}
@@ -1016,6 +1022,7 @@ export default function ReportsTimeAxis() {
                   {
                     data: holdTimeDistribution.map((h) => h.count),
                     backgroundColor: getAccentColor(),
+                    useGradient: 'blue',
                   },
                 ],
               }}
@@ -1098,6 +1105,7 @@ export default function ReportsTimeAxis() {
                     backgroundColor: scatterTimeProfit.map((p) =>
                       p.y >= 0 ? getAccentColor() : getLossColor()
                     ),
+                    useGradient: 'profit-bars',
                     pointRadius: 4,
                   },
                 ],
@@ -1137,6 +1145,7 @@ export default function ReportsTimeAxis() {
                     backgroundColor: scatterHoldTimeProfit.map((p) =>
                       p.y >= 0 ? getAccentColor() : getLossColor()
                     ),
+                    useGradient: 'profit-bars',
                     pointRadius: 4,
                   },
                 ],

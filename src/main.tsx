@@ -24,6 +24,7 @@ import {
   TimeScale,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import { gradientPlugin } from './lib/chartColors';
 
 ChartJS.register(
   CategoryScale,
@@ -36,7 +37,8 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
-  TimeScale
+  TimeScale,
+  gradientPlugin
 );
 
 function updateChartColors() {
