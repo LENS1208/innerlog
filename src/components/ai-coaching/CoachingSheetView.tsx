@@ -10,13 +10,16 @@ import { FourWeekPlanTable } from './FourWeekPlanTable';
 import { CoachBubble } from './CoachBubble';
 import { HelpIcon } from '../common/HelpIcon';
 
+type TabKey = "overview" | "strengths" | "weaknesses" | "trends";
+
 interface CoachingSheetViewProps {
   sheet: CoachingSheet;
   scoreComponent?: React.ReactNode;
   radarComponent?: React.ReactNode;
+  activeTab?: TabKey;
 }
 
-export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: CoachingSheetViewProps) {
+export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activeTab = "overview" }: CoachingSheetViewProps) {
   if (!sheet || !sheet.summary) {
     return (
       <div style={{ padding: '20px', textAlign: 'center', color: 'var(--muted)' }}>
@@ -24,6 +27,33 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
       </div>
     );
   }
+
+  const goodExamples = sheet.examples?.filter(ex => {
+    const note = ex.note || '';
+    const isProfit = ex.pnlJPY >= 0;
+    return note.includes('良い') ||
+           note.includes('好例') ||
+           note.includes('成功') ||
+           note.includes('綺麗') ||
+           note.includes('理想') ||
+           note.includes('完璧') ||
+           note.includes('適切') ||
+           (isProfit && ex.pnlJPY > 10000);
+  }) || [];
+
+  const badExamples = sheet.examples?.filter(ex => {
+    const note = ex.note || '';
+    const isProfit = ex.pnlJPY >= 0;
+    return note.includes('改善') ||
+           note.includes('課題') ||
+           note.includes('注意') ||
+           note.includes('反省') ||
+           note.includes('過大') ||
+           note.includes('逆張り') ||
+           note.includes('大きすぎ') ||
+           note.includes('ロット大') ||
+           (!isProfit && ex.pnlJPY < -10000);
+  }) || [];
 
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
@@ -51,100 +81,143 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent }: Coa
           }
         }
       `}</style>
-      <div className="coaching-top-grid">
-        {radarComponent && (
-          <Section title="総合評価" helpText="AIがあなたの取引パフォーマンスを多角的に評価した結果です。">
-            {radarComponent}
-          </Section>
-        )}
 
-        {sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0 && (
-          <Section title="現状サマリー" helpText="あなたの取引スタイルと現在の状況をまとめた概要です。">
-            <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
-              {sheet.summary.map((s, i) => (
-                <li key={i} style={{ fontSize: '15px', color: 'var(--ink)', marginBottom: '6px' }}>{s}</li>
-              ))}
-            </ul>
-          </Section>
-        )}
-      </div>
+      {/* 総評タブ */}
+      {activeTab === "overview" && (
+        <>
+          <div className="coaching-top-grid">
+            {radarComponent && (
+              <Section title="総合評価" helpText="AIがあなたの取引パフォーマンスを多角的に評価した結果です。">
+                {radarComponent}
+              </Section>
+            )}
 
-      {sheet.strengthsWeaknesses && Array.isArray(sheet.strengthsWeaknesses) && sheet.strengthsWeaknesses.length > 0 && (
-        <Section title="強みと課題" helpText="あなたの取引における強みと改善すべき課題を整理しています。">
-          {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
-          <StrengthsWeaknessesTable
-            rows={sheet.strengthsWeaknesses}
-            evaluationScore={sheet.evaluationScore}
-          />
-        </Section>
-      )}
-
-      {sheet.examples && Array.isArray(sheet.examples) && sheet.examples.length > 0 && (
-        <Section title="あなたの注目トレード" helpText="学びに繋がる代表的なトレード事例を抽出しました。">
-          <div className="trade-examples-grid">
-            {sheet.examples.map((ex, i) => (
-              <TradeExampleCard key={i} ex={ex} />
-            ))}
+            {sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0 && (
+              <Section title="現状サマリー" helpText="あなたの取引スタイルと現在の状況をまとめた概要です。">
+                <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
+                  {sheet.summary.map((s, i) => (
+                    <li key={i} style={{ fontSize: '15px', color: 'var(--ink)', marginBottom: '6px' }}>{s}</li>
+                  ))}
+                </ul>
+              </Section>
+            )}
           </div>
-        </Section>
+
+          {sheet.coachingMessage && Array.isArray(sheet.coachingMessage) && sheet.coachingMessage.length > 0 && (
+            <Section title="コーチングメッセージ" helpText="AIコーチからのパーソナルメッセージです。">
+              {sheet.coachingMessage.map((text, i) => (
+                <p key={i} style={{ margin: '0 0 12px 0', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink)' }}>
+                  {text}
+                </p>
+              ))}
+            </Section>
+          )}
+
+          {sheet.nextSteps && Array.isArray(sheet.nextSteps) && sheet.nextSteps.length > 0 && (
+            <footer
+              style={{
+                padding: '16px',
+                background: 'var(--chip)',
+                borderRadius: '8px',
+                fontSize: '14px',
+                color: 'var(--ink)',
+              }}
+            >
+              <div style={{ fontWeight: 600, marginBottom: '6px', fontSize: '15px' }}>次のステップ提案：</div>
+              <div>{sheet.nextSteps.join(' / ')}</div>
+            </footer>
+          )}
+        </>
       )}
 
-      {sheet.rules && Array.isArray(sheet.rules) && sheet.rules.length > 0 && (
-        <Section title="改善のための5ルール" helpText="今すぐ実践できる具体的なトレードルールを提案します。" comment={sheet.rulesComment}>
-          <RulesTable rules={sheet.rules} />
-        </Section>
+      {/* 強みタブ */}
+      {activeTab === "strengths" && (
+        <>
+          {sheet.strengthsWeaknesses && Array.isArray(sheet.strengthsWeaknesses) && sheet.strengthsWeaknesses.length > 0 && (
+            <Section title="あなたの強み" helpText="取引における優れている点と活かし方を分析しています。">
+              {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
+              <StrengthsWeaknessesTable
+                rows={sheet.strengthsWeaknesses}
+                evaluationScore={sheet.evaluationScore}
+                focusMode="strengths"
+              />
+            </Section>
+          )}
+
+          {goodExamples.length > 0 && (
+            <Section title="成功トレード事例" helpText="学びに繋がる良いトレード事例を抽出しました。">
+              <div className="trade-examples-grid">
+                {goodExamples.map((ex, i) => (
+                  <TradeExampleCard key={i} ex={ex} />
+                ))}
+              </div>
+            </Section>
+          )}
+        </>
       )}
 
-      {sheet.playbook && typeof sheet.playbook === 'object' && (
-        <Section title="プレイブック（戦略型）" helpText="セットアップごとの勝率や統計データから最適な戦略を導きます。" comment={sheet.playbookComment}>
-          <PlaybookView playbook={sheet.playbook} />
-        </Section>
+      {/* 弱みタブ */}
+      {activeTab === "weaknesses" && (
+        <>
+          {sheet.strengthsWeaknesses && Array.isArray(sheet.strengthsWeaknesses) && sheet.strengthsWeaknesses.length > 0 && (
+            <Section title="改善すべき課題" helpText="取引における弱点と具体的な改善策を提案します。">
+              {sheet.strengthsWeaknessesComment && <CoachBubble message={sheet.strengthsWeaknessesComment} />}
+              <StrengthsWeaknessesTable
+                rows={sheet.strengthsWeaknesses}
+                evaluationScore={sheet.evaluationScore}
+                focusMode="weaknesses"
+              />
+            </Section>
+          )}
+
+          {badExamples.length > 0 && (
+            <Section title="改善すべきトレード事例" helpText="課題が見られたトレード事例を分析します。">
+              <div className="trade-examples-grid">
+                {badExamples.map((ex, i) => (
+                  <TradeExampleCard key={i} ex={ex} />
+                ))}
+              </div>
+            </Section>
+          )}
+
+          {sheet.rules && Array.isArray(sheet.rules) && sheet.rules.length > 0 && (
+            <Section title="改善のための5ルール" helpText="今すぐ実践できる具体的なトレードルールを提案します。" comment={sheet.rulesComment}>
+              <RulesTable rules={sheet.rules} />
+            </Section>
+          )}
+        </>
       )}
 
-      {sheet.diaryGuide && sheet.diaryGuide.rows && Array.isArray(sheet.diaryGuide.rows) && sheet.diaryGuide.rows.length > 0 && (
-        <Section title="オンライン日記の活用法" helpText="トレード日記を効果的に活用するための具体的なアドバイスです。">
-          {sheet.diaryGuide.comment && <CoachBubble message={sheet.diaryGuide.comment} />}
-          <DiaryGuideTable rows={sheet.diaryGuide.rows} />
-        </Section>
-      )}
+      {/* 傾向タブ */}
+      {activeTab === "trends" && (
+        <>
+          {sheet.playbook && typeof sheet.playbook === 'object' && (
+            <Section title="プレイブック（戦略型）" helpText="セットアップごとの勝率や統計データから最適な戦略を導きます。" comment={sheet.playbookComment}>
+              <PlaybookView playbook={sheet.playbook} />
+            </Section>
+          )}
 
-      {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
-        <Section title="KPI（数値で見る改善指標）" helpText="目標達成のために追跡すべき重要な数値指標です。">
-          {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
-          <KPITable kpis={sheet.kpis} />
-        </Section>
-      )}
+          {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
+            <Section title="KPI（数値で見る改善指標）" helpText="目標達成のために追跡すべき重要な数値指標です。">
+              {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
+              <KPITable kpis={sheet.kpis} />
+            </Section>
+          )}
 
-      {sheet.fourWeekPlan && Array.isArray(sheet.fourWeekPlan) && sheet.fourWeekPlan.length > 0 && (
-        <Section title="4週間リセットプラン" helpText="段階的にスキルアップするための4週間の実践プランです。">
-          {sheet.fourWeekPlanComment && <CoachBubble message={sheet.fourWeekPlanComment} />}
-          <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
-        </Section>
-      )}
+          {sheet.fourWeekPlan && Array.isArray(sheet.fourWeekPlan) && sheet.fourWeekPlan.length > 0 && (
+            <Section title="4週間リセットプラン" helpText="段階的にスキルアップするための4週間の実践プランです。">
+              {sheet.fourWeekPlanComment && <CoachBubble message={sheet.fourWeekPlanComment} />}
+              <FourWeekPlanTable weeks={sheet.fourWeekPlan} />
+            </Section>
+          )}
 
-      {sheet.coachingMessage && Array.isArray(sheet.coachingMessage) && sheet.coachingMessage.length > 0 && (
-        <Section title="コーチングメッセージ" helpText="AIコーチからのパーソナルメッセージです。">
-          {sheet.coachingMessage.map((text, i) => (
-            <p key={i} style={{ margin: '0 0 12px 0', fontSize: '15px', lineHeight: 1.7, color: 'var(--ink)' }}>
-              {text}
-            </p>
-          ))}
-        </Section>
-      )}
-
-      {sheet.nextSteps && Array.isArray(sheet.nextSteps) && sheet.nextSteps.length > 0 && (
-        <footer
-          style={{
-            padding: '16px',
-            background: 'var(--chip)',
-            borderRadius: '8px',
-            fontSize: '14px',
-            color: 'var(--ink)',
-          }}
-        >
-          <div style={{ fontWeight: 600, marginBottom: '6px', fontSize: '15px' }}>次のステップ提案：</div>
-          <div>{sheet.nextSteps.join(' / ')}</div>
-        </footer>
+          {sheet.diaryGuide && sheet.diaryGuide.rows && Array.isArray(sheet.diaryGuide.rows) && sheet.diaryGuide.rows.length > 0 && (
+            <Section title="オンライン日記の活用法" helpText="トレード日記を効果的に活用するための具体的なアドバイスです。">
+              {sheet.diaryGuide.comment && <CoachBubble message={sheet.diaryGuide.comment} />}
+              <DiaryGuideTable rows={sheet.diaryGuide.rows} />
+            </Section>
+          )}
+        </>
       )}
     </div>
   );

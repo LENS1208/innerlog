@@ -12,12 +12,15 @@ import { CoachingSheetView } from '../components/ai-coaching/CoachingSheetView';
 import type { AIResponse } from '../services/ai-coaching/types';
 import '../styles/journal-notebook.css';
 
+type TabKey = "overview" | "strengths" | "weaknesses" | "trends";
+
 export default function AiEvaluationPage() {
   const { dataset, useDatabase, isInitialized } = useDataset();
   const { currentTask, startGeneration, getResult, isGenerating, clearResult, loadCachedResult } = useAICoaching();
   const [dataRows, setDataRows] = useState<TradeRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabKey>("overview");
 
   const datasetKey = dataset || 'all';
   const coachingData = getResult(datasetKey);
@@ -86,6 +89,13 @@ export default function AiEvaluationPage() {
       </div>
     );
   }
+
+  const tabs: { key: TabKey; label: string }[] = [
+    { key: "overview", label: "総評" },
+    { key: "strengths", label: "強み" },
+    { key: "weaknesses", label: "弱み" },
+    { key: "trends", label: "傾向" },
+  ];
 
   return (
     <div style={{ width: '100%' }}>
@@ -314,7 +324,41 @@ export default function AiEvaluationPage() {
           </section>
         ) : coachingData?.sheet ? (
           <>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
+            {/* タブナビゲーション */}
+            <nav
+              style={{
+                display: "flex",
+                gap: 4,
+                borderBottom: "1px solid var(--line)",
+                marginBottom: 20,
+                overflowX: "auto",
+                background: "var(--surface)",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ display: "flex", gap: 4, flex: 1 }}>
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    style={{
+                      padding: "12px 20px",
+                      textDecoration: "none",
+                      color: activeTab === tab.key ? "var(--accent)" : "var(--ink)",
+                      borderBottom: activeTab === tab.key ? "2px solid var(--accent)" : "2px solid transparent",
+                      fontWeight: activeTab === tab.key ? 600 : 400,
+                      whiteSpace: "nowrap",
+                      transition: "all 0.2s",
+                      background: activeTab === tab.key ? "var(--chip)" : "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
               <button
                 onClick={() => {
                   clearResult(datasetKey);
@@ -328,13 +372,18 @@ export default function AiEvaluationPage() {
                   border: '1px solid var(--button-secondary-border)',
                   borderRadius: '6px',
                   cursor: 'pointer',
+                  marginRight: '8px',
+                  whiteSpace: "nowrap",
                 }}
               >
                 再生成
               </button>
-            </div>
+            </nav>
+
+            {/* コンテンツ */}
             <CoachingSheetView
               sheet={coachingData.sheet}
+              activeTab={activeTab}
               radarComponent={
                 coachingData.sheet.evaluationScore ? (
                   <EvaluationRadarChart

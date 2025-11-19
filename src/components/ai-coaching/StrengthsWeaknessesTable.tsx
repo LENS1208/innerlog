@@ -4,9 +4,10 @@ import type { StrengthWeaknessRow, EvaluationScore } from '../../services/ai-coa
 interface StrengthsWeaknessesTableProps {
   rows: StrengthWeaknessRow[];
   evaluationScore?: EvaluationScore;
+  focusMode?: 'all' | 'strengths' | 'weaknesses';
 }
 
-export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWeaknessesTableProps) {
+export function StrengthsWeaknessesTable({ rows, evaluationScore, focusMode = 'all' }: StrengthsWeaknessesTableProps) {
   const fixedItems = [
     { key: 'entryTiming', label: 'エントリータイミング', aliases: ['エントリー精度', 'エントリー'] },
     { key: 'riskManagement', label: 'リスク管理', aliases: ['ロット管理', '資金管理'] },
@@ -68,7 +69,7 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
       `}</style>
 
       <div className="strengths-table-desktop" style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px', minWidth: '700px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px', minWidth: focusMode === 'all' ? '700px' : '500px' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid var(--line)' }}>
               <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
@@ -77,12 +78,16 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
               <th style={{ padding: '16px 12px', textAlign: 'center', fontWeight: 700, color: 'var(--ink)', width: '90px', fontSize: '16px' }}>
                 点数
               </th>
-              <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
-                強み
-              </th>
-              <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
-                改善案
-              </th>
+              {(focusMode === 'all' || focusMode === 'strengths') && (
+                <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
+                  強み
+                </th>
+              )}
+              {(focusMode === 'all' || focusMode === 'weaknesses') && (
+                <th style={{ padding: '16px 12px', textAlign: 'left', fontWeight: 700, color: 'var(--ink)', fontSize: '16px' }}>
+                  改善案
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -122,8 +127,12 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
                     <span style={{ color: 'var(--muted)' }}>-</span>
                   )}
                 </td>
-                <td style={{ padding: '14px 12px', color: 'var(--ink)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.strength}</td>
-                <td style={{ padding: '14px 12px', color: 'var(--accent)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.improvement}</td>
+                {(focusMode === 'all' || focusMode === 'strengths') && (
+                  <td style={{ padding: '14px 12px', color: 'var(--ink)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.strength}</td>
+                )}
+                {(focusMode === 'all' || focusMode === 'weaknesses') && (
+                  <td style={{ padding: '14px 12px', color: 'var(--accent)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.improvement}</td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -175,14 +184,18 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore }: StrengthsWea
                 <span style={{ color: 'var(--muted)' }}>-</span>
               )}
             </div>
-            <div style={{ marginBottom: '12px' }}>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)', marginBottom: '4px' }}>強み</div>
-              <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--ink)', fontWeight: 500 }}>{row.strength}</div>
-            </div>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)', marginBottom: '4px' }}>改善案</div>
-              <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--accent)', fontWeight: 500 }}>{row.improvement}</div>
-            </div>
+            {(focusMode === 'all' || focusMode === 'strengths') && (
+              <div style={{ marginBottom: '12px' }}>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)', marginBottom: '4px' }}>強み</div>
+                <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--ink)', fontWeight: 500 }}>{row.strength}</div>
+              </div>
+            )}
+            {(focusMode === 'all' || focusMode === 'weaknesses') && (
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)', marginBottom: '4px' }}>改善案</div>
+                <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--accent)', fontWeight: 500 }}>{row.improvement}</div>
+              </div>
+            )}
           </div>
         ))}
       </div>
