@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { getAccentColor, getLossColor } from '../lib/chartColors';
 import { getAccountSummary, type DbAccountSummary } from '../lib/db.service';
 import { useDataset } from '../lib/dataset.context';
 import { HelpIcon } from './common/HelpIcon';
@@ -122,8 +121,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
           入金総額
           <HelpIcon text="口座に入金した総額です。取引資金の元手を把握するための指標です。" />
         </div>
-        <div className="kpi-value" style={{ color: getAccentColor() }}>
-          +{summaryData.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getAccentColor() }}>円</span>
+        <div className="kpi-value" style={{ color: 'var(--accent-2)' }}>
+          +{summaryData.total_deposits.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--accent-2)' }}>円</span>
         </div>
         <div className="kpi-desc">累計入金額の合計</div>
       </div>
@@ -133,8 +132,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
           出金総額
           <HelpIcon text="口座から出金した総額です。利益の引き出しや資金移動の記録です。" />
         </div>
-        <div className="kpi-value" style={{ color: getLossColor() }}>
-          -{Math.abs(summaryData.total_withdrawals).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getLossColor() }}>円</span>
+        <div className="kpi-value" style={{ color: 'var(--loss)' }}>
+          -{Math.abs(summaryData.total_withdrawals).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--loss)' }}>円</span>
         </div>
         <div className="kpi-desc">累計出金額の合計</div>
       </div>
@@ -145,8 +144,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
             最高資産
             <HelpIcon text="累積損益の最高到達点です。過去に達成した最大の資産額を示します。" />
           </div>
-          <div className="kpi-value" style={{ color: getAccentColor() }}>
-            +{peakEquity.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getAccentColor() }}>円</span>
+          <div className="kpi-value" style={{ color: 'var(--accent-2)' }}>
+            +{peakEquity.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--accent-2)' }}>円</span>
           </div>
           <div className="kpi-desc">累積損益のピーク値</div>
         </div>
@@ -159,8 +158,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
               XMポイント獲得
               <HelpIcon text="XMのロイヤルティプログラムで獲得したポイントを現金化した金額です。取引に応じて貯まります。" />
             </div>
-            <div className="kpi-value" style={{ color: getAccentColor() }}>
-              +{summaryData.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getAccentColor() }}>円</span>
+            <div className="kpi-value" style={{ color: 'var(--accent-2)' }}>
+              +{summaryData.xm_points_earned.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--accent-2)' }}>円</span>
             </div>
             <div className="kpi-desc">XMPで獲得した金額</div>
           </div>

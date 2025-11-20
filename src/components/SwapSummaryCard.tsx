@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { getAccentColor, getLossColor } from '../lib/chartColors';
 import { getAccountSummary, type DbAccountSummary } from '../lib/db.service';
 import { useDataset } from '../lib/dataset.context';
 import { HelpIcon } from './common/HelpIcon';
@@ -81,8 +80,8 @@ export default function SwapSummaryCard() {
         累計スワップ
         <HelpIcon text="ポジションを保有したことで発生したスワップポイントの総額です。プラスなら収入になります。" />
       </div>
-      <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor() }}>
-        {summaryData.total_swap >= 0 ? '+' : ''}{summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor() }}>円</span>
+      <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>
+        {summaryData.total_swap >= 0 ? '+' : ''}{summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.total_swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>円</span>
       </div>
       {hasSwapBreakdown ? (
         <>
@@ -100,7 +99,7 @@ export default function SwapSummaryCard() {
             {summaryData.swap_positive > 0 && (
               <div
                 style={{
-                  background: getAccentColor(),
+                  background: 'var(--accent-2)',
                   width: `${(summaryData.swap_positive / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
                   minWidth: summaryData.swap_positive > 0 ? '2px' : '0'
                 }}
@@ -110,7 +109,7 @@ export default function SwapSummaryCard() {
             {summaryData.swap_negative < 0 && (
               <div
                 style={{
-                  background: getLossColor(),
+                  background: 'var(--loss)',
                   width: `${(Math.abs(summaryData.swap_negative) / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
                   minWidth: summaryData.swap_negative < 0 ? '2px' : '0'
                 }}
@@ -119,8 +118,8 @@ export default function SwapSummaryCard() {
             )}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-            <span style={{ color: getAccentColor(), fontWeight: 600 }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')} 円</span>
-            <span style={{ color: getLossColor(), fontWeight: 600 }}>-{Math.abs(summaryData.swap_negative || 0).toLocaleString('ja-JP')} 円</span>
+            <span style={{ color: 'var(--accent-2)', fontWeight: 600 }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')} 円</span>
+            <span style={{ color: 'var(--loss)', fontWeight: 600 }}>-{Math.abs(summaryData.swap_negative || 0).toLocaleString('ja-JP')} 円</span>
           </div>
         </>
       ) : (
