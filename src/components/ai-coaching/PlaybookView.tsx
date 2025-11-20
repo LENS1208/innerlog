@@ -78,7 +78,7 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
           トレンド順張り
           <span className="strategy-badge strategy-badge-main">推奨</span>
         </h3>
-        <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6 }}>
+        <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: 'var(--ink)', lineHeight: 1.6 }}>
           トレンドの流れに乗って利益を狙う戦略。あなたの勝率が高い得意パターンです。
         </p>
         <div style={{ fontSize: '14px', marginBottom: '10px' }}>
@@ -144,7 +144,7 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
           逆張り
           <span className="strategy-badge strategy-badge-sub">少額で検証</span>
         </h3>
-        <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6 }}>
+        <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: 'var(--ink)', lineHeight: 1.6 }}>
           価格の反発を狙う戦略。小さなロットで慎重に取り組むことを推奨します。
         </p>
         <div style={{ fontSize: '14px', marginBottom: '10px' }}>
