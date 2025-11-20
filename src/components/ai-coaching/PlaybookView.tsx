@@ -22,6 +22,13 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
       <style>{`
+        .playbook-intro {
+          padding: 16px;
+          background: var(--chip);
+          border-radius: 8px;
+          border-left: 3px solid var(--accent);
+          margin-bottom: 8px;
+        }
         .playbook-strategies-grid {
           display: grid;
           grid-template-columns: 1fr;
@@ -31,6 +38,22 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
           .playbook-strategies-grid {
             grid-template-columns: repeat(2, 1fr);
           }
+        }
+        .strategy-badge {
+          display: inline-block;
+          padding: 4px 12px;
+          border-radius: 4px;
+          font-size: 12px;
+          font-weight: 600;
+          margin-left: 8px;
+        }
+        .strategy-badge-main {
+          background: var(--profit-bg);
+          color: var(--profit);
+        }
+        .strategy-badge-sub {
+          background: var(--chip);
+          color: var(--muted);
         }
         .playbook-trade-grid {
           display: grid;
@@ -45,6 +68,12 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
         }
       `}</style>
 
+      <div className="playbook-intro">
+        <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.7, color: 'var(--ink)' }}>
+          あなたの取引データから、2つの戦略パターンを分析しました。<strong>「トレンド順張り」</strong>は実績があり積極的に使える戦略、<strong>「逆張り」</strong>は慎重に研究しながら活用する戦略です。
+        </p>
+      </div>
+
       <div className="playbook-strategies-grid">
 
       <div
@@ -55,9 +84,13 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
           padding: '16px',
         }}
       >
-        <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 600, color: 'var(--ink)' }}>
-          順張り（メイン戦略）
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: 700, color: 'var(--ink)', display: 'flex', alignItems: 'center' }}>
+          トレンド順張り
+          <span className="strategy-badge strategy-badge-main">推奨</span>
         </h3>
+        <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6 }}>
+          トレンドの流れに乗って利益を狙う戦略。あなたの勝率が高い得意パターンです。
+        </p>
         <div style={{ fontSize: '14px', marginBottom: '10px' }}>
           <div style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--ink)' }}>エントリー条件：</div>
           <ul style={{ margin: '0 0 8px 20px', padding: 0, lineHeight: 1.6 }}>
@@ -84,7 +117,7 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
         </div>
         {trendExamples.length > 0 && (
           <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>実例：</div>
+            <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>参考となる取引例：</div>
             <div className="playbook-trade-grid">
               {trendExamples.map((ex, i) => (
                 <TradeExampleCard key={i} ex={ex} />
@@ -117,9 +150,13 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
           padding: '16px',
         }}
       >
-        <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 600, color: 'var(--ink)' }}>
-          逆張り（研究枠）
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '17px', fontWeight: 700, color: 'var(--ink)', display: 'flex', alignItems: 'center' }}>
+          逆張り
+          <span className="strategy-badge strategy-badge-sub">少額で検証</span>
         </h3>
+        <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6 }}>
+          価格の反発を狙う戦略。小さなロットで慎重に取り組むことを推奨します。
+        </p>
         <div style={{ fontSize: '14px', marginBottom: '10px' }}>
           <div style={{ fontWeight: 600, marginBottom: '6px', color: 'var(--ink)' }}>条件：</div>
           <ul style={{ margin: '0 0 8px 20px', padding: 0, lineHeight: 1.6 }}>
@@ -138,7 +175,7 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
         )}
         {meanReversionExamples.length > 0 && (
           <div style={{ marginTop: '12px' }}>
-            <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>実例：</div>
+            <div style={{ fontSize: '15px', fontWeight: 700, marginBottom: '8px', color: 'var(--ink)' }}>参考となる取引例：</div>
             <div className="playbook-trade-grid">
               {meanReversionExamples.map((ex, i) => (
                 <TradeExampleCard key={i} ex={ex} />
