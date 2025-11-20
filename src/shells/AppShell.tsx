@@ -183,6 +183,15 @@ function Header({
                       fontSize: 14,
                       cursor: "pointer",
                       whiteSpace: "nowrap",
+                      transition: "opacity 0.2s ease, transform 0.1s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = "0.9";
+                      e.currentTarget.style.transform = "scale(0.98)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = "1";
+                      e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
                     リセット
@@ -236,6 +245,15 @@ function Header({
                       fontSize: 14,
                       cursor: "pointer",
                       whiteSpace: "nowrap",
+                      transition: "opacity 0.2s ease, transform 0.1s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.opacity = "0.9";
+                      e.currentTarget.style.transform = "scale(0.98)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.opacity = "1";
+                      e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
                     リセット
@@ -269,6 +287,15 @@ function Header({
                   fontSize: 14,
                   cursor: "pointer",
                   whiteSpace: "nowrap",
+                  transition: "opacity 0.2s ease, transform 0.1s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "0.9";
+                  e.currentTarget.style.transform = "scale(0.98)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "1";
+                  e.currentTarget.style.transform = "scale(1)";
                 }}
               >
                 リセット
