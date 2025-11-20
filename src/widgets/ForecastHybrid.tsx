@@ -366,7 +366,7 @@ export default function ForecastHybrid(){
   {/* 右カラム：結果（棒グラフ＋詳細） */}
   <section className="fh-col fh-gap12">
     {/* 要約（棒3本） */}
-    <div className={`fh-card fh-card--header ${data ? "" : "fh-disabled"}`}>
+    <div className={`fh-card ${data ? "" : "fh-disabled"}`}>
       <div className="fh-row fh-between fh-mb8">
         <div>
           <div className="fh-caption">最新の結果</div>
