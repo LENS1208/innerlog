@@ -49,6 +49,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         p_dataset: dataset
       });
 
+      console.log('🔍 RPC Response:', { data: demoData, error: rpcError });
+
       if (rpcError) {
         throw rpcError;
       }
