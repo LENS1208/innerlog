@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Playbook } from '../../services/ai-coaching/types';
 import { TradeExampleCard } from './TradeExampleCard';
+import { CoachBubble } from './CoachBubble';
 
 interface PlaybookViewProps {
   playbook: Playbook;
@@ -22,13 +23,6 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
       <style>{`
-        .playbook-intro {
-          padding: 16px;
-          background: var(--chip);
-          border-radius: 8px;
-          border-left: 3px solid var(--accent);
-          margin-bottom: 8px;
-        }
         .playbook-strategies-grid {
           display: grid;
           grid-template-columns: 1fr;
@@ -68,11 +62,7 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
         }
       `}</style>
 
-      <div className="playbook-intro">
-        <p style={{ margin: 0, fontSize: '14px', lineHeight: 1.7, color: 'var(--ink)' }}>
-          あなたの取引データから、2つの戦略パターンを分析しました。<strong>「トレンド順張り」</strong>は実績があり積極的に使える戦略、<strong>「逆張り」</strong>は慎重に研究しながら活用する戦略です。
-        </p>
-      </div>
+      <CoachBubble message="あなたの取引データから、2つの戦略パターンを分析しました。「トレンド順張り」は実績があり積極的に使える戦略、「逆張り」は慎重に研究しながら活用する戦略です。" />
 
       <div className="playbook-strategies-grid">
 
