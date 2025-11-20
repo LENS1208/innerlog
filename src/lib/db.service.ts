@@ -471,6 +471,8 @@ export type DbAccountSummary = {
   xm_points_earned: number;
   xm_points_used: number;
   total_swap: number;
+  swap_positive?: number;
+  swap_negative?: number;
   total_commission: number;
   total_profit: number;
   closed_pl: number;
@@ -489,7 +491,23 @@ export async function getAccountSummary(dataset: string = 'default'): Promise<Db
     .maybeSingle();
 
   if (error) throw error;
-  return data;
+  if (!data) return null;
+
+  const { data: swapData } = await supabase
+    .from('account_transactions')
+    .select('amount')
+    .eq('user_id', user.id)
+    .eq('dataset', dataset)
+    .eq('transaction_type', 'swap');
+
+  const swap_positive = swapData?.reduce((sum, t) => sum + (t.amount > 0 ? t.amount : 0), 0) || 0;
+  const swap_negative = swapData?.reduce((sum, t) => sum + (t.amount < 0 ? t.amount : 0), 0) || 0;
+
+  return {
+    ...data,
+    swap_positive,
+    swap_negative: Math.abs(swap_negative),
+  };
 }
 
 export async function upsertAccountSummary(summary: {
