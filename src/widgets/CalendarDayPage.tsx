@@ -165,7 +165,11 @@ export default function CalendarDayPage() {
   const dayTrades = useMemo(() => {
     return trades.filter((t) => {
       const tradeDate = new Date(t.time);
-      const tradeDateStr = tradeDate.toISOString().split('T')[0];
+      // Use local date format to match the calendar's date format (YYYY-MM-DD)
+      const year = tradeDate.getFullYear();
+      const month = String(tradeDate.getMonth() + 1).padStart(2, '0');
+      const day = String(tradeDate.getDate()).padStart(2, '0');
+      const tradeDateStr = `${year}-${month}-${day}`;
       return tradeDateStr === selectedDate;
     });
   }, [trades, selectedDate]);
