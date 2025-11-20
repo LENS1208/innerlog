@@ -103,6 +103,13 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
             )}
           </div>
 
+          {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
+            <Section title="KPI（数値で見る改善指標）" helpText="目標達成のために追跡すべき重要な数値指標です。">
+              {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
+              <KPITable kpis={sheet.kpis} />
+            </Section>
+          )}
+
           {sheet.coachingMessage && Array.isArray(sheet.coachingMessage) && sheet.coachingMessage.length > 0 && (
             <Section title="コーチングメッセージ" helpText="AIコーチからのパーソナルメッセージです。">
               {sheet.coachingMessage.map((text, i) => (
@@ -194,13 +201,6 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
           {sheet.playbook && typeof sheet.playbook === 'object' && (
             <Section title="プレイブック（戦略型）" helpText="セットアップごとの勝率や統計データから最適な戦略を導きます。" comment={sheet.playbookComment}>
               <PlaybookView playbook={sheet.playbook} />
-            </Section>
-          )}
-
-          {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
-            <Section title="KPI（数値で見る改善指標）" helpText="目標達成のために追跡すべき重要な数値指標です。">
-              {sheet.kpisComment && <CoachBubble message={sheet.kpisComment} />}
-              <KPITable kpis={sheet.kpis} />
             </Section>
           )}
 
