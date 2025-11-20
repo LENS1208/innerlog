@@ -94,6 +94,7 @@
 }
 .fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
 .fh-card--header{ background:var(--bg-secondary); border-color:var(--line); }
+:root[data-theme="dark"] .fh-card--header{ background:#1a202c; border-color:var(--line); }
 .fh-card--chat{ position:sticky; top:72px; height:fit-content; }
 .fh-disabled{ opacity:.5; }
 
