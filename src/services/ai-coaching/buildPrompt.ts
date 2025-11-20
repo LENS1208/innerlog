@@ -1,4 +1,5 @@
 import systemPrompt from './SYSTEM_PROMPT.txt?raw';
+import { analyzeUserProfile, recommendCategories } from './analyzeUserProfile';
 
 export const SYSTEM_TXT = systemPrompt;
 
@@ -12,8 +13,17 @@ export function buildPrompt(input: PromptInput): string {
   const trades = input.tradesJson.trades || [];
   const summary = input.tradesJson.summary || {};
 
+  // ユーザープロファイルを分析
+  const profile = analyzeUserProfile(input.tradesJson);
+  const categoryRec = recommendCategories(profile);
+
   const actualExamples = trades.slice(0, 10).map((t: any, i: number) =>
     `${i + 1}. ticket:${t.ticket}, date:${t.closeDate}, symbol:${t.symbol}, side:${t.side}, lots:${t.lots}, profit:${t.profit}円, pips:${t.pips}`
+  ).join('\n');
+
+  // カテゴリー推奨リストの文字列化
+  const categoryList = categoryRec.categories.map((cat, idx) =>
+    `${idx + 1}. **${cat}**: ${categoryRec.categoryDescriptions[cat]}`
   ).join('\n');
 
   const userTemplate = `
@@ -24,6 +34,20 @@ export function buildPrompt(input: PromptInput): string {
 - 取引履歴ファイル（JSON要約）：<<TRADES_JSON>>
 - 期間メモ：${input.dateRangeHint ?? '（指定なし）'}
 - 重点観点：${input.focusHint ?? 'ロット管理と逆張り制御'}
+
+**🎯 現状サマリーのカテゴリー構成（このユーザー専用）**
+
+データ分析の結果、このユーザーには以下のカテゴリー構成が最適です：
+
+${categoryList}
+
+**選定理由**: ${categoryRec.rationale}
+
+**重要指示**:
+- 現状サマリー（summaryフィールド）は、上記のカテゴリーに沿って4-5段落で構成してください
+- 各カテゴリーの内容を1-2段落で簡潔に記述してください
+- カテゴリー名を段落の冒頭で明示する必要はありません。自然な流れで各観点を織り込んでください
+- 全体として、このユーザーの特性（強み・課題）が明確に伝わるストーリーを作成してください
 
 **🚨 絶対に守ること：以下の実際の取引データのみを使用してください 🚨**
 
