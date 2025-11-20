@@ -113,11 +113,13 @@ function getPairInfo(pair: string) {
   return { basePrice, priceRange, pipMultiplier, isJPY };
 }
 
-function calculateSwap(pair: string, side: string, holdDays: number): number {
+function calculateSwap(pair: string, side: string, holdDays: number, size: number = 1): number {
   if (pair === 'BTCUSD' || pair === 'ETHUSD') return 0;
 
-  const baseSwap = side === 'buy' ? randomFloat(-0.5, 1.5) : randomFloat(-1.5, 0.5);
-  return parseFloat((baseSwap * holdDays).toFixed(1));
+  // More realistic swap: -50 to 150 yen per lot per day for buy, -150 to 50 for sell
+  const baseSwapPerLot = side === 'buy' ? randomFloat(-50, 150) : randomFloat(-150, 50);
+  const totalSwap = baseSwapPerLot * size * holdDays;
+  return Math.floor(totalSwap); // Floor to remove decimals
 }
 
 function generateDatasetA(): TradeRecord[] {
@@ -181,8 +183,8 @@ function generateDatasetA(): TradeRecord[] {
 
         const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
         const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
-        const holdDays = Math.ceil(holdMinutes / (24 * 60));
-        const swap = calculateSwap(pair, type, holdDays);
+        const holdDays = Math.max(0.1, holdMinutes / (24 * 60)); // Minimum 0.1 day
+        const swap = calculateSwap(pair, type, holdDays, size);
 
         const slDistance = randomFloat(10, 25) / pipMultiplier;
         const tpDistance = randomFloat(20, 60) / pipMultiplier;
@@ -250,8 +252,8 @@ function generateDatasetA(): TradeRecord[] {
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
 
-    const holdDays = Math.ceil(holdMinutes / (24 * 60));
-    const swap = calculateSwap(pair, type, holdDays);
+    const holdDays = Math.max(0.1, holdMinutes / (24 * 60)); // Minimum 0.1 day
+    const swap = calculateSwap(pair, type, holdDays, size);
 
     const slDistance = randomFloat(10, 25) / pipMultiplier;
     const tpDistance = randomFloat(20, 60) / pipMultiplier;
@@ -361,8 +363,8 @@ function generateDatasetB(): TradeRecord[] {
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
 
-    const holdDays = Math.ceil(holdMinutes / (24 * 60));
-    const swap = calculateSwap(pair, type, holdDays);
+    const holdDays = Math.max(0.1, holdMinutes / (24 * 60)); // Minimum 0.1 day
+    const swap = calculateSwap(pair, type, holdDays, size);
 
     const slDistance = randomFloat(8, 22) / pipMultiplier;
     const tpDistance = randomFloat(18, 55) / pipMultiplier;
@@ -477,8 +479,8 @@ function generateDatasetC(): TradeRecord[] {
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
 
-    const holdDays = Math.ceil(holdMinutes / (24 * 60));
-    const swap = calculateSwap(pair, type, holdDays);
+    const holdDays = Math.max(0.1, holdMinutes / (24 * 60)); // Minimum 0.1 day
+    const swap = calculateSwap(pair, type, holdDays, size);
 
     const slDistance = isFomoTrade
       ? randomFloat(50, 100) / pipMultiplier

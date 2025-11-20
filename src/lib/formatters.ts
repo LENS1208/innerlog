@@ -31,9 +31,10 @@ export const fmt = {
   },
   swap_signed_colored: (n?: number) => {
     if (n == null || n === 0) return { text: "—", cls: "" };
+    const floored = Math.floor(Math.abs(n));
     const sign = n >= 0 ? "+" : "−";
     const cls  = n >= 0 ? "pnl-pos" : "pnl-neg";
-    return { text: `${sign}${Math.abs(n).toLocaleString("ja-JP")}円`, cls };
+    return { text: `${sign}${floored.toLocaleString("ja-JP")}円`, cls };
   },
   r_1: (n?: number) => (n==null ? "—" : `${n.toFixed(1)}R`),
   int: (n?: number) => (n==null ? "—" : Math.round(n).toString()),
@@ -63,6 +64,17 @@ export function formatJPY(value: number): string {
 export function formatJPYSigned(value: number): string {
   const sign = value >= 0 ? '+' : '';
   return `${sign}${formatJPY(value)}`;
+}
+
+export function formatSwap(value: number): string {
+  const floored = Math.floor(Math.abs(value));
+  const sign = value >= 0 ? '+' : '-';
+  return `${sign}${floored.toLocaleString('ja-JP')}円`;
+}
+
+export function formatSwapNoSign(value: number): string {
+  const floored = Math.floor(Math.abs(value));
+  return `${floored.toLocaleString('ja-JP')}`;
 }
 
 export function getPnLColor(value: number): string {

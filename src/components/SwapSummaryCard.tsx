@@ -81,7 +81,7 @@ export default function SwapSummaryCard() {
         <HelpIcon text="ポジションを保有したことで発生したスワップポイントの総額です。プラスなら収入になります。" />
       </div>
       <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>
-        {summaryData.total_swap >= 0 ? '+' : ''}{summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.total_swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>円</span>
+        {summaryData.total_swap >= 0 ? '+' : ''}{Math.floor(Math.abs(summaryData.total_swap)).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.total_swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>円</span>
       </div>
       {hasSwapBreakdown ? (
         <>
@@ -103,7 +103,7 @@ export default function SwapSummaryCard() {
                   width: `${(summaryData.swap_positive / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
                   minWidth: summaryData.swap_positive > 0 ? '2px' : '0'
                 }}
-                title={`受取: ${summaryData.swap_positive.toLocaleString('ja-JP')}円`}
+                title={`受取: ${Math.floor(summaryData.swap_positive).toLocaleString('ja-JP')}円`}
               />
             )}
             {summaryData.swap_negative < 0 && (
@@ -113,13 +113,13 @@ export default function SwapSummaryCard() {
                   width: `${(Math.abs(summaryData.swap_negative) / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
                   minWidth: summaryData.swap_negative < 0 ? '2px' : '0'
                 }}
-                title={`支払: ${Math.abs(summaryData.swap_negative).toLocaleString('ja-JP')}円`}
+                title={`支払: ${Math.floor(Math.abs(summaryData.swap_negative)).toLocaleString('ja-JP')}円`}
               />
             )}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-            <span style={{ color: 'var(--accent-2)', fontWeight: 600 }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')} 円</span>
-            <span style={{ color: 'var(--loss)', fontWeight: 600 }}>-{Math.abs(summaryData.swap_negative || 0).toLocaleString('ja-JP')} 円</span>
+            <span style={{ color: 'var(--accent-2)', fontWeight: 600 }}>+{Math.floor(summaryData.swap_positive || 0).toLocaleString('ja-JP')} 円</span>
+            <span style={{ color: 'var(--loss)', fontWeight: 600 }}>-{Math.floor(Math.abs(summaryData.swap_negative || 0)).toLocaleString('ja-JP')} 円</span>
           </div>
         </>
       ) : (
