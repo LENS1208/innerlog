@@ -71,7 +71,7 @@ GOLD（XAUUSD）は検証モード推奨、USDJPYをメイン戦略とします�
         "coachNote": "励ましと実践的アドバイス"
       }
     ],
-    "rulesComment": "安定した利益を継続するための5つのルールです。",
+    "rulesComment": "あなたの取引履歴を分析した上で、安定した利益を継続するための5つのルールをご提案します。",
     "rules": [
       {
         "ruleId": "rule1",

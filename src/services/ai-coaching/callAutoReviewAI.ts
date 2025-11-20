@@ -222,7 +222,7 @@ export function generateMockCoachingSheet(): AIResponse {
           coachNote: '"どの位置でどう感じたか"をスクショにメモすると再現性が高まります。',
         },
       ],
-      rulesComment: 'ルールは、自分を縛るためではなく、冷静でいられる環境を作るためのものです。あなたの強みを活かすために、次の5つを意識的に実践していきましょう。',
+      rulesComment: 'あなたの取引履歴を分析した上で、安定した利益を継続するための5つのルールをご提案します。',
       rules: [
         {
           ruleId: 'rule1',
