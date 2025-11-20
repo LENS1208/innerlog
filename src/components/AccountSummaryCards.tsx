@@ -3,6 +3,7 @@ import { getAccentColor, getLossColor } from '../lib/chartColors';
 import { getAccountSummary, type DbAccountSummary } from '../lib/db.service';
 import { useDataset } from '../lib/dataset.context';
 import { HelpIcon } from './common/HelpIcon';
+import { supabase } from '../lib/supabase';
 
 type AccountSummaryCardsProps = {
   peakEquity?: number;
