@@ -32,6 +32,11 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
       if (useDatabase) {
         const data = await getAccountSummary('default');
         console.log('📊 Account summary loaded:', data);
+        console.log('🔍 Swap breakdown:', {
+          swap_positive: data?.swap_positive,
+          swap_negative: data?.swap_negative,
+          hasSwapBreakdown: data?.swap_positive !== undefined && data?.swap_negative !== undefined
+        });
         setSummary(data);
         setError(null);
         setLoading(false);
@@ -53,8 +58,9 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
       }
 
       const demoData = await response.json();
+      console.log('📊 Demo account summary loaded:', demoData);
 
-      setSummary({
+      const summaryData = {
         id: 'demo',
         user_id: 'demo',
         dataset: dataset,
@@ -69,7 +75,15 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         total_profit: 0,
         closed_pl: 0,
         updated_at: new Date().toISOString(),
+      };
+
+      console.log('🔍 Demo swap breakdown:', {
+        swap_positive: summaryData.swap_positive,
+        swap_negative: summaryData.swap_negative,
+        hasSwapBreakdown: summaryData.swap_positive !== undefined && summaryData.swap_negative !== undefined
       });
+
+      setSummary(summaryData);
       setError(null);
     } catch (error) {
       console.error('❌ Failed to load account summary:', error);
@@ -100,7 +114,7 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
   };
 
   const hasXmPoints = summaryData.xm_points_earned > 0 || summaryData.xm_points_used > 0;
-  const hasSwapBreakdown = (summaryData.swap_positive || 0) > 0 || (summaryData.swap_negative || 0) > 0;
+  const hasSwapBreakdown = summaryData.swap_positive !== undefined && summaryData.swap_negative !== undefined;
 
   return (
     <>
