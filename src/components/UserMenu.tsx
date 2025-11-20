@@ -62,6 +62,7 @@ export default function UserMenu() {
           fontWeight: 600,
           cursor: 'pointer',
           transition: 'all 0.2s ease',
+          whiteSpace: 'nowrap',
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.background = 'var(--accent-dark)';
