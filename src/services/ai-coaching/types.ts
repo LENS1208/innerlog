@@ -72,8 +72,14 @@ export type EvaluationScore = {
   explanation: string;
 };
 
+export type SummaryCategory = {
+  category: string;
+  description: string;
+};
+
 export type CoachingSheet = {
   summary: string[];
+  summaryCategories?: SummaryCategory[];
   summaryComment?: string;
   examples: TradeExample[];
   strengthsWeaknesses: StrengthWeaknessRow[];
