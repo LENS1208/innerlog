@@ -186,47 +186,26 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
                     {(sheet.summaryCategories && sheet.summaryCategories.length > 0 ? sheet.summaryCategories : convertSummaryToCategories(sheet.summary || [])).map((cat, i) => (
                       <div
                         key={i}
-                        className="summary-category-card"
                         style={{
                           background: 'var(--surface)',
                           border: '1px solid var(--line)',
-                          borderRadius: '10px',
+                          borderRadius: '8px',
                           padding: '16px',
-                          position: 'relative',
-                          overflow: 'hidden',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--accent)';
-                          e.currentTarget.style.transform = 'translateY(-2px)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor = 'var(--line)';
-                          e.currentTarget.style.transform = 'translateY(0)';
                         }}
                       >
-                        <div style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          width: '4px',
-                          height: '100%',
-                          background: `var(--accent)`,
-                          opacity: 0.6
-                        }} />
                         <h4 style={{
-                          margin: '0 0 10px 0',
+                          margin: '0 0 8px 0',
                           fontSize: '14px',
-                          fontWeight: 700,
-                          color: 'var(--accent)',
-                          letterSpacing: '0.02em'
+                          fontWeight: 600,
+                          color: 'var(--ink)',
                         }}>
                           {cat.category}
                         </h4>
                         <p style={{
                           margin: 0,
                           fontSize: '14px',
-                          lineHeight: 1.7,
-                          color: 'var(--ink)'
+                          lineHeight: 1.6,
+                          color: 'var(--muted)'
                         }}>
                           {cat.description}
                         </p>
