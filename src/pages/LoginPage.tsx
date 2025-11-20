@@ -111,11 +111,22 @@ export default function LoginPage() {
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <img
-            src={logoImg}
-            alt="inner log"
-            style={{ height: 48, marginBottom: 24 }}
-          />
+          <button
+            onClick={() => (window.location.hash = '#/')}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              marginBottom: 24,
+            }}
+          >
+            <img
+              src={logoImg}
+              alt="inner log"
+              style={{ height: 48 }}
+            />
+          </button>
           <h1
             style={{
               fontSize: 32,

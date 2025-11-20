@@ -142,12 +142,16 @@ export default function App() {
     );
   }
 
-  if (!user && route !== "/signup") {
+  if (!user && route === "/login") {
     return <LoginPage />;
   }
 
   if (!user && route === "/signup") {
     return <SignupPage />;
+  }
+
+  if (!user) {
+    return <AppShell><EquityCurvePage /></AppShell>;
   }
 
   return <AppShell>{Page}</AppShell>;

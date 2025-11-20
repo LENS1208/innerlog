@@ -49,7 +49,32 @@ export default function UserMenu() {
   };
 
   if (!user) {
-    return null;
+    return (
+      <button
+        onClick={() => window.location.href = '#/login'}
+        style={{
+          padding: '8px 16px',
+          background: 'var(--accent)',
+          color: '#ffffff',
+          border: 'none',
+          borderRadius: 8,
+          fontSize: 14,
+          fontWeight: 600,
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'var(--accent-dark)';
+          e.currentTarget.style.transform = 'scale(1.02)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'var(--accent)';
+          e.currentTarget.style.transform = 'scale(1)';
+        }}
+      >
+        ログイン
+      </button>
+    );
   }
 
   const avatarUrl = user.user_metadata?.avatar_url || defaultAvatar;
