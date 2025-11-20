@@ -96,10 +96,10 @@ export default function AiEvaluationPage() {
   }
 
   const tabs: { key: TabKey; label: string }[] = [
-    { key: "overview", label: "総評" },
-    { key: "strengths", label: "強み" },
-    { key: "weaknesses", label: "弱み" },
-    { key: "trends", label: "傾向" },
+    { key: "overview", label: "あなたの総評" },
+    { key: "strengths", label: "強み・特徴" },
+    { key: "weaknesses", label: "弱み・改善点" },
+    { key: "trends", label: "傾向と目標" },
   ];
 
   return (
