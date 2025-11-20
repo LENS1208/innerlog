@@ -91,7 +91,7 @@
 @media (min-width: 840px){
   .fh-root{ grid-template-columns: minmax(300px, 360px) 1fr; column-gap:20px; }
 }
-.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.fh-card{ background:var(--surface) !important; border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
 .fh-card--chat{ position:sticky; top:72px; height:fit-content; }
 .fh-disabled{ opacity:.5; }
 
@@ -402,7 +402,7 @@
 .fh-left{ display:flex; flex-direction:column; gap:10px; }
 
 /* ===== Cards / badges ===== */
-.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.fh-card{ background:var(--surface) !important; border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
 .fh-disabled{ opacity:.6; }
 .fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
 .fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
@@ -494,7 +494,7 @@
 .fh-left{ display:flex; flex-direction:column; gap:10px; }
 
 /* ===== Cards / badges ===== */
-.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+.fh-card{ background:var(--surface) !important; border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
 .fh-disabled{ opacity:.6; }
 .fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
 .fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
