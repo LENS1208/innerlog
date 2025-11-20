@@ -5,6 +5,7 @@ import { UI_TEXT, formatCount } from '../lib/i18n'
 import { computePipsFromPrices, computeDurationMinutes } from '../lib/metrics'
 import type { Trade } from '../lib/types'
 import AccountSummaryCards from '../components/AccountSummaryCards'
+import SwapSummaryCard from '../components/SwapSummaryCard'
 import { HelpIcon } from '../components/common/HelpIcon'
 
 export type DashTrade = {
@@ -304,6 +305,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           <BarSplit avgProfit={dash.avgProfit} avgLoss={dash.avgLoss} />
         </div>
       </div>
+
+      <SwapSummaryCard />
 
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>

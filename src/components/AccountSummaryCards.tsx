@@ -152,58 +152,6 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         </div>
       )}
 
-      <div className="kpi-card">
-        <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
-          累計スワップ
-          <HelpIcon text="ポジションを保有したことで発生したスワップポイントの総額です。プラスなら収入になります。" />
-        </div>
-        <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor(), fontSize: '32px', fontWeight: 700, marginBottom: 4 }}>
-          {summaryData.total_swap >= 0 ? '+' : ''}{summaryData.total_swap.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.total_swap >= 0 ? getAccentColor() : getLossColor(), fontSize: '18px' }}>円</span>
-        </div>
-        {hasSwapBreakdown ? (
-          <>
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10 }}>
-              スワップポイントの累計
-            </div>
-            <div style={{
-              display: 'flex',
-              height: '12px',
-              borderRadius: '6px',
-              overflow: 'hidden',
-              background: 'var(--line)',
-              marginBottom: 8
-            }}>
-              {summaryData.swap_positive > 0 && (
-                <div
-                  style={{
-                    background: getAccentColor(),
-                    width: `${(summaryData.swap_positive / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
-                    minWidth: summaryData.swap_positive > 0 ? '2px' : '0'
-                  }}
-                  title={`受取: ${summaryData.swap_positive.toLocaleString('ja-JP')}円`}
-                />
-              )}
-              {summaryData.swap_negative < 0 && (
-                <div
-                  style={{
-                    background: getLossColor(),
-                    width: `${(Math.abs(summaryData.swap_negative) / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
-                    minWidth: summaryData.swap_negative < 0 ? '2px' : '0'
-                  }}
-                  title={`支払: ${Math.abs(summaryData.swap_negative).toLocaleString('ja-JP')}円`}
-                />
-              )}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-              <span style={{ color: getAccentColor(), fontWeight: 600 }}>+{(summaryData.swap_positive || 0).toLocaleString('ja-JP')} 円</span>
-              <span style={{ color: getLossColor(), fontWeight: 600 }}>-{Math.abs(summaryData.swap_negative || 0).toLocaleString('ja-JP')} 円</span>
-            </div>
-          </>
-        ) : (
-          <div className="kpi-desc">スワップポイントの累計</div>
-        )}
-      </div>
-
       {hasXmPoints && (
         <>
           <div className="kpi-card">
