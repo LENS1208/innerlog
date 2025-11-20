@@ -67,7 +67,6 @@
 /* ダークモード定義は削除：CSS変数で自動的に対応 */
 
 /* 6) v0.2の見栄え（任意だけど推奨） */
-.fh-card--header{background:var(--bg-secondary);border-color:var(--line);transition:background-color 0.3s ease, border-color 0.3s ease}
 .fh-card--chat{position:sticky;top:72px;height:fit-content}
 .fh-card--scenario{border-left:5px solid var(--line);transition:border-color 0.3s ease}
 .fh-dim{opacity:.72;filter:saturate(.9)}
@@ -93,8 +92,6 @@
   .fh-root{ grid-template-columns: minmax(300px, 360px) 1fr; column-gap:20px; }
 }
 .fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:var(--bg-secondary); border-color:var(--line); }
-:root[data-theme="dark"] .fh-card--header{ background:#1a202c; border-color:var(--line); }
 .fh-card--chat{ position:sticky; top:72px; height:fit-content; }
 .fh-disabled{ opacity:.5; }
 
@@ -156,9 +153,6 @@
 .fh-tl-title{ font-size:14px; font-weight:700 }
 .fh-tl-time{ font-size:12px; color:var(--muted) }
 .fh-tl-actions .fh-btn{ padding:6px 10px; font-size:12px }
-
-/* 要約カードの右上ボタンを馴染ませる */
-.fh-card--header .fh-btn{ padding:8px 12px; font-size:13px }
 
 /* 左寄せ・2カラムは既存のfh-ベースを使用想定 */
 
@@ -409,7 +403,6 @@
 
 /* ===== Cards / badges ===== */
 .fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:var(--bg-secondary); border-color:var(--line); }
 .fh-disabled{ opacity:.6; }
 .fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
 .fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
@@ -502,7 +495,6 @@
 
 /* ===== Cards / badges ===== */
 .fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:var(--bg-secondary); border-color:var(--line); }
 .fh-disabled{ opacity:.6; }
 .fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
 .fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
