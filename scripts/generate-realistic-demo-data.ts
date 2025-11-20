@@ -15,12 +15,17 @@ type TradeRecord = {
   comment: string;
 };
 
+type Transaction = {
+  user_id: string;
+  transaction_type: 'deposit' | 'withdrawal';
+  amount: number;
+  transaction_date: string;
+  description: string;
+};
+
 const CURRENCY_PAIRS_DATASET_A = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY'];
-const CURRENCY_PAIRS_DATASET_B = [
-  'EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY',
-  'USDCHF', 'NZDUSD', 'EURGBP', 'AUDJPY', 'GBPAUD', 'EURAUD',
-  'USDCAD', 'CHFJPY', 'EURCHF', 'NZDJPY'
-];
+const CRYPTO_PAIRS = ['BTCUSD', 'ETHUSD'];
+const CURRENCY_PAIRS_DATASET_B = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY', 'USDCHF', 'NZDUSD'];
 const CURRENCY_PAIRS_DATASET_C = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY'];
 
 const SETUPS = ['Trend', 'Breakout', 'Reversal', 'Pullback', 'Range'];
@@ -41,6 +46,18 @@ function addMinutes(date: Date, minutes: number): Date {
   const newDate = new Date(date);
   newDate.setMinutes(newDate.getMinutes() + minutes);
   return newDate;
+}
+
+function isWeekend(date: Date): boolean {
+  const day = date.getDay();
+  return day === 0 || day === 6;
+}
+
+function skipWeekends(date: Date): Date {
+  while (isWeekend(date)) {
+    date = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+  }
+  return date;
 }
 
 function formatDateTime(date: Date): string {
@@ -84,63 +101,51 @@ function getPairInfo(pair: string) {
   } else if (pair === 'NZDUSD') {
     basePrice = 0.61;
     priceRange = 0.02;
-  } else if (pair === 'EURGBP') {
-    basePrice = 0.84;
-    priceRange = 0.02;
-  } else if (pair === 'AUDJPY') {
-    basePrice = 99.0;
-    priceRange = 3.0;
-  } else if (pair === 'GBPAUD') {
-    basePrice = 1.94;
-    priceRange = 0.05;
-  } else if (pair === 'EURAUD') {
-    basePrice = 1.63;
-    priceRange = 0.04;
-  } else if (pair === 'USDCAD') {
-    basePrice = 1.36;
-    priceRange = 0.03;
-  } else if (pair === 'CHFJPY') {
-    basePrice = 170.0;
-    priceRange = 4.0;
-  } else if (pair === 'EURCHF') {
-    basePrice = 0.95;
-    priceRange = 0.02;
-  } else if (pair === 'NZDJPY') {
-    basePrice = 92.0;
-    priceRange = 3.0;
+  } else if (pair === 'BTCUSD') {
+    basePrice = 65000;
+    priceRange = 5000;
+  } else if (pair === 'ETHUSD') {
+    basePrice = 3200;
+    priceRange = 300;
   }
 
   return { basePrice, priceRange, pipMultiplier, isJPY };
 }
 
+function calculateSwap(pair: string, side: string, holdDays: number): number {
+  if (pair === 'BTCUSD' || pair === 'ETHUSD') return 0;
+
+  const baseSwap = side === 'buy' ? randomFloat(-0.5, 1.5) : randomFloat(-1.5, 0.5);
+  return parseFloat((baseSwap * holdDays).toFixed(1));
+}
+
 function generateDatasetA(): TradeRecord[] {
   const trades: TradeRecord[] = [];
-  const startDate = new Date('2024-12-01T08:00:00');
+  const startDate = new Date('2024-06-01T08:00:00');
   const endDate = new Date('2025-11-30T18:00:00');
 
   let ticketNum = 101000001;
-  let currentDate = new Date(startDate);
+  let currentDate = skipWeekends(new Date(startDate));
   let runningProfit = 0;
   const targetProfit = 2800000;
   const totalTrades = 350;
 
+  // 通貨ペアごとの得意不得意
   const pairPerformance: Record<string, number> = {
-    'EURUSD': randomFloat(-0.3, 1.2),
-    'GBPUSD': randomFloat(-0.2, 1.4),
-    'USDJPY': randomFloat(0.3, 1.5),
-    'AUDUSD': randomFloat(-0.5, 0.8),
-    'EURJPY': randomFloat(0.2, 1.3),
-    'GBPJPY': randomFloat(-0.4, 1.1)
+    'EURUSD': 0.3,  // やや苦手
+    'GBPUSD': -0.5, // 苦手
+    'USDJPY': 1.8,  // 非常に得意
+    'AUDUSD': 0.2,  // 普通
+    'EURJPY': 1.5,  // 得意
+    'GBPJPY': 0.8,  // やや得意
+    'BTCUSD': 2.0,  // 得意
+    'ETHUSD': 1.2   // やや得意
   };
 
-  const drawdownPeriods = [
-    { start: 40, end: 70, severity: -1.5 },
-    { start: 120, end: 145, severity: -1.2 },
-    { start: 210, end: 235, severity: -0.8 }
-  ];
-
   for (let i = 0; i < totalTrades; i++) {
-    const pair = randomChoice(CURRENCY_PAIRS_DATASET_A);
+    // 10%の確率で仮想通貨トレード
+    const isCrypto = Math.random() < 0.1;
+    const pair = isCrypto ? randomChoice(CRYPTO_PAIRS) : randomChoice(CURRENCY_PAIRS_DATASET_A);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
 
     const type = randomChoice(['buy', 'sell'] as const);
@@ -151,20 +156,9 @@ function generateDatasetA(): TradeRecord[] {
     let profitBias = remainingProfit / remainingTrades / 10000;
 
     profitBias *= pairPerformance[pair];
-
-    let periodMultiplier = 1;
-    for (const period of drawdownPeriods) {
-      if (i >= period.start && i <= period.end) {
-        periodMultiplier = period.severity;
-        break;
-      }
-    }
-    profitBias *= periodMultiplier;
-
     profitBias += randomFloat(-0.3, 0.3);
 
     const setup = randomChoice(SETUPS);
-    const isScalp = setup === 'Scalp' || Math.random() < 0.15;
 
     const openPrice = basePrice + randomFloat(-priceRange / 2, priceRange / 2);
     const pipMove = randomFloat(-35, 45) + profitBias * 12;
@@ -173,18 +167,14 @@ function generateDatasetA(): TradeRecord[] {
       : openPrice - (pipMove / pipMultiplier);
 
     const openTime = new Date(currentDate);
-    let holdMinutes: number;
-    if (isScalp) {
-      holdMinutes = randomFloat(2, 45);
-    } else if (setup === 'Trend') {
-      holdMinutes = randomFloat(180, 720);
-    } else {
-      holdMinutes = randomFloat(30, 480);
-    }
+    const holdMinutes = randomFloat(30, 480);
     const closeTime = addMinutes(openTime, holdMinutes);
 
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
+
+    const holdDays = Math.ceil(holdMinutes / (24 * 60));
+    const swap = calculateSwap(pair, type, holdDays);
 
     const slDistance = randomFloat(10, 25) / pipMultiplier;
     const tpDistance = randomFloat(20, 60) / pipMultiplier;
@@ -197,21 +187,23 @@ function generateDatasetA(): TradeRecord[] {
       type,
       size,
       openTime: formatDateTime(openTime),
-      openPrice: parseFloat(openPrice.toFixed(isJPY ? 3 : 5)),
+      openPrice: parseFloat(openPrice.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? (pair === 'BTCUSD' ? 2 : pair === 'ETHUSD' ? 2 : 5) : 3)),
       closeTime: formatDateTime(closeTime),
-      closePrice: parseFloat(closePrice.toFixed(isJPY ? 3 : 5)),
-      sl: parseFloat(sl.toFixed(isJPY ? 3 : 5)),
-      tp: parseFloat(tp.toFixed(isJPY ? 3 : 5)),
+      closePrice: parseFloat(closePrice.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? (pair === 'BTCUSD' ? 2 : pair === 'ETHUSD' ? 2 : 5) : 3)),
+      sl: parseFloat(sl.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? 5 : 3)),
+      tp: parseFloat(tp.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? 5 : 3)),
       commission: -12,
-      swap: parseFloat(randomFloat(-1, 5).toFixed(1)),
+      swap,
       profit,
       comment: setup
     });
 
     runningProfit += profit;
 
-    const hoursToAdd = randomFloat(2, 24);
-    currentDate = new Date(currentDate.getTime() + hoursToAdd * 60 * 60 * 1000);
+    // 1〜2日間隔で取引（土日スキップ）
+    const daysToAdd = randomFloat(1, 2);
+    currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+    currentDate = skipWeekends(currentDate);
 
     if (currentDate > endDate) {
       break;
@@ -227,23 +219,24 @@ function generateDatasetB(): TradeRecord[] {
   const endDate = new Date('2025-11-30T18:00:00');
 
   let ticketNum = 102000001;
-  let currentDate = new Date(startDate);
+  let currentDate = skipWeekends(new Date(startDate));
   let runningProfit = 0;
-  const targetProfit = 5200000;
+  const targetProfit = 500000; // 勝ったり負けたりで最終的に微益
   const totalTrades = 420;
 
-  const pairPerformance: Record<string, number> = {};
-  CURRENCY_PAIRS_DATASET_B.forEach(pair => {
-    pairPerformance[pair] = randomFloat(-0.6, 1.8);
-  });
+  // 通貨ペアごとの得意不得意
+  const pairPerformance: Record<string, number> = {
+    'EURUSD': 0.2,
+    'GBPUSD': -0.3,
+    'USDJPY': 0.5,
+    'AUDUSD': -0.4,
+    'EURJPY': 0.3,
+    'GBPJPY': -0.2,
+    'USDCHF': 0.1,
+    'NZDUSD': -0.1
+  };
 
-  const drawdownPeriods = [
-    { start: 80, end: 140, severity: -1.3 },
-    { start: 280, end: 340, severity: -1.6 },
-    { start: 450, end: 510, severity: -0.9 },
-    { start: 620, end: 680, severity: -1.1 }
-  ];
-
+  // 勝ちと負けを交互に近い形で
   for (let i = 0; i < totalTrades; i++) {
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_B);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
@@ -251,45 +244,28 @@ function generateDatasetB(): TradeRecord[] {
     const type = randomChoice(['buy', 'sell'] as const);
     const size = parseFloat((randomFloat(0.3, 2.8)).toFixed(1));
 
-    const remainingTrades = totalTrades - i;
-    const remainingProfit = targetProfit - runningProfit;
-    let profitBias = remainingProfit / remainingTrades / 10000;
-
+    // 勝ちと負けを交互に
+    const isWinTrade = i % 2 === 0;
+    let profitBias = isWinTrade ? randomFloat(0.5, 1.5) : randomFloat(-1.5, -0.5);
     profitBias *= pairPerformance[pair];
 
-    let periodMultiplier = 1;
-    for (const period of drawdownPeriods) {
-      if (i >= period.start && i <= period.end) {
-        periodMultiplier = period.severity;
-        break;
-      }
-    }
-    profitBias *= periodMultiplier;
-
-    profitBias += randomFloat(-0.4, 0.4);
-
     const setup = randomChoice(SETUPS);
-    const isScalp = setup === 'Scalp' || Math.random() < 0.2;
 
     const openPrice = basePrice + randomFloat(-priceRange / 2, priceRange / 2);
-    const pipMove = randomFloat(-30, 50) + profitBias * 10;
+    const pipMove = randomFloat(-30, 50) + profitBias * 15;
     const closePrice = type === 'buy'
       ? openPrice + (pipMove / pipMultiplier)
       : openPrice - (pipMove / pipMultiplier);
 
     const openTime = new Date(currentDate);
-    let holdMinutes: number;
-    if (isScalp) {
-      holdMinutes = randomFloat(1, 35);
-    } else if (setup === 'Trend') {
-      holdMinutes = randomFloat(240, 1080);
-    } else {
-      holdMinutes = randomFloat(20, 600);
-    }
+    const holdMinutes = randomFloat(20, 600);
     const closeTime = addMinutes(openTime, holdMinutes);
 
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
+
+    const holdDays = Math.ceil(holdMinutes / (24 * 60));
+    const swap = calculateSwap(pair, type, holdDays);
 
     const slDistance = randomFloat(8, 22) / pipMultiplier;
     const tpDistance = randomFloat(18, 55) / pipMultiplier;
@@ -308,15 +284,17 @@ function generateDatasetB(): TradeRecord[] {
       sl: parseFloat(sl.toFixed(isJPY ? 3 : 5)),
       tp: parseFloat(tp.toFixed(isJPY ? 3 : 5)),
       commission: -12,
-      swap: parseFloat(randomFloat(-2, 6).toFixed(1)),
+      swap,
       profit,
       comment: setup
     });
 
     runningProfit += profit;
 
-    const hoursToAdd = randomFloat(1, 18);
-    currentDate = new Date(currentDate.getTime() + hoursToAdd * 60 * 60 * 1000);
+    // 1〜2日間隔で取引（土日スキップ）
+    const daysToAdd = randomFloat(1, 2);
+    currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+    currentDate = skipWeekends(currentDate);
 
     if (currentDate > endDate) {
       break;
@@ -332,29 +310,22 @@ function generateDatasetC(): TradeRecord[] {
   const endDate = new Date('2025-11-30T18:00:00');
 
   let ticketNum = 103000001;
-  let currentDate = new Date(startDate);
+  let currentDate = skipWeekends(new Date(startDate));
   let runningProfit = 0;
   const targetLoss = -1800000;
   const totalTrades = 480;
 
+  // 通貨ペアごとの得意不得意
   const pairPerformance: Record<string, number> = {
-    'EURUSD': randomFloat(-0.8, 0.6),
-    'GBPUSD': randomFloat(-1.2, 0.3),
-    'USDJPY': randomFloat(-0.5, 0.9),
-    'AUDUSD': randomFloat(-1.0, 0.4),
-    'EURJPY': randomFloat(-0.6, 0.7),
-    'GBPJPY': randomFloat(-0.9, 0.5)
+    'EURUSD': -0.3,
+    'GBPUSD': -0.8,
+    'USDJPY': 0.4,
+    'AUDUSD': -0.6,
+    'EURJPY': 0.2,
+    'GBPJPY': -1.2  // 特に苦手
   };
 
   const fomoTradeIndices = [42, 78, 95, 134, 167, 189, 225, 268, 311, 357, 398, 442];
-
-  const recoveryPeriods = [
-    { start: 10, end: 35, multiplier: 0.8 },
-    { start: 98, end: 125, multiplier: 0.6 },
-    { start: 170, end: 185, multiplier: 0.7 },
-    { start: 280, end: 310, multiplier: 0.9 },
-    { start: 380, end: 410, multiplier: 0.5 }
-  ];
 
   for (let i = 0; i < totalTrades; i++) {
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_C);
@@ -367,20 +338,15 @@ function generateDatasetC(): TradeRecord[] {
       ? parseFloat((randomFloat(4.0, 9.0)).toFixed(1))
       : parseFloat((randomFloat(0.5, 2.8)).toFixed(1));
 
-    const remainingTrades = totalTrades - i;
-    const remainingProfit = targetLoss - runningProfit;
-    let profitBias = remainingProfit / remainingTrades / 10000;
-
-    profitBias *= pairPerformance[pair];
-
+    // 中盤(100-300)は利益が出る期間
     let periodMultiplier = 1;
-    for (const period of recoveryPeriods) {
-      if (i >= period.start && i <= period.end) {
-        periodMultiplier = period.multiplier;
-        break;
-      }
+    if (i >= 100 && i <= 300) {
+      periodMultiplier = 2.5; // 利益期間
+    } else if (i > 300) {
+      periodMultiplier = -2.0; // 後半大きく負ける
     }
-    profitBias *= periodMultiplier;
+
+    let profitBias = pairPerformance[pair] * periodMultiplier;
 
     if (isFomoTrade) {
       profitBias = randomFloat(-12, -5);
@@ -389,7 +355,6 @@ function generateDatasetC(): TradeRecord[] {
     }
 
     const setup = isFomoTrade ? 'FOMO' : randomChoice(SETUPS);
-    const isScalp = setup === 'Scalp' || Math.random() < 0.12;
 
     const openPrice = basePrice + randomFloat(-priceRange / 2, priceRange / 2);
     const pipMove = isFomoTrade
@@ -400,20 +365,14 @@ function generateDatasetC(): TradeRecord[] {
       : openPrice - (pipMove / pipMultiplier);
 
     const openTime = new Date(currentDate);
-    let holdMinutes: number;
-    if (isFomoTrade) {
-      holdMinutes = randomFloat(3, 90);
-    } else if (isScalp) {
-      holdMinutes = randomFloat(2, 40);
-    } else if (setup === 'Trend') {
-      holdMinutes = randomFloat(150, 600);
-    } else {
-      holdMinutes = randomFloat(25, 420);
-    }
+    const holdMinutes = randomFloat(25, 420);
     const closeTime = addMinutes(openTime, holdMinutes);
 
     const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
     const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
+
+    const holdDays = Math.ceil(holdMinutes / (24 * 60));
+    const swap = calculateSwap(pair, type, holdDays);
 
     const slDistance = isFomoTrade
       ? randomFloat(50, 100) / pipMultiplier
@@ -434,15 +393,17 @@ function generateDatasetC(): TradeRecord[] {
       sl: parseFloat(sl.toFixed(isJPY ? 3 : 5)),
       tp: parseFloat(tp.toFixed(isJPY ? 3 : 5)),
       commission: -12,
-      swap: parseFloat(randomFloat(-3, 4).toFixed(1)),
+      swap,
       profit,
       comment: setup
     });
 
     runningProfit += profit;
 
-    const hoursToAdd = randomFloat(3, 30);
-    currentDate = new Date(currentDate.getTime() + hoursToAdd * 60 * 60 * 1000);
+    // 1〜2日間隔で取引（土日スキップ）
+    const daysToAdd = randomFloat(1, 2);
+    currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
+    currentDate = skipWeekends(currentDate);
 
     if (currentDate > endDate) {
       break;
@@ -463,7 +424,8 @@ function tradesToCSV(trades: TradeRecord[]): string {
 console.log('Generating Dataset A...');
 const datasetA = generateDatasetA();
 const totalProfitA = datasetA.reduce((sum, t) => sum + t.profit, 0);
-console.log(`Dataset A: ${datasetA.length} trades, Total Profit: ¥${totalProfitA.toLocaleString()}`);
+const totalSwapA = datasetA.reduce((sum, t) => sum + t.swap, 0);
+console.log(`Dataset A: ${datasetA.length} trades, Total Profit: ¥${totalProfitA.toLocaleString()}, Total Swap: ¥${totalSwapA.toFixed(1)}`);
 
 const pairStatsA: Record<string, { trades: number; profit: number }> = {};
 datasetA.forEach(t => {
@@ -479,7 +441,8 @@ Object.entries(pairStatsA).forEach(([pair, stats]) => {
 console.log('\nGenerating Dataset B...');
 const datasetB = generateDatasetB();
 const totalProfitB = datasetB.reduce((sum, t) => sum + t.profit, 0);
-console.log(`Dataset B: ${datasetB.length} trades, Total Profit: ¥${totalProfitB.toLocaleString()}`);
+const totalSwapB = datasetB.reduce((sum, t) => sum + t.swap, 0);
+console.log(`Dataset B: ${datasetB.length} trades, Total Profit: ¥${totalProfitB.toLocaleString()}, Total Swap: ¥${totalSwapB.toFixed(1)}`);
 
 const pairStatsB: Record<string, { trades: number; profit: number }> = {};
 datasetB.forEach(t => {
@@ -495,7 +458,8 @@ Object.entries(pairStatsB).forEach(([pair, stats]) => {
 console.log('\nGenerating Dataset C...');
 const datasetC = generateDatasetC();
 const totalProfitC = datasetC.reduce((sum, t) => sum + t.profit, 0);
-console.log(`Dataset C: ${datasetC.length} trades, Total Profit: ¥${totalProfitC.toLocaleString()}`);
+const totalSwapC = datasetC.reduce((sum, t) => sum + t.swap, 0);
+console.log(`Dataset C: ${datasetC.length} trades, Total Profit: ¥${totalProfitC.toLocaleString()}, Total Swap: ¥${totalSwapC.toFixed(1)}`);
 
 const pairStatsC: Record<string, { trades: number; profit: number }> = {};
 datasetC.forEach(t => {
@@ -507,6 +471,11 @@ console.log('Pair breakdown:');
 Object.entries(pairStatsC).forEach(([pair, stats]) => {
   console.log(`  ${pair}: ${stats.trades} trades, ¥${stats.profit.toLocaleString()}`);
 });
+
+// 中盤の利益確認
+const midPeriodC = datasetC.slice(100, 301);
+const midProfitC = midPeriodC.reduce((sum, t) => sum + t.profit, 0);
+console.log(`Mid-period (trade 100-300): ¥${midProfitC.toLocaleString()}`);
 
 const fs = require('fs');
 
