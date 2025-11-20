@@ -22,7 +22,7 @@ export function RulesTable({ rules }: RulesTableProps) {
             padding: '16px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
             <div
               style={{
                 background: 'var(--accent)',
@@ -40,9 +40,9 @@ export function RulesTable({ rules }: RulesTableProps) {
             >
               {i + 1}
             </div>
-            <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--ink)' }}>{rule.title}</div>
+            <div style={{ fontWeight: 700, fontSize: '17px', color: 'var(--ink)' }}>{rule.title}</div>
           </div>
-          <div style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.6 }}>
+          <div style={{ fontSize: '16px', color: 'var(--ink)', lineHeight: 1.8, fontWeight: 500 }}>
             {rule.content}
           </div>
         </div>
