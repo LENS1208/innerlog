@@ -51,7 +51,7 @@ function formatDateSafe(date: Date): string {
 
 export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
   const { theme } = useTheme()
-  const { labels, equity } = useMemo(() => {
+  const { labels, equity, data, options } = useMemo(() => {
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
       return !isNaN(date.getTime())
@@ -64,10 +64,8 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
       acc += getProfit(t)
       equity.push(acc)
     }
-    return { labels, equity }
-  }, [trades])
 
-  const data = {
+    const data = {
     labels,
     datasets: [{
       label: '累積損益（円）',
@@ -96,37 +94,40 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
         }
       }
     }]
-  }
+    }
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    spanGaps: true,
-    interaction: { mode: 'index' as const, intersect: false },
-    scales: {
-      x: {
-        type: 'time' as const,
-        adapters: { date: { locale: ja } },
-        ticks: { maxRotation: 0 },
-        time: { tooltipFormat: 'yyyy/MM/dd HH:mm' }
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      spanGaps: true,
+      interaction: { mode: 'index' as const, intersect: false },
+      scales: {
+        x: {
+          type: 'time' as const,
+          adapters: { date: { locale: ja } },
+          ticks: { maxRotation: 0 },
+          time: { tooltipFormat: 'yyyy/MM/dd HH:mm' }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
+          }
         }
-      }
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleString('ja-JP') : '',
-          label: (item: any) => `累積損益: ${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleString('ja-JP') : '',
+            label: (item: any) => `累積損益: ${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
+          }
         }
       }
     }
-  }
+
+    return { labels, equity, data, options }
+  }, [trades, theme])
 
   return (
     <div style={{ height: 420, minWidth: 0, width: '100%' }}>
@@ -137,7 +138,7 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
 
 export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
   const { theme } = useTheme()
-  const { labels, dd } = useMemo(() => {
+  const { labels, dd, data, options } = useMemo(() => {
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
       return !isNaN(date.getTime())
@@ -152,10 +153,8 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
       if (equity > peak) peak = equity
       dd.push(peak - equity)
     }
-    return { labels, dd }
-  }, [trades])
 
-  const data = {
+    const data = {
     labels,
     datasets: [{
       label: 'ドローダウン（円）',
@@ -173,38 +172,41 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
       },
       tension: 0.2,
     }]
-  }
+    }
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    spanGaps: true,
-    interaction: { mode: 'index' as const, intersect: false },
-    scales: {
-      x: {
-        type: 'time' as const,
-        adapters: { date: { locale: ja } },
-        ticks: { maxRotation: 0 },
-        time: { tooltipFormat: 'yyyy/MM/dd HH:mm' }
-      },
-      y: {
-        beginAtZero: true,
-        reverse: true,
-        ticks: {
-          callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      spanGaps: true,
+      interaction: { mode: 'index' as const, intersect: false },
+      scales: {
+        x: {
+          type: 'time' as const,
+          adapters: { date: { locale: ja } },
+          ticks: { maxRotation: 0 },
+          time: { tooltipFormat: 'yyyy/MM/dd HH:mm' }
+        },
+        y: {
+          beginAtZero: true,
+          reverse: true,
+          ticks: {
+            callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
+          }
         }
-      }
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleString('ja-JP') : '',
-          label: (item: any) => `DD: ${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleString('ja-JP') : '',
+            label: (item: any) => `DD: ${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
+          }
         }
       }
     }
-  }
+
+    return { labels, dd, data, options }
+  }, [trades, theme])
 
   return (
     <div style={{ height: 420, minWidth: 0, width: '100%' }}>
@@ -215,7 +217,7 @@ export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
 
 export function MonthlyProfitChart({ trades, onMonthClick }: { trades: TradeWithProfit[]; onMonthClick?: (monthLabel: string, monthTrades: TradeWithProfit[]) => void }) {
   const { theme } = useTheme()
-  const { labels, profits, tradesCounts, winRates, monthlyTradesMap } = useMemo(() => {
+  const { labels, profits, tradesCounts, winRates, monthlyTradesMap, data, options } = useMemo(() => {
     const monthlyMap = new Map<string, { profit: number; count: number; wins: number }>()
     const monthlyTradesMap = new Map<string, TradeWithProfit[]>()
 
@@ -244,10 +246,7 @@ export function MonthlyProfitChart({ trades, onMonthClick }: { trades: TradeWith
     const tradesCounts = sorted.map(([, data]) => data.count)
     const winRates = sorted.map(([, data]) => data.count > 0 ? (data.wins / data.count) * 100 : 0)
 
-    return { labels, profits, tradesCounts, winRates, monthlyTradesMap }
-  }, [trades])
-
-  const data = {
+    const data = {
     labels,
     datasets: [{
       label: '月次損益（円）',
@@ -256,54 +255,57 @@ export function MonthlyProfitChart({ trades, onMonthClick }: { trades: TradeWith
       borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1.5,
     }]
-  }
+    }
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    onClick: onMonthClick ? (event: any, elements: any) => {
-      if (elements.length > 0) {
-        const index = elements[0].index
-        const monthKey = labels[index]
-        const monthTrades = monthlyTradesMap.get(monthKey) || []
-        onMonthClick(monthKey, monthTrades)
-      }
-    } : undefined,
-    scales: {
-      x: {
-        ticks: { maxRotation: 45, minRotation: 45 }
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v) + '円'
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      onClick: onMonthClick ? (event: any, elements: any) => {
+        if (elements.length > 0) {
+          const index = elements[0].index
+          const monthKey = labels[index]
+          const monthTrades = monthlyTradesMap.get(monthKey) || []
+          onMonthClick(monthKey, monthTrades)
         }
-      }
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          title: (items: any) => {
-            const idx = items[0]?.dataIndex
-            if (idx === undefined) return ''
-            return labels[idx]
-          },
-          label: (item: any) => {
-            const idx = item.dataIndex
-            const profit = item.parsed.y
-            const count = tradesCounts[idx]
-            const wr = winRates[idx]
-            return [
-              `損益: ${profit >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(profit)}円`,
-              `取引数: ${count}回`,
-              `勝率: ${wr.toFixed(1)}%`
-            ]
+      } : undefined,
+      scales: {
+        x: {
+          ticks: { maxRotation: 45, minRotation: 45 }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (v: any) => new Intl.NumberFormat('ja-JP', { notation: 'compact' }).format(v) + '円'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items: any) => {
+              const idx = items[0]?.dataIndex
+              if (idx === undefined) return ''
+              return labels[idx]
+            },
+            label: (item: any) => {
+              const idx = item.dataIndex
+              const profit = item.parsed.y
+              const count = tradesCounts[idx]
+              const wr = winRates[idx]
+              return [
+                `損益: ${profit >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(profit)}円`,
+                `取引数: ${count}回`,
+                `勝率: ${wr.toFixed(1)}%`
+              ]
+            }
           }
         }
       }
     }
-  }
+
+    return { labels, profits, tradesCounts, winRates, monthlyTradesMap, data, options }
+  }, [trades, theme])
 
   return (
     <div style={{ height: 420, minWidth: 0, width: '100%' }}>
@@ -314,7 +316,7 @@ export function MonthlyProfitChart({ trades, onMonthClick }: { trades: TradeWith
 
 export function DailyProfitChart({ trades, onDayClick }: { trades: TradeWithProfit[]; onDayClick?: (dateLabel: string, dayTrades: TradeWithProfit[]) => void }) {
   const { theme } = useTheme()
-  const { labels, profits, dailyTradesMap } = useMemo(() => {
+  const { labels, profits, dailyTradesMap, data, options } = useMemo(() => {
     const dailyMap = new Map<string, number>()
     const dailyTradesMap = new Map<string, TradeWithProfit[]>()
 
@@ -333,10 +335,7 @@ export function DailyProfitChart({ trades, onDayClick }: { trades: TradeWithProf
     const labels = sorted.map(([date]) => new Date(date).getTime())
     const profits = sorted.map(([, profit]) => profit)
 
-    return { labels, profits, dailyTradesMap }
-  }, [trades])
-
-  const data = {
+    const data = {
     labels,
     datasets: [{
       label: '日次損益（円）',
@@ -345,46 +344,49 @@ export function DailyProfitChart({ trades, onDayClick }: { trades: TradeWithProf
       borderColor: profits.map(p => p >= 0 ? getAccentColor(1) : getLossColor(1)),
       borderWidth: 1,
     }]
-  }
+    }
 
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    onClick: onDayClick ? (event: any, elements: any) => {
-      if (elements.length > 0) {
-        const index = elements[0].index
-        const timestamp = labels[index]
-        const date = new Date(timestamp)
-        const dateStr = date.toISOString().split('T')[0]
-        const dayTrades = dailyTradesMap.get(dateStr) || []
-        const dateLabel = date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
-        onDayClick(dateLabel, dayTrades)
-      }
-    } : undefined,
-    scales: {
-      x: {
-        type: 'time' as const,
-        adapters: { date: { locale: ja } },
-        ticks: { maxRotation: 0 },
-        time: { tooltipFormat: 'yyyy/MM/dd', unit: 'day' as const }
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      onClick: onDayClick ? (event: any, elements: any) => {
+        if (elements.length > 0) {
+          const index = elements[0].index
+          const timestamp = labels[index]
+          const date = new Date(timestamp)
+          const dateStr = date.toISOString().split('T')[0]
+          const dayTrades = dailyTradesMap.get(dateStr) || []
+          const dateLabel = date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+          onDayClick(dateLabel, dayTrades)
         }
-      }
-    },
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        callbacks: {
-          title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleDateString('ja-JP') : '',
-          label: (item: any) => `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
+      } : undefined,
+      scales: {
+        x: {
+          type: 'time' as const,
+          adapters: { date: { locale: ja } },
+          ticks: { maxRotation: 0 },
+          time: { tooltipFormat: 'yyyy/MM/dd', unit: 'day' as const }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: (v: any) => new Intl.NumberFormat('ja-JP').format(v) + ' 円'
+          }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: (items: any) => items[0]?.parsed?.x ? new Date(items[0].parsed.x).toLocaleDateString('ja-JP') : '',
+            label: (item: any) => `損益: ${item.parsed.y >= 0 ? '+' : ''}${new Intl.NumberFormat('ja-JP').format(item.parsed.y)} 円`
+          }
         }
       }
     }
-  }
+
+    return { labels, profits, dailyTradesMap, data, options }
+  }, [trades, theme])
 
   return (
     <div style={{ height: 420, minWidth: 0, width: '100%' }}>
