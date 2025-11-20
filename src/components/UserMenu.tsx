@@ -61,15 +61,15 @@ export default function UserMenu() {
           fontSize: 14,
           fontWeight: 600,
           cursor: 'pointer',
-          transition: 'all 0.2s ease',
+          transition: 'opacity 0.2s ease, transform 0.1s ease',
           whiteSpace: 'nowrap',
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'var(--accent-dark)';
-          e.currentTarget.style.transform = 'scale(1.02)';
+          e.currentTarget.style.opacity = '0.9';
+          e.currentTarget.style.transform = 'scale(0.98)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'var(--accent)';
+          e.currentTarget.style.opacity = '1';
           e.currentTarget.style.transform = 'scale(1)';
         }}
       >
