@@ -121,8 +121,8 @@ function generateDatasetA(): TradeRecord[] {
   let ticketNum = 101000001;
   let currentDate = new Date(startDate);
   let runningProfit = 0;
-  const targetProfit = 1215332;
-  const totalTrades = 262;
+  const targetProfit = 2800000;
+  const totalTrades = 350;
 
   const pairPerformance: Record<string, number> = {
     'EURUSD': randomFloat(-0.3, 1.2),
@@ -229,8 +229,8 @@ function generateDatasetB(): TradeRecord[] {
   let ticketNum = 102000001;
   let currentDate = new Date(startDate);
   let runningProfit = 0;
-  const targetProfit = 7806376;
-  const totalTrades = 754;
+  const targetProfit = 5200000;
+  const totalTrades = 420;
 
   const pairPerformance: Record<string, number> = {};
   CURRENCY_PAIRS_DATASET_B.forEach(pair => {
@@ -334,8 +334,8 @@ function generateDatasetC(): TradeRecord[] {
   let ticketNum = 103000001;
   let currentDate = new Date(startDate);
   let runningProfit = 0;
-  const targetLoss = -2206376;
-  const totalTrades = 213;
+  const targetLoss = -1800000;
+  const totalTrades = 480;
 
   const pairPerformance: Record<string, number> = {
     'EURUSD': randomFloat(-0.8, 0.6),
@@ -346,12 +346,14 @@ function generateDatasetC(): TradeRecord[] {
     'GBPJPY': randomFloat(-0.9, 0.5)
   };
 
-  const fomoTradeIndices = [42, 78, 95, 134, 167, 189];
+  const fomoTradeIndices = [42, 78, 95, 134, 167, 189, 225, 268, 311, 357, 398, 442];
 
   const recoveryPeriods = [
-    { start: 10, end: 35, multiplier: 1.8 },
-    { start: 98, end: 125, multiplier: 1.5 },
-    { start: 170, end: 185, multiplier: 1.3 }
+    { start: 10, end: 35, multiplier: 0.8 },
+    { start: 98, end: 125, multiplier: 0.6 },
+    { start: 170, end: 185, multiplier: 0.7 },
+    { start: 280, end: 310, multiplier: 0.9 },
+    { start: 380, end: 410, multiplier: 0.5 }
   ];
 
   for (let i = 0; i < totalTrades; i++) {
@@ -381,9 +383,9 @@ function generateDatasetC(): TradeRecord[] {
     profitBias *= periodMultiplier;
 
     if (isFomoTrade) {
-      profitBias = randomFloat(-8, -3);
+      profitBias = randomFloat(-12, -5);
     } else {
-      profitBias += randomFloat(-0.5, 0.5);
+      profitBias += randomFloat(-0.8, 0.4);
     }
 
     const setup = isFomoTrade ? 'FOMO' : randomChoice(SETUPS);
