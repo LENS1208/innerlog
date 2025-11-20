@@ -88,18 +88,25 @@ export default function MonthlyCalendar() {
           const { getAllTrades } = await import('../lib/db.service');
           const data = await getAllTrades(dataset);
 
-          const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+          const mappedTrades: Trade[] = (data || []).map((t: any) => {
+            // Convert UTC to JST (UTC+9)
+            const closeTimeUTC = new Date(t.close_time);
+            const openTimeUTC = new Date(t.open_time);
+            const closeTimeJST = new Date(closeTimeUTC.getTime() + (9 * 60 * 60 * 1000));
+            const openTimeJST = new Date(openTimeUTC.getTime() + (9 * 60 * 60 * 1000));
+
+            return {
               id: t.id || t.ticket,
-              datetime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
+              datetime: closeTimeJST.toISOString().replace('T', ' ').substring(0, 19).replace(/-/g, '.'),
               ticket: t.ticket,
               item: t.item,
               pair: t.item,
               side: t.side,
               volume: t.size || 0,
               size: t.size,
-              openTime: new Date(t.open_time).toISOString().replace('T', ' ').substring(0, 19),
+              openTime: openTimeJST.toISOString().replace('T', ' ').substring(0, 19).replace(/-/g, '.'),
               openPrice: t.open_price,
-              closeTime: new Date(t.close_time).toISOString().replace('T', ' ').substring(0, 19),
+              closeTime: closeTimeJST.toISOString().replace('T', ' ').substring(0, 19).replace(/-/g, '.'),
               closePrice: t.close_price,
               commission: t.commission,
               swap: t.swap,
@@ -107,7 +114,9 @@ export default function MonthlyCalendar() {
               sl: t.sl,
               tp: t.tp,
               pips: t.pips,
-            }));
+              setup: t.setup,
+            };
+          });
             setTrades(mappedTrades);
 
             if (mappedTrades.length > 0) {

@@ -134,17 +134,25 @@ export default function CalendarDayPage() {
           const { getAllTrades } = await import('../lib/db.service');
           const data = await getAllTrades(dataset);
 
-          const mappedTrades: Trade[] = (data || []).map((t: any) => ({
+          const mappedTrades: Trade[] = (data || []).map((t: any) => {
+            // Convert UTC to JST (UTC+9)
+            const closeTimeUTC = new Date(t.close_time);
+            const openTimeUTC = new Date(t.open_time);
+            const closeTimeJST = closeTimeUTC.getTime() + (9 * 60 * 60 * 1000);
+            const openTimeJST = openTimeUTC.getTime() + (9 * 60 * 60 * 1000);
+
+            return {
               ticket: t.ticket,
               symbol: t.item,
               type: t.side,
-              time: new Date(t.close_time).getTime(),
+              time: closeTimeJST,
               profitJPY: t.profit,
               entryPrice: t.open_price,
               exitPrice: t.close_price,
               size: t.size,
-              openTimeMs: new Date(t.open_time).getTime(),
-            }));
+              openTimeMs: openTimeJST,
+            };
+          });
             setTrades(mappedTrades);
           }
         } else {
