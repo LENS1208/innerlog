@@ -140,7 +140,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
             <style>{`
               @media (min-width: 1024px) {
                 .overview-layout {
-                  grid-template-columns: 70% 1fr !important;
+                  grid-template-columns: 30% 1fr !important;
                 }
               }
             `}</style>
