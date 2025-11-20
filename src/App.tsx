@@ -169,7 +169,8 @@ export default function App() {
   }
 
   if (!user) {
-    return <AppShell><EquityCurvePage /></AppShell>;
+    console.log("⚠️ No user logged in, showing demo mode with selected page");
+    return <AppShell>{Page}</AppShell>;
   }
 
   return <AppShell>{Page}</AppShell>;
