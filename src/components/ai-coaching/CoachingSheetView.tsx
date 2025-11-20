@@ -15,39 +15,47 @@ type TabKey = "overview" | "strengths" | "weaknesses" | "trends";
 function convertSummaryToCategories(summary: string[]): SummaryCategory[] {
   if (!summary || summary.length === 0) return [];
 
-  const categoryKeywords = {
-    'エントリー': ['エントリー', 'タイミング', '押し目', '戻り'],
-    'リスク管理': ['リスク', 'ロット', '資金管理', 'ドローダウン'],
-    'メンタル・規律': ['メンタル', '感情', '規律', '連敗', '冷静'],
-  };
+  const categoryNames = [
+    '全体像・取引スタイル',
+    'エントリー・タイミング',
+    'リスク管理・ポジション管理',
+    'メンタル・規律'
+  ];
 
+  const itemsPerCategory = Math.ceil(summary.length / categoryNames.length);
   const categories: SummaryCategory[] = [];
-  let currentCategory = '取引分析';
 
-  summary.forEach((text, idx) => {
-    let foundCategory = false;
-    for (const [catName, keywords] of Object.entries(categoryKeywords)) {
-      if (keywords.some(kw => text.includes(kw))) {
-        currentCategory = catName;
-        foundCategory = true;
-        break;
-      }
-    }
+  for (let i = 0; i < categoryNames.length; i++) {
+    const startIdx = i * itemsPerCategory;
+    const endIdx = Math.min(startIdx + itemsPerCategory, summary.length);
+    const items = summary.slice(startIdx, endIdx);
 
-    if (!foundCategory && idx === 0) {
-      currentCategory = '全体像';
-    }
-
-    const existingCat = categories.find(c => c.category === currentCategory);
-    if (existingCat) {
-      existingCat.description += ' ' + text;
-    } else {
+    if (items.length > 0) {
       categories.push({
-        category: currentCategory,
-        description: text
+        category: categoryNames[i],
+        description: items.join(' ')
       });
     }
-  });
+  }
+
+  if (categories.length < 3) {
+    const allText = summary.join(' ');
+    const words = allText.split('。').filter(s => s.trim());
+    const wordsPerCat = Math.ceil(words.length / 3);
+
+    categories.length = 0;
+    for (let i = 0; i < 3; i++) {
+      const start = i * wordsPerCat;
+      const end = Math.min(start + wordsPerCat, words.length);
+      const text = words.slice(start, end).join('。') + '。';
+      if (text.trim() !== '。') {
+        categories.push({
+          category: categoryNames[i],
+          description: text
+        });
+      }
+    }
+  }
 
   return categories;
 }
