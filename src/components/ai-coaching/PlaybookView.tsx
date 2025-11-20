@@ -22,6 +22,16 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
   return (
     <div style={{ display: 'grid', gap: '16px' }}>
       <style>{`
+        .playbook-strategies-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        @media (min-width: 768px) {
+          .playbook-strategies-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
         .playbook-trade-grid {
           display: grid;
           grid-template-columns: 1fr;
@@ -34,6 +44,8 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
           }
         }
       `}</style>
+
+      <div className="playbook-strategies-grid">
 
       <div
         style={{
@@ -149,6 +161,8 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
             💡 {playbook.meanReversion.coachNote}
           </div>
         )}
+      </div>
+
       </div>
     </div>
   );
