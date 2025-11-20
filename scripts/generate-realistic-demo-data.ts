@@ -13,6 +13,7 @@ type TradeRecord = {
   swap: number;
   profit: number;
   comment: string;
+  xmPoints?: number;
 };
 
 type Transaction = {
@@ -25,7 +26,7 @@ type Transaction = {
 
 const CURRENCY_PAIRS_DATASET_A = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY'];
 const CRYPTO_PAIRS = ['BTCUSD', 'ETHUSD'];
-const CURRENCY_PAIRS_DATASET_B = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY', 'USDCHF', 'NZDUSD'];
+const CURRENCY_PAIRS_DATASET_B = ['EURUSD', 'USDJPY', 'EURJPY', 'GBPJPY']; // 半分に削減
 const CURRENCY_PAIRS_DATASET_C = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'EURJPY', 'GBPJPY'];
 
 const SETUPS = ['Trend', 'Breakout', 'Reversal', 'Pullback', 'Range'];
@@ -130,33 +131,105 @@ function generateDatasetA(): TradeRecord[] {
   const targetProfit = 2800000;
   const totalTrades = 350;
 
-  // 通貨ペアごとの得意不得意
-  const pairPerformance: Record<string, number> = {
-    'EURUSD': 0.3,  // やや苦手
-    'GBPUSD': -0.5, // 苦手
-    'USDJPY': 1.8,  // 非常に得意
-    'AUDUSD': 0.2,  // 普通
-    'EURJPY': 1.5,  // 得意
-    'GBPJPY': 0.8,  // やや得意
-    'BTCUSD': 2.0,  // 得意
-    'ETHUSD': 1.2   // やや得意
+  // 通貨ペアごとの得意不得意（勝率%）
+  const pairWinRate: Record<string, number> = {
+    'EURUSD': 0.50,  // 普通
+    'GBPUSD': 0.30,  // 苦手
+    'USDJPY': 0.90,  // 非常に得意
+    'AUDUSD': 0.55,  // やや得意
+    'EURJPY': 0.85,  // 得意
+    'GBPJPY': 0.70,  // やや得意
+    'BTCUSD': 0.90,  // 非常に得意
+    'ETHUSD': 0.75   // 得意
   };
 
+  // 仮想通貨取引を行う日のインデックス（同じ日に複数取引）
+  const cryptoDayIndices = [45, 120, 195, 270];
+  const cryptoTradesPerDay: Record<number, number> = {}; // 各日の取引カウント
+
   for (let i = 0; i < totalTrades; i++) {
-    // 10%の確率で仮想通貨トレード
-    const isCrypto = Math.random() < 0.1;
-    const pair = isCrypto ? randomChoice(CRYPTO_PAIRS) : randomChoice(CURRENCY_PAIRS_DATASET_A);
+    // 特定の日には仮想通貨取引を複数件追加
+    const isCryptoDayStart = cryptoDayIndices.includes(i);
+
+    if (isCryptoDayStart) {
+      // 同じ日に2-4件の仮想通貨取引を追加
+      const numCryptoTrades = randomInt(2, 4);
+      const cryptoDate = new Date(currentDate);
+
+      for (let c = 0; c < numCryptoTrades; c++) {
+        const pair = randomChoice(CRYPTO_PAIRS);
+        const { basePrice, priceRange, pipMultiplier } = getPairInfo(pair);
+        const type = randomChoice(['buy', 'sell'] as const);
+        const size = parseFloat((randomFloat(0.5, 2.0)).toFixed(1));
+
+        // 通貨ペアの得意不得意に基づいて勝ち負けを決定
+        const isWinTrade = Math.random() < pairWinRate[pair];
+        let profitBias = isWinTrade ? randomFloat(0.5, 1.5) : randomFloat(-1.2, -0.4);
+
+        const setup = randomChoice(SETUPS);
+        const openPrice = basePrice + randomFloat(-priceRange / 2, priceRange / 2);
+        const pipMove = randomFloat(-35, 45) + profitBias * 12;
+        const closePrice = type === 'buy'
+          ? openPrice + (pipMove / pipMultiplier)
+          : openPrice - (pipMove / pipMultiplier);
+
+        // 同じ日の中で時間をずらす（2-6時間間隔）
+        const hourOffset = c * randomFloat(2, 6);
+        const openTime = addMinutes(cryptoDate, hourOffset * 60);
+        const holdMinutes = randomFloat(30, 300);
+        const closeTime = addMinutes(openTime, holdMinutes);
+
+        const pips = Math.abs(openPrice - closePrice) * pipMultiplier;
+        const profit = Math.round((closePrice - openPrice) * (type === 'buy' ? 1 : -1) * size * 100000);
+        const holdDays = Math.ceil(holdMinutes / (24 * 60));
+        const swap = calculateSwap(pair, type, holdDays);
+
+        const slDistance = randomFloat(10, 25) / pipMultiplier;
+        const tpDistance = randomFloat(20, 60) / pipMultiplier;
+        const sl = type === 'buy' ? openPrice - slDistance : openPrice + slDistance;
+        const tp = type === 'buy' ? openPrice + tpDistance : openPrice - tpDistance;
+
+        trades.push({
+          ticket: String(ticketNum++),
+          item: pair,
+          type,
+          size,
+          openTime: formatDateTime(openTime),
+          openPrice: parseFloat(openPrice.toFixed(2)),
+          closeTime: formatDateTime(closeTime),
+          closePrice: parseFloat(closePrice.toFixed(2)),
+          sl: parseFloat(sl.toFixed(2)),
+          tp: parseFloat(tp.toFixed(2)),
+          commission: -12,
+          swap,
+          profit,
+          comment: setup
+        });
+
+        runningProfit += profit;
+      }
+    }
+
+    // 通常のFX取引
+    const pair = randomChoice(CURRENCY_PAIRS_DATASET_A);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
 
     const type = randomChoice(['buy', 'sell'] as const);
     const size = parseFloat((randomFloat(0.5, 3.5)).toFixed(1));
 
+    // 通貨ペアの得意不得意に基づいて勝ち負けを決定
+    const isWinTrade = Math.random() < pairWinRate[pair];
+
     const remainingTrades = totalTrades - i;
     const remainingProfit = targetProfit - runningProfit;
     let profitBias = remainingProfit / remainingTrades / 10000;
 
-    profitBias *= pairPerformance[pair];
-    profitBias += randomFloat(-0.3, 0.3);
+    // 勝ち取引は大きく、負け取引は小さくする
+    if (isWinTrade) {
+      profitBias = Math.abs(profitBias) + randomFloat(0.5, 1.5);
+    } else {
+      profitBias = -Math.abs(profitBias) - randomFloat(0.3, 1.0);
+    }
 
     const setup = randomChoice(SETUPS);
 
@@ -187,11 +260,11 @@ function generateDatasetA(): TradeRecord[] {
       type,
       size,
       openTime: formatDateTime(openTime),
-      openPrice: parseFloat(openPrice.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? (pair === 'BTCUSD' ? 2 : pair === 'ETHUSD' ? 2 : 5) : 3)),
+      openPrice: parseFloat(openPrice.toFixed(isJPY ? 3 : 5)),
       closeTime: formatDateTime(closeTime),
-      closePrice: parseFloat(closePrice.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? (pair === 'BTCUSD' ? 2 : pair === 'ETHUSD' ? 2 : 5) : 3)),
-      sl: parseFloat(sl.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? 5 : 3)),
-      tp: parseFloat(tp.toFixed(pair.includes('USD') && !pair.endsWith('JPY') ? 5 : 3)),
+      closePrice: parseFloat(closePrice.toFixed(isJPY ? 3 : 5)),
+      sl: parseFloat(sl.toFixed(isJPY ? 3 : 5)),
+      tp: parseFloat(tp.toFixed(isJPY ? 3 : 5)),
       commission: -12,
       swap,
       profit,
@@ -200,8 +273,8 @@ function generateDatasetA(): TradeRecord[] {
 
     runningProfit += profit;
 
-    // 1〜2日間隔で取引（土日スキップ）
-    const daysToAdd = randomFloat(1, 2);
+    // 1〜3日間隔で取引（土日スキップ、隙間をあける）
+    const daysToAdd = randomFloat(1, 3);
     currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
     currentDate = skipWeekends(currentDate);
 
@@ -224,19 +297,15 @@ function generateDatasetB(): TradeRecord[] {
   const targetProfit = 500000; // 勝ったり負けたりで最終的に微益
   const totalTrades = 420;
 
-  // 通貨ペアごとの得意不得意
-  const pairPerformance: Record<string, number> = {
-    'EURUSD': 0.2,
-    'GBPUSD': -0.3,
-    'USDJPY': 0.5,
-    'AUDUSD': -0.4,
-    'EURJPY': 0.3,
-    'GBPJPY': -0.2,
-    'USDCHF': 0.1,
-    'NZDUSD': -0.1
+  // 通貨ペアごとの得意不得意（勝率%）
+  const pairWinRate: Record<string, number> = {
+    'EURUSD': 0.60,  // やや得意
+    'USDJPY': 0.75,  // 得意
+    'EURJPY': 0.65,  // やや得意
+    'GBPJPY': 0.40   // やや苦手
   };
 
-  // 勝ちと負けを交互に近い形で
+  // 勝ちと負けを交互に近い形で繰り返す
   for (let i = 0; i < totalTrades; i++) {
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_B);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
@@ -244,10 +313,14 @@ function generateDatasetB(): TradeRecord[] {
     const type = randomChoice(['buy', 'sell'] as const);
     const size = parseFloat((randomFloat(0.3, 2.8)).toFixed(1));
 
-    // 勝ちと負けを交互に
-    const isWinTrade = i % 2 === 0;
+    // 勝ちと負けを交互に近い形で決定（通貨ペアの得意不得意も考慮）
+    const shouldAlternate = (i % 3 === 0 || i % 3 === 1); // 2勝1敗のパターン
+    let isWinTrade = shouldAlternate;
+    // 通貨ペアが苦手な場合は勝率を下げる
+    if (isWinTrade && Math.random() > pairWinRate[pair]) {
+      isWinTrade = false;
+    }
     let profitBias = isWinTrade ? randomFloat(0.5, 1.5) : randomFloat(-1.5, -0.5);
-    profitBias *= pairPerformance[pair];
 
     const setup = randomChoice(SETUPS);
 
@@ -291,8 +364,8 @@ function generateDatasetB(): TradeRecord[] {
 
     runningProfit += profit;
 
-    // 1〜2日間隔で取引（土日スキップ）
-    const daysToAdd = randomFloat(1, 2);
+    // 1〜3日間隔で取引（土日スキップ、隙間をあける）
+    const daysToAdd = randomFloat(1, 3);
     currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
     currentDate = skipWeekends(currentDate);
 
@@ -315,14 +388,14 @@ function generateDatasetC(): TradeRecord[] {
   const targetLoss = -1800000;
   const totalTrades = 480;
 
-  // 通貨ペアごとの得意不得意
-  const pairPerformance: Record<string, number> = {
-    'EURUSD': -0.3,
-    'GBPUSD': -0.8,
-    'USDJPY': 0.4,
-    'AUDUSD': -0.6,
-    'EURJPY': 0.2,
-    'GBPJPY': -1.2  // 特に苦手
+  // 通貨ペアごとの得意不得意（勝率%）
+  const pairWinRate: Record<string, number> = {
+    'EURUSD': 0.40,  // やや苦手
+    'GBPUSD': 0.20,  // 非常に苦手
+    'USDJPY': 0.65,  // やや得意
+    'AUDUSD': 0.30,  // 苦手
+    'EURJPY': 0.55,  // 普通
+    'GBPJPY': 0.15   // 非常に苦手
   };
 
   const fomoTradeIndices = [42, 78, 95, 134, 167, 189, 225, 268, 311, 357, 398, 442];
@@ -339,19 +412,23 @@ function generateDatasetC(): TradeRecord[] {
       : parseFloat((randomFloat(0.5, 2.8)).toFixed(1));
 
     // 中盤(100-300)は利益が出る期間
-    let periodMultiplier = 1;
+    let adjustedWinRate = pairWinRate[pair];
     if (i >= 100 && i <= 300) {
-      periodMultiplier = 2.5; // 利益期間
+      adjustedWinRate = Math.min(0.95, adjustedWinRate + 0.30); // 利益期間は勝率アップ
     } else if (i > 300) {
-      periodMultiplier = -2.0; // 後半大きく負ける
+      adjustedWinRate = Math.max(0.10, adjustedWinRate - 0.25); // 後半大きく負ける
     }
 
-    let profitBias = pairPerformance[pair] * periodMultiplier;
+    // 通貨ペアの得意不得意に基づいて勝ち負けを決定
+    const isWinTrade = !isFomoTrade && (Math.random() < adjustedWinRate);
+    let profitBias: number;
 
     if (isFomoTrade) {
       profitBias = randomFloat(-12, -5);
+    } else if (isWinTrade) {
+      profitBias = randomFloat(0.4, 1.2);
     } else {
-      profitBias += randomFloat(-0.8, 0.4);
+      profitBias = randomFloat(-1.2, -0.4);
     }
 
     const setup = isFomoTrade ? 'FOMO' : randomChoice(SETUPS);
@@ -381,6 +458,9 @@ function generateDatasetC(): TradeRecord[] {
     const sl = type === 'buy' ? openPrice - slDistance : openPrice + slDistance;
     const tp = type === 'buy' ? openPrice + tpDistance : openPrice - tpDistance;
 
+    // XMポイントの計算（1ロットあたり約10〜20ポイント）
+    const xmPoints = Math.round(size * randomFloat(10, 20));
+
     trades.push({
       ticket: String(ticketNum++),
       item: pair,
@@ -395,13 +475,14 @@ function generateDatasetC(): TradeRecord[] {
       commission: -12,
       swap,
       profit,
-      comment: setup
+      comment: setup,
+      xmPoints
     });
 
     runningProfit += profit;
 
-    // 1〜2日間隔で取引（土日スキップ）
-    const daysToAdd = randomFloat(1, 2);
+    // 1〜3日間隔で取引（土日スキップ、隙間をあける）
+    const daysToAdd = randomFloat(1, 3);
     currentDate = new Date(currentDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
     currentDate = skipWeekends(currentDate);
 
@@ -413,11 +494,14 @@ function generateDatasetC(): TradeRecord[] {
   return trades;
 }
 
-function tradesToCSV(trades: TradeRecord[]): string {
-  const header = 'Ticket\tItem\tType\tSize\tOpen Time\tOpen Price\tClose Time\tClose Price\tS/L\tT/P\tCommission\tSwap\tProfit\tComment\n';
-  const rows = trades.map(t =>
-    `${t.ticket}\t${t.item}\t${t.type}\t${t.size}\t${t.openTime}\t${t.openPrice}\t${t.closeTime}\t${t.closePrice}\t${t.sl}\t${t.tp}\t${t.commission}\t${t.swap}\t${t.profit}\t${t.comment}`
-  ).join('\n');
+function tradesToCSV(trades: TradeRecord[], includeXMPoints: boolean = false): string {
+  const header = includeXMPoints
+    ? 'Ticket\tItem\tType\tSize\tOpen Time\tOpen Price\tClose Time\tClose Price\tS/L\tT/P\tCommission\tSwap\tProfit\tComment\tXM Points\n'
+    : 'Ticket\tItem\tType\tSize\tOpen Time\tOpen Price\tClose Time\tClose Price\tS/L\tT/P\tCommission\tSwap\tProfit\tComment\n';
+  const rows = trades.map(t => {
+    const base = `${t.ticket}\t${t.item}\t${t.type}\t${t.size}\t${t.openTime}\t${t.openPrice}\t${t.closeTime}\t${t.closePrice}\t${t.sl}\t${t.tp}\t${t.commission}\t${t.swap}\t${t.profit}\t${t.comment}`;
+    return includeXMPoints ? `${base}\t${t.xmPoints || 0}` : base;
+  }).join('\n');
   return header + rows;
 }
 
@@ -485,5 +569,5 @@ console.log('\n✅ Dataset A saved to ./public/demo/A.csv');
 fs.writeFileSync('./public/demo/B.csv', tradesToCSV(datasetB));
 console.log('✅ Dataset B saved to ./public/demo/B.csv');
 
-fs.writeFileSync('./public/demo/C.csv', tradesToCSV(datasetC));
-console.log('✅ Dataset C saved to ./public/demo/C.csv');
+fs.writeFileSync('./public/demo/C.csv', tradesToCSV(datasetC, true));
+console.log('✅ Dataset C saved to ./public/demo/C.csv (with XM Points)');
