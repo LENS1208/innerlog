@@ -137,90 +137,97 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
             gap: '16px',
             alignItems: 'start'
           }}>
-            {radarComponent && (
-              <div style={{
-                gridColumn: '1 / -1',
-                maxWidth: '70%',
-                margin: '0 auto',
-                width: '100%'
-              }}>
+            <style>{`
+              @media (min-width: 1024px) {
+                .overview-layout {
+                  grid-template-columns: 70% 1fr !important;
+                }
+              }
+            `}</style>
+            <div className="overview-layout" style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+              gap: '16px',
+              alignItems: 'start'
+            }}>
+              {radarComponent && (
                 <Section title="総合評価" helpText="AIがあなたの取引パフォーマンスを多角的に評価した結果です。">
                   {radarComponent}
                 </Section>
-              </div>
-            )}
+              )}
 
-            {(sheet.summaryCategories && Array.isArray(sheet.summaryCategories) && sheet.summaryCategories.length > 0) || (sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0) ? (
-              <div style={{ gridColumn: '1 / -1' }}>
-                <h3 style={{
-                  margin: '0 0 16px 0',
-                  fontSize: 15,
-                  fontWeight: 'bold',
-                  color: 'var(--muted)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                }}>
-                  現状サマリー
-                  <HelpIcon text="あなたの取引スタイルと現在の状況を重要なカテゴリーごとに分析しています。" />
-                </h3>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                  gap: '12px'
-                }}>
-                  {(sheet.summaryCategories && sheet.summaryCategories.length > 0 ? sheet.summaryCategories : convertSummaryToCategories(sheet.summary || [])).map((cat, i) => (
-                    <div
-                      key={i}
-                      className="summary-category-card"
-                      style={{
-                        background: 'var(--surface)',
-                        border: '1px solid var(--line)',
-                        borderRadius: '10px',
-                        padding: '16px',
-                        position: 'relative',
-                        overflow: 'hidden',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--accent)';
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--line)';
-                        e.currentTarget.style.transform = 'translateY(0)';
-                      }}
-                    >
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '4px',
-                        height: '100%',
-                        background: `var(--accent)`,
-                        opacity: 0.6
-                      }} />
-                      <h4 style={{
-                        margin: '0 0 10px 0',
-                        fontSize: '14px',
-                        fontWeight: 700,
-                        color: 'var(--accent)',
-                        letterSpacing: '0.02em'
-                      }}>
-                        {cat.category}
-                      </h4>
-                      <p style={{
-                        margin: 0,
-                        fontSize: '14px',
-                        lineHeight: 1.7,
-                        color: 'var(--ink)'
-                      }}>
-                        {cat.description}
-                      </p>
-                    </div>
-                  ))}
+              {(sheet.summaryCategories && Array.isArray(sheet.summaryCategories) && sheet.summaryCategories.length > 0) || (sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0) ? (
+                <div>
+                  <h3 style={{
+                    margin: '0 0 16px 0',
+                    fontSize: 15,
+                    fontWeight: 'bold',
+                    color: 'var(--muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                  }}>
+                    現状サマリー
+                    <HelpIcon text="あなたの取引スタイルと現在の状況を重要なカテゴリーごとに分析しています。" />
+                  </h3>
+                  <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px'
+                  }}>
+                    {(sheet.summaryCategories && sheet.summaryCategories.length > 0 ? sheet.summaryCategories : convertSummaryToCategories(sheet.summary || [])).map((cat, i) => (
+                      <div
+                        key={i}
+                        className="summary-category-card"
+                        style={{
+                          background: 'var(--surface)',
+                          border: '1px solid var(--line)',
+                          borderRadius: '10px',
+                          padding: '16px',
+                          position: 'relative',
+                          overflow: 'hidden',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--accent)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--line)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                      >
+                        <div style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '4px',
+                          height: '100%',
+                          background: `var(--accent)`,
+                          opacity: 0.6
+                        }} />
+                        <h4 style={{
+                          margin: '0 0 10px 0',
+                          fontSize: '14px',
+                          fontWeight: 700,
+                          color: 'var(--accent)',
+                          letterSpacing: '0.02em'
+                        }}>
+                          {cat.category}
+                        </h4>
+                        <p style={{
+                          margin: 0,
+                          fontSize: '14px',
+                          lineHeight: 1.7,
+                          color: 'var(--ink)'
+                        }}>
+                          {cat.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
           </div>
 
           {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
