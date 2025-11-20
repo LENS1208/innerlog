@@ -7,18 +7,22 @@ interface RulesTableProps {
 
 export function RulesTable({ rules }: RulesTableProps) {
   return (
-    <div style={{ display: 'grid', gap: '16px' }}>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(5, 1fr)',
+      gap: '12px'
+    }}>
       {rules.map((rule, i) => (
         <div
           key={i}
           style={{
-            background: 'var(--chip)',
+            background: 'var(--surface)',
             border: '1px solid var(--line)',
             borderRadius: '8px',
             padding: '16px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
             <div
               style={{
                 background: 'var(--accent)',
@@ -31,20 +35,16 @@ export function RulesTable({ rules }: RulesTableProps) {
                 justifyContent: 'center',
                 fontSize: '12px',
                 fontWeight: 600,
+                flexShrink: 0,
               }}
             >
               {i + 1}
             </div>
-            <div style={{ fontWeight: 700, fontSize: '17px', color: 'var(--ink)' }}>{rule.title}</div>
+            <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--ink)' }}>{rule.title}</div>
           </div>
-          <div style={{ fontSize: '16px', color: 'var(--ink)', marginBottom: '10px', lineHeight: 1.8, fontWeight: 500 }}>
+          <div style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.6 }}>
             {rule.content}
           </div>
-          {rule.coachNote && (
-            <div style={{ fontSize: '15px', color: 'var(--ink)', fontStyle: 'italic', lineHeight: 1.6, opacity: 0.8 }}>
-              💡 {rule.coachNote}
-            </div>
-          )}
         </div>
       ))}
     </div>
