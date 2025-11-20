@@ -108,6 +108,11 @@ function makeDummyTrades(): Trade[] {
 const pipFactor = (sym: string) => (/JPY$/.test(sym) ? 100 : 10000);
 const holdMs = (a: Date, b: Date) => b.getTime() - a.getTime();
 const fmtJPY = (n: number) => `${Math.round(n).toLocaleString("ja-JP")}円`;
+const fmtPrice = (n: number, sym: string) => {
+  const isJPY = /JPY$/.test(sym);
+  const decimals = isJPY ? 3 : 5;
+  return `${n.toFixed(decimals)} 円`;
+};
 const fmtHoldJP = (ms: number) => {
   const m = Math.floor(ms / 60000),
     h = Math.floor(m / 60);
@@ -1085,7 +1090,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-4, 20px)', minHeight: 56 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
             <div style={{ fontSize: 24, fontWeight: 700, margin: 0 }}>
-              {row.item}｜{fmtJPY(row.openPrice)}｜{row.side === "BUY" ? "買い" : "売り"}｜<span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 400 }}>Ticket:{row.ticket}</span>
+              {row.item}｜{fmtPrice(row.openPrice, row.item)}｜{row.side === "BUY" ? "買い" : "売り"}｜<span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 400 }}>Ticket:{row.ticket}</span>
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
