@@ -210,7 +210,11 @@ function generateDatasetA(): TradeRecord[] {
       }
     }
 
-    // 通常のFX取引
+    // 通常のFX取引（土日はスキップ）
+    if (isWeekend(currentDate)) {
+      currentDate = skipWeekends(currentDate);
+    }
+
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_A);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
 
@@ -294,33 +298,53 @@ function generateDatasetB(): TradeRecord[] {
   let ticketNum = 102000001;
   let currentDate = skipWeekends(new Date(startDate));
   let runningProfit = 0;
-  const targetProfit = 500000; // 勝ったり負けたりで最終的に微益
+  const targetProfit = -300000; // 大きく勝ったり負けたりで最終的に損失
   const totalTrades = 420;
 
-  // 通貨ペアごとの得意不得意（勝率%）
+  // 通貨ペアごとの得意不得意（勝率%）- より極端に
   const pairWinRate: Record<string, number> = {
-    'EURUSD': 0.60,  // やや得意
-    'USDJPY': 0.75,  // 得意
-    'EURJPY': 0.65,  // やや得意
-    'GBPJPY': 0.40   // やや苦手
+    'EURUSD': 0.48,
+    'USDJPY': 0.52,
+    'EURJPY': 0.43,
+    'GBPJPY': 0.38
   };
 
-  // 勝ちと負けを交互に近い形で繰り返す
+  // 大きな勝ちと大きな負けを繰り返すパターン（負けの方を多くする）
+  const bigWinIndices = [5, 58, 128, 201, 276, 352];
+  const bigLossIndices = [10, 22, 35, 50, 67, 85, 103, 121, 139, 157, 175, 194, 213, 232, 250, 269, 288, 307, 326, 345, 364, 383, 402, 415];
+
+  // 大きく勝ったり負けたりを繰り返す
   for (let i = 0; i < totalTrades; i++) {
+    // 土日はスキップ
+    if (isWeekend(currentDate)) {
+      currentDate = skipWeekends(currentDate);
+    }
+
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_B);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
 
     const type = randomChoice(['buy', 'sell'] as const);
-    const size = parseFloat((randomFloat(0.3, 2.8)).toFixed(1));
 
-    // 勝ちと負けを交互に近い形で決定（通貨ペアの得意不得意も考慮）
-    const shouldAlternate = (i % 3 === 0 || i % 3 === 1); // 2勝1敗のパターン
-    let isWinTrade = shouldAlternate;
-    // 通貨ペアが苦手な場合は勝率を下げる
-    if (isWinTrade && Math.random() > pairWinRate[pair]) {
-      isWinTrade = false;
+    // 大きな勝ち/負けの取引ではロットサイズを大きくする（負けの方をより大きく）
+    const isBigWin = bigWinIndices.includes(i);
+    const isBigLoss = bigLossIndices.includes(i);
+    const size = isBigWin
+      ? parseFloat((randomFloat(3.0, 6.0)).toFixed(1))
+      : isBigLoss
+      ? parseFloat((randomFloat(5.0, 10.0)).toFixed(1))
+      : parseFloat((randomFloat(0.3, 2.5)).toFixed(1));
+
+    // 大きな勝ち/負けのパターン（負けをより大きく）
+    let profitBias: number;
+    if (isBigWin) {
+      profitBias = randomFloat(2.0, 4.0); // 大きな勝ち（控えめ）
+    } else if (isBigLoss) {
+      profitBias = randomFloat(-8.0, -5.0); // 大きな負け（より大きく）
+    } else {
+      // 通常の取引
+      const isWinTrade = Math.random() < pairWinRate[pair];
+      profitBias = isWinTrade ? randomFloat(0.3, 1.2) : randomFloat(-1.2, -0.3);
     }
-    let profitBias = isWinTrade ? randomFloat(0.5, 1.5) : randomFloat(-1.5, -0.5);
 
     const setup = randomChoice(SETUPS);
 
@@ -385,7 +409,7 @@ function generateDatasetC(): TradeRecord[] {
   let ticketNum = 103000001;
   let currentDate = skipWeekends(new Date(startDate));
   let runningProfit = 0;
-  const targetLoss = -1800000;
+  const targetLoss = -2500000;
   const totalTrades = 480;
 
   // 通貨ペアごとの得意不得意（勝率%）
@@ -401,6 +425,11 @@ function generateDatasetC(): TradeRecord[] {
   const fomoTradeIndices = [42, 78, 95, 134, 167, 189, 225, 268, 311, 357, 398, 442];
 
   for (let i = 0; i < totalTrades; i++) {
+    // 土日はスキップ
+    if (isWeekend(currentDate)) {
+      currentDate = skipWeekends(currentDate);
+    }
+
     const pair = randomChoice(CURRENCY_PAIRS_DATASET_C);
     const { basePrice, priceRange, pipMultiplier, isJPY } = getPairInfo(pair);
 
