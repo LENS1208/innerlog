@@ -76,6 +76,6 @@ function getScoreColor(value: number): string {
   if (value >= 80) return '#10b981';
   if (value >= 70) return '#3b82f6';
   if (value >= 60) return '#f59e0b';
-  if (value >= 50) return '#ef4444';
+  if (value >= 50) return getLossColor();
   return '#991b1b';
 }

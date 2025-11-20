@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme.context';
+import { getAccentColor } from '../lib/chartColors';
 import logoImgLight from '../assets/inner-log-logo-l.png';
 import logoImgDark from '../assets/inner-log-logo-d.png';
 
@@ -122,7 +123,7 @@ export default function SignupPage() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#0084c7',
+                color: getAccentColor(),
                 fontWeight: 600,
                 cursor: 'pointer',
                 textDecoration: 'underline',
@@ -223,7 +224,7 @@ export default function SignupPage() {
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#0084c7';
+                e.target.style.borderColor = getAccentColor();
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e2e8f0';
@@ -260,7 +261,7 @@ export default function SignupPage() {
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#0084c7';
+                e.target.style.borderColor = getAccentColor();
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e2e8f0';
@@ -306,7 +307,7 @@ export default function SignupPage() {
                 transition: 'all 0.2s',
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#0084c7';
+                e.target.style.borderColor = getAccentColor();
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e2e8f0';
@@ -339,7 +340,7 @@ export default function SignupPage() {
               fontSize: 16,
               fontWeight: 700,
               color: '#fff',
-              background: loading ? '#a0aec0' : '#0084c7',
+              background: loading ? '#a0aec0' : getAccentColor(),
               border: 'none',
               borderRadius: 12,
               cursor: loading ? 'not-allowed' : 'pointer',
@@ -349,7 +350,7 @@ export default function SignupPage() {
               if (!loading) e.currentTarget.style.background = '#006ba3';
             }}
             onMouseLeave={(e) => {
-              if (!loading) e.currentTarget.style.background = '#0084c7';
+              if (!loading) e.currentTarget.style.background = getAccentColor();
             }}
           >
             {loading ? '処理中...' : '新規登録'}

@@ -97,7 +97,7 @@ export default function TimingQualitySection({ trades = [] }: Props) {
 
           <div className="panel" style={{ padding: 20 }}>
             <div style={{ fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', marginBottom: 8 }}>MAE（最大含み損）</div>
-            <div style={{ fontSize: 24, fontWeight: 700, color: '#ef4444', marginBottom: 4 }}>
+            <div style={{ fontSize: 24, fontWeight: 700, color: getLossColor(), marginBottom: 4 }}>
               {(timingMetrics.avgMae * 100).toFixed(1)}%
             </div>
             <div style={{ fontSize: 12, color: 'var(--muted)' }}>平均的な最大含み損率</div>

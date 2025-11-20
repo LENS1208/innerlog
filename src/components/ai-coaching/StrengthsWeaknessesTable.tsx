@@ -1,5 +1,6 @@
 import React from 'react';
 import type { StrengthWeaknessRow, EvaluationScore } from '../../services/ai-coaching/types';
+import { getAccentColor, getLossColor } from '../../lib/chartColors';
 
 interface StrengthsWeaknessesTableProps {
   rows: StrengthWeaknessRow[];
@@ -118,7 +119,7 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore, focusMode = 'a
                             ? '#3b82f6'
                             : row.score >= 40
                             ? '#fbbf24'
-                            : '#ef4444',
+                            : getLossColor(),
                       }}
                     >
                       {row.score}
@@ -131,7 +132,7 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore, focusMode = 'a
                   <td style={{ padding: '14px 12px', color: 'var(--accent)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.strength}</td>
                 )}
                 {(focusMode === 'all' || focusMode === 'weaknesses') && (
-                  <td style={{ padding: '14px 12px', color: '#ef4444', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.improvement}</td>
+                  <td style={{ padding: '14px 12px', color: getLossColor(), lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.improvement}</td>
                 )}
               </tr>
             ))}
@@ -193,7 +194,7 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore, focusMode = 'a
             {(focusMode === 'all' || focusMode === 'weaknesses') && (
               <div>
                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)', marginBottom: '4px' }}>改善案</div>
-                <div style={{ fontSize: '14px', lineHeight: 1.7, color: '#ef4444', fontWeight: 500 }}>{row.improvement}</div>
+                <div style={{ fontSize: '14px', lineHeight: 1.7, color: getLossColor(), fontWeight: 500 }}>{row.improvement}</div>
               </div>
             )}
           </div>

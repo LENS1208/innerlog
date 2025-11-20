@@ -7,6 +7,7 @@ import type { Trade } from '../lib/types'
 import AccountSummaryCards from '../components/AccountSummaryCards'
 import SwapSummaryCard from '../components/SwapSummaryCard'
 import { HelpIcon } from '../components/common/HelpIcon'
+import { getAccentColor, getLossColor } from '../lib/chartColors'
 
 export type DashTrade = {
   profitJPY?: number
@@ -144,7 +145,7 @@ function Gauge({ winRate, profitFactor }: { winRate: number; profitFactor: numbe
           <circle
             cx="40" cy="40" r="32"
             fill="none"
-            stroke="var(--accent-2, #0084c7)"
+            stroke={getAccentColor()}
             strokeWidth="9"
             strokeLinecap="round"
             strokeDasharray={`${winPct * 2.01} ${201 - winPct * 2.01}`}
@@ -152,7 +153,7 @@ function Gauge({ winRate, profitFactor }: { winRate: number; profitFactor: numbe
           <circle
             cx="40" cy="40" r="32"
             fill="none"
-            stroke="var(--danger, #ef4444)"
+            stroke={getLossColor()}
             strokeWidth="9"
             strokeLinecap="round"
             strokeDasharray={`0 ${winPct * 2.01} ${lossPct * 2.01}`}
@@ -185,8 +186,8 @@ function SemiGauge({ winRate, wins, draws, losses }: { winRate: number; wins: nu
       <div style={{ position: 'relative', width: '100%', maxWidth: 120, height: 70 }}>
         <svg viewBox="0 0 120 70" style={{ width: '100%', height: 70 }}>
           <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--line)" strokeWidth="12" pathLength="100" />
-          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--accent-2, #0084c7)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`${winPct} ${100 - winPct}`} />
-          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke="var(--danger, #ef4444)" strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`0 ${winPct} ${lossPct}`} />
+          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke={getAccentColor()} strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`${winPct} ${100 - winPct}`} />
+          <path d="M10,60 A50,50 0 0 1 110,60" fill="none" stroke={getLossColor()} strokeLinecap="round" strokeWidth="12" pathLength="100" strokeDasharray={`0 ${winPct} ${lossPct}`} />
         </svg>
       </div>
       <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 6, flexWrap: 'wrap' }}>
@@ -217,8 +218,8 @@ function BarSplit({ avgProfit, avgLoss, unit = '円' }: { avgProfit: number; avg
         <div style={{ width: `${lossPct}%`, background: 'rgba(239,68,68,.35)' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6, fontWeight: 600 }}>
-        <span style={{ color: 'var(--accent-2, #0084c7)' }}>+{formatValue(avgProfit)} <span style={{ fontSize: 12, color: 'var(--accent-2, #0084c7)' }}>{unit}</span></span>
-        <span style={{ color: 'var(--danger, #ef4444)' }}>-{formatValue(avgLoss)} <span style={{ fontSize: 12, color: 'var(--danger, #ef4444)' }}>{unit}</span></span>
+        <span style={{ color: getAccentColor() }}>+{formatValue(avgProfit)} <span style={{ fontSize: 12, color: getAccentColor() }}>{unit}</span></span>
+        <span style={{ color: getLossColor() }}>-{formatValue(avgLoss)} <span style={{ fontSize: 12, color: getLossColor() }}>{unit}</span></span>
       </div>
     </div>
   )
@@ -286,8 +287,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           合計損益
           <HelpIcon text="全取引の利益と損失を合計した最終的な損益です。プラスなら利益が出ています。" />
         </div>
-        <div className="kpi-value" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
-          {dash.gross >= 0 ? '+' : ''}{Math.round(dash.gross).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.gross < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>円</span>
+        <div className="kpi-value" style={{ color: dash.gross < 0 ? getLossColor() : getAccentColor() }}>
+          {dash.gross >= 0 ? '+' : ''}{Math.round(dash.gross).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.gross < 0 ? getLossColor() : getAccentColor() }}>円</span>
         </div>
         <div className="kpi-desc">全取引の合計損益</div>
       </div>
@@ -298,8 +299,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           <HelpIcon text="1回の取引あたりの平均的な損益です。プラスなら平均的に利益が出ています。" />
         </div>
         <div>
-          <div className="kpi-value" style={{ color: dash.avg < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>
-            {dash.avg >= 0 ? '+' : ''}{Math.round(dash.avg).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.avg < 0 ? 'var(--danger, #ef4444)' : 'var(--accent-2, #0084c7)' }}>円/件</span>
+          <div className="kpi-value" style={{ color: dash.avg < 0 ? getLossColor() : getAccentColor() }}>
+            {dash.avg >= 0 ? '+' : ''}{Math.round(dash.avg).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.avg < 0 ? getLossColor() : getAccentColor() }}>円/件</span>
           </div>
           <div className="kpi-desc">1取引あたりの平均</div>
           <BarSplit avgProfit={dash.avgProfit} avgLoss={dash.avgLoss} />
@@ -343,7 +344,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
               <circle
                 cx="40" cy="40" r="32"
                 fill="none"
-                stroke="var(--accent-2, #0084c7)"
+                stroke={getAccentColor()}
                 strokeWidth="9"
                 strokeLinecap="round"
                 strokeDasharray={`${Math.min(Math.round(dash.profitFactor * 100), 201)} 201`}
@@ -358,8 +359,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
           最大ドローダウン
           <HelpIcon text="資金が最も減った金額です。この数値が大きいほど、大きな含み損に耐える必要があります。" />
         </div>
-        <div className="kpi-value" style={{ color: 'var(--danger, #ef4444)' }}>
-          -{Math.round(dash.maxDD).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--danger, #ef4444)' }}>円</span>
+        <div className="kpi-value" style={{ color: getLossColor() }}>
+          -{Math.round(dash.maxDD).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: getLossColor() }}>円</span>
         </div>
         <div className="kpi-desc">ピーク→ボトムの最大下落</div>
       </div>

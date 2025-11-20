@@ -38,7 +38,7 @@ export default function NotesReflectionSection() {
   ];
 
   const severityColor = (severity: string) => {
-    if (severity === 'High') return '#ef4444';
+    if (severity === 'High') return getLossColor();
     if (severity === 'Mid') return '#f59e0b';
     return getAccentColor();
   };
@@ -96,7 +96,7 @@ export default function NotesReflectionSection() {
                     style={{
                       width: '100%',
                       height: `${day.score * 10}%`,
-                      background: day.score >= 7 ? getAccentColor() : day.score >= 5 ? getAccentColor() : '#ef4444',
+                      background: day.score >= 7 ? getAccentColor() : day.score >= 5 ? getAccentColor() : getLossColor(),
                       borderRadius: 4,
                     }}
                   />

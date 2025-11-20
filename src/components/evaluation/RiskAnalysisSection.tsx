@@ -89,8 +89,8 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
             <svg width="100%" height="220" viewBox="0 0 500 220">
               <defs>
                 <linearGradient id="ddGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#ef4444" stopOpacity="0.1" />
+                  <stop offset="0%" stopColor={getLossColor()} stopOpacity="0.3" />
+                  <stop offset="100%" stopColor={getLossColor()} stopOpacity="0.1" />
                 </linearGradient>
               </defs>
 
@@ -159,7 +159,7 @@ export default function RiskAnalysisSection({ trades = [], initialCapital = 1000
                       style={{
                         width: `${Math.min(d.prob, 100)}%`,
                         height: '100%',
-                        background: d.prob > 5 ? '#ef4444' : getAccentColor(),
+                        background: d.prob > 5 ? getLossColor() : getAccentColor(),
                       }}
                     />
                   </div>

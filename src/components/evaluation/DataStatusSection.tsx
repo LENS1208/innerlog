@@ -52,7 +52,7 @@ export default function DataStatusSection({ metrics }: Props) {
                 <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 8, border: '1px solid var(--line)', borderRadius: 6, background: 'var(--surface)' }}>
                   <span style={{ fontSize: 13 }}>{status.metric}</span>
                   <span style={{ fontSize: 13, color: 'var(--muted)' }}>{status.value} ({status.threshold})</span>
-                  <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700, background: status.status === 'OK' ? getAccentColor() : '#ef4444', color: '#fff' }}>{status.status}</span>
+                  <span style={{ padding: '2px 8px', borderRadius: 4, fontSize: 11, fontWeight: 700, background: status.status === 'OK' ? getAccentColor() : getLossColor(), color: '#fff' }}>{status.status}</span>
                 </div>
               ))}
             </div>

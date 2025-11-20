@@ -290,7 +290,7 @@ function AIAdviceSection({ tradeData, kpi, diaryData }: AIAdviceSectionProps) {
           disabled={!advice}
           style={{
             minWidth: 60,
-            backgroundColor: isPinned ? "var(--accent-2, #0084c7)" : undefined,
+            backgroundColor: isPinned ? getAccentColor() : undefined,
             color: isPinned ? "white" : undefined,
           }}
         >
@@ -1114,9 +1114,9 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
       {/* KPI */}
       <div className="kpi-grid">
-        <div className="td-card"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? 'var(--accent-2, #0084c7)' : 'var(--danger, #ef4444)' }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
+        <div className="td-card"><div className="lab">pips</div><div className="val" style={{ color: kpi.pips >= 0 ? getAccentColor() : getLossColor() }}>{(kpi.pips >= 0 ? "+" : "") + kpi.pips.toFixed(1)}</div></div>
         <div className="td-card"><div className="lab">保有時間</div><div className="val">{fmtHoldJP(kpi.hold)}</div></div>
-        <div className="td-card"><div className="lab">スワップポイント</div><div className="val" style={{ color: row.swap >= 0 ? 'var(--accent-2, #0084c7)' : 'var(--danger, #ef4444)' }}>{(row.swap >= 0 ? "+" : "") + Math.round(row.swap).toLocaleString("ja-JP")}円</div></div>
+        <div className="td-card"><div className="lab">スワップポイント</div><div className="val" style={{ color: row.swap >= 0 ? getAccentColor() : getLossColor() }}>{(row.swap >= 0 ? "+" : "") + Math.round(row.swap).toLocaleString("ja-JP")}円</div></div>
         <div className="td-card"><div className="lab">リスクリワード</div><div className="val">{kpi.rrr ? kpi.rrr.toFixed(2) : "—"}</div></div>
       </div>
 

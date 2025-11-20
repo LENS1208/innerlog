@@ -21,7 +21,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
     if (value > 0.7) return getAccentColor();
     if (value > 0.5) return getAccentColor();
     if (value > 0.3) return '#f59e0b';
-    return '#ef4444';
+    return getLossColor();
   };
 
   const pairs = ['USD/JPY', 'EUR/USD', 'GBP/JPY', 'AUD/USD', 'EUR/JPY'];
@@ -120,7 +120,7 @@ export default function StrengthWeaknessSection({ trades = [] }: Props) {
             <div style={{ marginTop: 8, display: 'flex', gap: 12, fontSize: 11 }}>
               <span><span style={{ display: 'inline-block', width: 12, height: 12, background: getAccentColor(), marginRight: 4 }} />良い</span>
               <span><span style={{ display: 'inline-block', width: 12, height: 12, background: getAccentColor(), marginRight: 4 }} />普通</span>
-              <span><span style={{ display: 'inline-block', width: 12, height: 12, background: '#ef4444', marginRight: 4 }} />注意</span>
+              <span><span style={{ display: 'inline-block', width: 12, height: 12, background: getLossColor(), marginRight: 4 }} />注意</span>
             </div>
           </div>
 

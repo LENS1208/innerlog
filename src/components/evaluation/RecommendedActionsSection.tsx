@@ -20,7 +20,7 @@ export default function RecommendedActionsSection({ metrics }: Props) {
   const difficultyColor = (difficulty: string) => {
     if (difficulty === 'Low') return getAccentColor();
     if (difficulty === 'Mid') return getAccentColor();
-    return '#ef4444';
+    return getLossColor();
   };
 
   if (!metrics || actions.length === 0) {

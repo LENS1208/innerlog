@@ -129,7 +129,7 @@ export default function TPSLEvaluationSection({ metrics }: Props) {
                 <span style={{ fontWeight: 600 }}>{(analysis.slHitRate * 100).toFixed(0)}%</span>
               </div>
               <div style={{ height: 8, background: 'var(--chip)', borderRadius: 4, overflow: 'hidden' }}>
-                <div style={{ width: `${analysis.slHitRate * 100}%`, height: '100%', background: '#ef4444' }} />
+                <div style={{ width: `${analysis.slHitRate * 100}%`, height: '100%', background: getLossColor() }} />
               </div>
             </div>
             <div>

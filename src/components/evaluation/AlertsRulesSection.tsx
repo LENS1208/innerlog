@@ -60,7 +60,7 @@ export default function AlertsRulesSection({ metrics }: Props) {
                 <div style={{ padding: 16, border: '1px solid var(--accent)', borderRadius: 8, background: getAccentColor(0.1), color: getAccentColor(), fontSize: 13 }}>✓ アラートなし</div>
               ) : (
                 alerts.map((alert, idx) => {
-                  const borderColor = alert.type === 'danger' ? '#ef4444' : getAccentColor();
+                  const borderColor = alert.type === 'danger' ? getLossColor() : getAccentColor();
                   const bgColor = alert.type === 'danger' ? 'rgba(239, 68, 68, 0.1)' : getAccentColor(0.1);
                   const icon = alert.type === 'danger' ? '🔴' : '⚠️';
                   return (
