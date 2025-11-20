@@ -128,10 +128,10 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore, focusMode = 'a
                   )}
                 </td>
                 {(focusMode === 'all' || focusMode === 'strengths') && (
-                  <td style={{ padding: '14px 12px', color: 'var(--ink)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.strength}</td>
+                  <td style={{ padding: '14px 12px', color: 'var(--accent)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.strength}</td>
                 )}
                 {(focusMode === 'all' || focusMode === 'weaknesses') && (
-                  <td style={{ padding: '14px 12px', color: 'var(--accent)', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.improvement}</td>
+                  <td style={{ padding: '14px 12px', color: '#ef4444', lineHeight: 1.7, fontSize: '15px', fontWeight: 500 }}>{row.improvement}</td>
                 )}
               </tr>
             ))}
@@ -187,13 +187,13 @@ export function StrengthsWeaknessesTable({ rows, evaluationScore, focusMode = 'a
             {(focusMode === 'all' || focusMode === 'strengths') && (
               <div style={{ marginBottom: '12px' }}>
                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)', marginBottom: '4px' }}>強み</div>
-                <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--ink)', fontWeight: 500 }}>{row.strength}</div>
+                <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--accent)', fontWeight: 500 }}>{row.strength}</div>
               </div>
             )}
             {(focusMode === 'all' || focusMode === 'weaknesses') && (
               <div>
                 <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--muted)', marginBottom: '4px' }}>改善案</div>
-                <div style={{ fontSize: '14px', lineHeight: 1.7, color: 'var(--accent)', fontWeight: 500 }}>{row.improvement}</div>
+                <div style={{ fontSize: '14px', lineHeight: 1.7, color: '#ef4444', fontWeight: 500 }}>{row.improvement}</div>
               </div>
             )}
           </div>
