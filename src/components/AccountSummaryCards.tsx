@@ -44,20 +44,14 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
       }
 
       // デモデータを使用している場合は、データセット別のサマリーデータを取得
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/get_demo_account_summary`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({ p_dataset: dataset }),
+      const { data: demoData, error: rpcError } = await supabase.rpc('get_demo_account_summary', {
+        p_dataset: dataset
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch demo account summary');
+      if (rpcError) {
+        throw rpcError;
       }
 
-      const demoData = await response.json();
       console.log('📊 Demo account summary loaded:', demoData);
 
       const summaryData = {
@@ -70,7 +64,7 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         xm_points_used: demoData?.xm_points_used || 0,
         total_swap: demoData?.total_swap || 0,
         swap_positive: demoData?.swap_positive || 0,
-        swap_negative: demoData?.swap_negative || 0,
+        swap_negative: Math.abs(demoData?.swap_negative || 0),
         total_commission: 0,
         total_profit: 0,
         closed_pl: 0,
@@ -78,6 +72,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
       };
 
       console.log('🔍 Demo swap breakdown:', {
+        raw_swap_positive: demoData?.swap_positive,
+        raw_swap_negative: demoData?.swap_negative,
         swap_positive: summaryData.swap_positive,
         swap_negative: summaryData.swap_negative,
         hasSwapBreakdown: summaryData.swap_positive !== undefined && summaryData.swap_negative !== undefined
