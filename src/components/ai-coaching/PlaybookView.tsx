@@ -115,21 +115,6 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
             </div>
           </div>
         )}
-        {playbook.trendFollowing.coachNote && (
-          <div
-            style={{
-              marginTop: '12px',
-              fontSize: '13px',
-              color: 'var(--ink)',
-              fontStyle: 'italic',
-              padding: '8px',
-              background: 'var(--chip)',
-              borderRadius: '6px',
-            }}
-          >
-            💡 {playbook.trendFollowing.coachNote}
-          </div>
-        )}
       </div>
 
       <div
@@ -171,21 +156,6 @@ export function PlaybookView({ playbook }: PlaybookViewProps) {
                 <TradeExampleCard key={i} ex={ex} />
               ))}
             </div>
-          </div>
-        )}
-        {playbook.meanReversion.coachNote && (
-          <div
-            style={{
-              marginTop: '12px',
-              fontSize: '13px',
-              color: 'var(--ink)',
-              fontStyle: 'italic',
-              padding: '8px',
-              background: 'var(--chip)',
-              borderRadius: '6px',
-            }}
-          >
-            💡 {playbook.meanReversion.coachNote}
           </div>
         )}
       </div>
