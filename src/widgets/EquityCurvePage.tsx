@@ -131,7 +131,23 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 2. 月別・日次損益と今月の取引（時系列パフォーマンス） */}
+            {/* 2. セグメント分析（曜日別・時間帯別・通貨ペア別） */}
+            <section style={{ marginBottom: 16 }}>
+              <SegmentCharts
+                trades={filteredTrades as any}
+                onWeekdayClick={(weekdayLabel, weekdayTrades) => {
+                  setWeekdayPanel({ rangeLabel: weekdayLabel, trades: weekdayTrades });
+                }}
+                onTimeClick={(timeLabel, timeTrades) => {
+                  setTimeOfDayPanel({ rangeLabel: timeLabel, trades: timeTrades });
+                }}
+                onPairClick={(pairLabel, pairTrades) => {
+                  setCurrencyPairPanel({ rangeLabel: pairLabel, trades: pairTrades });
+                }}
+              />
+            </section>
+
+            {/* 3. 月別・日次損益（時系列パフォーマンス） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -159,7 +175,7 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 3. 今月の取引カレンダー */}
+            {/* 4. 今月の取引カレンダー */}
             <section style={{ marginBottom: 16 }}>
               <div className="dash-card">
                 <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -170,7 +186,7 @@ const EquityCurvePage: React.FC = () => {
               </div>
             </section>
 
-            {/* 4. 損益分布と保有時間分布（取引の特性分析） */}
+            {/* 5. 損益分布と保有時間分布（取引の特性分析） */}
             <section className="dash-row-2" style={{ marginBottom: 16 }}>
               <ProfitDistributionChart
                 trades={filteredTrades as any}
@@ -182,22 +198,6 @@ const EquityCurvePage: React.FC = () => {
                 trades={filteredTrades as any}
                 onRangeClick={(rangeLabel, rangeTrades) => {
                   setHoldingTimePanel({ rangeLabel, trades: rangeTrades });
-                }}
-              />
-            </section>
-
-            {/* 5. セグメント分析（市場条件別の詳細分析） */}
-            <section style={{ marginBottom: 16 }}>
-              <SegmentCharts
-                trades={filteredTrades as any}
-                onWeekdayClick={(weekdayLabel, weekdayTrades) => {
-                  setWeekdayPanel({ rangeLabel: weekdayLabel, trades: weekdayTrades });
-                }}
-                onTimeClick={(timeLabel, timeTrades) => {
-                  setTimeOfDayPanel({ rangeLabel: timeLabel, trades: timeTrades });
-                }}
-                onPairClick={(pairLabel, pairTrades) => {
-                  setCurrencyPairPanel({ rangeLabel: pairLabel, trades: pairTrades });
                 }}
               />
             </section>
