@@ -89,16 +89,34 @@ export default function App() {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
+  console.log("🎯 Current route:", route, "Hash:", location.hash);
+
   let Page: JSX.Element;
-  if (route === "/dashboard") Page = <EquityCurvePage />;
-  else if (route === "/calendar") Page = <MonthlyCalendar />;
+  if (route === "/dashboard") {
+    console.log("✅ Rendering DashboardPage (EquityCurvePage)");
+    Page = <EquityCurvePage />;
+  }
+  else if (route === "/calendar") {
+    console.log("✅ Rendering MonthlyCalendar");
+    Page = <MonthlyCalendar />;
+  }
   else if (route.startsWith("/calendar/day/")) {
     const dateKey = route.split("/")[3] ?? "";
+    console.log("✅ Rendering DailyNotePage for date:", dateKey);
     Page = <DailyNotePage kpi={{ dateJst: dateKey } as any} />;
   }
-  else if (route === "/trades") Page = <TradeListPage />;
-  else if (route.startsWith("/reports")) Page = <ReportsPage />;
-  else if (route === "/notebook") Page = <JournalNotesPage />;
+  else if (route === "/trades") {
+    console.log("✅ Rendering TradeListPage");
+    Page = <TradeListPage />;
+  }
+  else if (route.startsWith("/reports")) {
+    console.log("✅ Rendering ReportsPage");
+    Page = <ReportsPage />;
+  }
+  else if (route === "/notebook") {
+    console.log("✅ Rendering JournalNotesPage");
+    Page = <JournalNotesPage />;
+  }
   else if (route.startsWith("/notebook/")) {
     const entryId = route.split("/")[2] ?? "";
     Page = <TradeDiaryPage entryId={entryId as any} />;
