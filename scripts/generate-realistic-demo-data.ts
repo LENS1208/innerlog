@@ -523,6 +523,151 @@ function generateDatasetC(): TradeRecord[] {
   return trades;
 }
 
+function generateTransactionsForDataset(
+  dataset: 'A' | 'B' | 'C',
+  trades: TradeRecord[]
+): { deposits: number; withdrawals: number; transactions: any[] } {
+  const transactions: any[] = [];
+  let totalDeposits = 0;
+  let totalWithdrawals = 0;
+
+  // 取引開始日の前に初期入金
+  const firstTradeDate = new Date(trades[0].openTime);
+  const initialDepositDate = new Date(firstTradeDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  if (dataset === 'A') {
+    // データセットA: 初期入金1,000,000円、追加入金2回、出金1回
+    const initialDeposit = 1000000;
+    transactions.push({
+      date: formatDateTime(initialDepositDate),
+      type: 'deposit',
+      amount: initialDeposit,
+      description: '初回入金'
+    });
+    totalDeposits += initialDeposit;
+
+    // 途中で追加入金（取引の1/3くらいで）
+    const additionalDeposit1Date = new Date(trades[Math.floor(trades.length / 3)].openTime);
+    transactions.push({
+      date: formatDateTime(additionalDeposit1Date),
+      type: 'deposit',
+      amount: 500000,
+      description: '追加入金'
+    });
+    totalDeposits += 500000;
+
+    // さらに途中で追加入金
+    const additionalDeposit2Date = new Date(trades[Math.floor(trades.length * 2 / 3)].openTime);
+    transactions.push({
+      date: formatDateTime(additionalDeposit2Date),
+      type: 'deposit',
+      amount: 300000,
+      description: '追加入金'
+    });
+    totalDeposits += 300000;
+
+    // 最後に一部出金
+    const withdrawalDate = new Date(trades[trades.length - 10].closeTime);
+    transactions.push({
+      date: formatDateTime(withdrawalDate),
+      type: 'withdrawal',
+      amount: 1000000,
+      description: '利益出金'
+    });
+    totalWithdrawals += 1000000;
+
+  } else if (dataset === 'B') {
+    // データセットB: 初期入金3,000,000円、大損後に追加入金2回
+    const initialDeposit = 3000000;
+    transactions.push({
+      date: formatDateTime(initialDepositDate),
+      type: 'deposit',
+      amount: initialDeposit,
+      description: '初回入金'
+    });
+    totalDeposits += initialDeposit;
+
+    // 大きな損失後に追加入金（取引の1/4くらいで）
+    const additionalDeposit1Date = new Date(trades[Math.floor(trades.length / 4)].openTime);
+    transactions.push({
+      date: formatDateTime(additionalDeposit1Date),
+      type: 'deposit',
+      amount: 2000000,
+      description: '追加入金（損失補填）'
+    });
+    totalDeposits += 2000000;
+
+    // さらに大きな損失後に追加入金
+    const additionalDeposit2Date = new Date(trades[Math.floor(trades.length * 3 / 4)].openTime);
+    transactions.push({
+      date: formatDateTime(additionalDeposit2Date),
+      type: 'deposit',
+      amount: 1500000,
+      description: '追加入金（損失補填）'
+    });
+    totalDeposits += 1500000;
+
+  } else if (dataset === 'C') {
+    // データセットC: 初期入金800,000円、中盤で利益出金、後半で追加入金
+    const initialDeposit = 800000;
+    transactions.push({
+      date: formatDateTime(initialDepositDate),
+      type: 'deposit',
+      amount: initialDeposit,
+      description: '初回入金'
+    });
+    totalDeposits += initialDeposit;
+
+    // 中盤の利益が出ている時期に出金
+    const withdrawalDate = new Date(trades[Math.floor(trades.length / 2)].closeTime);
+    transactions.push({
+      date: formatDateTime(withdrawalDate),
+      type: 'withdrawal',
+      amount: 400000,
+      description: '利益出金'
+    });
+    totalWithdrawals += 400000;
+
+    // 後半の損失後に追加入金
+    const additionalDepositDate = new Date(trades[Math.floor(trades.length * 4 / 5)].openTime);
+    transactions.push({
+      date: formatDateTime(additionalDepositDate),
+      type: 'deposit',
+      amount: 600000,
+      description: '追加入金'
+    });
+    totalDeposits += 600000;
+  }
+
+  return { deposits: totalDeposits, withdrawals: totalWithdrawals, transactions };
+}
+
+function calculateAccountSummary(dataset: 'A' | 'B' | 'C', trades: TradeRecord[], transactionData: any) {
+  const totalProfit = trades.reduce((sum, t) => sum + t.profit, 0);
+  const totalSwap = trades.reduce((sum, t) => sum + t.swap, 0);
+  const totalCommission = trades.reduce((sum, t) => sum + t.commission, 0);
+  const xmPointsEarned = trades.reduce((sum, t) => sum + (t.xmPoints || 0), 0);
+
+  const swapPositive = trades.reduce((sum, t) => sum + (t.swap > 0 ? t.swap : 0), 0);
+  const swapNegative = trades.reduce((sum, t) => sum + (t.swap < 0 ? t.swap : 0), 0);
+
+  const closedPL = totalProfit + totalSwap + totalCommission;
+
+  return {
+    dataset,
+    total_deposits: transactionData.deposits,
+    total_withdrawals: transactionData.withdrawals,
+    xm_points_earned: xmPointsEarned,
+    xm_points_used: 0,
+    total_swap: totalSwap,
+    swap_positive: swapPositive,
+    swap_negative: swapNegative,
+    total_commission: totalCommission,
+    total_profit: totalProfit,
+    closed_pl: closedPL
+  };
+}
+
 function tradesToCSV(trades: TradeRecord[], includeXMPoints: boolean = false): string {
   const header = includeXMPoints
     ? 'Ticket\tItem\tType\tSize\tOpen Time\tOpen Price\tClose Time\tClose Price\tS/L\tT/P\tCommission\tSwap\tProfit\tComment\tXM Points\n'
@@ -592,6 +737,7 @@ console.log(`Mid-period (trade 100-300): ¥${midProfitC.toLocaleString()}`);
 
 const fs = require('fs');
 
+// CSV出力
 fs.writeFileSync('./public/demo/A.csv', tradesToCSV(datasetA));
 console.log('\n✅ Dataset A saved to ./public/demo/A.csv');
 
@@ -600,3 +746,43 @@ console.log('✅ Dataset B saved to ./public/demo/B.csv');
 
 fs.writeFileSync('./public/demo/C.csv', tradesToCSV(datasetC, true));
 console.log('✅ Dataset C saved to ./public/demo/C.csv (with XM Points)');
+
+// トランザクションとaccount_summaryデータを生成
+console.log('\nGenerating transaction and summary data...');
+const transactionsA = generateTransactionsForDataset('A', datasetA);
+const transactionsB = generateTransactionsForDataset('B', datasetB);
+const transactionsC = generateTransactionsForDataset('C', datasetC);
+
+const summaryA = calculateAccountSummary('A', datasetA, transactionsA);
+const summaryB = calculateAccountSummary('B', datasetB, transactionsB);
+const summaryC = calculateAccountSummary('C', datasetC, transactionsC);
+
+console.log('\nDataset A Summary:');
+console.log(`  Deposits: ¥${summaryA.total_deposits.toLocaleString()}`);
+console.log(`  Withdrawals: ¥${summaryA.total_withdrawals.toLocaleString()}`);
+console.log(`  Total Swap: ¥${summaryA.total_swap.toFixed(1)}`);
+console.log(`  XM Points: ${summaryA.xm_points_earned}`);
+
+console.log('\nDataset B Summary:');
+console.log(`  Deposits: ¥${summaryB.total_deposits.toLocaleString()}`);
+console.log(`  Withdrawals: ¥${summaryB.total_withdrawals.toLocaleString()}`);
+console.log(`  Total Swap: ¥${summaryB.total_swap.toFixed(1)}`);
+
+console.log('\nDataset C Summary:');
+console.log(`  Deposits: ¥${summaryC.total_deposits.toLocaleString()}`);
+console.log(`  Withdrawals: ¥${summaryC.total_withdrawals.toLocaleString()}`);
+console.log(`  Total Swap: ¥${summaryC.total_swap.toFixed(1)}`);
+console.log(`  XM Points: ${summaryC.xm_points_earned}`);
+
+// JSON出力（マイグレーションに使用）
+const summaryData = {
+  datasets: { A: summaryA, B: summaryB, C: summaryC },
+  transactions: {
+    A: transactionsA.transactions,
+    B: transactionsB.transactions,
+    C: transactionsC.transactions
+  }
+};
+
+fs.writeFileSync('./public/demo/account-data.json', JSON.stringify(summaryData, null, 2));
+console.log('\n✅ Account data saved to ./public/demo/account-data.json');
