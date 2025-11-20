@@ -195,9 +195,9 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
                       >
                         <h4 style={{
                           margin: '0 0 8px 0',
-                          fontSize: '14px',
-                          fontWeight: 600,
-                          color: 'var(--ink)',
+                          fontSize: 15,
+                          fontWeight: 'bold',
+                          color: 'var(--muted)',
                         }}>
                           {cat.category}
                         </h4>
