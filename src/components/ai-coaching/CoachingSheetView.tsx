@@ -1,5 +1,5 @@
 import React from 'react';
-import type { CoachingSheet } from '../../services/ai-coaching/types';
+import type { CoachingSheet, SummaryCategory } from '../../services/ai-coaching/types';
 import { TradeExampleCard } from './TradeExampleCard';
 import { StrengthsWeaknessesTable } from './StrengthsWeaknessesTable';
 import { RulesTable } from './RulesTable';
@@ -11,6 +11,46 @@ import { CoachBubble } from './CoachBubble';
 import { HelpIcon } from '../common/HelpIcon';
 
 type TabKey = "overview" | "strengths" | "weaknesses" | "trends";
+
+function convertSummaryToCategories(summary: string[]): SummaryCategory[] {
+  if (!summary || summary.length === 0) return [];
+
+  const categoryKeywords = {
+    'エントリー': ['エントリー', 'タイミング', '押し目', '戻り'],
+    'リスク管理': ['リスク', 'ロット', '資金管理', 'ドローダウン'],
+    'メンタル・規律': ['メンタル', '感情', '規律', '連敗', '冷静'],
+  };
+
+  const categories: SummaryCategory[] = [];
+  let currentCategory = '取引分析';
+
+  summary.forEach((text, idx) => {
+    let foundCategory = false;
+    for (const [catName, keywords] of Object.entries(categoryKeywords)) {
+      if (keywords.some(kw => text.includes(kw))) {
+        currentCategory = catName;
+        foundCategory = true;
+        break;
+      }
+    }
+
+    if (!foundCategory && idx === 0) {
+      currentCategory = '全体像';
+    }
+
+    const existingCat = categories.find(c => c.category === currentCategory);
+    if (existingCat) {
+      existingCat.description += ' ' + text;
+    } else {
+      categories.push({
+        category: currentCategory,
+        description: text
+      });
+    }
+  });
+
+  return categories;
+}
 
 interface CoachingSheetViewProps {
   sheet: CoachingSheet;
@@ -98,16 +138,19 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
             alignItems: 'start'
           }}>
             {radarComponent && (
-              <div style={{ gridColumn: '1 / -1' }}>
+              <div style={{
+                gridColumn: '1 / -1',
+                maxWidth: '70%',
+                margin: '0 auto',
+                width: '100%'
+              }}>
                 <Section title="総合評価" helpText="AIがあなたの取引パフォーマンスを多角的に評価した結果です。">
-                  <div style={{ maxWidth: '70%', margin: '0 auto' }}>
-                    {radarComponent}
-                  </div>
+                  {radarComponent}
                 </Section>
               </div>
             )}
 
-            {sheet.summaryCategories && Array.isArray(sheet.summaryCategories) && sheet.summaryCategories.length > 0 ? (
+            {(sheet.summaryCategories && Array.isArray(sheet.summaryCategories) && sheet.summaryCategories.length > 0) || (sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0) ? (
               <div style={{ gridColumn: '1 / -1' }}>
                 <h3 style={{
                   margin: '0 0 16px 0',
@@ -126,7 +169,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
                   gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
                   gap: '12px'
                 }}>
-                  {sheet.summaryCategories.map((cat, i) => (
+                  {(sheet.summaryCategories && sheet.summaryCategories.length > 0 ? sheet.summaryCategories : convertSummaryToCategories(sheet.summary || [])).map((cat, i) => (
                     <div
                       key={i}
                       className="summary-category-card"
@@ -177,15 +220,7 @@ export function CoachingSheetView({ sheet, scoreComponent, radarComponent, activ
                   ))}
                 </div>
               </div>
-            ) : sheet.summary && Array.isArray(sheet.summary) && sheet.summary.length > 0 && (
-              <Section title="現状サマリー" helpText="あなたの取引スタイルと現在の状況をまとめた概要です。">
-                <ul style={{ margin: '0 0 0 20px', padding: 0, lineHeight: 1.7 }}>
-                  {sheet.summary.map((s, i) => (
-                    <li key={i} style={{ fontSize: '15px', color: 'var(--ink)', marginBottom: '6px' }}>{s}</li>
-                  ))}
-                </ul>
-              </Section>
-            )}
+            ) : null}
           </div>
 
           {sheet.kpis && Array.isArray(sheet.kpis) && sheet.kpis.length > 0 && (
