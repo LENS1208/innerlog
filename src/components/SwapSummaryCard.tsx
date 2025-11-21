@@ -37,20 +37,20 @@ export default function SwapSummaryCard() {
         throw rpcError;
       }
 
-      const summaryData = {
+      const summaryData: DbAccountSummary = {
         id: 'demo',
         user_id: 'demo',
-        dataset: dataset,
-        total_deposits: demoData?.total_deposits || 0,
-        total_withdrawals: demoData?.total_withdrawals || 0,
-        xm_points_earned: demoData?.xm_points_earned || 0,
-        xm_points_used: demoData?.xm_points_used || 0,
-        total_swap: demoData?.total_swap || 0,
+        balance: demoData?.balance || 0,
+        equity: demoData?.equity || 0,
+        profit: demoData?.profit || 0,
+        deposit: demoData?.deposit || 0,
+        withdraw: demoData?.withdraw || 0,
+        commission: demoData?.commission || 0,
+        swap: demoData?.swap || 0,
+        swap_long: demoData?.swap_long || 0,
+        swap_short: demoData?.swap_short || 0,
         swap_positive: demoData?.swap_positive || 0,
         swap_negative: Math.abs(demoData?.swap_negative || 0),
-        total_commission: 0,
-        total_profit: 0,
-        closed_pl: 0,
         updated_at: new Date().toISOString(),
       };
 
@@ -67,7 +67,7 @@ export default function SwapSummaryCard() {
   }
 
   const summaryData = summary || {
-    total_swap: 0,
+    swap: 0,
     swap_positive: 0,
     swap_negative: 0,
   };
@@ -80,8 +80,8 @@ export default function SwapSummaryCard() {
         累計スワップ
         <HelpIcon text="ポジションを保有したことで発生したスワップポイントの総額です。プラスなら収入になります。" />
       </div>
-      <div className="kpi-value" style={{ color: summaryData.total_swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>
-        {summaryData.total_swap >= 0 ? '+' : ''}{Math.floor(Math.abs(summaryData.total_swap)).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.total_swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>円</span>
+      <div className="kpi-value" style={{ color: summaryData.swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>
+        {summaryData.swap >= 0 ? '+' : ''}{Math.floor(Math.abs(summaryData.swap)).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: summaryData.swap >= 0 ? 'var(--accent-2)' : 'var(--loss)' }}>円</span>
       </div>
       {hasSwapBreakdown ? (
         <>

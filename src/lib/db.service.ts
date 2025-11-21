@@ -465,17 +465,17 @@ type Side = "LONG" | "SHORT";
 export type DbAccountSummary = {
   id: string;
   user_id: string;
-  dataset: string;
-  total_deposits: number;
-  total_withdrawals: number;
-  xm_points_earned: number;
-  xm_points_used: number;
-  total_swap: number;
+  balance: number;
+  equity: number;
+  profit: number;
+  deposit: number;
+  withdraw: number;
+  commission: number;
+  swap: number;
+  swap_long?: number;
+  swap_short?: number;
   swap_positive?: number;
   swap_negative?: number;
-  total_commission: number;
-  total_profit: number;
-  closed_pl: number;
   updated_at: string;
 };
 
@@ -487,7 +487,6 @@ export async function getAccountSummary(dataset: string = 'default'): Promise<Db
     .from('account_summary')
     .select('*')
     .eq('user_id', user.id)
-    .eq('dataset', dataset)
     .maybeSingle();
 
   if (error) throw error;
@@ -497,8 +496,7 @@ export async function getAccountSummary(dataset: string = 'default'): Promise<Db
     .from('account_transactions')
     .select('amount')
     .eq('user_id', user.id)
-    .eq('dataset', dataset)
-    .eq('transaction_type', 'swap');
+    .eq('type', 'swap');
 
   const swap_positive = swapData?.reduce((sum, t) => sum + (t.amount > 0 ? t.amount : 0), 0) || 0;
   const swap_negative = swapData?.reduce((sum, t) => sum + (t.amount < 0 ? t.amount : 0), 0) || 0;
@@ -511,33 +509,34 @@ export async function getAccountSummary(dataset: string = 'default'): Promise<Db
 }
 
 export async function upsertAccountSummary(summary: {
-  dataset?: string;
-  total_deposits: number;
-  total_withdrawals: number;
-  xm_points_earned: number;
-  xm_points_used: number;
-  total_swap: number;
-  total_commission: number;
-  total_profit: number;
-  closed_pl: number;
+  balance: number;
+  equity: number;
+  profit: number;
+  deposit: number;
+  withdraw: number;
+  commission: number;
+  swap: number;
+  swap_long?: number;
+  swap_short?: number;
 }): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('User not authenticated');
 
   const { error } = await supabase
     .from('account_summary')
     .upsert({
-      user_id: user?.id || '',
-      dataset: summary.dataset || 'default',
-      total_deposits: summary.total_deposits,
-      total_withdrawals: summary.total_withdrawals,
-      xm_points_earned: summary.xm_points_earned,
-      xm_points_used: summary.xm_points_used,
-      total_swap: summary.total_swap,
-      total_commission: summary.total_commission,
-      total_profit: summary.total_profit,
-      closed_pl: summary.closed_pl,
+      user_id: user.id,
+      balance: summary.balance,
+      equity: summary.equity,
+      profit: summary.profit,
+      deposit: summary.deposit,
+      withdraw: summary.withdraw,
+      commission: summary.commission,
+      swap: summary.swap,
+      swap_long: summary.swap_long || 0,
+      swap_short: summary.swap_short || 0,
       updated_at: new Date().toISOString(),
-    }, { onConflict: 'user_id,dataset' });
+    }, { onConflict: 'user_id' });
 
   if (error) throw error;
 }
