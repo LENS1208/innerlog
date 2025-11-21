@@ -92,7 +92,7 @@ function generateTrade(
     : FX_PAIRS[Math.floor(Math.random() * FX_PAIRS.length)];
 
   const type: 'buy' | 'sell' = Math.random() > 0.5 ? 'buy' : 'sell';
-  const size = parseFloat((isWeekendTrade ? 0.01 + Math.random() * 0.09 : 0.5 + Math.random() * 2.5).toFixed(1));
+  const size = parseFloat((isWeekendTrade ? 0.05 + Math.random() * 0.15 : 0.5 + Math.random() * 2.5).toFixed(1));
 
   const holdingHours = isWeekendTrade ? 2 + Math.random() * 46 : 0.5 + Math.random() * 12;
 
@@ -171,11 +171,17 @@ function generateTrade(
     closePrice = type === 'buy' ? openPrice + pips / 10000 : openPrice - pips / 10000;
   }
 
-  if (!isFinite(closePrice) || closePrice <= 0) {
-    closePrice = type === 'buy' ? openPrice * 1.01 : openPrice * 0.99;
+  if (!isFinite(closePrice) || closePrice <= 0 || Math.abs(closePrice - openPrice) / openPrice > 0.2) {
+    const reasonableMove = isWin ? 0.015 : -0.01;
+    closePrice = type === 'buy' ? openPrice * (1 + reasonableMove) : openPrice * (1 - reasonableMove);
   }
 
   const profit = calculateProfit(item, type, size, openPrice, closePrice);
+
+  if (!isFinite(profit) || Math.abs(profit) > 500000) {
+    const fallbackMove = isWin ? 0.01 : -0.005;
+    closePrice = type === 'buy' ? openPrice * (1 + fallbackMove) : openPrice * (1 - fallbackMove);
+  }
 
   const holdingMs = closeTime.getTime() - openTime.getTime();
   const holdingDays = Math.floor(holdingMs / (1000 * 60 * 60 * 24));
