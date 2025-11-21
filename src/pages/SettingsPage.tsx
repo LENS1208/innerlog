@@ -66,15 +66,22 @@ export default function SettingsPage() {
     const init = async () => {
       console.log('🔄 SettingsPage: 初期化開始');
       setLoading(true);
+
+      // 各関数を個別にtry-catchで実行（一方が失敗しても他方を実行）
       try {
         await loadUserAndSettings();
+      } catch (err) {
+        console.error('❌ loadUserAndSettings エラー:', err);
+      }
+
+      try {
         await loadImportHistory();
       } catch (err) {
-        console.error('❌ 初期化エラー:', err);
-      } finally {
-        console.log('✅ SettingsPage: 初期化完了');
-        setLoading(false);
+        console.error('❌ loadImportHistory エラー:', err);
       }
+
+      console.log('✅ SettingsPage: 初期化完了');
+      setLoading(false);
     };
     init();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -86,76 +93,73 @@ export default function SettingsPage() {
 
   const loadUserAndSettings = async () => {
     console.log('📥 loadUserAndSettings: 開始');
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      console.log('👤 Loaded user:', user?.email);
-      console.log('📋 User metadata:', user?.user_metadata);
-      setUser(user);
+    const { data: { user } } = await supabase.auth.getUser();
+    console.log('👤 Loaded user:', user?.email);
+    console.log('📋 User metadata:', user?.user_metadata);
+    setUser(user);
 
-      if (user) {
-        const traderNameFromMeta = user.user_metadata?.trader_name || '';
-        console.log('📝 Setting traderName to:', traderNameFromMeta);
-        setEmail(user.email || '');
-        setTraderName(traderNameFromMeta);
-        setAvatarPreview(user.user_metadata?.avatar_url || '');
+    if (user) {
+      const traderNameFromMeta = user.user_metadata?.trader_name || '';
+      console.log('📝 Setting traderName to:', traderNameFromMeta);
+      setEmail(user.email || '');
+      setTraderName(traderNameFromMeta);
+      setAvatarPreview(user.user_metadata?.avatar_url || '');
 
-        const { data, error } = await supabase
-          .from('user_settings')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
+      const { data, error } = await supabase
+        .from('user_settings')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
 
-        if (error) throw error;
-
-        if (data) {
-          setSettings({
-            theme: theme,
-            timezone: data.timezone || 'Asia/Tokyo',
-            time_format: data.time_format || '24h',
-            date_format: data.date_format || 'yyyy-MM-dd',
-            currency: data.currency || 'JPY',
-            csv_format_preset: data.csv_format_preset || 'MT4',
-            csv_column_mapping: data.csv_column_mapping || {},
-            ai_evaluation_frequency: data.ai_evaluation_frequency || 'daily',
-            ai_proposal_detail_level: data.ai_proposal_detail_level || 'standard',
-            ai_evaluation_enabled: data.ai_evaluation_enabled ?? true,
-            ai_proposal_enabled: data.ai_proposal_enabled ?? true,
-            ai_advice_enabled: data.ai_advice_enabled ?? true,
-            coach_avatar_preset: data.coach_avatar_preset || 'teacher',
-          });
-        }
+      if (error) {
+        console.error('❌ user_settings取得エラー:', error);
+        return;
       }
-      console.log('✅ loadUserAndSettings: 完了');
-    } catch (err) {
-      console.error('❌ 設定の読み込みエラー:', err);
-      throw err;
+
+      if (data) {
+        setSettings({
+          theme: theme,
+          timezone: data.timezone || 'Asia/Tokyo',
+          time_format: data.time_format || '24h',
+          date_format: data.date_format || 'yyyy-MM-dd',
+          currency: data.currency || 'JPY',
+          csv_format_preset: data.csv_format_preset || 'MT4',
+          csv_column_mapping: data.csv_column_mapping || {},
+          ai_evaluation_frequency: data.ai_evaluation_frequency || 'daily',
+          ai_proposal_detail_level: data.ai_proposal_detail_level || 'standard',
+          ai_evaluation_enabled: data.ai_evaluation_enabled ?? true,
+          ai_proposal_enabled: data.ai_proposal_enabled ?? true,
+          ai_advice_enabled: data.ai_advice_enabled ?? true,
+          coach_avatar_preset: data.coach_avatar_preset || 'teacher',
+        });
+      }
     }
+    console.log('✅ loadUserAndSettings: 完了');
   };
 
   const loadImportHistory = async () => {
     console.log('📥 loadImportHistory: 開始');
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        console.log('⚠️ loadImportHistory: ユーザーなし');
-        return;
-      }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      console.log('⚠️ loadImportHistory: ユーザーなし');
+      return;
+    }
 
-      const { data, error } = await supabase
-        .from('import_history')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('imported_at', { ascending: false })
-        .limit(50);
+    const { data, error } = await supabase
+      .from('import_history')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('imported_at', { ascending: false })
+      .limit(50);
 
-      if (error) throw error;
-      if (data) {
-        setImportHistory(data);
-        console.log(`✅ loadImportHistory: ${data.length}件取得`);
-      }
-    } catch (err) {
-      console.error('❌ インポート履歴の読み込みエラー:', err);
-      throw err;
+    if (error) {
+      console.error('❌ インポート履歴の読み込みエラー:', error);
+      return;
+    }
+
+    if (data) {
+      setImportHistory(data);
+      console.log(`✅ loadImportHistory: ${data.length}件取得`);
     }
   };
 
@@ -222,8 +226,11 @@ export default function SettingsPage() {
   };
 
   const handleSaveProfile = async () => {
+    console.log('🎯 handleSaveProfile が呼ばれました！');
+
     if (!user) {
       console.error('❌ ユーザーがログインしていません');
+      showToast('ログインしてください', 'error');
       return;
     }
 
@@ -234,7 +241,8 @@ export default function SettingsPage() {
     const resetTimer = setTimeout(() => {
       console.log('⏰ タイムアウト: saving状態をリセット');
       setSaving(false);
-    }, 5000);
+      showToast('プロフィールを保存しました', 'success');
+    }, 1000);
 
     try {
       let avatarUrl = user.user_metadata?.avatar_url;
