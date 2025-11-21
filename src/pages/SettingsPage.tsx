@@ -474,7 +474,10 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <button
-                      onClick={handleSaveProfile}
+                      onClick={() => {
+                        console.log('🔘 ボタンがクリックされました');
+                        handleSaveProfile();
+                      }}
                       disabled={saving}
                       style={{
                         padding: '8px 16px',
