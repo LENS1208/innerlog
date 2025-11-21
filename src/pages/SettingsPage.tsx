@@ -117,8 +117,10 @@ export default function SettingsPage() {
       }
 
       if (data) {
-        setSettings({
-          theme: theme,
+        console.log('📝 setSettingsを呼び出します');
+        // themeは除外（useThemeから取得するため）
+        setSettings(prev => ({
+          ...prev,
           timezone: data.timezone || 'Asia/Tokyo',
           time_format: data.time_format || '24h',
           date_format: data.date_format || 'yyyy-MM-dd',
@@ -131,7 +133,8 @@ export default function SettingsPage() {
           ai_proposal_enabled: data.ai_proposal_enabled ?? true,
           ai_advice_enabled: data.ai_advice_enabled ?? true,
           coach_avatar_preset: data.coach_avatar_preset || 'teacher',
-        });
+        }));
+        console.log('✅ setSettings完了');
       }
     }
     console.log('✅ loadUserAndSettings: 完了');
