@@ -24,9 +24,8 @@ interface UserSettings {
 interface ImportHistory {
   id: string;
   filename: string;
-  rows: number;
-  created_at: string;
-  format: string;
+  row_count: number;
+  imported_at: string;
 }
 
 export default function SettingsPage() {
@@ -128,7 +127,7 @@ export default function SettingsPage() {
         .from('import_history')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .order('imported_at', { ascending: false })
         .limit(50);
 
       if (error) throw error;
@@ -164,12 +163,17 @@ export default function SettingsPage() {
   };
 
   const uploadAvatarToStorage = async () => {
-    if (!user || !avatarFile) return null;
+    if (!user || !avatarFile) {
+      console.log('⚠️ ユーザーまたはアバターファイルがありません');
+      return null;
+    }
 
     try {
       const fileExt = avatarFile.name.split('.').pop();
       const fileName = `${user.id}-${Date.now()}.${fileExt}`;
       const filePath = `avatars/${fileName}`;
+
+      console.log('📤 Storageにアップロード開始:', { filePath, fileSize: avatarFile.size });
 
       const { error: uploadError } = await supabase.storage
         .from('user-avatars')
@@ -178,33 +182,46 @@ export default function SettingsPage() {
           upsert: true
         });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('❌ Storageアップロードエラー:', uploadError);
+        throw uploadError;
+      }
+
+      console.log('✅ Storageアップロード成功');
 
       const { data: { publicUrl } } = supabase.storage
         .from('user-avatars')
         .getPublicUrl(filePath);
 
+      console.log('✅ 公開URL取得:', publicUrl);
       return publicUrl;
     } catch (err) {
-      console.error('アップロードエラー:', err);
+      console.error('❌ アップロードエラー:', err);
       throw err;
     }
   };
 
   const handleSaveProfile = async () => {
-    if (!user) return;
+    if (!user) {
+      console.error('❌ ユーザーがログインしていません');
+      return;
+    }
 
+    console.log('💾 プロフィール保存開始:', { traderName, hasAvatarFile: !!avatarFile });
     setSaving(true);
     try {
       let avatarUrl = user.user_metadata?.avatar_url;
 
       if (avatarFile) {
+        console.log('📤 アバター画像をアップロード中...');
         const uploadedUrl = await uploadAvatarToStorage();
         if (uploadedUrl) {
           avatarUrl = uploadedUrl;
+          console.log('✅ アバター画像アップロード成功:', avatarUrl);
         }
       }
 
+      console.log('🔄 ユーザーメタデータを更新中...', { trader_name: traderName, avatar_url: avatarUrl });
       const { error } = await supabase.auth.updateUser({
         data: {
           trader_name: traderName,
@@ -212,10 +229,15 @@ export default function SettingsPage() {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ ユーザーメタデータ更新エラー:', error);
+        throw error;
+      }
 
+      console.log('✅ ユーザーメタデータ更新成功');
       const { data: { user: updatedUser } } = await supabase.auth.getUser();
       if (updatedUser) {
+        console.log('✅ 更新後のユーザー情報:', updatedUser.user_metadata);
         setUser(updatedUser);
         setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
       }
@@ -223,7 +245,7 @@ export default function SettingsPage() {
       setAvatarFile(null);
       showToast('プロフィールを保存しました', 'success');
     } catch (err) {
-      console.error('プロフィール保存エラー:', err);
+      console.error('❌ プロフィール保存エラー:', err);
       showToast('保存に失敗しました', 'error');
     } finally {
       setSaving(false);
@@ -624,7 +646,6 @@ export default function SettingsPage() {
                       <thead>
                         <tr style={{ backgroundColor: 'var(--bg-secondary)' }}>
                           <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>ファイル名</th>
-                          <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>形式</th>
                           <th style={{ padding: '8px 12px', textAlign: 'right', fontSize: 13, fontWeight: 600 }}>行数</th>
                           <th style={{ padding: '8px 12px', textAlign: 'left', fontSize: 13, fontWeight: 600 }}>日時</th>
                         </tr>
@@ -633,10 +654,9 @@ export default function SettingsPage() {
                         {importHistory.slice(0, 10).map((item) => (
                           <tr key={item.id} style={{ borderTop: '1px solid var(--line)' }}>
                             <td style={{ padding: '8px 12px', fontSize: 13 }}>{item.filename}</td>
-                            <td style={{ padding: '8px 12px', fontSize: 13 }}>{item.format}</td>
-                            <td style={{ padding: '8px 12px', fontSize: 13, textAlign: 'right' }}>{item.rows}</td>
+                            <td style={{ padding: '8px 12px', fontSize: 13, textAlign: 'right' }}>{item.row_count}</td>
                             <td style={{ padding: '8px 12px', fontSize: 13 }}>
-                              {new Date(item.created_at).toLocaleString('ja-JP')}
+                              {new Date(item.imported_at).toLocaleString('ja-JP')}
                             </td>
                           </tr>
                         ))}
