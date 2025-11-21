@@ -65,7 +65,7 @@ export default function SettingsPage() {
   useEffect(() => {
     loadUserAndSettings();
     loadImportHistory();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleThemeChange = (newTheme: string) => {
     setSettings({ ...settings, theme: newTheme });
@@ -110,12 +110,8 @@ export default function SettingsPage() {
             ai_advice_enabled: data.ai_advice_enabled ?? true,
             coach_avatar_preset: data.coach_avatar_preset || 'teacher',
           });
-        } else {
-          setSettings({
-            ...settings,
-            theme: theme,
-          });
         }
+        // データがない場合はデフォルト設定を維持（setSettingsを呼ばない）
       }
     } catch (err) {
       console.error('設定の読み込みエラー:', err);
