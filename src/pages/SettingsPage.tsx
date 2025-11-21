@@ -483,10 +483,7 @@ export default function SettingsPage() {
                   <div>
                     {console.log('🎨 ボタンをレンダリング中')}
                     <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
+                      onClick={() => {
                         console.log('🔘 ボタンがクリックされました');
                         console.log('👤 Current user:', user?.email);
                         console.log('💾 Will call handleSaveProfile');
@@ -495,14 +492,14 @@ export default function SettingsPage() {
                       disabled={saving}
                       style={{
                         padding: '8px 16px',
-                        backgroundColor: 'var(--accent)',
+                        background: saving ? 'var(--muted)' : 'var(--accent)',
                         color: 'white',
                         border: 'none',
                         borderRadius: 4,
                         fontSize: 14,
+                        fontWeight: 600,
                         cursor: saving ? 'not-allowed' : 'pointer',
                         opacity: saving ? 0.6 : 1,
-                        pointerEvents: saving ? 'none' : 'auto',
                       }}
                     >
                       {saving ? '保存中...' : 'プロフィールを保存'}
