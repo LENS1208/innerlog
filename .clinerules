@@ -11,19 +11,19 @@
    - マイグレーションファイルを削除しない
    - RLS（Row Level Security）を無効化しない
 
-   - **🚨 重要: データベースURL厳守 🚨**
-     - **使用可能なデータベースは xjviqzyhephwkytwjmwd のみ**
-     - **以下のデータベースID/URLは完全使用禁止：**
-       - ❌ `zcflpkmxeupharqbaymc` （絶対に使用しない）
-       - ❌ `xvqpsnrcmkvngxrinjyf` （絶対に使用しない）
-       - ❌ https://zcflpkmxeupharqbaymc.supabase.co
-       - ❌ https://xvqpsnrcmkvngxrinjyf.supabase.co
-     - **違反した場合、即座にエラーを報告してユーザーに通知すること**
+   - **🚨 重要: データベース設定 🚨**
 
-   - **✅ 必ず使用するデータベース（これ以外は使用禁止）：**
+     **✅ 使用するデータベース（本番環境）：**
      - Database ID: `xjviqzyhephwkytwjmwd`
      - URL: https://xjviqzyhephwkytwjmwd.supabase.co
      - Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqdmlxenloZXBod2t5dHdqbXdkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM0MTQwMDEsImV4cCI6MjA3ODk5MDAwMX0.dPEren_T08S80QEy4ZiqJvOTxB5w8cP13RHUakFl4yE
+
+     **❌ 使用しないデータベース（レガシー/廃止済み）：**
+     - `zcflpkmxeupharqbaymc` - Bolt自動生成（管理外、アクセス不可）
+     - `xvqpsnrcmkvngxrinjyf` - 古い開発環境（廃止済み）
+
+     **注意：** 上記レガシーDBへの参照を検出した場合は、正しいDBに修正して
+     ユーザーに報告すること。check-db.sh スクリプトで検証可能。
 
    - **環境変数ファイル（.env, .env.production）の操作ルール：**
      - 変更前に必ず現在の内容を確認すること
