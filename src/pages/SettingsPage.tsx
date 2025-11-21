@@ -294,9 +294,38 @@ export default function SettingsPage() {
   const handleSaveSettings = async () => {
     if (!user) return;
 
+    console.log('💾 すべての設定を保存開始:', { traderName, hasAvatarFile: !!avatarFile });
     setSaving(true);
     try {
-      const { error } = await supabase
+      // 1. トレーダー名とアバターを保存
+      let avatarUrl = user.user_metadata?.avatar_url;
+
+      if (avatarFile) {
+        console.log('📤 アバター画像をアップロード中...');
+        const uploadedUrl = await uploadAvatarToStorage();
+        if (uploadedUrl) {
+          avatarUrl = uploadedUrl;
+          console.log('✅ アバター画像アップロード成功:', avatarUrl);
+        }
+      }
+
+      console.log('🔄 ユーザーメタデータを更新中...', { trader_name: traderName, avatar_url: avatarUrl });
+      const { error: authError } = await supabase.auth.updateUser({
+        data: {
+          trader_name: traderName,
+          avatar_url: avatarUrl
+        }
+      });
+
+      if (authError) {
+        console.error('❌ ユーザーメタデータ更新エラー:', authError);
+        throw authError;
+      }
+
+      console.log('✅ ユーザーメタデータ更新成功');
+
+      // 2. user_settings テーブルを保存
+      const { error: settingsError } = await supabase
         .from('user_settings')
         .upsert({
           user_id: user.id,
@@ -317,8 +346,19 @@ export default function SettingsPage() {
           onConflict: 'user_id'
         });
 
-      if (error) throw error;
-      showToast('設定を保存しました', 'success');
+      if (settingsError) throw settingsError;
+
+      // 3. 更新されたユーザー情報を取得
+      const { data: { user: updatedUser } } = await supabase.auth.getUser();
+      if (updatedUser) {
+        console.log('✅ 更新後のユーザー情報:', updatedUser.user_metadata);
+        setUser(updatedUser);
+        setTraderName(updatedUser.user_metadata?.trader_name || '');
+        setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
+      }
+
+      setAvatarFile(null);
+      showToast('すべての設定を保存しました', 'success');
     } catch (err) {
       console.error('設定保存エラー:', err);
       showToast('保存に失敗しました', 'error');
