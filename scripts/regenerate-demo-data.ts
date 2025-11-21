@@ -218,39 +218,37 @@ function generateDataset(
   cryptoRatio: number
 ): Trade[] {
   const trades: Trade[] = [];
-  const days = Math.floor((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-
   const fxTrades = Math.floor(totalTrades * (1 - cryptoRatio));
   const cryptoTrades = totalTrades - fxTrades;
 
-  const weekdays = Math.floor(days * 5 / 7);
-  const tradesPerDay = fxTrades / weekdays;
+  const weekdays: Date[] = [];
+  const weekends: Date[] = [];
 
-  let ticketNumber = 101000001;
   let currentDate = new Date(startDate);
-  let fxAdded = 0;
-
-  while (fxAdded < fxTrades && currentDate <= endDate) {
+  while (currentDate <= endDate) {
     if (isWeekday(currentDate)) {
-      const numTrades = Math.max(1, Math.floor(tradesPerDay + (Math.random() - 0.5) * tradesPerDay * 0.5));
-      for (let i = 0; i < numTrades && fxAdded < fxTrades; i++) {
-        trades.push(generateTrade(ticketNumber++, new Date(currentDate), winRate, avgWin, avgLoss, false));
-        fxAdded++;
-      }
+      weekdays.push(new Date(currentDate));
+    } else {
+      weekends.push(new Date(currentDate));
     }
     currentDate.setUTCDate(currentDate.getUTCDate() + 1);
   }
 
-  currentDate = new Date(startDate);
+  let ticketNumber = 101000001;
+  let fxAdded = 0;
+
+  while (fxAdded < fxTrades) {
+    const dayIndex = Math.floor(Math.random() * weekdays.length);
+    const closeDate = weekdays[dayIndex];
+    trades.push(generateTrade(ticketNumber++, new Date(closeDate), winRate, avgWin, avgLoss, false));
+    fxAdded++;
+  }
+
   let cryptoAdded = 0;
-  while (cryptoAdded < cryptoTrades && currentDate <= endDate) {
-    if (isWeekend(currentDate)) {
-      const numTrades = Math.min(1 + Math.floor(Math.random() * 2), cryptoTrades - cryptoAdded);
-      for (let i = 0; i < numTrades; i++) {
-        trades.push(generateTrade(102000000 + cryptoAdded++, new Date(currentDate), winRate, avgWin, avgLoss, true));
-      }
-    }
-    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+  while (cryptoAdded < cryptoTrades) {
+    const dayIndex = Math.floor(Math.random() * weekends.length);
+    const closeDate = weekends[dayIndex];
+    trades.push(generateTrade(102000000 + cryptoAdded++, new Date(closeDate), winRate, avgWin, avgLoss, true));
   }
 
   return trades.sort((a, b) => a.closeTime.getTime() - b.closeTime.getTime());
