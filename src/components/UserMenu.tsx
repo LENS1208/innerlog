@@ -15,8 +15,13 @@ export default function UserMenu() {
     };
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      } else {
+        setUser(null);
+      }
     });
 
     return () => subscription.unsubscribe();

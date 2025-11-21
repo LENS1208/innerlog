@@ -214,8 +214,13 @@ export default function SettingsPage() {
 
       if (error) throw error;
 
+      const { data: { user: updatedUser } } = await supabase.auth.getUser();
+      if (updatedUser) {
+        setUser(updatedUser);
+        setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
+      }
+
       setAvatarFile(null);
-      setAvatarPreview(avatarUrl || '');
       showToast('プロフィールを保存しました', 'success');
     } catch (err) {
       console.error('プロフィール保存エラー:', err);
