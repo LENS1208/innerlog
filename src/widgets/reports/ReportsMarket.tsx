@@ -620,7 +620,7 @@ export default function ReportsMarket() {
           <HelpIcon text="各通貨ペアの買い（ロング）と売り（ショート）の成績を比較します。どちらのポジションが得意か、通貨ペアごとの傾向を把握できます。" />
         </h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
-          {pairStatsData.slice(0, 6).map((item, idx) => {
+          {pairStatsData.map((item, idx) => {
                 const totalProfit = item.longProfit + item.shortProfit;
 
                 const longTrades = filteredTrades.filter(t => getTradePair(t) === item.symbol && getTradeSide(t) === 'LONG');
