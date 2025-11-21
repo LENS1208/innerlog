@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme.context';
 import '../styles/journal-notebook.css';
@@ -34,7 +34,6 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [initialized, setInitialized] = useState(false); // 初期化済みフラグ
   const [user, setUser] = useState<any>(null);
   const [traderName, setTraderName] = useState('');
   const [email, setEmail] = useState('');
@@ -44,6 +43,9 @@ export default function SettingsPage() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordMessage, setPasswordMessage] = useState('');
+
+  // タイマーを管理するためのRef
+  const timersRef = useRef<NodeJS.Timeout[]>([]);
 
   const [settings, setSettings] = useState<UserSettings>({
     theme: 'light',
@@ -64,14 +66,12 @@ export default function SettingsPage() {
   const [importHistory, setImportHistory] = useState<ImportHistory[]>([]);
 
   useEffect(() => {
-    // 初期化済みの場合はスキップ
-    if (initialized) {
-      console.log('⏩ 初期化済みのためスキップ');
-      return;
-    }
+    let isMounted = true; // マウント状態を追跡
 
     const init = async () => {
       console.log('🔄 SettingsPage: 初期化開始');
+      if (!isMounted) return;
+
       setLoading(true);
 
       // 各関数を個別にtry-catchで実行（一方が失敗しても他方を実行）
@@ -81,18 +81,30 @@ export default function SettingsPage() {
         console.error('❌ loadUserAndSettings エラー:', err);
       }
 
+      if (!isMounted) return;
+
       try {
         await loadImportHistory();
       } catch (err) {
         console.error('❌ loadImportHistory エラー:', err);
       }
 
+      if (!isMounted) return;
+
       console.log('✅ SettingsPage: 初期化完了');
       setLoading(false);
-      setInitialized(true); // 初期化完了をマーク
     };
+
     init();
-  }, [initialized]); // initializedを依存配列に追加
+
+    // クリーンアップ：すべてのタイマーをクリア
+    return () => {
+      console.log('🧹 SettingsPage: クリーンアップ');
+      isMounted = false;
+      timersRef.current.forEach(timer => clearTimeout(timer));
+      timersRef.current = [];
+    };
+  }, []); // 空の依存配列で初回のみ実行
 
   const handleThemeChange = (newTheme: string) => {
     // settingsオブジェクトを更新（関数形式で）
@@ -296,7 +308,7 @@ export default function SettingsPage() {
       showToast('プロフィールを保存しました', 'success');
 
       // 少し待ってからユーザー情報を再取得
-      setTimeout(async () => {
+      const profileRefreshTimer = setTimeout(async () => {
         try {
           const { data: { user: updatedUser } } = await supabase.auth.getUser();
           if (updatedUser) {
@@ -309,6 +321,7 @@ export default function SettingsPage() {
           console.error('⚠️ ユーザー情報再取得エラー:', err);
         }
       }, 500);
+      timersRef.current.push(profileRefreshTimer);
 
     } catch (err) {
       console.error('❌ プロフィール保存エラー:', err);
@@ -365,6 +378,7 @@ export default function SettingsPage() {
       setSaving(false);
       showToast('すべての設定を保存しました', 'success');
     }, 1500); // タイムアウトを短縮
+    timersRef.current.push(resetTimer); // タイマーを追跡
 
     try {
       // 1. トレーダー名とアバターを保存
@@ -431,7 +445,7 @@ export default function SettingsPage() {
       showToast('すべての設定を保存しました', 'success');
 
       // 少し待ってからユーザー情報を再取得
-      setTimeout(async () => {
+      const settingsRefreshTimer = setTimeout(async () => {
         try {
           const { data: { user: updatedUser } } = await supabase.auth.getUser();
           if (updatedUser) {
@@ -444,6 +458,7 @@ export default function SettingsPage() {
           console.error('⚠️ ユーザー情報再取得エラー:', err);
         }
       }, 500);
+      timersRef.current.push(settingsRefreshTimer);
 
     } catch (err) {
       console.error('❌ 設定保存エラー:', err);
