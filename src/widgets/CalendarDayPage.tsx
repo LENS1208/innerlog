@@ -4,6 +4,7 @@ import { Line } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 import { useDataset } from "../lib/dataset.context";
 import { supabase } from "../lib/supabase";
+import { formatDateFromJST } from "../lib/dateUtils";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
@@ -183,12 +184,8 @@ export default function CalendarDayPage() {
 
   const dayTrades = useMemo(() => {
     return trades.filter((t) => {
-      const tradeDate = new Date(t.time);
-      // t.time is already in JST milliseconds, use UTC methods to get the correct date
-      const year = tradeDate.getUTCFullYear();
-      const month = String(tradeDate.getUTCMonth() + 1).padStart(2, '0');
-      const day = String(tradeDate.getUTCDate()).padStart(2, '0');
-      const tradeDateStr = `${year}-${month}-${day}`;
+      // t.time is JST timestamp, use utility function to format
+      const tradeDateStr = formatDateFromJST(t.time);
       console.log('Filtering trade:', { tradeDateStr, selectedDate, matches: tradeDateStr === selectedDate });
       return tradeDateStr === selectedDate;
     });
