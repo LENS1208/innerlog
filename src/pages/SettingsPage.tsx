@@ -487,7 +487,10 @@ export default function SettingsPage() {
                   <div>
                     {console.log('🎨 ボタンをレンダリング中')}
                     <button
-                      onClick={() => {
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         console.log('🔘 ボタンがクリックされました');
                         console.log('👤 Current user:', user?.email);
                         console.log('💾 Will call handleSaveProfile');
@@ -503,6 +506,7 @@ export default function SettingsPage() {
                         fontSize: 14,
                         cursor: saving ? 'not-allowed' : 'pointer',
                         opacity: saving ? 0.6 : 1,
+                        pointerEvents: saving ? 'none' : 'auto',
                       }}
                     >
                       {saving ? '保存中...' : 'プロフィールを保存'}
@@ -555,7 +559,12 @@ export default function SettingsPage() {
                   )}
                   <div>
                     <button
-                      onClick={handleChangePassword}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleChangePassword();
+                      }}
                       disabled={saving || !newPassword || !confirmPassword}
                       style={{
                         padding: '8px 16px',
@@ -860,7 +869,12 @@ export default function SettingsPage() {
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: 12, padding: '16px 0' }}>
           <button
-            onClick={handleSaveSettings}
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSaveSettings();
+            }}
             disabled={saving}
             style={{
               padding: '12px 32px',
