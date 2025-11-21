@@ -29,6 +29,8 @@ interface ImportHistory {
 }
 
 export default function SettingsPage() {
+  console.log('🚀 SettingsPage component mounted');
+
   const { theme, setTheme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -417,6 +419,8 @@ export default function SettingsPage() {
     );
   }
 
+  console.log('✅ SettingsPage rendering - user:', user?.email, 'traderName:', traderName);
+
   return (
     <div style={{ width: '100%', padding: 16 }}>
       <div style={{ display: 'grid', gap: 16, maxWidth: 900 }}>
@@ -473,9 +477,12 @@ export default function SettingsPage() {
                     />
                   </div>
                   <div>
+                    {console.log('🎨 ボタンをレンダリング中')}
                     <button
                       onClick={() => {
                         console.log('🔘 ボタンがクリックされました');
+                        console.log('👤 Current user:', user?.email);
+                        console.log('💾 Will call handleSaveProfile');
                         handleSaveProfile();
                       }}
                       disabled={saving}
@@ -486,7 +493,8 @@ export default function SettingsPage() {
                         border: 'none',
                         borderRadius: 4,
                         fontSize: 14,
-                        cursor: 'pointer',
+                        cursor: saving ? 'not-allowed' : 'pointer',
+                        opacity: saving ? 0.6 : 1,
                       }}
                     >
                       {saving ? '保存中...' : 'プロフィールを保存'}
