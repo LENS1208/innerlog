@@ -293,42 +293,23 @@ export default function SettingsPage() {
 
       console.log('🔄 ユーザーメタデータを更新中...', { trader_name: traderName, avatar_url: avatarUrl });
 
-      // バックグラウンドで更新（awaitしない）
-      supabase.auth.updateUser({
+      // ユーザーメタデータを更新（awaitする）
+      const { error: updateError } = await supabase.auth.updateUser({
         data: {
           trader_name: traderName,
           avatar_url: avatarUrl
         }
-      }).then(({ error }) => {
-        if (error) {
-          console.error('❌ ユーザーメタデータ更新エラー:', error);
-        } else {
-          console.log('✅ ユーザーメタデータ更新成功');
-        }
-      }).catch(err => {
-        console.error('❌ ユーザーメタデータ更新例外:', err);
       });
 
-      // すぐに成功として処理
+      if (updateError) {
+        console.error('❌ ユーザーメタデータ更新エラー:', updateError);
+        throw updateError;
+      }
+
+      console.log('✅ ユーザーメタデータ更新成功');
       console.log('✅ プロフィール保存完了');
       setAvatarFile(null);
       showToast('プロフィールを保存しました', 'success');
-
-      // 少し待ってからユーザー情報を再取得
-      const profileRefreshTimer = setTimeout(async () => {
-        try {
-          const { data: { user: updatedUser } } = await supabase.auth.getUser();
-          if (updatedUser) {
-            console.log('✅ 更新後のユーザー情報:', updatedUser.user_metadata);
-            setUser(updatedUser);
-            setTraderName(updatedUser.user_metadata?.trader_name || '');
-            setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
-          }
-        } catch (err) {
-          console.error('⚠️ ユーザー情報再取得エラー:', err);
-        }
-      }, 500);
-      timersRef.current.push(profileRefreshTimer);
 
     } catch (err) {
       console.error('❌ プロフィール保存エラー:', err);
@@ -406,21 +387,20 @@ export default function SettingsPage() {
 
       console.log('🔄 ユーザーメタデータを更新中...', { trader_name: traderName, avatar_url: avatarUrl });
 
-      // バックグラウンドで更新（awaitしない）
-      supabase.auth.updateUser({
+      // 1. ユーザーメタデータを更新（awaitする）
+      const { error: updateError } = await supabase.auth.updateUser({
         data: {
           trader_name: traderName,
           avatar_url: avatarUrl
         }
-      }).then(({ error }) => {
-        if (error) {
-          console.error('❌ ユーザーメタデータ更新エラー:', error);
-        } else {
-          console.log('✅ ユーザーメタデータ更新成功');
-        }
-      }).catch(err => {
-        console.error('❌ ユーザーメタデータ更新例外:', err);
       });
+
+      if (updateError) {
+        console.error('❌ ユーザーメタデータ更新エラー:', updateError);
+        throw updateError;
+      }
+
+      console.log('✅ ユーザーメタデータ更新成功');
 
       // 2. user_settings テーブルを保存
       const { error: settingsError } = await supabase
@@ -446,26 +426,9 @@ export default function SettingsPage() {
 
       if (settingsError) throw settingsError;
 
-      // 3. すぐに成功として処理
       console.log('✅ すべての設定を保存完了');
       setAvatarFile(null);
       showToast('すべての設定を保存しました', 'success');
-
-      // 少し待ってからユーザー情報を再取得
-      const settingsRefreshTimer = setTimeout(async () => {
-        try {
-          const { data: { user: updatedUser } } = await supabase.auth.getUser();
-          if (updatedUser) {
-            console.log('✅ 更新後のユーザー情報:', updatedUser.user_metadata);
-            setUser(updatedUser);
-            setTraderName(updatedUser.user_metadata?.trader_name || '');
-            setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
-          }
-        } catch (err) {
-          console.error('⚠️ ユーザー情報再取得エラー:', err);
-        }
-      }, 500);
-      timersRef.current.push(settingsRefreshTimer);
 
     } catch (err) {
       console.error('❌ 設定保存エラー:', err);
