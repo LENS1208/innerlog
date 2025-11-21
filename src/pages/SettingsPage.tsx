@@ -75,11 +75,15 @@ export default function SettingsPage() {
   const loadUserAndSettings = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
+      console.log('👤 Loaded user:', user?.email);
+      console.log('📋 User metadata:', user?.user_metadata);
       setUser(user);
 
       if (user) {
+        const traderNameFromMeta = user.user_metadata?.trader_name || '';
+        console.log('📝 Setting traderName to:', traderNameFromMeta);
         setEmail(user.email || '');
-        setTraderName(user.user_metadata?.trader_name || '');
+        setTraderName(traderNameFromMeta);
         setAvatarPreview(user.user_metadata?.avatar_url || '');
 
         const { data, error } = await supabase
@@ -238,9 +242,13 @@ export default function SettingsPage() {
 
       console.log('✅ ユーザーメタデータ更新成功');
       const { data: { user: updatedUser } } = await supabase.auth.getUser();
+      console.log('🔍 取得した更新後ユーザー:', updatedUser?.email);
+      console.log('🔍 更新後のメタデータ全体:', updatedUser?.user_metadata);
+      console.log('🔍 trader_name specifically:', updatedUser?.user_metadata?.trader_name);
       if (updatedUser) {
         console.log('✅ 更新後のユーザー情報:', updatedUser.user_metadata);
         setUser(updatedUser);
+        setTraderName(updatedUser.user_metadata?.trader_name || '');
         setAvatarPreview(updatedUser.user_metadata?.avatar_url || '');
       }
 
