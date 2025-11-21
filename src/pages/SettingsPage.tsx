@@ -500,6 +500,9 @@ export default function SettingsPage() {
                         fontWeight: 600,
                         cursor: saving ? 'not-allowed' : 'pointer',
                         opacity: saving ? 0.6 : 1,
+                        pointerEvents: 'auto',
+                        position: 'relative',
+                        zIndex: 10,
                       }}
                     >
                       {saving ? '保存中...' : 'プロフィールを保存'}
