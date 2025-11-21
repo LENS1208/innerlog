@@ -8,6 +8,7 @@ import { AiAdviceBlock } from "./daily/AiAdviceBlock";
 import type { DailyNotePageProps } from "./daily/types";
 import { supabase } from "../lib/supabase";
 import { useDataset } from "../lib/dataset.context";
+import { getTodayJST } from "../lib/dateUtils";
 import "./dailyNote.css";
 
 const DUMMY_DATA: DailyNotePageProps = {
@@ -20,7 +21,7 @@ const DUMMY_DATA: DailyNotePageProps = {
     profitFactor: 2.15,
     totalPips: 42.3,
     dayTotalYen: 7500,
-    dateJst: "2025-10-04",
+    dateJst: getTodayJST(),
     weekdayJp: "土",
   },
   trades: [
@@ -33,14 +34,14 @@ const DUMMY_DATA: DailyNotePageProps = {
   ],
   linkedNotes: [
     {
-      title: "2025-10-04（土）｜日次ノート",
+      title: `${getTodayJST()}｜日次ノート`,
       kind: "日次",
-      updatedAt: "2025/10/04 20:15",
+      updatedAt: new Date().toLocaleString("ja-JP"),
     },
     {
       title: "USDJPY 買いポジション #100123",
       kind: "取引",
-      updatedAt: "2025/10/04 08:30",
+      updatedAt: new Date().toLocaleString("ja-JP"),
     },
   ],
   advice: {
@@ -50,7 +51,7 @@ const DUMMY_DATA: DailyNotePageProps = {
       "損切りが適切に機能しています。この調子でリスク管理を継続してください。",
       "午前中の取引が好調です。時間帯ごとの傾向を分析してみると良いでしょう。",
     ],
-    lastUpdated: "2025/10/04 20:30",
+    lastUpdated: new Date().toLocaleString("ja-JP"),
     pinned: false,
   },
 };

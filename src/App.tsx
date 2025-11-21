@@ -10,7 +10,6 @@ import TradeDiaryPage from "./widgets/TradeDiaryPage";
 import DiaryIndexPage from "./widgets/DiaryIndexPage";
 import MonthlyCalendar from "./widgets/MonthlyCalendar";
 import ReportsPage from "./widgets/ReportsPage";
-import CalendarDayPage from "./widgets/CalendarDayPage";
 import DailyNotePage from "./widgets/DailyNotePage";
 import JournalNotesPage from "./pages/JournalNotesPage";
 import AiProposalPage from "./pages/AiProposalPage";
