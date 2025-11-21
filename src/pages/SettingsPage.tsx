@@ -138,24 +138,31 @@ export default function SettingsPage() {
       }
 
       if (data) {
-        console.log('📝 setSettingsを呼び出します');
-        // themeは除外（useThemeから取得するため）
-        setSettings(prev => ({
-          ...prev,
-          timezone: data.timezone || 'Asia/Tokyo',
-          time_format: data.time_format || '24h',
-          date_format: data.date_format || 'yyyy-MM-dd',
-          currency: data.currency || 'JPY',
-          csv_format_preset: data.csv_format_preset || 'MT4',
-          csv_column_mapping: data.csv_column_mapping || {},
-          ai_evaluation_frequency: data.ai_evaluation_frequency || 'daily',
-          ai_proposal_detail_level: data.ai_proposal_detail_level || 'standard',
-          ai_evaluation_enabled: data.ai_evaluation_enabled ?? true,
-          ai_proposal_enabled: data.ai_proposal_enabled ?? true,
-          ai_advice_enabled: data.ai_advice_enabled ?? true,
-          coach_avatar_preset: data.coach_avatar_preset || 'teacher',
-        }));
-        console.log('✅ setSettings完了');
+        console.log('📝 データベースから設定を取得:', {
+          timezone: data.timezone,
+          ai_enabled: data.ai_evaluation_enabled
+        });
+
+        // 一度だけsetSettingsを呼ぶ（themeは現在の値を維持）
+        setSettings(prev => {
+          const newSettings = {
+            ...prev,
+            timezone: data.timezone || prev.timezone,
+            time_format: data.time_format || prev.time_format,
+            date_format: data.date_format || prev.date_format,
+            currency: data.currency || prev.currency,
+            csv_format_preset: data.csv_format_preset || prev.csv_format_preset,
+            csv_column_mapping: data.csv_column_mapping || prev.csv_column_mapping,
+            ai_evaluation_frequency: data.ai_evaluation_frequency || prev.ai_evaluation_frequency,
+            ai_proposal_detail_level: data.ai_proposal_detail_level || prev.ai_proposal_detail_level,
+            ai_evaluation_enabled: data.ai_evaluation_enabled ?? prev.ai_evaluation_enabled,
+            ai_proposal_enabled: data.ai_proposal_enabled ?? prev.ai_proposal_enabled,
+            ai_advice_enabled: data.ai_advice_enabled ?? prev.ai_advice_enabled,
+            coach_avatar_preset: data.coach_avatar_preset || prev.coach_avatar_preset,
+          };
+          console.log('✅ 設定を更新しました');
+          return newSettings;
+        });
       }
     }
     console.log('✅ loadUserAndSettings: 完了');
