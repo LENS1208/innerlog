@@ -121,8 +121,10 @@ export default function CalendarDayPage() {
   useEffect(() => {
     const updateDateFromHash = () => {
       const hash = location.hash;
+      console.log('CalendarDayPage hash:', hash);
       const match = hash.match(/\/calendar\/day\/(.+)/);
       if (match) {
+        console.log('CalendarDayPage setSelectedDate:', match[1]);
         setSelectedDate(match[1]);
       }
     };
@@ -182,11 +184,12 @@ export default function CalendarDayPage() {
   const dayTrades = useMemo(() => {
     return trades.filter((t) => {
       const tradeDate = new Date(t.time);
-      // Use local date format to match the calendar's date format (YYYY-MM-DD)
-      const year = tradeDate.getFullYear();
-      const month = String(tradeDate.getMonth() + 1).padStart(2, '0');
-      const day = String(tradeDate.getDate()).padStart(2, '0');
+      // t.time is already in JST milliseconds, use UTC methods to get the correct date
+      const year = tradeDate.getUTCFullYear();
+      const month = String(tradeDate.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(tradeDate.getUTCDate()).padStart(2, '0');
       const tradeDateStr = `${year}-${month}-${day}`;
+      console.log('Filtering trade:', { tradeDateStr, selectedDate, matches: tradeDateStr === selectedDate });
       return tradeDateStr === selectedDate;
     });
   }, [trades, selectedDate]);
