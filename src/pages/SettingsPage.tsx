@@ -34,6 +34,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [initialized, setInitialized] = useState(false); // 初期化済みフラグ
   const [user, setUser] = useState<any>(null);
   const [traderName, setTraderName] = useState('');
   const [email, setEmail] = useState('');
@@ -63,6 +64,12 @@ export default function SettingsPage() {
   const [importHistory, setImportHistory] = useState<ImportHistory[]>([]);
 
   useEffect(() => {
+    // 初期化済みの場合はスキップ
+    if (initialized) {
+      console.log('⏩ 初期化済みのためスキップ');
+      return;
+    }
+
     const init = async () => {
       console.log('🔄 SettingsPage: 初期化開始');
       setLoading(true);
@@ -82,12 +89,14 @@ export default function SettingsPage() {
 
       console.log('✅ SettingsPage: 初期化完了');
       setLoading(false);
+      setInitialized(true); // 初期化完了をマーク
     };
     init();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [initialized]); // initializedを依存配列に追加
 
   const handleThemeChange = (newTheme: string) => {
-    setSettings({ ...settings, theme: newTheme });
+    // settingsオブジェクトを更新（関数形式で）
+    setSettings(prev => ({ ...prev, theme: newTheme }));
     setTheme(newTheme as 'light' | 'dark');
   };
 
@@ -354,7 +363,8 @@ export default function SettingsPage() {
     const resetTimer = setTimeout(() => {
       console.log('⏰ タイムアウト: saving状態をリセット');
       setSaving(false);
-    }, 5000);
+      showToast('すべての設定を保存しました', 'success');
+    }, 1500); // タイムアウトを短縮
 
     try {
       // 1. トレーダー名とアバターを保存
