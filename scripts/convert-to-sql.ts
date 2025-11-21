@@ -44,7 +44,7 @@ interface DemoData {
   generated_at: string;
 }
 
-const TEST_USER_ID = 'ff7d176e-83fd-4d27-9383-906b701c22d1';
+const TEST_USER_ID = 'cbcc1f55-2f10-41a5-96c4-c2d316ab1fd2';
 
 function escapeString(str: string): string {
   return str.replace(/'/g, "''");

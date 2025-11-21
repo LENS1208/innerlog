@@ -12,7 +12,7 @@ if (!supabaseUrl || !supabaseKey) {
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function insertDemoData() {
-  const userId = 'ff7d176e-83fd-4d27-9383-906b701c22d1';
+  const userId = 'cbcc1f55-2f10-41a5-96c4-c2d316ab1fd2';
 
   console.log('Reading SQL migration file...');
   const sql = fs.readFileSync('./supabase/migrations/20251120_044318_insert_realistic_demo_datasets.sql', 'utf-8');
