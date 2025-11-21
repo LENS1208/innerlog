@@ -119,11 +119,20 @@ export default function CalendarDayPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const hash = location.hash;
-    const match = hash.match(/\/calendar\/day\/(.+)/);
-    if (match) {
-      setSelectedDate(match[1]);
-    }
+    const updateDateFromHash = () => {
+      const hash = location.hash;
+      const match = hash.match(/\/calendar\/day\/(.+)/);
+      if (match) {
+        setSelectedDate(match[1]);
+      }
+    };
+
+    updateDateFromHash();
+
+    window.addEventListener('hashchange', updateDateFromHash);
+    return () => {
+      window.removeEventListener('hashchange', updateDateFromHash);
+    };
   }, []);
 
   useEffect(() => {
