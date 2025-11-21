@@ -33,6 +33,8 @@ interface Transaction {
 interface Dataset {
   trades: Trade[];
   transactions: Transaction[];
+  xmPointsEarned?: number;
+  xmPointsUsed?: number;
 }
 
 function isWeekend(dateStr: string): boolean {
@@ -105,6 +107,16 @@ function analyzeDataset(name: string, dataset: Dataset) {
   console.log(`  総出金: ¥${totalWithdrawals.toLocaleString()}`);
   console.log(`  純入金: ¥${(totalDeposits - totalWithdrawals).toLocaleString()}`);
 
+  // XMポイント情報
+  if (dataset.xmPointsEarned && dataset.xmPointsEarned > 0) {
+    console.log(`\n🎁 XMポイント:`);
+    console.log(`  獲得ポイント: ${dataset.xmPointsEarned.toLocaleString()} XMP`);
+    console.log(`  使用ポイント: ${dataset.xmPointsUsed?.toLocaleString() || 0} XMP`);
+    console.log(`  残高: ${((dataset.xmPointsEarned || 0) - (dataset.xmPointsUsed || 0)).toLocaleString()} XMP`);
+    const pointValue = Math.floor((dataset.xmPointsUsed || 0) * 0.33 * 150);
+    console.log(`  使用価値: 約¥${pointValue.toLocaleString()}`);
+  }
+
   console.log(`\n📅 土日の取引:`);
   console.log(`  土日の総取引数: ${weekendTrades.length}`);
   console.log(`  仮想通貨取引: ${weekendCryptoTrades.length}`);
@@ -176,6 +188,8 @@ function analyzeDataset(name: string, dataset: Dataset) {
     totalWithdrawals,
     winRate: parseFloat(winRate),
     weekendFxTradesCount: weekendFxTrades.length,
+    xmPointsEarned: dataset.xmPointsEarned || 0,
+    xmPointsUsed: dataset.xmPointsUsed || 0,
   };
 }
 

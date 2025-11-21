@@ -33,6 +33,8 @@ interface Transaction {
 interface Dataset {
   trades: Trade[];
   transactions: Transaction[];
+  xmPointsEarned?: number;
+  xmPointsUsed?: number;
 }
 
 interface DemoData {
@@ -106,12 +108,12 @@ function calculateSummary(trades: Trade[], transactions: Transaction[]): {
   };
 }
 
-function generateSummaryInsert(trades: Trade[], transactions: Transaction[], dataset: string): string {
+function generateSummaryInsert(trades: Trade[], transactions: Transaction[], dataset: string, xmPointsEarned: number = 0, xmPointsUsed: number = 0): string {
   const summary = calculateSummary(trades, transactions);
 
   return `-- Insert account summary for Dataset ${dataset}
 INSERT INTO account_summary (user_id, dataset, total_deposits, total_withdrawals, xm_points_earned, xm_points_used, total_swap, swap_positive, swap_negative, total_commission, total_profit, closed_pl)
-VALUES ('${TEST_USER_ID}', '${dataset}', ${summary.totalDeposits}, ${summary.totalWithdrawals}, 0, 0, ${summary.totalSwap}, ${summary.swapPositive}, ${summary.swapNegative}, ${summary.totalCommission}, ${summary.totalProfit}, ${summary.closedPL});`;
+VALUES ('${TEST_USER_ID}', '${dataset}', ${summary.totalDeposits}, ${summary.totalWithdrawals}, ${xmPointsEarned}, ${xmPointsUsed}, ${summary.totalSwap}, ${summary.swapPositive}, ${summary.swapNegative}, ${summary.totalCommission}, ${summary.totalProfit}, ${summary.closedPL});`;
 }
 
 function main() {
@@ -137,13 +139,14 @@ function main() {
     - Three datasets with different characteristics:
       - Dataset A: ${data.dataset_a.trades.length} trades, consistent profitable trader (win rate ~65%)
       - Dataset B: ${data.dataset_b.trades.length} trades, high performance trader (win rate ~58%)
-      - Dataset C: ${data.dataset_c.trades.length} trades, struggling trader (win rate ~45%)
+      - Dataset C: ${data.dataset_c.trades.length} trades, struggling trader (win rate ~45%), includes XM Points
 
   2. Key Improvements
     - Weekend trades use crypto pairs (BTCUSD, ETHUSD) only
     - Swap calculated based on holding time and currency pair
     - Deposits/withdrawals reflect actual trading performance
     - Trade counts match monthly calendar display
+    - Dataset C includes XM Points earned (based on trading volume) and used
 
   3. Security
     - Only inserts data for the test user (${TEST_USER_ID})
@@ -169,11 +172,11 @@ ${generateTransactionInserts(data.dataset_b.transactions, 'B')}
 
 ${generateTransactionInserts(data.dataset_c.transactions, 'C')}
 
-${generateSummaryInsert(data.dataset_a.trades, data.dataset_a.transactions, 'A')}
+${generateSummaryInsert(data.dataset_a.trades, data.dataset_a.transactions, 'A', data.dataset_a.xmPointsEarned || 0, data.dataset_a.xmPointsUsed || 0)}
 
-${generateSummaryInsert(data.dataset_b.trades, data.dataset_b.transactions, 'B')}
+${generateSummaryInsert(data.dataset_b.trades, data.dataset_b.transactions, 'B', data.dataset_b.xmPointsEarned || 0, data.dataset_b.xmPointsUsed || 0)}
 
-${generateSummaryInsert(data.dataset_c.trades, data.dataset_c.transactions, 'C')}
+${generateSummaryInsert(data.dataset_c.trades, data.dataset_c.transactions, 'C', data.dataset_c.xmPointsEarned || 0, data.dataset_c.xmPointsUsed || 0)}
 `;
 
   writeFileSync(`./supabase/migrations/${filename}`, sql);

@@ -248,7 +248,7 @@ function generateDatasetA(): { trades: Trade[]; transactions: Transaction[] } {
 
   console.log(`Dataset A: ${trades.length} trades, Total Profit: ¥${totalProfit.toLocaleString()}, Total Swap: ¥${totalSwap.toFixed(1)}`);
 
-  return { trades, transactions };
+  return { trades, transactions, xmPointsEarned: 0, xmPointsUsed: 0 };
 }
 
 // Dataset B: 高パフォーマンストレーダー（勝率58%、平均R:R 1:2）
@@ -381,7 +381,7 @@ function generateDatasetB(): { trades: Trade[]; transactions: Transaction[] } {
 
   console.log(`Dataset B: ${trades.length} trades, Total Profit: ¥${totalProfit.toLocaleString()}, Total Swap: ¥${totalSwap.toFixed(1)}`);
 
-  return { trades, transactions };
+  return { trades, transactions, xmPointsEarned: 0, xmPointsUsed: 0 };
 }
 
 // Dataset C: 苦戦トレーダー（勝率45%、FOMO問題）
@@ -513,9 +513,26 @@ function generateDatasetC(): { trades: Trade[]; transactions: Transaction[] } {
     });
   }
 
-  console.log(`Dataset C: ${trades.length} trades, Total Profit: ¥${totalProfit.toLocaleString()}, Total Swap: ¥${totalSwap.toFixed(1)}`);
+  // XMポイントの計算（取引量に基づく）
+  // 1 standard lot (size 1.0) = 約15 XMポイント
+  const totalLots = trades.reduce((sum, t) => sum + t.size, 0);
+  const xmPointsEarned = Math.floor(totalLots * 15); // 取引量に応じて獲得
+  const xmPointsUsed = Math.floor(xmPointsEarned * 0.4); // 40%を使用
 
-  return { trades, transactions };
+  // XMポイント利用の取引を追加
+  if (xmPointsUsed > 0) {
+    transactions.push({
+      date: '2025-07-15T10:00:00Z',
+      type: 'deposit',
+      category: 'credit',
+      description: `XMポイント利用（${xmPointsUsed}ポイント）`,
+      amount: Math.floor(xmPointsUsed * 0.33 * 150), // 1ポイント ≈ $0.33 ≈ ¥50
+    });
+  }
+
+  console.log(`Dataset C: ${trades.length} trades, Total Profit: ¥${totalProfit.toLocaleString()}, Total Swap: ¥${totalSwap.toFixed(1)}, XM Points: ${xmPointsEarned} earned, ${xmPointsUsed} used`);
+
+  return { trades, transactions, xmPointsEarned, xmPointsUsed };
 }
 
 // メイン処理
