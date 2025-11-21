@@ -66,7 +66,13 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
   useEffect(() => {
     if (!useDatabase) {
-      setRealKpi(DUMMY_DATA.kpi);
+      // デモモードでも URLパラメータの日付を使用
+      const dayOfWeek = new Date(dateJst).toLocaleDateString('ja-JP', { weekday: 'short' });
+      setRealKpi({
+        ...DUMMY_DATA.kpi,
+        dateJst,
+        weekdayJp: dayOfWeek,
+      });
       setRealTrades(DUMMY_DATA.trades);
       setLoading(false);
       return;
