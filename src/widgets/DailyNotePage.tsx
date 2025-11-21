@@ -57,7 +57,7 @@ const DUMMY_DATA: DailyNotePageProps = {
 };
 
 export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
-  const { useDatabase } = useDataset();
+  const { useDatabase, dataset } = useDataset();
   const [loading, setLoading] = useState(true);
   const [realKpi, setRealKpi] = useState<typeof DUMMY_DATA.kpi | null>(null);
   const [realTrades, setRealTrades] = useState<typeof DUMMY_DATA.trades>([]);
@@ -66,15 +66,73 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
 
   useEffect(() => {
     if (!useDatabase) {
-      // デモモードでも URLパラメータの日付を使用
-      const dayOfWeek = new Date(dateJst).toLocaleDateString('ja-JP', { weekday: 'short' });
-      setRealKpi({
-        ...DUMMY_DATA.kpi,
-        dateJst,
-        weekdayJp: dayOfWeek,
-      });
-      setRealTrades(DUMMY_DATA.trades);
-      setLoading(false);
+      // デモモードでCSVからデータを読み込む
+      const loadCsvData = async () => {
+        setLoading(true);
+        try {
+          const { parseCsvText } = await import('../lib/csv');
+          const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: 'no-store' });
+          if (!res.ok) {
+            setRealKpi(null);
+            setRealTrades([]);
+            setLoading(false);
+            return;
+          }
+          const text = await res.text();
+          const allTrades = parseCsvText(text);
+
+          // 日付でフィルタリング
+          const dayTrades = allTrades.filter(t => {
+            const tradeDate = (t.datetime || t.openTime || '').split(' ')[0].replace(/\./g, '-');
+            return tradeDate === dateJst;
+          });
+
+          const tradeCount = dayTrades.length;
+          const winTrades = dayTrades.filter(t => (t.profitYen || 0) > 0);
+          const lossTrades = dayTrades.filter(t => (t.profitYen || 0) < 0);
+          const winCount = winTrades.length;
+          const lossCount = lossTrades.length;
+          const winRate = tradeCount > 0 ? (winCount / tradeCount) * 100 : 0;
+          const dayTotalYen = dayTrades.reduce((sum, t) => sum + (t.profitYen || 0), 0);
+          const avgPnLPerTradeYen = tradeCount > 0 ? dayTotalYen / tradeCount : 0;
+          const grossProfit = winTrades.reduce((sum, t) => sum + (t.profitYen || 0), 0);
+          const grossLoss = Math.abs(lossTrades.reduce((sum, t) => sum + (t.profitYen || 0), 0));
+          const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? 999 : 0);
+          const totalPips = dayTrades.reduce((sum, t) => sum + (t.pips || 0), 0);
+
+          const dayOfWeek = new Date(dateJst).toLocaleDateString('ja-JP', { weekday: 'short' });
+
+          setRealKpi({
+            winRate,
+            tradeCount,
+            winCount,
+            lossCount,
+            avgPnLPerTradeYen,
+            profitFactor,
+            totalPips,
+            dayTotalYen,
+            dateJst,
+            weekdayJp: dayOfWeek,
+          });
+
+          setRealTrades(
+            dayTrades.map(t => ({
+              time: (t.datetime || t.openTime || '').split(' ')[1]?.substring(0, 5) || '00:00',
+              symbol: t.pair || t.symbol || 'UNKNOWN',
+              sideJp: t.side === 'LONG' ? '買い' : '売り',
+              pnlYen: t.profitYen || 0,
+              ticket: t.ticket || t.id || '',
+            }))
+          );
+        } catch (e) {
+          console.error('Error loading CSV data:', e);
+          setRealKpi(null);
+          setRealTrades([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadCsvData();
       return;
     }
 
@@ -145,7 +203,7 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     };
 
     loadDayData();
-  }, [useDatabase, dateJst]);
+  }, [useDatabase, dateJst, dataset]);
 
   if (loading || !realKpi) {
     return (
