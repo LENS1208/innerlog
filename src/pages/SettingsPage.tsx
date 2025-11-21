@@ -216,10 +216,15 @@ export default function SettingsPage() {
 
       if (avatarFile) {
         console.log('📤 アバター画像をアップロード中...');
-        const uploadedUrl = await uploadAvatarToStorage();
-        if (uploadedUrl) {
-          avatarUrl = uploadedUrl;
-          console.log('✅ アバター画像アップロード成功:', avatarUrl);
+        try {
+          const uploadedUrl = await uploadAvatarToStorage();
+          if (uploadedUrl) {
+            avatarUrl = uploadedUrl;
+            console.log('✅ アバター画像アップロード成功:', avatarUrl);
+          }
+        } catch (uploadErr) {
+          console.error('⚠️ アバター画像アップロード失敗（処理は続行）:', uploadErr);
+          // アバターアップロードに失敗しても、プロフィール保存は続行
         }
       }
 
@@ -302,10 +307,15 @@ export default function SettingsPage() {
 
       if (avatarFile) {
         console.log('📤 アバター画像をアップロード中...');
-        const uploadedUrl = await uploadAvatarToStorage();
-        if (uploadedUrl) {
-          avatarUrl = uploadedUrl;
-          console.log('✅ アバター画像アップロード成功:', avatarUrl);
+        try {
+          const uploadedUrl = await uploadAvatarToStorage();
+          if (uploadedUrl) {
+            avatarUrl = uploadedUrl;
+            console.log('✅ アバター画像アップロード成功:', avatarUrl);
+          }
+        } catch (uploadErr) {
+          console.error('⚠️ アバター画像アップロード失敗（処理は続行）:', uploadErr);
+          // アバターアップロードに失敗しても、設定保存は続行
         }
       }
 
@@ -360,7 +370,7 @@ export default function SettingsPage() {
       setAvatarFile(null);
       showToast('すべての設定を保存しました', 'success');
     } catch (err) {
-      console.error('設定保存エラー:', err);
+      console.error('❌ 設定保存エラー:', err);
       showToast('保存に失敗しました', 'error');
     } finally {
       setSaving(false);
