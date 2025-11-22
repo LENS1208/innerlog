@@ -224,17 +224,17 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
     const currentDate = new Date(dateJst);
     currentDate.setDate(currentDate.getDate() - 1);
     const newDate = currentDate.toISOString().slice(0, 10);
-    location.hash = `/daily/${newDate}`;
+    location.hash = `/calendar/day/${newDate}`;
   };
   const handleNextDay = () => {
     const currentDate = new Date(dateJst);
     currentDate.setDate(currentDate.getDate() + 1);
     const newDate = currentDate.toISOString().slice(0, 10);
-    location.hash = `/daily/${newDate}`;
+    location.hash = `/calendar/day/${newDate}`;
   };
   const handleToday = () => {
     const today = new Date().toISOString().slice(0, 10);
-    location.hash = `/daily/${today}`;
+    location.hash = `/calendar/day/${today}`;
   };
   const handleSave = (payload: any) => {
     console.log("保存:", payload);
