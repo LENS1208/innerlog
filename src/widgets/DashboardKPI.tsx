@@ -1,6 +1,6 @@
 // src/widgets/DashboardKPI.tsx
 // Updated: Fixed neutral KPI colors to use var(--ink)
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { UI_TEXT, formatCount } from '../lib/i18n'
 import { computePipsFromPrices, computeDurationMinutes } from '../lib/metrics'
 import type { Trade } from '../lib/types'
@@ -8,6 +8,9 @@ import AccountSummaryCards from '../components/AccountSummaryCards'
 import SwapSummaryCard from '../components/SwapSummaryCard'
 import { HelpIcon } from '../components/common/HelpIcon'
 import { getAccentColor, getLossColor } from '../lib/chartColors'
+import { useDataset } from '../lib/dataset.context'
+import { WelcomeMessage } from '../components/common/WelcomeMessage'
+import { DemoModeBanner } from '../components/common/DemoModeBanner'
 
 export type DashTrade = {
   profitJPY?: number
@@ -227,6 +230,24 @@ function BarSplit({ avgProfit, avgLoss, unit = '円' }: { avgProfit: number; avg
 
 export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
   const dash = useMemo(() => computeDashboard(trades), [trades])
+  const { useDatabase } = useDataset();
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  useEffect(() => {
+    const hasSeenWelcome = localStorage.getItem('hasSeenWelcome');
+    if (!hasSeenWelcome && !useDatabase) {
+      setShowWelcome(true);
+    }
+  }, [useDatabase]);
+
+  const handleDismissWelcome = () => {
+    localStorage.setItem('hasSeenWelcome', 'true');
+    setShowWelcome(false);
+  };
+
+  const handleUploadClick = () => {
+    window.dispatchEvent(new CustomEvent("fx:openUpload"));
+  };
 
   const tradePeriod = useMemo(() => {
     if (trades.length === 0) return null;
@@ -258,6 +279,8 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
 
   return (
     <>
+      {showWelcome && <WelcomeMessage onDismiss={handleDismissWelcome} />}
+      {!useDatabase && !showWelcome && <DemoModeBanner onUploadClick={handleUploadClick} />}
       <div className="kpi-grid" style={{ marginBottom: 12 }}>
       <div className="kpi-card">
         <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
