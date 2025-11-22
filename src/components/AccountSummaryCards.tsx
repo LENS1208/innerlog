@@ -162,7 +162,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         </div>
       )}
 
-      {hasXmPointsEarned && (
+      {/* XM Points cards temporarily hidden due to complexity */}
+      {false && hasXmPointsEarned && (
         <div className="kpi-card">
           <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
             獲得XMポイント
@@ -175,7 +176,7 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         </div>
       )}
 
-      {hasXmPointsUsed && (
+      {false && hasXmPointsUsed && (
         <div className="kpi-card">
           <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
             利用XMポイント
