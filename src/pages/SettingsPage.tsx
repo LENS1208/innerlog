@@ -465,37 +465,51 @@ export default function SettingsPage() {
   };
 
   const handleDeleteAllTrades = async () => {
-    if (!confirm('現在アップロード中の取引履歴をすべて削除しますか？\nこの操作は元に戻せません。')) {
+    if (!confirm('現在アップロード中の取引履歴をすべて削除します。この操作は元に戻せません。よろしいですか？')) {
       return;
     }
 
     setSaving(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        showToast('ユーザー情報を取得できませんでした', 'error');
+        return;
+      }
+
       const { error: tradesError } = await supabase
         .from('trades')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000');
+        .eq('user_id', user.id)
+        .is('dataset', null);
 
       if (tradesError) throw tradesError;
 
       const { error: summaryError } = await supabase
         .from('account_summary')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000');
+        .eq('user_id', user.id);
 
       if (summaryError) throw summaryError;
+
+      const { error: transactionsError } = await supabase
+        .from('account_transactions')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (transactionsError) console.error('取引明細の削除エラー:', transactionsError);
 
       const { error: notesError } = await supabase
         .from('trade_notes')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000');
+        .eq('user_id', user.id);
 
       if (notesError) console.error('取引メモの削除エラー:', notesError);
 
       const { error: dailyNotesError } = await supabase
         .from('daily_notes')
         .delete()
-        .neq('id', '00000000-0000-0000-0000-000000000000');
+        .eq('user_id', user.id);
 
       if (dailyNotesError) console.error('デイリーノートの削除エラー:', dailyNotesError);
 
