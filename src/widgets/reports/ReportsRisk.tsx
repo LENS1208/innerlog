@@ -1,30 +1,228 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { getGridLineColor, getAccentColor, getLossColor, getWarningColor } from "../../lib/chartColors";
 import { Bar, Line } from "react-chartjs-2";
 import { useDataset } from "../../lib/dataset.context";
 import { parseCsvText } from "../../lib/csv";
 import type { Trade } from "../../lib/types";
 import { filterTrades, getTradeProfit, getTradePair } from "../../lib/filterTrades";
+import { supabase } from "../../lib/supabase";
+import { HelpIcon } from "../../components/common/HelpIcon";
+import Card from "../../components/common/Card";
 
 type UnitType = "yen" | "r";
 
+type TailEventTab = "最大損失" | "最大利益" | "連敗ピーク" | "連勝ピーク";
+
+function TailEventTabs({
+  riskMetrics,
+  streakData,
+  formatDate,
+  getTradePair,
+  extractSetup
+}: {
+  riskMetrics: any;
+  streakData: any;
+  formatDate: (date: string) => string;
+  getTradePair: (trade: any) => string;
+  extractSetup: (trade: any) => string;
+}) {
+  const [activeTab, setActiveTab] = React.useState<TailEventTab>("最大損失");
+
+  const tabs: TailEventTab[] = ["最大損失", "最大利益", "連敗ピーク", "連勝ピーク"];
+
+  const renderTable = () => {
+    let data: any = null;
+    let type = "";
+
+    switch (activeTab) {
+      case "最大損失":
+        if (!riskMetrics.maxLossTrade) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "最大損失",
+          date: formatDate(riskMetrics.maxLossTrade.openTime),
+          pair: getTradePair(riskMetrics.maxLossTrade),
+          setup: extractSetup(riskMetrics.maxLossTrade),
+          r: `${(riskMetrics.maxLoss / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R`,
+          profit: riskMetrics.maxLoss,
+          color: "var(--loss)"
+        };
+        break;
+      case "最大利益":
+        if (!riskMetrics.maxProfitTrade) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "最大利益",
+          date: formatDate(riskMetrics.maxProfitTrade.openTime),
+          pair: getTradePair(riskMetrics.maxProfitTrade),
+          setup: extractSetup(riskMetrics.maxProfitTrade),
+          r: `+${(riskMetrics.maxProfit / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R`,
+          profit: riskMetrics.maxProfit,
+          color: "var(--gain)"
+        };
+        break;
+      case "連敗ピーク":
+        if (!streakData.maxLossStreakDate) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "連敗ピーク",
+          date: formatDate(streakData.maxLossStreakDate),
+          pair: "—",
+          setup: "—",
+          r: "—",
+          profit: `${streakData.maxLossStreak}連敗`,
+          color: "var(--loss)",
+          isStreak: true
+        };
+        break;
+      case "連勝ピーク":
+        if (!streakData.maxWinStreakDate) return <div style={{ padding: 20, textAlign: "center", color: "var(--muted)" }}>データがありません</div>;
+        data = {
+          type: "連勝ピーク",
+          date: formatDate(streakData.maxWinStreakDate),
+          pair: "—",
+          setup: "—",
+          r: "—",
+          profit: `${streakData.maxWinStreak}連勝`,
+          color: "var(--gain)",
+          isStreak: true
+        };
+        break;
+    }
+
+    return (
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ borderBottom: "2px solid var(--line)" }}>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>タイプ</th>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>日付</th>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>通貨</th>
+            <th style={{ padding: 10, textAlign: "left", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>セットアップ</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>R</th>
+            <th style={{ padding: 10, textAlign: "right", fontSize: 15, fontWeight: "bold", color: "var(--muted)" }}>損益</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            style={{
+              borderBottom: "1px solid var(--line)",
+              height: 44,
+              cursor: "pointer",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+          >
+            <td style={{ padding: 10, fontSize: 13 }}>{data.type}</td>
+            <td style={{ padding: 10, fontSize: 13 }}>{data.date}</td>
+            <td style={{ padding: 10, fontSize: 13 }}>{data.pair}</td>
+            <td style={{ padding: 10, fontSize: 13 }}>{data.setup}</td>
+            <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>{data.r}</td>
+            <td
+              style={{
+                padding: 10,
+                textAlign: "right",
+                fontSize: 15,
+                fontWeight: 700,
+                color: data.color,
+              }}
+            >
+              {data.isStreak ? data.profit : `${data.profit > 0 ? '+' : ''}${Math.round(data.profit).toLocaleString("ja-JP")}円`}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 16, borderBottom: "1px solid var(--line)" }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            style={{
+              padding: "10px 20px",
+              fontSize: 14,
+              fontWeight: activeTab === tab ? 600 : 400,
+              color: activeTab === tab ? "var(--fg)" : "var(--muted)",
+              background: "transparent",
+              border: "none",
+              borderBottom: activeTab === tab ? "2px solid var(--accent)" : "2px solid transparent",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div style={{ maxHeight: "40vh", overflowY: "auto" }}>
+        {renderTable()}
+      </div>
+    </div>
+  );
+}
+
 export default function ReportsRisk() {
-  const { dataset, filters } = useDataset();
+  const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
-  const [unit, setUnit] = useState<UnitType>("yen");
+  const [isLoading, setIsLoading] = useState(true);
+  const unit: UnitType = "yen";
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       try {
-        const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: "no-store" });
-        if (!res.ok) return;
-        const text = await res.text();
-        const parsed = parseCsvText(text);
-        setTrades(parsed);
+        if (useDatabase) {
+          const { getAllTrades } = await import('../../lib/db.service');
+          const data = await getAllTrades(dataset);
+
+          const normalizeSide = (side: string): 'LONG' | 'SHORT' => {
+            const s = side?.toUpperCase();
+            if (s === 'BUY' || s === 'LONG') return 'LONG';
+            if (s === 'SELL' || s === 'SHORT') return 'SHORT';
+            return 'LONG';
+          };
+
+          const mapped: Trade[] = (data || []).map((t: any) => {
+            const openTime = typeof t.open_time === 'string' ? t.open_time : new Date(t.open_time).toISOString();
+            const closeTime = typeof t.close_time === 'string' ? t.close_time : new Date(t.close_time).toISOString();
+
+            return {
+              id: t.ticket,
+              datetime: closeTime,
+              pair: t.item,
+              side: normalizeSide(t.side),
+              volume: Number(t.size),
+              profitYen: Number(t.profit),
+              pips: Number(t.pips || 0),
+              openTime: openTime,
+              openPrice: Number(t.open_price),
+              closePrice: Number(t.close_price),
+              stopPrice: t.sl ? Number(t.sl) : undefined,
+              targetPrice: t.tp ? Number(t.tp) : undefined,
+              commission: Number(t.commission || 0),
+              swap: Number(t.swap || 0),
+              symbol: t.item,
+              action: normalizeSide(t.side),
+              profit: Number(t.profit),
+              comment: t.comment || '',
+              memo: t.memo || '',
+            };
+          });
+          setTrades(mapped);
+        } else {
+          const res = await fetch(`/demo/${dataset}.csv?t=${Date.now()}`, { cache: "no-store" });
+          if (!res.ok) return;
+          const text = await res.text();
+          const parsed = parseCsvText(text);
+          setTrades(parsed);
+        }
       } catch (err) {
         console.error("Failed to load trades:", err);
+      } finally {
+        setIsLoading(false);
       }
     })();
-  }, [dataset]);
+  }, [dataset, useDatabase]);
 
   const filteredTrades = useMemo(() => filterTrades(trades, filters), [trades, filters]);
 
@@ -167,7 +365,7 @@ export default function ReportsRisk() {
   }, [filteredTrades, riskMetrics.avgLoss]);
 
   const ddContributionByDay = useMemo(() => {
-    const dayMap = new Map<string, number>();
+    const dayMap = new Map<string, { loss: number; count: number }>();
     filteredTrades.forEach((t) => {
       const profit = getTradeProfit(t);
       if (profit < 0) {
@@ -175,42 +373,45 @@ export default function ReportsRisk() {
           const date = new Date(t.openTime);
           const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
           const day = dayNames[date.getDay()];
-          dayMap.set(day, (dayMap.get(day) || 0) + Math.abs(profit));
+          const current = dayMap.get(day) || { loss: 0, count: 0 };
+          dayMap.set(day, { loss: current.loss + Math.abs(profit), count: current.count + 1 });
         } catch (err) {
           console.error("Date parse error:", err);
         }
       }
     });
     return Array.from(dayMap.entries())
-      .map(([day, loss]) => ({ day, loss }))
+      .map(([day, data]) => ({ day, loss: data.loss, count: data.count }))
       .sort((a, b) => b.loss - a.loss);
   }, [filteredTrades]);
 
   const ddContributionByPair = useMemo(() => {
-    const pairMap = new Map<string, number>();
+    const pairMap = new Map<string, { loss: number; count: number }>();
     filteredTrades.forEach((t) => {
       const profit = getTradeProfit(t);
       if (profit < 0) {
         const pair = getTradePair(t);
-        pairMap.set(pair, (pairMap.get(pair) || 0) + Math.abs(profit));
+        const current = pairMap.get(pair) || { loss: 0, count: 0 };
+        pairMap.set(pair, { loss: current.loss + Math.abs(profit), count: current.count + 1 });
       }
     });
     return Array.from(pairMap.entries())
-      .map(([pair, loss]) => ({ pair, loss }))
+      .map(([pair, data]) => ({ pair, loss: data.loss, count: data.count }))
       .sort((a, b) => b.loss - a.loss);
   }, [filteredTrades]);
 
   const ddContributionBySetup = useMemo(() => {
-    const setupMap = new Map<string, number>();
+    const setupMap = new Map<string, { loss: number; count: number }>();
     filteredTrades.forEach((t) => {
       const profit = getTradeProfit(t);
       if (profit < 0) {
         const setup = extractSetup(t);
-        setupMap.set(setup, (setupMap.get(setup) || 0) + Math.abs(profit));
+        const current = setupMap.get(setup) || { loss: 0, count: 0 };
+        setupMap.set(setup, { loss: current.loss + Math.abs(profit), count: current.count + 1 });
       }
     });
     return Array.from(setupMap.entries())
-      .map(([setup, loss]) => ({ setup, loss }))
+      .map(([setup, data]) => ({ setup, loss: data.loss, count: data.count }))
       .sort((a, b) => b.loss - a.loss);
   }, [filteredTrades]);
 
@@ -230,6 +431,41 @@ export default function ReportsRisk() {
     }
   };
 
+  // ロット分析
+  const lotAnalysis = useMemo(() => {
+    const lots = filteredTrades.map(t => t.volume).filter(v => v > 0).sort((a, b) => a - b);
+    if (lots.length === 0) return { q1: 0, q2: 0, q3: 0, q4: 0, min: 0, max: 0 };
+
+    const q1 = lots[Math.floor(lots.length * 0.25)];
+    const q2 = lots[Math.floor(lots.length * 0.5)];
+    const q3 = lots[Math.floor(lots.length * 0.75)];
+    const q4 = lots[lots.length - 1];
+    const min = lots[0];
+    const max = lots[lots.length - 1];
+
+    return { q1, q2, q3, q4, min, max };
+  }, [filteredTrades]);
+
+  const actualRR = useMemo(() => {
+    const avgWin = riskMetrics.avgWin;
+    const avgLoss = Math.abs(riskMetrics.avgLoss);
+
+    if (avgLoss === 0) return 0;
+    return avgWin / avgLoss;
+  }, [riskMetrics]);
+
+  // シャープレシオ（簡易版）
+  const sharpeRatio = useMemo(() => {
+    const profits = filteredTrades.map(t => getTradeProfit(t));
+    if (profits.length < 2) return 0;
+
+    const avgProfit = profits.reduce((sum, p) => sum + p, 0) / profits.length;
+    const variance = profits.reduce((sum, p) => sum + Math.pow(p - avgProfit, 2), 0) / (profits.length - 1);
+    const stdDev = Math.sqrt(variance);
+
+    return stdDev > 0 ? avgProfit / stdDev : 0;
+  }, [filteredTrades]);
+
   if (filteredTrades.length === 0) {
     return (
       <div style={{ width: "100%", padding: 40, textAlign: "center" }}>
@@ -238,105 +474,190 @@ export default function ReportsRisk() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
+
   return (
     <div style={{ width: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          gap: 8,
-          marginBottom: 16,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex", border: "1px solid var(--line)", borderRadius: 10, overflow: "hidden" }}>
-          {[
-            { key: "yen", label: "円" },
-            { key: "r", label: "R" },
-          ].map((u, idx, arr) => (
-            <button
-              key={u.key}
-              onClick={() => setUnit(u.key as UnitType)}
-              style={{
-                height: 32,
-                padding: "0 12px",
-                background: unit === u.key ? "var(--chip)" : "var(--surface)",
-                border: "none",
-                borderRight: idx < arr.length - 1 ? "1px solid var(--line)" : "none",
-                color: "var(--ink)",
-                cursor: "pointer",
-                fontSize: 13,
-              }}
-            >
-              {u.label}
-            </button>
-          ))}
+
+      <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
+        <h3 style={{ margin: '0 0 8px', fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+          ロット設計とリスク指標
+          <HelpIcon text="取引ロット数とリスク指標の関係を分析します。適切なポジションサイズを設計するために重要な情報です。" />
+        </h3>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gap: 12,
+            marginBottom: 16,
+          }}
+        >
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>リスクリワード比（RRR）</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--accent)" }}>
+              {actualRR > 0 ? actualRR.toFixed(2) : '—'}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>
+              平均利益 ÷ 平均損失
+            </div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>シャープレシオ</h4>
+            <div style={{ fontSize: 20, fontWeight: 700, color: sharpeRatio >= 1 ? "var(--gain)" : sharpeRatio >= 0.5 ? "var(--accent)" : "var(--loss)" }}>
+              {sharpeRatio.toFixed(3)}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>リターン/リスク比率（1.0以上が良好）</div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>連続最大負け数</h4>
+            <div className="kpi-value" style={{ color: "var(--loss)" }}>
+              {streakData.maxLossStreak} <span className="kpi-unit" style={{ color: "var(--loss)" }}>回</span>
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>メンタル負荷指標</div>
+          </div>
+
+          <div style={{ background: "var(--chip)", border: "1px solid var(--line)", borderRadius: 12, padding: 12 }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: "bold", color: "var(--muted)" }}>最大損失額</h4>
+            <div className="kpi-value" style={{ color: "var(--loss)" }}>
+              {Math.round(riskMetrics.maxLoss).toLocaleString()} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
+            </div>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>1取引最悪損失</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 style={{ margin: "0 0 12px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            ロット分布（四分位点）
+            <HelpIcon text="ポジションサイズの分布です。ロット管理が一貫しているか確認できます。" />
+          </h4>
+          <div style={{ display: "flex", gap: 16, alignItems: "center", justifyContent: "space-around", padding: "16px 0" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Min</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.min.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Q1 (25%)</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.q1.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Q2 (50%)</div>
+              <div style={{ fontSize: 16, fontWeight: 600, color: "var(--accent)" }}>{lotAnalysis.q2.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Q3 (75%)</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.q3.toFixed(2)}</div>
+            </div>
+            <div style={{ height: 40, width: 1, background: "var(--line)" }} />
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 4 }}>Max</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{lotAnalysis.max.toFixed(2)}</div>
+            </div>
+          </div>
         </div>
       </div>
 
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: 12,
           marginBottom: 16,
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>最大ドローダウン</h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            {Math.round(drawdownData.maxDD).toLocaleString("ja-JP")}円
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            最大ドローダウン
+            <HelpIcon text="資金が最も減った金額です。この数値が大きいほど、大きな含み損に耐える必要があります。" />
+          </h3>
+          <div className="kpi-value" style={{ color: "var(--loss)" }}>
+            最大DD：{Math.round(drawdownData.maxDD).toLocaleString("ja-JP")} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>ピーク→ボトムの最大下落</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>連敗（最大）</h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            {streakData.maxLossStreak} 連敗
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            連敗（最大）
+            <HelpIcon text="連続で負けた最大回数です。メンタル面の耐久力と資金管理の見直しに使います。" />
+          </h3>
+          <div className="kpi-value" style={{ color: "var(--loss)" }}>
+            連敗：{streakData.maxLossStreak} <span className="kpi-unit" style={{ color: "var(--loss)" }}>回</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での負け数</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>連勝（最大）</h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-            {streakData.maxWinStreak} 連勝
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            連勝（最大）
+            <HelpIcon text="連続で勝った最大回数です。調子が良い時期を知り、過信を防ぐ目安になります。" />
+          </h3>
+          <div className="kpi-value" style={{ color: "var(--gain)" }}>
+            連勝：{streakData.maxWinStreak} <span className="kpi-unit" style={{ color: "var(--gain)" }}>回</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>連続での勝ち数</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>単取引の最大損失</h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--loss)" }}>
-            {Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")}円
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            単取引の最大損失
+            <HelpIcon text="1回の取引で出た最大の損失額です。最悪のケースを把握して損切りルールを見直せます。" />
+          </h3>
+          <div className="kpi-value" style={{ color: "var(--loss)" }}>
+            最大損失：{Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最悪1件の損失</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>単取引の最大利益</h3>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "var(--gain)" }}>
-            +{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")}円
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            単取引の最大利益
+            <HelpIcon text="1回の取引で出た最大の利益額です。ベストケースを知ることで期待値を調整できます。" />
+          </h3>
+          <div className="kpi-value" style={{ color: "var(--gain)" }}>
+            最大利益：+{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")} <span className="kpi-unit" style={{ color: "var(--gain)" }}>円</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>最高1件の利益</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>平均勝ち / 平均負け</h3>
-          <div style={{ fontSize: 14, fontWeight: 600 }}>
-            <span style={{ color: "var(--gain)" }}>+{Math.round(riskMetrics.avgWin).toLocaleString()}円</span>
-            {" / "}
-            <span style={{ color: "var(--loss)" }}>{Math.round(riskMetrics.avgLoss).toLocaleString()}円</span>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            平均勝ち / 平均負け
+            <HelpIcon text="勝ち取引と負け取引の平均額です。利益と損失のバランスを確認できます。" />
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div className="kpi-value" style={{ color: "var(--gain)" }}>
+              勝ち：+{Math.round(riskMetrics.avgWin).toLocaleString()} <span className="kpi-unit" style={{ color: "var(--gain)" }}>円</span>
+            </div>
+            <div className="kpi-value" style={{ color: "var(--loss)" }}>
+              負け：{Math.round(riskMetrics.avgLoss).toLocaleString()} <span className="kpi-unit" style={{ color: "var(--loss)" }}>円</span>
+            </div>
           </div>
-          <div style={{ fontSize: 12, color: "var(--muted)" }}>分布の歪み把握</div>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 4 }}>分布の歪み把握</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>R-multiple 平均</h3>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>
-            {riskMetrics.rMultipleAvg.toFixed(2)} R/件
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            R-multiple 平均
+            <HelpIcon text="リスク1単位あたりのリターンです。1.0以上なら損失より利益が大きいことを示します。" />
+          </h3>
+          <div className="kpi-value">
+            {riskMetrics.rMultipleAvg.toFixed(2)} <span className="kpi-unit">R/件</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>損益をRで正規化</div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>取引数</h3>
-          <div style={{ fontSize: 18, fontWeight: 700 }}>
-            {filteredTrades.length} 件
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            取引回数
+            <HelpIcon text="分析対象の取引回数です。数が多いほど統計的に信頼できる分析になります。" />
+          </h3>
+          <div className="kpi-value">
+            {filteredTrades.length} <span className="kpi-unit">回</span>
           </div>
           <div style={{ fontSize: 12, color: "var(--muted)" }}>フィルター適用後</div>
         </div>
@@ -351,7 +672,10 @@ export default function ReportsRisk() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>損益分布（ヒストグラム）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            損益分布（ヒストグラム）
+            <HelpIcon text="取引の損益を金額帯別に分類したグラフです。損益の偏りや傾向を把握できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -361,8 +685,8 @@ export default function ReportsRisk() {
                     data: profitDistribution.counts,
                     backgroundColor: profitDistribution.labels.map((label) =>
                       label.includes("~0") || label.includes("以下") || label.startsWith("-")
-                        ? "rgba(239, 68, 68, 0.8)"
-                        : "rgba(34, 197, 94, 0.8)"
+                        ? getLossColor()
+                        : getAccentColor()
                     ),
                   },
                 ],
@@ -370,7 +694,19 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return profitDistribution.labels[context[0].dataIndex];
+                      },
+                      label: (context) => {
+                        return `取引回数: ${context.parsed.y}回`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -382,7 +718,10 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>R-multiple 分布</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            R-multiple 分布
+            <HelpIcon text="損益をリスク単位で分類したグラフです。標準化された損益パターンを分析できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -392,8 +731,8 @@ export default function ReportsRisk() {
                     data: rMultipleDistribution.counts,
                     backgroundColor: rMultipleDistribution.labels.map((label) =>
                       label.includes("~0R") || label.includes("以下") || label.startsWith("-")
-                        ? "rgba(239, 68, 68, 0.8)"
-                        : "rgba(34, 197, 94, 0.8)"
+                        ? getLossColor()
+                        : getAccentColor()
                     ),
                   },
                 ],
@@ -401,7 +740,19 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return rMultipleDistribution.labels[context[0].dataIndex];
+                      },
+                      label: (context) => {
+                        return `取引回数: ${context.parsed.y}回`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -413,7 +764,10 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>ドローダウン推移（小）</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            ドローダウン推移（小）
+            <HelpIcon text="時間経過に伴うドローダウンの変化です。資金の回復力を視覚的に確認できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Line
               data={{
@@ -432,7 +786,19 @@ export default function ReportsRisk() {
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return `取引 #${context[0].dataIndex + 1}`;
+                      },
+                      label: (context) => {
+                        return `ドローダウン: ${context.parsed.y.toLocaleString()}円`;
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     ticks: { callback: (value) => `${(value as number).toLocaleString()}円` },
@@ -456,7 +822,10 @@ export default function ReportsRisk() {
         }}
       >
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>DD寄与：曜日</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            DD寄与：曜日
+            <HelpIcon text="曜日別のドローダウンへの影響度です。どの曜日がリスクが高いか把握できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -464,14 +833,30 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionByDay.slice(0, 7).map((d) => d.loss),
-                    backgroundColor: "rgba(239, 68, 68, 0.8)",
+                    backgroundColor: getLossColor(),
                   },
                 ],
               }}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return ddContributionByDay.slice(0, 7)[context[0].dataIndex].day;
+                      },
+                      label: (context) => {
+                        const d = ddContributionByDay.slice(0, 7)[context.dataIndex];
+                        return [
+                          `損失額: ${d.loss.toLocaleString()}円`,
+                          `負け回数: ${d.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -483,7 +868,10 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>DD寄与：通貨ペア</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            DD寄与：通貨ペア
+            <HelpIcon text="通貨ペア別のドローダウンへの影響度です。リスクの高い銘柄を特定できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -491,14 +879,30 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionByPair.slice(0, 6).map((d) => d.loss),
-                    backgroundColor: "rgba(239, 68, 68, 0.8)",
+                    backgroundColor: getLossColor(),
                   },
                 ],
               }}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return ddContributionByPair.slice(0, 6)[context[0].dataIndex].pair;
+                      },
+                      label: (context) => {
+                        const d = ddContributionByPair.slice(0, 6)[context.dataIndex];
+                        return [
+                          `損失額: ${d.loss.toLocaleString()}円`,
+                          `負け回数: ${d.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -510,7 +914,10 @@ export default function ReportsRisk() {
           </div>
         </div>
         <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12 }}>
-          <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>DD寄与：セットアップ</h3>
+          <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+            DD寄与：セットアップ
+            <HelpIcon text="戦略タグ別のドローダウンへの影響度です。どの戦略タグがリスクが高いか分析できます。" />
+          </h3>
           <div style={{ height: 180 }}>
             <Bar
               data={{
@@ -518,14 +925,30 @@ export default function ReportsRisk() {
                 datasets: [
                   {
                     data: ddContributionBySetup.slice(0, 6).map((d) => d.loss),
-                    backgroundColor: "rgba(239, 68, 68, 0.8)",
+                    backgroundColor: getLossColor(),
                   },
                 ],
               }}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: (context) => {
+                        return ddContributionBySetup.slice(0, 6)[context[0].dataIndex].setup;
+                      },
+                      label: (context) => {
+                        const d = ddContributionBySetup.slice(0, 6)[context.dataIndex];
+                        return [
+                          `損失額: ${d.loss.toLocaleString()}円`,
+                          `負け回数: ${d.count}回`
+                        ];
+                      }
+                    }
+                  }
+                },
                 scales: {
                   y: {
                     beginAtZero: true,
@@ -539,151 +962,17 @@ export default function ReportsRisk() {
       </div>
 
       <div style={{ background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 16, padding: 12, marginBottom: 16 }}>
-        <h3 style={{ margin: "0 0 8px 0", fontSize: 13, color: "var(--muted)" }}>テールイベント（Top/Bottom）</h3>
-        <div style={{ maxHeight: "40vh", overflowY: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "2px solid var(--line)" }}>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 12 }}>タイプ</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 12 }}>日付</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 12 }}>通貨</th>
-                <th style={{ padding: 10, textAlign: "left", fontSize: 12 }}>セットアップ</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 12 }}>R</th>
-                <th style={{ padding: 10, textAlign: "right", fontSize: 12 }}>損益</th>
-              </tr>
-            </thead>
-            <tbody>
-              {riskMetrics.maxLossTrade && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>最大損失</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(riskMetrics.maxLossTrade.openTime)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{getTradePair(riskMetrics.maxLossTrade)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{extractSetup(riskMetrics.maxLossTrade)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    {(riskMetrics.maxLoss / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R
-                  </td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--loss)",
-                    }}
-                  >
-                    {Math.round(riskMetrics.maxLoss).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              )}
-              {riskMetrics.maxProfitTrade && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>最大利益</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(riskMetrics.maxProfitTrade.openTime)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{getTradePair(riskMetrics.maxProfitTrade)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{extractSetup(riskMetrics.maxProfitTrade)}</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>
-                    +{(riskMetrics.maxProfit / Math.abs(riskMetrics.avgLoss)).toFixed(1)} R
-                  </td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--gain)",
-                    }}
-                  >
-                    +{Math.round(riskMetrics.maxProfit).toLocaleString("ja-JP")}円
-                  </td>
-                </tr>
-              )}
-              {streakData.maxLossStreakDate && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>連敗ピーク</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(streakData.maxLossStreakDate)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>—</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--loss)",
-                    }}
-                  >
-                    {streakData.maxLossStreak}連敗
-                  </td>
-                </tr>
-              )}
-              {streakData.maxWinStreakDate && (
-                <tr
-                  style={{
-                    borderBottom: "1px solid var(--line)",
-                    height: 44,
-                    cursor: "pointer",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--chip)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <td style={{ padding: 10, fontSize: 13 }}>連勝ピーク</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>{formatDate(streakData.maxWinStreakDate)}</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, fontSize: 13 }}>—</td>
-                  <td style={{ padding: 10, textAlign: "right", fontSize: 13 }}>—</td>
-                  <td
-                    style={{
-                      padding: 10,
-                      textAlign: "right",
-                      fontSize: 13,
-                      color: "var(--gain)",
-                    }}
-                  >
-                    {streakData.maxWinStreak}連勝
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "2px 8px",
-              borderRadius: 999,
-              background: "var(--chip)",
-              border: "1px solid var(--line)",
-              fontSize: 12,
-              color: "var(--muted)",
-            }}
-          >
-            極端な損益イベントの追跡
-          </span>
-        </div>
+        <h3 style={{ margin: "0 0 8px 0", fontSize: 15, fontWeight: "bold", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+          セグメント別
+          <HelpIcon text="極端に大きな損益を記録した取引リストです。異常なケースを振り返り対策を考えられます。" />
+        </h3>
+        <TailEventTabs
+          riskMetrics={riskMetrics}
+          streakData={streakData}
+          formatDate={formatDate}
+          getTradePair={getTradePair}
+          extractSetup={extractSetup}
+        />
       </div>
     </div>
   );

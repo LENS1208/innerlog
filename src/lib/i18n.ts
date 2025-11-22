@@ -21,7 +21,7 @@ export const UI_TEXT = {
   maxDrawdown: '最大ドローダウン',
   tradeList: '取引一覧',
   tradeDetail: '取引の詳細',
-  tradeDiary: 'トレード日記',
+  tradeDiary: '取引日記',
   winOnly: '勝ちのみ',
   lossOnly: '負けのみ',
   noTrades: '取引なし',
@@ -31,11 +31,11 @@ export const UI_TEXT = {
   weeklyProfit: '週ごとの損益',
   monthlyTotal: '月合計',
   cost: 'コスト',
-  side: '方向',
-  symbol: '銘柄',
+  side: 'ポジション',
+  symbol: '通貨ペア',
   position: 'ポジション',
-  long: 'LONG',
-  short: 'SHORT',
+  long: '買い',
+  short: '売り',
 } as const;
 
 export function formatCurrency(value: number): string {
@@ -44,7 +44,8 @@ export function formatCurrency(value: number): string {
 }
 
 export function formatCurrencySimple(value: number): string {
-  return `${Math.round(value).toLocaleString('ja-JP')}円`;
+  const sign = value >= 0 ? '+' : '';
+  return `${sign}${Math.round(value).toLocaleString('ja-JP')}円`;
 }
 
 export function formatWinRate(rate: number): string {

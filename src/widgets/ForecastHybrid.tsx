@@ -1,4 +1,5 @@
 // src/widgets/ForecastHybrid.tsx
+import { getAccentColor, getLossColor } from '../lib/chartColors';
 import React, { useMemo, useRef, useState, useEffect } from "react";
 
 /* ================== 型 ================== */
@@ -52,7 +53,7 @@ type HistoryItem = {
 
 /* ================== 表示用メタ ================== */
 const kindMeta: Record<ScenarioKind, { label: string; color: string }> = {
-  bull:  { label: "上昇トレンド", color: "#16a34a" },
+  bull:  { label: "上昇トレンド", color: getAccentColor() },
   range: { label: "レンジ",       color: "#6b7280" },
   bear:  { label: "下降トレンド", color: "#dc2626" },
 };
@@ -365,7 +366,7 @@ export default function ForecastHybrid(){
   {/* 右カラム：結果（棒グラフ＋詳細） */}
   <section className="fh-col fh-gap12">
     {/* 要約（棒3本） */}
-    <div className={`fh-card fh-card--header ${data ? "" : "fh-disabled"}`}>
+    <div className={`fh-card ${data ? "" : "fh-disabled"}`}>
       <div className="fh-row fh-between fh-mb8">
         <div>
           <div className="fh-caption">最新の結果</div>

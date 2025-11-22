@@ -23,4 +23,10 @@ export type Trade = {
   symbol?: string;
   action?: Side;
   profit?: number;
+  item?: string;
+  ticket?: string;
+  size?: number;
+  closeTime?: string;
+  sl?: number;
+  tp?: number;
 };

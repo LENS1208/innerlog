@@ -1,6 +1,7 @@
 // src/widgets/DiaryIndexPage.tsx
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "../tradeDiary.css";
+import { showToast } from "../lib/toast";
 
 /* ========= 型 ========= */
 type Diary = {
@@ -82,8 +83,8 @@ function Dropzone({ tempId, maxFiles = 3 }: { tempId: string; maxFiles?: number 
     for (const f of Array.from(files)) {
       if (list.length >= maxFiles) break;
       // @ts-ignore
-      const type = f.type || ""; if (!allowed.includes(type)) { alert(`未対応の形式です: ${(f as any).name}`); continue; }
-      if ((f as File).size > 3 * 1024 * 1024) { alert(`サイズ上限3MBを超えています: ${(f as any).name}`); continue; }
+      const type = f.type || ""; if (!allowed.includes(type)) { showToast(`未対応の形式です: ${(f as any).name}`, 'error'); continue; }
+      if ((f as File).size > 3 * 1024 * 1024) { showToast(`サイズ上限3MBを超えています: ${(f as any).name}`, 'error'); continue; }
       const reader = new FileReader();
       reader.onload = () => { list = [{ id: `img_${Date.now()}_${Math.random().toString(16).slice(2)}`, dataUrl: String(reader.result), createdAt: nowISO() }, ...list]; saveImages(tempId, list); setImgs([...list]); };
       reader.readAsDataURL(f as File);
@@ -134,8 +135,8 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
     const allowed = ["image/jpeg", "image/png", "image/gif"]; let list = [...stageImgs];
     for (const f of Array.from(files)) {
       // @ts-ignore
-      const type = f.type || ""; if (!allowed.includes(type)) { alert(`未対応の形式です: ${(f as any).name}`); continue; }
-      if ((f as File).size > 3 * 1024 * 1024) { alert(`サイズ上限3MBを超えています: ${(f as any).name}`); continue; }
+      const type = f.type || ""; if (!allowed.includes(type)) { showToast(`未対応の形式です: ${(f as any).name}`, 'error'); continue; }
+      if ((f as File).size > 3 * 1024 * 1024) { showToast(`サイズ上限3MBを超えています: ${(f as any).name}`, 'error'); continue; }
       const reader = new FileReader();
       reader.onload = () => { list = [{ id: `img_${Date.now()}_${Math.random().toString(16).slice(2)}`, dataUrl: String(reader.result), createdAt: nowISO() }, ...list]; setStageImgs([...list]); };
       reader.readAsDataURL(f as File);
@@ -149,7 +150,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
   useEffect(() => { if (open) { setSymbol(""); setSide("BUY"); setActual(""); setSize(""); const n = new Date(); setEntryDate(toLocalDate(n)); setEntryHour(pad2(n.getHours())); setEntryMin(pad2(n.getMinutes())); setEmotion(""); setAiSide("設定なし"); setAiFollow("選択しない"); setNote(""); setStageImgs([]); } }, [open]);
 
   const onSave = () => {
-    const sym = upper(symbol); if (!sym) { alert("通貨ペアを入力してください（例：USDJPY）"); return; }
+    const sym = upper(symbol); if (!sym) { showToast("通貨ペアを入力してください（例：USDJPY）", 'error'); return; }
     const iso = new Date(`${entryDate}T${entryHour}:${entryMin}:00`).toISOString(); // 入力 → ISO
     const tempId = genTempId(sym);
     const d: Diary = {
@@ -170,7 +171,7 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
 
         <div className="dlg-grid">
           <label><div className="muted small">通貨ペア（例: USDJPY）</div><input className="input" placeholder="例: USDJPY" value={symbol} onChange={(e) => setSymbol(e.target.value)} /></label>
-          <label><div className="muted small">方向</div><select className="select" value={side} onChange={(e) => setSide(e.target.value as "BUY"|"SELL")}><option>BUY</option><option>SELL</option></select></label>
+          <label><div className="muted small">ポジション</div><select className="select" value={side} onChange={(e) => setSide(e.target.value as "BUY"|"SELL")}><option>BUY</option><option>SELL</option></select></label>
 
           <label><div className="muted small">実エントリー価格（任意）</div><input className="input" placeholder="150.123" value={actual} onChange={(e) => setActual(e.target.value)} /></label>
           <label><div className="muted small">サイズ（lot 任意）</div><input className="input" placeholder="0.50" value={size} onChange={(e) => setSize(e.target.value)} /></label>
@@ -197,10 +198,10 @@ function DiaryNewDialog({ open, onClose, onSaved }: { open: boolean; onClose: ()
               <option>なんとなく</option><option>負けを取り返したい</option><option>迷いがある</option><option>置いていかれ不安</option>
             </select>
           </label>
-          <label><div className="muted small">AIの方向感</div><select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
-            <option>設定なし</option><option>買い（ロング）</option><option>売り（ショート）</option><option>様子見</option></select></label>
+          <label><div className="muted small">AIのポジション予測</div><select className="select" value={aiSide} onChange={(e) => setAiSide(e.target.value)}>
+            <option>設定なし</option><option>買い</option><option>売り</option><option>様子見</option></select></label>
 
-          <label><div className="muted small">トレードの判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
+          <label><div className="muted small">取引の判断</div><select className="select" value={aiFollow} onChange={(e) => setAiFollow(e.target.value)}>
             <option>選択しない</option><option>AIに従った</option><option>AIに一部従った</option><option>AIを気にせず行動した</option><option>見送った</option></select></label>
           <label><div className="muted small">ファンダメモ（自由入力）</div><input className="input" placeholder="例）CPI直後の乱高下を想定、要人発言あり など" value={note} onChange={(e) => setNote(e.target.value)} /></label>
         </div>
@@ -247,7 +248,7 @@ function DiaryEditDialog({ open, onClose, diary, onSaved }: { open: boolean; onC
 
         <div className="row2" style={{ marginTop: 8 }}>
           <label><div className="muted small">通貨ペア</div><input className="input" value={d.symbol} onChange={(e) => setField("symbol", upper(e.target.value))} /></label>
-          <label><div className="muted small">方向</div><select className="select" value={d.side} onChange={(e) => setField("side", e.target.value as "BUY"|"SELL")}><option>BUY</option><option>SELL</option></select></label>
+          <label><div className="muted small">ポジション</div><select className="select" value={d.side} onChange={(e) => setField("side", e.target.value as "BUY"|"SELL")}><option>BUY</option><option>SELL</option></select></label>
         </div>
 
         <div className="row2" style={{ marginTop: 8 }}>
@@ -331,7 +332,7 @@ export default function DiaryIndexPage() {
       <div className="td-card diary-list">
         <div className="td-section-title">
           <h2>リンク待ちの日記一覧</h2>
-          <div className="small muted">トレードにまだリンクしていない日記です。候補から紐付けできます。　<strong>{rows.length} 件</strong></div>
+          <div className="small muted">取引にまだリンクしていない日記です。候補から紐付けできます。　<strong>{rows.length} 件</strong></div>
         </div>
 
         {rows.length === 0 && <div className="muted small">まだ日記がありません。</div>}
@@ -342,7 +343,7 @@ export default function DiaryIndexPage() {
               <tr>
                 <th className="nowrap">作成時刻</th>
                 <th>通貨ペア</th>
-                <th>方向</th>
+                <th>ポジション</th>
                 <th className="num">サイズ(lot)</th>
                 <th className="num">エントリー価格</th>
                 <th>操作</th>

@@ -4,8 +4,18 @@ import type { Filters } from "./dataset.context";
 export function filterTrades(trades: Trade[], filters: Filters): Trade[] {
   let result = [...trades];
 
+  console.log('🔎 filterTrades called:', {
+    totalTrades: trades.length,
+    filters,
+    symbolFilter: filters.symbol
+  });
+
   if (filters.symbol) {
-    result = result.filter((t) => (t.pair || t.symbol) === filters.symbol);
+    result = result.filter((t) => {
+      const tradePair = t.pair || t.symbol || (t as any).item;
+      return tradePair === filters.symbol;
+    });
+    console.log('  → After symbol filter:', result.length, 'trades');
   }
 
   if (filters.side) {
@@ -69,7 +79,7 @@ export function getTradeProfit(t: Trade): number {
 }
 
 export function getTradePair(t: Trade): string {
-  return t.pair || t.symbol || "UNKNOWN";
+  return t.pair || t.symbol || (t as any).item || "UNKNOWN";
 }
 
 export function getTradeSide(t: Trade): "LONG" | "SHORT" {

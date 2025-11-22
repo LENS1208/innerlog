@@ -1,6 +1,47 @@
 /* ===== Global resets for ForecastHybrid ===== */
 /* body background is controlled by tokens.css */
 
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* スクロールバーは必要な時のみ表示 */
+* {
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+:root[data-theme="dark"] *::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+:root[data-theme="dark"] *::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
 /* 2) 予想UIのコンテナは常に左寄せで読む */
 .fh-wrap, .fh-root, .fh-card{ text-align:left; }
 
@@ -15,30 +56,33 @@
 }
 
 /* 5) 必須ミニマム（カード/ゲージ/グリッド） */
-.fh-card{background:#fff;border:1px solid #e6e6e6;border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.fh-badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;background:#f3f4f6;border:1px solid #e5e7eb}
-.fh-chip{display:inline-block;border:1px solid #d1d5db;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700}
-.fh-bar{width:100%;height:10px;background:#e5e7eb;border-radius:6px;overflow:hidden}
-.fh-bar__fill{height:100%;background:#2563eb}        /* ← これが無いと棒が見えません */
+.fh-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.05);transition:background-color 0.3s ease, border-color 0.3s ease}
+.fh-badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:12px;background:var(--chip);border:1px solid var(--line);color:var(--ink);transition:background-color 0.3s ease, border-color 0.3s ease}
+.fh-chip{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700;color:var(--ink);transition:border-color 0.3s ease, color 0.3s ease}
+.fh-bar{width:100%;height:10px;background:var(--line);border-radius:6px;overflow:hidden;transition:background-color 0.3s ease}
+.fh-bar__fill{height:100%;background:var(--accent)}
 .fh-grid{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:720px){.fh-grid{grid-template-columns:repeat(3,1fr)}}
 
+/* ダークモード定義は削除：CSS変数で自動的に対応 */
+
 /* 6) v0.2の見栄え（任意だけど推奨） */
-.fh-card--header{background:#f8fbff;border-color:#dfe8ff}
 .fh-card--chat{position:sticky;top:72px;height:fit-content}
-.fh-card--scenario{border-left:5px solid #eef2f7}
+.fh-card--scenario{border-left:5px solid var(--line);transition:border-color 0.3s ease}
 .fh-dim{opacity:.72;filter:saturate(.9)}
 .fh-headline{font-size:18px;font-weight:800}
-.fh-subtle{color:#6b7280;font-size:12.5px}
+.fh-subtle{color:var(--muted);font-size:12.5px;transition:color 0.3s ease}
 .fh-list li{line-height:1.5}
+
+/* ダークモード定義は削除：CSS変数で自動的に対応 */
 .fh-gauge{margin-top:8px}
 .fh-gauge__label{display:flex;align-items:center;justify-content:space-between;font-size:13px;margin-bottom:6px}
 .fh-emoji{font-size:18px;line-height:1}
-.fh-pill-group{display:flex;background:#f3f4f6;border-radius:999px;padding:4px}
-.fh-pill{border:none;background:transparent;border-radius:999px;padding:6px 10px;cursor:pointer;font-size:13px}
-.fh-pill--on{background:#111827;color:#fff}
-.fh-btn{padding:9px 12px;border-radius:10px;border:1px solid #e5e7eb;background:#111827;color:#fff;cursor:pointer;font-size:13px}
-.fh-btn--ghost{background:#fff;color:#111827}
+.fh-pill-group{display:flex;background:var(--chip);border-radius:999px;padding:4px}
+.fh-pill{border:none;background:transparent;border-radius:999px;padding:6px 10px;cursor:pointer;font-size:13px;color:var(--ink)}
+.fh-pill--on{background:var(--button-primary-bg);color:var(--button-primary-text)}
+.fh-btn{padding:9px 12px;border-radius:10px;border:1px solid var(--button-secondary-border);background:var(--button-primary-bg);color:var(--button-primary-text);cursor:pointer;font-size:13px}
+.fh-btn--ghost{background:var(--button-secondary-bg);color:var(--button-secondary-text)}
 .fh-badge--warn{background:#fde68a;border-color:#f59e0b}
 
 /* --- 配置 & ベース（既存に足りなければ） --- */
@@ -47,20 +91,19 @@
 @media (min-width: 840px){
   .fh-root{ grid-template-columns: minmax(300px, 360px) 1fr; column-gap:20px; }
 }
-.fh-card{ background:#fff; border:1px solid #e6e6e6; border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:#f8fbff; border-color:#dfe8ff; }
+.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
 .fh-card--chat{ position:sticky; top:72px; height:fit-content; }
 .fh-disabled{ opacity:.5; }
 
 /* --- バー --- */
-.fh-bar{ width:100%; height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden }
-.fh-bar__fill{ height:100%; background:#2563eb }
+.fh-bar{ width:100%; height:10px; background:var(--line); border-radius:6px; overflow:hidden }
+.fh-bar__fill{ height:100%; background:var(--accent) }
 
 /* --- 見出し/文字 --- */
 .fh-title{ margin:0 0 4px; font-size:16px; font-weight:700 }
 .fh-headline{ font-size:18px; font-weight:800 }
-.fh-caption{ color:#6b7280; font-size:12px; margin-bottom:2px }
-.fh-subtle{ color:#6b7280; font-size:12.5px }
+.fh-caption{ color:var(--muted); font-size:12px; margin-bottom:2px }
+.fh-subtle{ color:var(--muted); font-size:12.5px }
 .fh-strong{ font-weight:800 }
 .fh-paragraph{ margin:0; line-height:1.6; }
 
@@ -73,13 +116,13 @@
 .fh-mt8{ margin-top:8px } .fh-mt10{ margin-top:10px }
 
 /* --- 入力/ボタン --- */
-.fh-input{ flex:1; min-width:160px; padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px; outline:none; font-size:14px }
-.fh-input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.12) }
-.fh-btn{ padding:9px 12px; border-radius:10px; border:1px solid #e5e7eb; background:#111827; color:#fff; cursor:pointer; font-size:13px }
-.fh-btn--ghost{ background:#fff; color:#111827 }
-.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:#f3f4f6; border:1px solid #e5e7eb }
-.fh-badge--ghost{ background:#f6f7fb; border-color:#e0e7ff }
-.fh-chip{ display:inline-block; border:1px solid #d1d5db; border-radius:999px; padding:2px 8px; font-size:12px; font-weight:700 }
+.fh-input{ flex:1; min-width:160px; padding:10px 12px; border:1px solid var(--input-border); border-radius:10px; outline:none; font-size:14px; background:var(--input-bg); color:var(--input-text); }
+.fh-input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.12) }
+.fh-btn{ padding:9px 12px; border-radius:10px; border:1px solid var(--button-secondary-border); background:var(--button-primary-bg); color:var(--button-primary-text); cursor:pointer; font-size:13px }
+.fh-btn--ghost{ background:var(--button-secondary-bg); color:var(--button-secondary-text); }
+.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
+.fh-badge--ghost{ background:var(--chip); border-color:var(--line); }
+.fh-chip{ display:inline-block; border:1px solid var(--line); border-radius:999px; padding:2px 8px; font-size:12px; font-weight:700; color:var(--ink); background:var(--chip); }
 
 /* --- ゲージまとめ --- */
 .fh-gauge{ margin-top:8px }
@@ -92,51 +135,48 @@
 .fh-msg{ display:flex }
 .fh-msg--me{ justify-content:flex-end }
 .fh-msg--ai{ justify-content:flex-start }
-.fh-msg__bubble{ max-width:92%; padding:10px 12px; border-radius:14px; line-height:1.5; box-shadow:0 1px 2px rgba(0,0,0,.05); background:#fff; border:1px solid #e6e6e6; font-size:13.5px; white-space:pre-wrap }
-.fh-msg--me .fh-msg__bubble{ background:#111827; color:#fff; border-color:#111827 }
+.fh-msg__bubble{ max-width:92%; padding:10px 12px; border-radius:14px; line-height:1.5; box-shadow:0 1px 2px rgba(0,0,0,.05); background:var(--surface); border:1px solid var(--line); color:var(--ink); font-size:13.5px; white-space:pre-wrap }
+.fh-msg--me .fh-msg__bubble{ background:var(--button-primary-bg); color:var(--button-primary-text); border-color:var(--button-primary-bg) }
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin-top:6px }
 
 /* --- アイコンボタン（＋／マイク） --- */
-.fh-iconbtn{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center }
-.fh-iconbtn--on{ background:#111827; color:#fff; }
+.fh-iconbtn{ width:36px; height:36px; border-radius:10px; border:1px solid var(--input-border); background:var(--surface); cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; color:var(--ink); }
+.fh-iconbtn--on{ background:var(--button-primary-bg); color:var(--button-primary-text); }
 
 /* --- 既存の fh- スタイルがある前提。足りない分だけ追加してください --- */
 
 /* タイムライン */
 .fh-timeline{ list-style:none; padding:0; margin:0 }
-.fh-timeline li + li{ border-top:1px solid #ececec }
+.fh-timeline li + li{ border-top:1px solid var(--line); }
 .fh-tl-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0 }
 .fh-tl-main{ display:flex; flex-direction:column; gap:2px }
 .fh-tl-title{ font-size:14px; font-weight:700 }
-.fh-tl-time{ font-size:12px; color:#6b7280 }
+.fh-tl-time{ font-size:12px; color:var(--muted) }
 .fh-tl-actions .fh-btn{ padding:6px 10px; font-size:12px }
-
-/* 要約カードの右上ボタンを馴染ませる */
-.fh-card--header .fh-btn{ padding:8px 12px; font-size:13px }
 
 /* 左寄せ・2カラムは既存のfh-ベースを使用想定 */
 
 /* チャット：タイムスタンプ（LINE風寄せ） */
-.fh-time{ font-size:11px; color:#9ca3af; margin-top:4px }
+.fh-time{ font-size:11px; color:var(--muted); margin-top:4px }
 .fh-time.left{ text-align:left }
 .fh-time.right{ text-align:right }
 
 /* タイトルリンク（チャット内） */
-.fh-link{ all:unset; color:#2563eb; cursor:pointer; }
+.fh-link{ all:unset; color:var(--accent); cursor:pointer; }
 .fh-link:hover{ text-decoration:underline; }
 
 /* タイムライン・パネル */
-.fh-tl-panel{ margin-top:10px; border:1px solid #e6e6e6; border-radius:12px; padding:12px; background:#fff }
+.fh-tl-panel{ margin-top:10px; border:1px solid var(--line); border-radius:12px; padding:12px; background:var(--surface) }
 .fh-timeline{ list-style:none; margin:0; padding:0 }
-.fh-timeline li + li{ border-top:1px solid #ececec }
+.fh-timeline li + li{ border-top:1px solid var(--line); }
 .fh-tl-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0 }
 .fh-tl-main{ display:flex; flex-direction:column; gap:2px }
 .fh-tl-title{ font-size:14px; font-weight:700 }
-.fh-tl-time{ font-size:12px; color:#6b7280 }
+.fh-tl-time{ font-size:12px; color:var(--muted) }
 .fh-tl-actions .fh-btn{ padding:6px 10px; font-size:12px }
 
 /* 詳細セクションの区切り線 */
-.fh-sep{ border:0; border-top:1px solid #ececec; margin:14px 0 0 }
+.fh-sep{ border:0; border-top:1px solid var(--line); margin:14px 0 0 }
 
 /* 既存のボタン・入力・バッジ・バーなどは前回の v0.3.x と同等でOK */
 
@@ -181,7 +221,7 @@
   cursor:pointer;
   color:#374151;
 }
-.fh-toggle__btn:hover{ background:#e5e7eb; }
+.fh-toggle__btn:hover{ background:var(--line); }
 .fh-toggle__btn.is-on{
   background:#111827;
   color:#fff;
@@ -221,7 +261,7 @@
   cursor:pointer;
   color:#374151;
 }
-.fh-toggle__btn:hover{ background:#e5e7eb; }
+.fh-toggle__btn:hover{ background:var(--line); }
 .fh-toggle__btn.is-on{
   background:#111827;
   color:#fff;
@@ -300,7 +340,7 @@
   display:flex; align-items:center; justify-content:center;
   cursor: pointer;
 }
-.fh-composer__icon:hover{ background:#ececf1; }
+.fh-composer__icon:hover{ background:var(--chip); }
 .fh-composer__textarea{
   flex: 1 1 auto;
   min-height: 48px;     /* ← 入力欄を“大きく”する肝 */
@@ -311,7 +351,7 @@
   padding: 6px 8px;
   font-size: 15px; line-height: 1.6;
 }
-.fh-composer__textarea::placeholder{ color:#9ca3af; }
+.fh-composer__textarea::placeholder{ color:var(--input-placeholder); }
 .fh-composer__send{
   height: 36px;
   min-width: 56px;
@@ -326,7 +366,7 @@
 
 /* 添付チップ（＋で選んだファイル名） */
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin: 8px 0; }
-.fh-chip{ background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px 8px; font-size:12px; }
+.fh-chip{ background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px 8px; font-size:12px; color:var(--ink); }
 
 /* トグル（タイトル直下）の余白 */
 .fh-toggle--top{ margin-bottom: 8px; }
@@ -334,26 +374,26 @@
 /* 評価（三択） */
 .fh-rate{ display:flex; gap:6px; }
 .fh-rate__btn{
-  border:1px solid #e5e7eb; background:#fff; color:#374151;
+  border:1px solid var(--line); background:var(--surface); color:var(--ink);
   border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer;
 }
-.fh-rate__btn:hover{ background:#f3f4f6; }
-.fh-rate__btn.is-on{ color:#fff; border-color:transparent; }
-.fh-rate__btn.is-on.adopted{ background:#16a34a; }
-.fh-rate__btn.is-on.reference{ background:#2563eb; }
+.fh-rate__btn:hover{ background:var(--chip); }
+.fh-rate__btn.is-on{ color:var(--button-primary-text); border-color:transparent; }
+.fh-rate__btn.is-on.adopted{ background:var(--accent); }
+.fh-rate__btn.is-on.reference{ background:var(--accent); }
 .fh-rate__btn.is-on.rejected{ background:#dc2626; }
 
 /* 1口メモ */
 .fh-memo{ display:flex; gap:8px; align-items:center; margin:10px 0 6px; }
 .fh-memo__input{
   flex:1 1 auto; height:36px; padding:0 10px;
-  border:1px solid #e5e7eb; border-radius:10px; outline:none; background:#fff;
+  border:1px solid var(--input-border); border-radius:10px; outline:none; background:var(--input-bg); color:var(--input-text);
   font-size:13px;
 }
-.fh-memo__input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+.fh-memo__input:focus{ border-color:var(--input-border-focus); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
 .fh-memo__save{
   height:36px; padding:0 12px; border-radius:10px; cursor:pointer;
-  border:1px solid #e5e7eb; background:#111827; color:#fff; font-size:12px;
+  border:1px solid var(--button-secondary-border); background:var(--button-primary-bg); color:var(--button-primary-text); font-size:12px;
 }
 
 /* ===== Layout ===== */
@@ -362,17 +402,16 @@
 .fh-left{ display:flex; flex-direction:column; gap:10px; }
 
 /* ===== Cards / badges ===== */
-.fh-card{ background:#fff; border:1px solid #e6e6e6; border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:#f8fbff; border-color:#dfe8ff; }
+.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
 .fh-disabled{ opacity:.6; }
-.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:#f3f4f6; border:1px solid #e5e7eb; }
-.fh-badge--neg{ background:#fff1f2; border-color:#fecaca; color:#991b1b; }
+.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
+.fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
 
 /* ===== Typography ===== */
 .fh-title{ margin:0 0 4px; font-size:16px; font-weight:700 }
-.fh-caption{ color:#6b7280; font-size:12px; margin-bottom:2px }
+.fh-caption{ color:var(--muted); font-size:12px; margin-bottom:2px }
 .fh-headline{ font-size:18px; font-weight:800 }
-.fh-subtle{ color:#6b7280; font-size:12.5px }
+.fh-subtle{ color:var(--muted); font-size:12.5px }
 .fh-strong{ font-weight:800 }
 .fh-paragraph{ margin:0; line-height:1.6; }
 
@@ -383,71 +422,71 @@
 .fh-gap8{ gap:8px } .fh-gap12{ gap:12px }
 .fh-mb4{ margin-bottom:4px } .fh-mb8{ margin-bottom:8px }
 .fh-mt10{ margin-top:10px }
-.fh-sep{ border:0; border-top:1px solid #ececec; margin:14px 0 0 }
+.fh-sep{ border:0; border-top:1px solid var(--line); margin:14px 0 0 }
 
 /* ===== Toggle (top) ===== */
-.fh-toggle{ align-self:flex-start; display:flex; gap:0; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px; }
+.fh-toggle{ align-self:flex-start; display:flex; gap:0; background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px; }
 .fh-toggle--top{ margin-bottom:8px; }
-.fh-toggle__btn{ display:inline-flex; align-items:center; border:0; background:transparent; padding:8px 14px; font-size:13px; border-radius:999px; cursor:pointer; color:#374151; }
-.fh-toggle__btn:hover{ background:#e5e7eb; }
-.fh-toggle__btn.is-on{ background:#111827; color:#fff; }
+.fh-toggle__btn{ display:inline-flex; align-items:center; border:0; background:transparent; padding:8px 14px; font-size:13px; border-radius:999px; cursor:pointer; color:var(--ink); }
+.fh-toggle__btn:hover{ background:var(--line); }
+.fh-toggle__btn.is-on{ background:var(--button-primary-bg); color:var(--button-primary-text); }
 
 /* ===== Chat card ===== */
 .fh-card--chat{ display:flex; flex-direction:column; min-height:560px; padding:18px; border-radius:16px; }
 .fh-chat{ flex:1 1 auto; overflow:auto; padding-right:6px; padding-bottom:12px; scroll-behavior:smooth; }
-.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; }
-.fh-msg--me .fh-msg__bubble{ background:#111827; color:#fff; border-color:#111827; }
-.fh-time{ font-size:11px; color:#9ca3af; margin-top:4px; }
-.fh-link{ all:unset; color:#2563eb; cursor:pointer; }
+.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:var(--surface); border:1px solid var(--line); box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; color:var(--ink); }
+.fh-msg--me .fh-msg__bubble{ background:var(--button-primary-bg); color:var(--button-primary-text); border-color:var(--button-primary-bg); }
+.fh-time{ font-size:11px; color:var(--muted); margin-top:4px; }
+.fh-link{ all:unset; color:var(--accent); cursor:pointer; }
 .fh-link:hover{ text-decoration:underline; }
 
 /* Composer */
-.fh-composer{ display:flex; align-items:flex-end; gap:8px; background:#f7f7f8; border:1px solid #e5e7eb; border-radius:22px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.fh-composer{ display:flex; align-items:flex-end; gap:8px; background:var(--bg-secondary); border:1px solid var(--line); border-radius:22px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
 .fh-composer__icon{ width:36px; height:36px; border-radius:10px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; }
-.fh-composer__icon:hover{ background:#ececf1; }
-.fh-composer__textarea{ flex:1 1 auto; min-height:48px; max-height:240px; resize:none; border:none; outline:none; background:transparent; padding:6px 8px; font-size:15px; line-height:1.6; }
-.fh-composer__textarea::placeholder{ color:#9ca3af; }
-.fh-composer__send{ height:36px; min-width:56px; padding:0 12px; border-radius:10px; border:1px solid #0f172a; background:#0f172a; color:#fff; cursor:pointer; }
+.fh-composer__icon:hover{ background:var(--chip); }
+.fh-composer__textarea{ flex:1 1 auto; min-height:48px; max-height:240px; resize:none; border:none; outline:none; background:transparent; color:var(--ink); padding:6px 8px; font-size:15px; line-height:1.6; }
+.fh-composer__textarea::placeholder{ color:var(--input-placeholder); }
+.fh-composer__send{ height:36px; min-width:56px; padding:0 12px; border-radius:10px; border:1px solid var(--button-primary-bg); background:var(--button-primary-bg); color:var(--button-primary-text); cursor:pointer; }
 .fh-composer__send:disabled{ opacity:.6; cursor:default; }
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
-.fh-chip{ background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px 8px; font-size:12px; }
+.fh-chip{ background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px 8px; font-size:12px; color:var(--ink); }
 
 /* ===== Summary ===== */
-.fh-summary{ display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fff; border:1px dashed #e5e7eb; border-radius:10px; padding:8px 10px; margin:8px 0; }
-.fh-summary__text{ font-size:13px; color:#374151; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.fh-summary__copy{ border:1px solid #e5e7eb; background:#fff; color:#374151; border-radius:10px; padding:6px 10px; font-size:12px; cursor:pointer; }
-.fh-summary__copy:hover{ background:#f3f4f6; }
+.fh-summary{ display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--surface); border:1px dashed var(--line); border-radius:10px; padding:8px 10px; margin:8px 0; }
+.fh-summary__text{ font-size:13px; color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.fh-summary__copy{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:10px; padding:6px 10px; font-size:12px; cursor:pointer; }
+.fh-summary__copy:hover{ background:var(--chip); }
 
 /* ===== 評価・メモ ===== */
 .fh-rate{ display:flex; gap:6px; }
-.fh-rate__btn{ border:1px solid #e5e7eb; background:#fff; color:#374151; border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer; }
-.fh-rate__btn:hover{ background:#f3f4f6; }
-.fh-rate__btn.is-on{ color:#fff; border-color:transparent; }
-.fh-rate__btn.is-on.adopted{ background:#16a34a; }
-.fh-rate__btn.is-on.reference{ background:#2563eb; }
+.fh-rate__btn{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer; }
+.fh-rate__btn:hover{ background:var(--chip); }
+.fh-rate__btn.is-on{ color:var(--button-primary-text); border-color:transparent; }
+.fh-rate__btn.is-on.adopted{ background:var(--accent); }
+.fh-rate__btn.is-on.reference{ background:var(--accent); }
 .fh-rate__btn.is-on.rejected{ background:#dc2626; }
 
 .fh-memo{ display:flex; gap:8px; align-items:center; margin:10px 0 6px; }
-.fh-memo__input{ flex:1 1 auto; height:36px; padding:0 10px; border:1px solid #e5e7eb; border-radius:10px; outline:none; background:#fff; font-size:13px; }
-.fh-memo__input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.12); }
-.fh-memo__save{ height:36px; padding:0 12px; border-radius:10px; cursor:pointer; border:1px solid #e5e7eb; background:#111827; color:#fff; font-size:12px; }
+.fh-memo__input{ flex:1 1 auto; height:36px; padding:0 10px; border:1px solid var(--input-border); border-radius:10px; outline:none; background:var(--input-bg); color:var(--input-text); font-size:13px; }
+.fh-memo__input:focus{ border-color:var(--input-border-focus); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+.fh-memo__save{ height:36px; padding:0 12px; border-radius:10px; cursor:pointer; border:1px solid var(--button-secondary-border); background:var(--button-primary-bg); color:var(--button-primary-text); font-size:12px; }
 
 /* ===== Bars / tags / trades ===== */
-.fh-bar{ width:100%; height:10px; background:#e5e7eb; border-radius:6px; overflow:hidden }
-.fh-bar__fill{ height:100%; background:#2563eb }
+.fh-bar{ width:100%; height:10px; background:var(--line); border-radius:6px; overflow:hidden }
+.fh-bar__fill{ height:100%; background:var(--accent) }
 
 .fh-tags{ display:flex; gap:6px; flex-wrap:wrap; }
-.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:#eef2ff; color:#374151; border:1px solid #e5e7eb; }
+.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:var(--chip); color:var(--ink); border:1px solid var(--line); }
 
 .fh-trades{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
 .fh-trade{ display:flex; gap:8px; align-items:center; font-size:12px; }
-.fh-trade__side{ display:inline-block; min-width:46px; text-align:center; padding:2px 6px; border-radius:6px; color:#fff; }
-.fh-trade__side.long{ background:#16a34a; }
+.fh-trade__side{ display:inline-block; min-width:46px; text-align:center; padding:2px 6px; border-radius:6px; color:var(--button-primary-text); }
+.fh-trade__side.long{ background:var(--accent); }
 .fh-trade__side.short{ background:#dc2626; }
-.fh-trade__time{ color:#374151; }
-.fh-trade__pips{ color:#374151; }
-.fh-trade__pnl{ color:#374151; }
-.fh-trade__note{ color:#6b7280; }
+.fh-trade__time{ color:var(--ink); }
+.fh-trade__pips{ color:var(--ink); }
+.fh-trade__pnl{ color:var(--ink); }
+.fh-trade__note{ color:var(--muted); }
 
 /* ===== Layout ===== */
 .fh-root{ display:grid; gap:16px; grid-template-columns:1fr; }
@@ -455,17 +494,16 @@
 .fh-left{ display:flex; flex-direction:column; gap:10px; }
 
 /* ===== Cards / badges ===== */
-.fh-card{ background:#fff; border:1px solid #e6e6e6; border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
-.fh-card--header{ background:#f8fbff; border-color:#dfe8ff; }
+.fh-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.05); }
 .fh-disabled{ opacity:.6; }
-.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:#f3f4f6; border:1px solid #e5e7eb; }
-.fh-badge--neg{ background:#fff1f2; border-color:#fecaca; color:#991b1b; }
+.fh-badge{ display:inline-block; border-radius:999px; padding:4px 8px; font-size:12px; background:var(--chip); border:1px solid var(--line); color:var(--ink); }
+.fh-badge--neg{ background:var(--danger); border-color:var(--danger); color:var(--button-primary-text); }
 
 /* ===== Typography ===== */
 .fh-title{ margin:0 0 4px; font-size:16px; font-weight:700 }
-.fh-caption{ color:#6b7280; font-size:12px; margin-bottom:2px }
+.fh-caption{ color:var(--muted); font-size:12px; margin-bottom:2px }
 .fh-headline{ font-size:18px; font-weight:800 }
-.fh-subtle{ color:#6b7280; font-size:12.5px }
+.fh-subtle{ color:var(--muted); font-size:12.5px }
 .fh-strong{ font-weight:800 }
 .fh-paragraph{ margin:0; line-height:1.6; }
 
@@ -476,43 +514,43 @@
 .fh-gap8{ gap:8px } .fh-gap12{ gap:12px }
 .fh-mb4{ margin-bottom:4px } .fh-mb8{ margin-bottom:8px }
 .fh-mt10{ margin-top:10px }
-.fh-sep{ border:0; border-top:1px solid #ececec; margin:14px 0 0 }
+.fh-sep{ border:0; border-top:1px solid var(--line); margin:14px 0 0 }
 
 /* ===== Toggle (top) ===== */
-.fh-toggle{ align-self:flex-start; display:flex; gap:0; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px; }
+.fh-toggle{ align-self:flex-start; display:flex; gap:0; background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px; }
 .fh-toggle--top{ margin-bottom:8px; }
-.fh-toggle__btn{ display:inline-flex; align-items:center; border:0; background:transparent; padding:8px 14px; font-size:13px; border-radius:999px; cursor:pointer; color:#374151; }
-.fh-toggle__btn:hover{ background:#e5e7eb; }
-.fh-toggle__btn.is-on{ background:#111827; color:#fff; }
+.fh-toggle__btn{ display:inline-flex; align-items:center; border:0; background:transparent; padding:8px 14px; font-size:13px; border-radius:999px; cursor:pointer; color:var(--ink); }
+.fh-toggle__btn:hover{ background:var(--line); }
+.fh-toggle__btn.is-on{ background:var(--button-primary-bg); color:var(--button-primary-text); }
 
 /* ===== Chat card ===== */
 .fh-card--chat{ display:flex; flex-direction:column; min-height:560px; padding:18px; border-radius:16px; }
 .fh-chat{ flex:1 1 auto; overflow:auto; padding-right:6px; padding-bottom:12px; scroll-behavior:smooth; }
-.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:#fff; border:1px solid #e5e7eb; box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; }
-.fh-msg--me .fh-msg__bubble{ background:#111827; color:#fff; border-color:#111827; }
-.fh-msg__bubble.is-trade{ border-color:#c7d2fe; background:#eef2ff; }
-.fh-time{ font-size:11px; color:#9ca3af; margin-top:4px; }
-.fh-link{ color:#2563eb; text-decoration:none; }
+.fh-msg__bubble{ max-width:92%; border-radius:16px; padding:10px 12px; line-height:1.6; font-size:14px; background:var(--surface); border:1px solid var(--line); box-shadow:0 1px 2px rgba(0,0,0,.04); white-space:pre-wrap; color:var(--ink); }
+.fh-msg--me .fh-msg__bubble{ background:var(--button-primary-bg); color:var(--button-primary-text); border-color:var(--button-primary-bg); }
+.fh-msg__bubble.is-trade{ border-color:var(--accent); background:var(--accent-bg); }
+.fh-time{ font-size:11px; color:var(--muted); margin-top:4px; }
+.fh-link{ color:var(--accent); text-decoration:none; }
 .fh-link:hover{ text-decoration:underline; }
 
 /* Composer */
-.fh-composer{ display:flex; align-items:flex-end; gap:8px; background:#f7f7f8; border:1px solid #e5e7eb; border-radius:22px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
+.fh-composer{ display:flex; align-items:flex-end; gap:8px; background:var(--bg-secondary); border:1px solid var(--line); border-radius:22px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,.06); }
 .fh-composer__icon{ width:36px; height:36px; border-radius:10px; border:none; background:transparent; display:flex; align-items:center; justify-content:center; cursor:pointer; }
-.fh-composer__icon:hover{ background:#ececf1; }
-.fh-composer__textarea{ flex:1 1 auto; min-height:48px; max-height:240px; resize:none; border:none; outline:none; background:transparent; padding:6px 8px; font-size:15px; line-height:1.6; }
-.fh-composer__textarea::placeholder{ color:#9ca3af; }
-.fh-composer__send{ height:36px; min-width:56px; padding:0 12px; border-radius:10px; border:1px solid #0f172a; background:#0f172a; color:#fff; cursor:pointer; }
+.fh-composer__icon:hover{ background:var(--chip); }
+.fh-composer__textarea{ flex:1 1 auto; min-height:48px; max-height:240px; resize:none; border:none; outline:none; background:transparent; color:var(--ink); padding:6px 8px; font-size:15px; line-height:1.6; }
+.fh-composer__textarea::placeholder{ color:var(--input-placeholder); }
+.fh-composer__send{ height:36px; min-width:56px; padding:0 12px; border-radius:10px; border:1px solid var(--button-primary-bg); background:var(--button-primary-bg); color:var(--button-primary-text); cursor:pointer; }
 .fh-composer__send:disabled{ opacity:.6; cursor:default; }
 .fh-attach{ display:flex; gap:6px; flex-wrap:wrap; margin:8px 0; }
-.fh-chip{ background:#f3f4f6; border:1px solid #e5e7eb; border-radius:999px; padding:4px 8px; font-size:12px; }
+.fh-chip{ background:var(--chip); border:1px solid var(--line); border-radius:999px; padding:4px 8px; font-size:12px; color:var(--ink); }
 
 /* ===== Bars / tags ===== */
-.fh-bar{ width:100%; height:14px; background:#e5e7eb; border-radius:6px; overflow:hidden } /* ← 高さUP */
-.fh-bar__fill{ height:100%; background:#2563eb }
+.fh-bar{ width:100%; height:14px; background:var(--line); border-radius:6px; overflow:hidden } /* ← 高さUP */
+.fh-bar__fill{ height:100%; background:var(--accent) }
 .fh-gauge__label{ display:flex; align-items:center; justify-content:space-between; font-size:14px; margin-bottom:6px }
 .fh-gauge__pct{ font-weight:800; font-size:18px } /* ← ％大きく */
 .fh-tags{ display:flex; gap:6px; flex-wrap:wrap; }
-.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:#eef2ff; color:#374151; border:1px solid #e5e7eb; }
+.fh-tag{ display:inline-block; padding:2px 8px; font-size:11px; border-radius:999px; background:var(--chip); color:var(--ink); border:1px solid var(--line); }
 
 /* ===== Top probability big ring ===== */
 .fh-topprob{ display:flex; align-items:center; gap:14px; margin:8px 0 6px; }
@@ -520,32 +558,32 @@
   --v: 56%;
   width:42px; height:42px; border-radius:50%;
   background:
-    conic-gradient(#2563eb var(--v), #e5e7eb 0);
+    conic-gradient(var(--accent) var(--v), var(--line) 0);
 }
 .fh-topprob__meta{ display:flex; gap:6px; align-items:baseline }
 .fh-topprob__num{ font-size:28px; font-weight:800; line-height:1 }
-.fh-topprob__label{ font-size:13px; color:#374151 }
+.fh-topprob__label{ font-size:13px; color:var(--ink) }
 
 /* ===== 評価・メモ ===== */
 .fh-rate{ display:flex; gap:6px; }
-.fh-rate__btn{ border:1px solid #e5e7eb; background:#fff; color:#374151; border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer; }
-.fh-rate__btn:hover{ background:#f3f4f6; }
-.fh-rate__btn.is-on{ color:#fff; border-color:transparent; }
-.fh-rate__btn.is-on.adopted{ background:#16a34a; }
-.fh-rate__btn.is-on.reference{ background:#2563eb; }
+.fh-rate__btn{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:6px 10px; font-size:12px; cursor:pointer; }
+.fh-rate__btn:hover{ background:var(--chip); }
+.fh-rate__btn.is-on{ color:var(--button-primary-text); border-color:transparent; }
+.fh-rate__btn.is-on.adopted{ background:var(--accent); }
+.fh-rate__btn.is-on.reference{ background:var(--accent); }
 .fh-rate__btn.is-on.rejected{ background:#dc2626; }
 
 .fh-memo{ display:flex; gap:8px; align-items:center; margin:10px 0 6px; }
-.fh-memo__input{ flex:1 1 auto; height:36px; padding:0 10px; border:1px solid #e5e7eb; border-radius:10px; outline:none; background:#fff; font-size:13px; }
-.fh-memo__input:focus{ border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.12); }
-.fh-memo__save{ height:36px; padding:0 12px; border-radius:10px; cursor:pointer; border:1px solid #e5e7eb; background:#111827; color:#fff; font-size:12px; }
+.fh-memo__input{ flex:1 1 auto; height:36px; padding:0 10px; border:1px solid var(--input-border); border-radius:10px; outline:none; background:var(--input-bg); color:var(--input-text); font-size:13px; }
+.fh-memo__input:focus{ border-color:var(--input-border-focus); box-shadow:0 0 0 3px rgba(37,99,235,.12); }
+.fh-memo__save{ height:36px; padding:0 12px; border-radius:10px; cursor:pointer; border:1px solid var(--button-secondary-border); background:var(--button-primary-bg); color:var(--button-primary-text); font-size:12px; }
 
 /* ===== Timeline（予想一覧） ===== */
 .fh-timeline{ list-style:none; margin:0; padding:0 }
 .fh-tl-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 0; }
 .fh-tl-main{ display:flex; flex-direction:column; gap:2px }
 .fh-tl-title{ font-size:14px; font-weight:700 }
-.fh-tl-time{ font-size:12px; color:#6b7280 }
+.fh-tl-time{ font-size:12px; color:var(--muted) }
 .fh-tl-actions .fh-btn{ padding:6px 10px; font-size:12px }
 
 /* ===== Filter bar layout ===== */
@@ -566,7 +604,7 @@
 
 /* 入力コントロールの統一感 */
 .control label {
-  display:block; font-size:12px; color:#6b7280;
+  display:block; font-size:12px; color:var(--muted);
   margin-bottom:6px;
 }
 .control select,
@@ -575,8 +613,9 @@
 .range-trigger {
   display:block; width:100%;
   padding:10px 12px;
-  border:1px solid #e5e7eb; border-radius:10px;
-  background:#fff;
+  border:1px solid var(--input-border); border-radius:10px;
+  background:var(--input-bg);
+  color:var(--input-text);
 }
 
 /* 期間トリガーは左寄せテキストで */
@@ -584,45 +623,163 @@
 
 /* リセットボタン */
 .btn-reset {
-  padding:10px 12px; border:1px solid #e5e7eb; border-radius:10px;
-  background:#fff; font-weight:700;
+  padding:10px 12px; border:1px solid var(--button-secondary-border); border-radius:10px;
+  background:var(--button-secondary-bg); color:var(--button-secondary-text); font-weight:700;
 }
 
 /* 期間ポップオーバーの箱 */
 .range-pop {
   position:absolute; top:calc(100% + 8px); left:0; z-index:30;
   width:540px; max-width:95vw;
-  background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+  background:var(--surface); border:1px solid var(--line); border-radius:12px;
   box-shadow:0 10px 30px rgba(0,0,0,.12);
 }
 
 /* ===== KPI card refinements ===== */
-.kpi-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); max-width: 100%; }
-@media (min-width: 1024px) {
-  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+.kpi-grid {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+  width: 100%;
+  max-width: 100%;
 }
-.kpi-card { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
-.kpi-title { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); margin-bottom:4px; }
-.kpi-value { display:flex; align-items:baseline; gap:4px; font-size:28px; font-weight:700; }
-.kpi-unit  { font-size:16px; color:var(--muted); }
-.kpi-desc  { margin-top:6px; font-size:12px; color:var(--muted); }
+
+@media (min-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  .kpi-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.kpi-card {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  box-sizing: border-box;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Tooltip layer - ensure it's on top of everything */
+[style*="z-index: 99999"] {
+  z-index: 99999 !important;
+}
+
+@media (min-width: 640px) {
+  .kpi-card {
+    padding: 12px;
+    border-radius: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .kpi-card {
+    padding: 14px;
+  }
+}
+
+.kpi-title {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:15px;
+  font-weight:bold;
+  color:var(--muted);
+  margin:0 0 8px;
+}
+
+.kpi-value {
+  display:flex;
+  align-items:baseline;
+  gap:4px;
+  font-size:20px;
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.1;
+}
+
+@media (min-width: 640px) {
+  .kpi-value {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .kpi-value {
+    font-size: 28px;
+  }
+}
+
+.kpi-unit {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (min-width: 640px) {
+  .kpi-unit {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .kpi-unit {
+    font-size: 16px;
+  }
+}
+
+.kpi-desc {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.3;
+}
+
+@media (min-width: 640px) {
+  .kpi-desc {
+    margin-top: 6px;
+    font-size: 12px;
+  }
+}
 .info {
   display:inline-flex; align-items:center; justify-content:center;
   width:16px; height:16px; border-radius:999px; background:var(--chip); color:var(--ink);
   font-size:11px; line-height:1; border:1px solid var(--line); cursor:help;
 }
 
-/* info tooltip button */
-.info {
-  display:inline-flex; align-items:center; justify-content:center;
-  width:16px; height:16px; border-radius:999px; background:#f3f4f6; color:#374151;
-  font-size:11px; line-height:1; border:1px solid #e5e7eb; cursor:help;
-}
+/* info tooltip button - consolidated with previous definition */
 
 :root{
-  --c-bg:#fff; --c-surface:#f7f7f8; --c-border:#e5e7eb;
-  --c-text:#111; --c-muted:#6b7280;
-  --c-pos:#059669; --c-neg:#dc2626; --c-accent:#2563eb;
+  --c-bg: var(--surface);
+  --c-surface: var(--bg-secondary);
+  --c-border: var(--line);
+  --c-text: var(--ink);
+  --c-muted: var(--muted);
+  --c-pos: var(--gain);
+  --c-neg: var(--loss);
+  --c-accent: var(--accent);
 
   --radii:12px;
   --shadow:0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.06);
@@ -640,9 +797,11 @@
 
 .table-wrap { overflow:auto; border:1px solid var(--c-border); border-radius: var(--radii); }
 .table { width:100%; border-collapse:separate; border-spacing:0; font-size:14px; }
-.table thead th { position:sticky; top:0; background:#fff; z-index:1; text-align:left; padding:10px 12px; border-bottom:1px solid var(--c-border); }
+.table thead th { position:sticky; top:0; background:var(--surface); z-index:1; text-align:left; padding:10px 12px; border-bottom:1px solid var(--c-border); font-weight:600; color:var(--ink); }
 .table tbody td { padding:10px 12px; border-bottom:1px solid var(--c-border); }
-.table tbody tr:hover { background: var(--c-surface); }
+.table tbody tr:nth-child(odd) { background: var(--surface); }
+.table tbody tr:nth-child(even) { background: var(--panel); }
+.table tbody tr:hover { background: var(--chip); }
 .text-right { text-align:right; }
 .text-pos { color: var(--c-pos); }
 .text-neg { color: var(--c-neg); }
@@ -657,6 +816,48 @@
 .text-right { text-align: right; }
 .text-pos { color: var(--c-pos, #059669); }
 .text-neg { color: var(--c-neg, #dc2626); }
+
+/* マークダウン内のテーブルスタイル */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table thead th {
+  background: var(--surface);
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+}
+
+table tbody tr:nth-child(odd) {
+  background: var(--surface);
+}
+
+table tbody tr:nth-child(even) {
+  background: var(--panel);
+}
+
+table tbody tr:hover {
+  background: var(--chip);
+}
+
+table tbody tr:last-child td {
+  border-bottom: none;
+}
 
 /* ===== Responsive Layout for AppShell ===== */
 @media (min-width: 1024px) {

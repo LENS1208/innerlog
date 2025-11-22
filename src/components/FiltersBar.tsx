@@ -1,17 +1,121 @@
 import React from "react";
 import { useDataset } from "../lib/dataset.context";
 import { UI_TEXT } from "../lib/i18n";
+import { supabase } from "../lib/supabase";
+import type { Trade } from "../lib/types";
+import { parseCsvText } from "../lib/csv";
 
-const box: React.CSSProperties = { height: 36, border: "1px solid var(--line)", borderRadius: 12, background: "var(--surface)", padding: "0 10px" };
+const box: React.CSSProperties = {
+  height: 36,
+  border: "1px solid var(--input-border)",
+  borderRadius: 12,
+  background: "var(--input-bg)",
+  color: "var(--input-text)",
+  padding: "0 10px",
+  transition: "border-color 0.2s ease"
+};
 
 type DatePreset = "all"|"today"|"yesterday"|"last7"|"last30"|"thisMonth"|"lastMonth"|"last12"|"lastYear"|"ytd"|"custom";
 
+function loadData(ds: "A" | "B" | "C"): Promise<Trade[]> {
+  if (ds === "A" || ds === "B" || ds === "C") {
+    const cacheBuster = `?t=${Date.now()}`;
+    return fetch(`/demo/${ds}.csv${cacheBuster}`)
+      .then((r) => r.text())
+      .then((text) => parseCsvText(text));
+  }
+  return Promise.resolve([]);
+}
+
 export default function FiltersBar() {
-  const { uiFilters, setUiFilters } = useDataset();
+  const { uiFilters, setUiFilters, dataset, useDatabase, isInitialized } = useDataset();
   const [datePreset, setDatePreset] = React.useState<DatePreset>("all");
   const [showModal, setShowModal] = React.useState(false);
   const [tempFrom, setTempFrom] = React.useState("");
   const [tempTo, setTempTo] = React.useState("");
+  const [availableSymbols, setAvailableSymbols] = React.useState<string[]>([]);
+  const [loadingSymbols, setLoadingSymbols] = React.useState(false);
+
+  React.useEffect(() => {
+    const loadSymbols = async () => {
+      if (!isInitialized) {
+        return;
+      }
+
+      setLoadingSymbols(true);
+      try {
+        let trades: Trade[] = [];
+
+        if (useDatabase) {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) {
+            console.error('No authenticated user');
+            setAvailableSymbols([]);
+            setLoadingSymbols(false);
+            return;
+          }
+
+          const PAGE_SIZE = 1000;
+          let allData: any[] = [];
+          let currentPage = 0;
+          let hasMore = true;
+
+          while (hasMore) {
+            const start = currentPage * PAGE_SIZE;
+            const end = start + PAGE_SIZE - 1;
+
+            const { data, error } = await supabase
+              .from('trades')
+              .select('item')
+              .eq('user_id', user.id)
+              .order('close_time', { ascending: true })
+              .range(start, end);
+
+            if (error) {
+              console.error('Error loading trades:', error);
+              break;
+            }
+
+            if (data && data.length > 0) {
+              allData = [...allData, ...data];
+              currentPage++;
+              hasMore = data.length === PAGE_SIZE;
+            } else {
+              hasMore = false;
+            }
+          }
+
+          trades = allData.map((t: any) => ({
+            pair: t.item,
+            symbol: t.item
+          } as Trade));
+        } else {
+          trades = await loadData(dataset);
+        }
+
+        console.log('Loaded trades for symbols:', trades.length);
+
+        const symbolSet = new Set<string>();
+        trades.forEach(trade => {
+          const symbol = (trade.pair || trade.symbol || (trade as any).item || '').toUpperCase();
+          if (symbol) {
+            symbolSet.add(symbol);
+          }
+        });
+
+        const symbols = Array.from(symbolSet).sort();
+        console.log('Available symbols:', symbols);
+        setAvailableSymbols(symbols);
+      } catch (e) {
+        console.error('Error loading symbols:', e);
+        setAvailableSymbols([]);
+      } finally {
+        setLoadingSymbols(false);
+      }
+    };
+
+    loadSymbols();
+  }, [dataset, useDatabase, isInitialized]);
 
   const getPresetLabel = () => {
     switch(datePreset) {
@@ -106,28 +210,22 @@ export default function FiltersBar() {
     <>
       <div className="filters-container" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
         {/* 銘柄 */}
-        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
-          <option value="">{UI_TEXT.symbol}</option>
-          <optgroup label="メジャーペア">
-            <option>USD/JPY</option><option>EUR/USD</option><option>GBP/USD</option><option>USD/CHF</option><option>AUD/USD</option><option>NZD/USD</option><option>USD/CAD</option>
-          </optgroup>
-          <optgroup label="クロス円">
-            <option>EUR/JPY</option><option>GBP/JPY</option><option>AUD/JPY</option><option>CHF/JPY</option><option>CAD/JPY</option><option>NZD/JPY</option>
-          </optgroup>
-          <optgroup label="その他">
-            <option>EUR/GBP</option><option>EUR/AUD</option><option>GBP/AUD</option><option>AUD/NZD</option>
-          </optgroup>
+        <select value={uiFilters.symbol || ""} onChange={(e) => setUiFilters({ symbol: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }} disabled={loadingSymbols}>
+          <option value="">{loadingSymbols ? '読み込み中...' : UI_TEXT.symbol}</option>
+          {availableSymbols.map(symbol => (
+            <option key={symbol} value={symbol}>{symbol}</option>
+          ))}
         </select>
 
         {/* ポジション */}
-        <select value={uiFilters.side || ""} onChange={(e) => setUiFilters({ side: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.side || ""} onChange={(e) => setUiFilters({ side: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">{UI_TEXT.position}</option>
           <option value="LONG">{UI_TEXT.long}</option>
           <option value="SHORT">{UI_TEXT.short}</option>
         </select>
 
         {/* 損益 */}
-        <select value={uiFilters.pnl || ""} onChange={(e) => setUiFilters({ pnl: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.pnl || ""} onChange={(e) => setUiFilters({ pnl: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">{UI_TEXT.profit}</option>
           <option value="win">{UI_TEXT.winOnly}</option>
           <option value="loss">{UI_TEXT.lossOnly}</option>
@@ -225,7 +323,7 @@ export default function FiltersBar() {
                         padding: "8px 24px",
                         border: "none",
                         borderRadius: 8,
-                        background: "#4ade80",
+                        background: "#00a218",
                         color: "white",
                         cursor: "pointer"
                       }}
@@ -240,7 +338,7 @@ export default function FiltersBar() {
         </div>
 
         {/* 曜日 */}
-        <select value={uiFilters.weekday || ""} onChange={(e) => setUiFilters({ weekday: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.weekday || ""} onChange={(e) => setUiFilters({ weekday: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">曜日</option>
           <option value="weekdays">平日のみ</option>
           <option value="weekend">週末のみ</option>
@@ -250,7 +348,7 @@ export default function FiltersBar() {
         </select>
 
         {/* 時間帯 */}
-        <select value={uiFilters.session || ""} onChange={(e) => setUiFilters({ session: (e.target.value as any) || undefined })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
+        <select value={uiFilters.session || ""} onChange={(e) => setUiFilters({ session: e.target.value === "" ? undefined : e.target.value })} style={{ ...box, flex: "1 1 auto", minWidth: 120 }}>
           <option value="">時間帯</option>
           <option value="asia">アジア</option>
           <option value="london">ロンドン</option>

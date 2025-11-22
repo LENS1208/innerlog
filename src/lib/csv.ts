@@ -4,7 +4,7 @@ import type { Trade } from "./types";
 const alias = {
   datetime: ["datetime","日時","date","time","日時年月日"],
   pair: ["pair","通貨ペア","symbol","シンボル"],
-  side: ["side","方向","dir","longshort"],
+  side: ["side","ポジション","方向","dir","longshort"],
   volume: ["volume","qty","lot","数量","取引量"],
   profitYen: ["profit","損益","pl","p/l","損益円"],
   pips: ["pips","pip","損益pips"],
@@ -36,7 +36,7 @@ export async function parseCsv(file: File): Promise<Trade[]> {
     return {
       id: `csv-${n}-${pick("datetime")}-${pick("pair")}`,
       datetime: pick("datetime"),
-      pair: pick("pair") || "UNKNOWN",
+      pair: (pick("pair") || "UNKNOWN").toUpperCase(),
       side: sideRaw.includes("SHORT") || sideRaw === "S" ? "SHORT" : "LONG",
       volume: Number(pick("volume")) || 0,
       profitYen: Number(pick("profitYen")) || 0,
@@ -70,6 +70,7 @@ export type Trade = {
 
 // src/lib/csv.ts もしくは TradeListPage.tsx の parseCsvText を置換
 import type { Trade } from "./types";
+import { calculatePips } from "./formatters";
 
 const norm = (s: string) =>
   s.toLowerCase().replace(/\s+/g, "").replace(/[／\/]/g, "/").replace(/[（）()]/g, "");
@@ -80,7 +81,37 @@ const toNumLoose = (s: string) => {
   return Number.isFinite(n) ? n : 0;
 };
 
-const isJpyCross = (pair: string) => /JPY$/i.test((pair || "").trim());
+export type AccountSummary = {
+  deposit: number;
+  withdraw: number;
+  bonus_credit: number;
+};
+
+function calculateAccountSummaryFromRows(rows: string[], indices: { iPair: number, iType: number, iProfit: number }): AccountSummary {
+  let deposit = 0;
+  let withdraw = 0;
+  let bonus_credit = 0;
+
+  for (const row of rows) {
+    const cols = row.split(/,|\t/).map(c => c.trim());
+    const pair = cols[indices.iPair] || '';
+    const type = cols[indices.iType] || '';
+    const profit = toNumLoose(cols[indices.iProfit] || '0');
+
+    // CD-ECS-BWR = Deposit, CW-ECS-BWR = Withdrawal, EXP05-ECS-BWR = XM Points
+    if (type.toLowerCase() === 'balance') {
+      if (pair.includes('CD-ECS') || pair.includes('Deposit')) {
+        deposit += profit;
+      } else if (pair.includes('CW-ECS') || pair.includes('Withdraw')) {
+        withdraw += Math.abs(profit);
+      } else if (pair.includes('EXP05') || pair.includes('XM Points') || pair.includes('XM Point')) {
+        bonus_credit += profit;
+      }
+    }
+  }
+
+  return { deposit, withdraw, bonus_credit };
+}
 
 export function parseCsvText(text: string): Trade[] {
   const lines = text.split(/\r?\n/).filter(Boolean);
@@ -99,7 +130,7 @@ export function parseCsvText(text: string): Trade[] {
   // 列位置（候補を広く持つ）
   const iTicket    = idx(["ticket", "order"]);
   const iPair      = idx(["item", "pair", "symbol", "銘柄"]);
-  const iType      = idx(["type", "side", "方向"]);
+  const iType      = idx(["type", "side", "ポジション", "方向"]);
   const iSize      = idx(["size", "lot", "lots", "qty", "数量", "取引量"]);
   const iOpenTime  = idx(["opentime", "open time"]);
   const iOpenPrice = idx(["openprice", "open price", "entry", "entryprice"]);
@@ -120,6 +151,10 @@ export function parseCsvText(text: string): Trade[] {
 
   const body = lines.slice(1);
 
+  // Calculate account summary and store it globally for AccountSummaryCards to access
+  const accountSummary = calculateAccountSummaryFromRows(body, { iPair, iType, iProfit });
+  (window as any)._csvAccountSummary = accountSummary;
+
   return body.map((row, n) => {
     const cols = row.split(/,|\t/).map((c) => c.trim());
     const get  = (i: number) => (i >= 0 ? cols[i] ?? "" : "");
@@ -127,7 +162,7 @@ export function parseCsvText(text: string): Trade[] {
     // 必須の補完（日時優先順）
     const openTime  = get(iOpenTime);
     const closeTime = get(iCloseTime) || openTime;
-    const pair      = get(iPair) || "USDJPY";
+    const pair      = (get(iPair) || "USDJPY").toUpperCase();
     const sideRaw   = get(iType).toLowerCase();
     const side: "LONG" | "SHORT" =
       /short|sell|\bs\b/.test(sideRaw) ? "SHORT" :
@@ -141,9 +176,7 @@ export function parseCsvText(text: string): Trade[] {
 
     // pips 自動計算（CSVになければ Open/Close から）
     if (!pips && entry && exit) {
-      const mult = isJpyCross(pair) ? 100 : 10000;
-      const diff = side === "LONG" ? (exit - entry) : (entry - exit);
-      pips = +(diff * mult).toFixed(1);
+      pips = calculatePips(entry, exit, side, pair);
     }
 
     // 保有時間計算（分）
@@ -183,7 +216,7 @@ export function parseCsvText(text: string): Trade[] {
       holdTimeMin,
 
       // エイリアス（後方互換）
-      symbol: pair,
+      symbol: pair.toUpperCase(),
       action: side,
       profit: profitYen,
     } as Trade;
