@@ -579,6 +579,12 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
     }
   }, [allTrades, trades]);
 
+  /* ===== 折りたたみ状態 ===== */
+  const [expandEntry, setExpandEntry] = useState(false);
+  const [expandHold, setExpandHold] = useState(false);
+  const [expandExit, setExpandExit] = useState(false);
+  const [expandAnalysis, setExpandAnalysis] = useState(false);
+
   /* ===== グラフ ===== */
   const equityRef = useRef<HTMLCanvasElement | null>(null);
   const histRef = useRef<HTMLCanvasElement | null>(null);
@@ -997,12 +1003,6 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
   const [noteWrong, setNoteWrong] = useState("");
   const [noteNext, setNoteNext] = useState("");
   const [noteFree, setNoteFree] = useState("");
-
-  /* ===== 折りたたみ状態 ===== */
-  const [expandEntry, setExpandEntry] = useState(false);
-  const [expandHold, setExpandHold] = useState(false);
-  const [expandExit, setExpandExit] = useState(false);
-  const [expandAnalysis, setExpandAnalysis] = useState(false);
 
   /* ===== タグモーダル ===== */
   const [tagModalOpen, setTagModalOpen] = useState(false);
