@@ -819,7 +819,7 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
       } catch {}
       chartsRef.current = {};
     };
-  }, [chartTrades]);
+  }, [chartTrades, expandAnalysis]);
 
   /* ===== クイック日記（簡易） ===== */
   type QuickMemo = {
