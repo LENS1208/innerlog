@@ -16,18 +16,8 @@ export function WelcomeMessage({ onDismiss }: WelcomeMessageProps) {
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-        <div
-          style={{
-            fontSize: '32px',
-            lineHeight: 1,
-            marginTop: '4px',
-          }}
-        >
-          👋
-        </div>
-        <div style={{ flex: 1 }}>
-          <h3
+      <div>
+        <h3
             style={{
               margin: '0 0 12px 0',
               fontSize: '18px',
@@ -83,7 +73,6 @@ export function WelcomeMessage({ onDismiss }: WelcomeMessageProps) {
               このメッセージは一度だけ表示されます
             </span>
           </div>
-        </div>
       </div>
     </div>
   );
