@@ -121,83 +121,90 @@ export default function SettingsPage() {
 
   const loadUserAndSettings = async () => {
     console.log('📥 loadUserAndSettings: 開始');
-    const { data: { user } } = await supabase.auth.getUser();
-    console.log('👤 Loaded user:', user?.email);
-    console.log('📋 User metadata:', user?.user_metadata);
-    setUser(user);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      console.log('👤 Loaded user:', user?.email);
+      console.log('📋 User metadata:', user?.user_metadata);
+      setUser(user);
 
-    if (user) {
-      const traderNameFromMeta = user.user_metadata?.trader_name || '';
-      console.log('📝 Setting traderName to:', traderNameFromMeta);
-      setEmail(user.email || '');
-      setTraderName(traderNameFromMeta);
-      setAvatarPreview(user.user_metadata?.avatar_url || '');
+      if (user) {
+        const traderNameFromMeta = user.user_metadata?.trader_name || '';
+        console.log('📝 Setting traderName to:', traderNameFromMeta);
+        setEmail(user.email || '');
+        setTraderName(traderNameFromMeta);
+        setAvatarPreview(user.user_metadata?.avatar_url || '');
 
-      const { data, error } = await supabase
-        .from('user_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+        const { data, error } = await supabase
+          .from('user_settings')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
 
-      if (error) {
-        console.error('❌ user_settings取得エラー:', error);
-        return;
+        if (error) {
+          console.error('❌ user_settings取得エラー:', error);
+          return;
+        }
+
+        if (data) {
+          console.log('📝 データベースから設定を取得:', {
+            timezone: data.timezone,
+            ai_enabled: data.ai_evaluation_enabled
+          });
+
+          // 一度だけsetSettingsを呼ぶ（themeは現在の値を維持）
+          setSettings(prev => {
+            const newSettings = {
+              ...prev,
+              timezone: data.timezone || prev.timezone,
+              time_format: data.time_format || prev.time_format,
+              date_format: data.date_format || prev.date_format,
+              currency: data.currency || prev.currency,
+              csv_format_preset: data.csv_format_preset || prev.csv_format_preset,
+              csv_column_mapping: data.csv_column_mapping || prev.csv_column_mapping,
+              ai_evaluation_frequency: data.ai_evaluation_frequency || prev.ai_evaluation_frequency,
+              ai_proposal_detail_level: data.ai_proposal_detail_level || prev.ai_proposal_detail_level,
+              ai_evaluation_enabled: data.ai_evaluation_enabled ?? prev.ai_evaluation_enabled,
+              ai_proposal_enabled: data.ai_proposal_enabled ?? prev.ai_proposal_enabled,
+              ai_advice_enabled: data.ai_advice_enabled ?? prev.ai_advice_enabled,
+              coach_avatar_preset: data.coach_avatar_preset || prev.coach_avatar_preset,
+            };
+            console.log('✅ 設定を更新しました');
+            return newSettings;
+          });
+        }
       }
-
-      if (data) {
-        console.log('📝 データベースから設定を取得:', {
-          timezone: data.timezone,
-          ai_enabled: data.ai_evaluation_enabled
-        });
-
-        // 一度だけsetSettingsを呼ぶ（themeは現在の値を維持）
-        setSettings(prev => {
-          const newSettings = {
-            ...prev,
-            timezone: data.timezone || prev.timezone,
-            time_format: data.time_format || prev.time_format,
-            date_format: data.date_format || prev.date_format,
-            currency: data.currency || prev.currency,
-            csv_format_preset: data.csv_format_preset || prev.csv_format_preset,
-            csv_column_mapping: data.csv_column_mapping || prev.csv_column_mapping,
-            ai_evaluation_frequency: data.ai_evaluation_frequency || prev.ai_evaluation_frequency,
-            ai_proposal_detail_level: data.ai_proposal_detail_level || prev.ai_proposal_detail_level,
-            ai_evaluation_enabled: data.ai_evaluation_enabled ?? prev.ai_evaluation_enabled,
-            ai_proposal_enabled: data.ai_proposal_enabled ?? prev.ai_proposal_enabled,
-            ai_advice_enabled: data.ai_advice_enabled ?? prev.ai_advice_enabled,
-            coach_avatar_preset: data.coach_avatar_preset || prev.coach_avatar_preset,
-          };
-          console.log('✅ 設定を更新しました');
-          return newSettings;
-        });
-      }
+    } finally {
+      console.log('✅ loadUserAndSettings: 完了');
     }
-    console.log('✅ loadUserAndSettings: 完了');
   };
 
   const loadImportHistory = async () => {
     console.log('📥 loadImportHistory: 開始');
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      console.log('⚠️ loadImportHistory: ユーザーなし');
-      return;
-    }
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('⚠️ loadImportHistory: ユーザーなし');
+        return;
+      }
 
-    const { data, error } = await supabase
-      .from('import_history')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('imported_at', { ascending: false })
-      .limit(50);
+      const { data, error } = await supabase
+        .from('import_history')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('imported_at', { ascending: false })
+        .limit(50);
 
-    if (error) {
-      console.error('❌ インポート履歴の読み込みエラー:', error);
-      return;
-    }
+      if (error) {
+        console.error('❌ インポート履歴の読み込みエラー:', error);
+        return;
+      }
 
-    if (data) {
-      setImportHistory(data);
-      console.log(`✅ loadImportHistory: ${data.length}件取得`);
+      if (data) {
+        setImportHistory(data);
+        console.log(`✅ loadImportHistory: ${data.length}件取得`);
+      }
+    } finally {
+      console.log('✅ loadImportHistory: 完了');
     }
   };
 
