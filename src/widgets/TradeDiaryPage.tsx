@@ -1015,6 +1015,11 @@ export default function TradeDiaryPage({ entryId }: TradeDiaryPageProps = {}) {
 
   /* ===== 保存 ===== */
   const savePayload = async () => {
+    if (!useDatabase) {
+      showToast('デモデータには取引ノートを追加できません', 'error');
+      return;
+    }
+
     try {
       const { data: existing } = await supabase
         .from('trade_notes')
