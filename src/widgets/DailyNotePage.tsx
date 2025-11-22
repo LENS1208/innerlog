@@ -156,7 +156,7 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
           .select('*')
           .gte('close_time', utcStart)
           .lte('close_time', utcEnd)
-          .eq('dataset', null)
+          .is('dataset', null)
           .order('close_time', { ascending: true });
 
         if (error) {
