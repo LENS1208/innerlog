@@ -598,6 +598,14 @@ export default function ReportsTimeAxis() {
     };
   }, [filteredTrades]);
 
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
+
   return (
     <div style={{ width: "100%" }}>
 
@@ -1452,14 +1460,6 @@ function LossStreakHeatmap({ trades }: { trades: Trade[] }) {
         }}
       >
         データがありません
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-        読み込み中...
       </div>
     );
   }
