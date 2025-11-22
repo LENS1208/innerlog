@@ -87,6 +87,8 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
             return tradeDate === dateJst;
           });
 
+          console.log(`DailyNotePage CSV mode: dateJst=${dateJst}, total trades=${allTrades.length}, filtered trades=${dayTrades.length}`);
+
           const tradeCount = dayTrades.length;
           const winTrades = dayTrades.filter(t => (t.profitYen || 0) > 0);
           const lossTrades = dayTrades.filter(t => (t.profitYen || 0) < 0);
@@ -141,11 +143,21 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
       setRealKpi(null);
       setRealTrades([]);
       try {
+        // JST日付からUTC範囲を計算（JST 00:00 = UTC 15:00 前日）
+        const jstDate = new Date(dateJst + 'T00:00:00+09:00');
+        const utcStartDate = new Date(jstDate.getTime() - (9 * 60 * 60 * 1000));
+        const utcEndDate = new Date(utcStartDate.getTime() + (24 * 60 * 60 * 1000));
+
+        const utcStart = utcStartDate.toISOString();
+        const utcEnd = utcEndDate.toISOString();
+
+        console.log(`Loading trades for JST date: ${dateJst}, UTC range: ${utcStart} to ${utcEnd}`);
+
         const { data, error } = await supabase
           .from('trades')
           .select('*')
-          .gte('close_time', `${dateJst}T00:00:00Z`)
-          .lt('close_time', `${dateJst}T23:59:59Z`)
+          .gte('close_time', utcStart)
+          .lt('close_time', utcEnd)
           .order('close_time', { ascending: true });
 
         if (error) {
@@ -155,7 +167,17 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
           return;
         }
 
-        const dayTrades = data || [];
+        // JST日付でフィルタリング（タイムゾーン変換後）
+        const allTrades = data || [];
+        const dayTrades = allTrades.filter(t => {
+          const closeTimeUTC = new Date(t.close_time);
+          const closeTimeJST = new Date(closeTimeUTC.getTime() + (9 * 60 * 60 * 1000));
+          const tradeDateJST = closeTimeJST.toISOString().substring(0, 10);
+          return tradeDateJST === dateJst;
+        });
+
+        console.log(`DailyNotePage DB mode: dateJst=${dateJst}, UTC range trades=${allTrades.length}, JST filtered trades=${dayTrades.length}`);
+
         const tradeCount = dayTrades.length;
         const winTrades = dayTrades.filter(t => t.profit > 0);
         const lossTrades = dayTrades.filter(t => t.profit < 0);
@@ -185,13 +207,18 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
         });
 
         setRealTrades(
-          dayTrades.map(t => ({
-            time: new Date(t.close_time).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
-            symbol: t.item,
-            sideJp: t.side === 'BUY' ? '買い' : '売り',
-            pnlYen: Number(t.profit),
-            ticket: t.ticket,
-          }))
+          dayTrades.map(t => {
+            const closeTimeUTC = new Date(t.close_time);
+            const closeTimeJST = new Date(closeTimeUTC.getTime() + (9 * 60 * 60 * 1000));
+            const timeStr = closeTimeJST.toISOString().substring(11, 16); // HH:MM
+            return {
+              time: timeStr,
+              symbol: t.item,
+              sideJp: t.side === 'BUY' ? '買い' : '売り',
+              pnlYen: Number(t.profit),
+              ticket: t.ticket,
+            };
+          })
         );
       } catch (e) {
         console.error('Exception loading day data:', e);
