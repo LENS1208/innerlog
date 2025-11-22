@@ -510,15 +510,23 @@ export async function getAccountSummary(dataset: string = 'default'): Promise<Db
 }
 
 export async function upsertAccountSummary(summary: {
-  balance: number;
-  equity: number;
-  profit: number;
-  deposit: number;
-  withdraw: number;
-  commission: number;
-  swap: number;
+  balance?: number;
+  equity?: number;
+  profit?: number;
+  deposit?: number;
+  withdraw?: number;
+  commission?: number;
+  swap?: number;
   swap_long?: number;
   swap_short?: number;
+  total_deposits?: number;
+  total_withdrawals?: number;
+  xm_points_earned?: number;
+  xm_points_used?: number;
+  total_swap?: number;
+  total_commission?: number;
+  total_profit?: number;
+  closed_pl?: number;
 }): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
@@ -527,15 +535,23 @@ export async function upsertAccountSummary(summary: {
     .from('account_summary')
     .upsert({
       user_id: user.id,
-      balance: summary.balance,
-      equity: summary.equity,
-      profit: summary.profit,
-      deposit: summary.deposit,
-      withdraw: summary.withdraw,
-      commission: summary.commission,
-      swap: summary.swap,
+      balance: summary.balance || 0,
+      equity: summary.equity || 0,
+      profit: summary.profit || 0,
+      deposit: summary.deposit || 0,
+      withdraw: summary.withdraw || 0,
+      commission: summary.commission || 0,
+      swap: summary.swap || 0,
       swap_long: summary.swap_long || 0,
       swap_short: summary.swap_short || 0,
+      total_deposits: summary.total_deposits || 0,
+      total_withdrawals: summary.total_withdrawals || 0,
+      xm_points_earned: summary.xm_points_earned || 0,
+      xm_points_used: summary.xm_points_used || 0,
+      total_swap: summary.total_swap || 0,
+      total_commission: summary.total_commission || 0,
+      total_profit: summary.total_profit || 0,
+      closed_pl: summary.closed_pl || 0,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id' });
 
