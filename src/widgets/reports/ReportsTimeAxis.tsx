@@ -155,10 +155,12 @@ function SegmentDetailsTabs({
 export default function ReportsTimeAxis() {
   const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const metric: MetricType = "profit";
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../../lib/db.service');
@@ -221,6 +223,8 @@ export default function ReportsTimeAxis() {
         }
       } catch (err) {
         console.error("Failed to load trades:", err);
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, [dataset, useDatabase]);
@@ -228,6 +232,14 @@ export default function ReportsTimeAxis() {
   const filteredTrades = useMemo(() => {
     return filterTrades(trades, filters);
   }, [trades, filters]);
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
 
   const dayOfWeekData = useMemo(() => {
     const map = new Map<DayOfWeek, { profit: number; count: number; wins: number }>();

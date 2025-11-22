@@ -195,10 +195,12 @@ function MarketSegmentTabs({
 export default function ReportsMarket() {
   const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const metric: MetricType = "profit";
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../../lib/db.service');
@@ -247,11 +249,21 @@ export default function ReportsMarket() {
         }
       } catch (err) {
         console.error("Failed to load trades:", err);
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, [dataset, useDatabase]);
 
   const filteredTrades = useMemo(() => filterTrades(trades, filters), [trades, filters]);
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
 
   const symbolData = useMemo(() => {
     const map = new Map<string, { profit: number; count: number; wins: number; losses: number }>();

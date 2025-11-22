@@ -164,10 +164,12 @@ function TailEventTabs({
 export default function ReportsRisk() {
   const { dataset, filters, useDatabase } = useDataset();
   const [trades, setTrades] = useState<Trade[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const unit: UnitType = "yen";
 
   useEffect(() => {
     (async () => {
+      setIsLoading(true);
       try {
         if (useDatabase) {
           const { getAllTrades } = await import('../../lib/db.service');
@@ -216,11 +218,21 @@ export default function ReportsRisk() {
         }
       } catch (err) {
         console.error("Failed to load trades:", err);
+      } finally {
+        setIsLoading(false);
       }
     })();
   }, [dataset, useDatabase]);
 
   const filteredTrades = useMemo(() => filterTrades(trades, filters), [trades, filters]);
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
 
   const extractSetup = (t: Trade): string => {
     const text = (t.comment || t.memo || "").toLowerCase();
