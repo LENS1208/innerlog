@@ -56,20 +56,24 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
 
       console.log('📊 Demo account summary loaded:', demoData);
 
+      // Get account summary from CSV parsing (bonus_credit, deposit, withdraw)
+      const csvSummary = (window as any)._csvAccountSummary || {};
+
       const summaryData: DbAccountSummary = {
         id: 'demo',
         user_id: 'demo',
         balance: demoData?.balance || 0,
         equity: demoData?.equity || 0,
         profit: demoData?.profit || 0,
-        deposit: demoData?.deposit || 0,
-        withdraw: demoData?.withdraw || 0,
+        deposit: demoData?.deposit || csvSummary.deposit || 0,
+        withdraw: demoData?.withdraw || csvSummary.withdraw || 0,
         commission: demoData?.commission || 0,
         swap: demoData?.swap || 0,
         swap_long: demoData?.swap_long || 0,
         swap_short: demoData?.swap_short || 0,
         swap_positive: demoData?.swap_positive || 0,
         swap_negative: Math.abs(demoData?.swap_negative || 0),
+        bonus_credit: demoData?.bonus_credit || csvSummary.bonus_credit || 0,
         updated_at: new Date().toISOString(),
       };
 
@@ -110,9 +114,10 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
     equity: 0,
     profit: 0,
     commission: 0,
+    bonus_credit: 0,
   };
 
-  const hasXmPoints = false;
+  const hasXmPoints = summaryData.bonus_credit !== undefined && summaryData.bonus_credit > 0;
   const hasSwapBreakdown = summaryData.swap_positive !== undefined && summaryData.swap_negative !== undefined;
 
   return (
@@ -138,6 +143,19 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         </div>
         <div className="kpi-desc">累計出金額の合計</div>
       </div>
+
+      {hasXmPoints && (
+        <div className="kpi-card">
+          <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+            XMポイント
+            <HelpIcon text="XMポイント（ロイヤルティポイント）を口座資金に変換した合計額です。取引ごとに獲得できるボーナスクレジットです。" />
+          </div>
+          <div className="kpi-value" style={{ color: 'var(--accent-2)' }}>
+            +{Math.floor(summaryData.bonus_credit || 0).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--accent-2)' }}>円</span>
+          </div>
+          <div className="kpi-desc">XMポイント利用累計</div>
+        </div>
+      )}
 
       {peakEquity !== undefined && (
         <div className="kpi-card">
