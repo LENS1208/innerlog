@@ -243,14 +243,6 @@ export default function ReportsStrategy() {
 
   const filteredTrades = useMemo(() => filterTrades(trades, filters), [trades, filters]);
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-        読み込み中...
-      </div>
-    );
-  }
-
   // 戦略タグ抽出（comment または memo から）
   const extractSetup = (t: Trade): string => {
     const text = (t.comment || t.memo || "").toLowerCase();
@@ -450,6 +442,14 @@ export default function ReportsStrategy() {
       exitRanking,
     };
   }, [filteredTrades]);
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
 
   return (
     <div style={{ width: "100%" }}>

@@ -226,14 +226,6 @@ export default function ReportsRisk() {
 
   const filteredTrades = useMemo(() => filterTrades(trades, filters), [trades, filters]);
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-        読み込み中...
-      </div>
-    );
-  }
-
   const extractSetup = (t: Trade): string => {
     const text = (t.comment || t.memo || "").toLowerCase();
     if (text.includes("breakout") || text.includes("ブレイクアウト")) return "Breakout";
@@ -478,6 +470,14 @@ export default function ReportsRisk() {
     return (
       <div style={{ width: "100%", padding: 40, textAlign: "center" }}>
         <p style={{ fontSize: 16, color: "var(--muted)" }}>データがありません。フィルター条件を変更してください。</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
       </div>
     );
   }

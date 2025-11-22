@@ -233,14 +233,6 @@ export default function ReportsTimeAxis() {
     return filterTrades(trades, filters);
   }, [trades, filters]);
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-        読み込み中...
-      </div>
-    );
-  }
-
   const dayOfWeekData = useMemo(() => {
     const map = new Map<DayOfWeek, { profit: number; count: number; wins: number }>();
     filteredTrades.forEach((t) => {
@@ -1460,6 +1452,14 @@ function LossStreakHeatmap({ trades }: { trades: Trade[] }) {
         }}
       >
         データがありません
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
       </div>
     );
   }

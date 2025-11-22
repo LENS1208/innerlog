@@ -257,14 +257,6 @@ export default function ReportsMarket() {
 
   const filteredTrades = useMemo(() => filterTrades(trades, filters), [trades, filters]);
 
-  if (isLoading) {
-    return (
-      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
-        読み込み中...
-      </div>
-    );
-  }
-
   const symbolData = useMemo(() => {
     const map = new Map<string, { profit: number; count: number; wins: number; losses: number }>();
     filteredTrades.forEach((t) => {
@@ -531,6 +523,14 @@ export default function ReportsMarket() {
       };
     });
   }, [symbolData, filteredTrades]);
+
+  if (isLoading) {
+    return (
+      <div style={{ padding: 40, textAlign: 'center', color: 'var(--muted)' }}>
+        読み込み中...
+      </div>
+    );
+  }
 
   return (
     <div style={{ width: "100%" }}>
