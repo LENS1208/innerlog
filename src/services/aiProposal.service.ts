@@ -49,6 +49,7 @@ export async function saveProposal(
       ideas: proposalData.ideas,
       factors: proposalData.factors,
       notes: proposalData.notes,
+      proposal_data: proposalData,
       is_fixed: true,
       prompt,
     })
@@ -175,6 +176,7 @@ export async function regenerateProposal(
       ideas: proposalData.ideas,
       factors: proposalData.factors,
       notes: proposalData.notes,
+      proposal_data: proposalData,
       is_fixed: true,
       prompt: prompt || parent.prompt,
       parent_id: parentId,
