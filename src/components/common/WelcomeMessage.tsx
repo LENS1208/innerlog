@@ -9,10 +9,10 @@ export function WelcomeMessage({ onDismiss }: WelcomeMessageProps) {
     <div
       style={{
         padding: '20px 24px',
-        background: 'linear-gradient(135deg, var(--accent-light, #e3f2fd) 0%, var(--accent-lighter, #f0f7ff) 100%)',
+        background: 'var(--accent-bg)',
         borderRadius: '12px',
         marginBottom: '20px',
-        border: '1px solid var(--accent-border, #90caf9)',
+        border: '1px solid var(--accent-border)',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
       }}
     >
@@ -32,7 +32,7 @@ export function WelcomeMessage({ onDismiss }: WelcomeMessageProps) {
               margin: '0 0 16px 0',
               fontSize: '14px',
               lineHeight: '1.6',
-              color: 'var(--ink-light, #4a5568)',
+              color: 'var(--muted)',
             }}
           >
             まずはデモデータで機能をお試しください。
