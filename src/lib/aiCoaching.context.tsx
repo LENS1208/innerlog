@@ -90,15 +90,7 @@ export function AICoachingProvider({ children }: { children: React.ReactNode }) 
         return newMap;
       });
 
-      setCurrentTask({
-        dataset,
-        status: 'completed',
-        result,
-      });
-
-      setTimeout(() => {
-        setCurrentTask(null);
-      }, 3000);
+      setCurrentTask(null);
 
     } catch (error: any) {
       if (error.name === 'AbortError') {
