@@ -477,6 +477,8 @@ export type DbAccountSummary = {
   swap_positive?: number;
   swap_negative?: number;
   bonus_credit?: number;
+  xm_points_earned?: number;
+  xm_points_used?: number;
   updated_at: string;
 };
 

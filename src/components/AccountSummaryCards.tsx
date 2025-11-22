@@ -74,6 +74,8 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         swap_positive: demoData?.swap_positive || 0,
         swap_negative: Math.abs(demoData?.swap_negative || 0),
         bonus_credit: demoData?.bonus_credit || csvSummary.bonus_credit || 0,
+        xm_points_earned: demoData?.xm_points_earned || csvSummary.xm_points_earned || 0,
+        xm_points_used: demoData?.xm_points_used || csvSummary.xm_points_used || 0,
         updated_at: new Date().toISOString(),
       };
 
@@ -115,9 +117,12 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
     profit: 0,
     commission: 0,
     bonus_credit: 0,
+    xm_points_earned: 0,
+    xm_points_used: 0,
   };
 
-  const hasXmPoints = summaryData.bonus_credit !== undefined && summaryData.bonus_credit > 0;
+  const hasXmPointsEarned = summaryData.xm_points_earned !== undefined && summaryData.xm_points_earned > 0;
+  const hasXmPointsUsed = summaryData.xm_points_used !== undefined && summaryData.xm_points_used > 0;
   const hasSwapBreakdown = summaryData.swap_positive !== undefined && summaryData.swap_negative !== undefined;
 
   return (
@@ -144,19 +149,6 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         <div className="kpi-desc">累計出金額の合計</div>
       </div>
 
-      {hasXmPoints && (
-        <div className="kpi-card">
-          <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
-            XMポイント
-            <HelpIcon text="XMポイント（ロイヤルティポイント）を口座資金に変換した合計額です。取引ごとに獲得できるボーナスクレジットです。" />
-          </div>
-          <div className="kpi-value" style={{ color: 'var(--accent-2)' }}>
-            +{Math.floor(summaryData.bonus_credit || 0).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--accent-2)' }}>円</span>
-          </div>
-          <div className="kpi-desc">XMポイント利用累計</div>
-        </div>
-      )}
-
       {peakEquity !== undefined && (
         <div className="kpi-card">
           <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
@@ -167,6 +159,32 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
             +{peakEquity.toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--accent-2)' }}>円</span>
           </div>
           <div className="kpi-desc">累積損益のピーク値</div>
+        </div>
+      )}
+
+      {hasXmPointsEarned && (
+        <div className="kpi-card">
+          <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+            獲得XMポイント
+            <HelpIcon text="XMポイント（ロイヤルティポイント）を口座資金に変換した合計額です。取引ごとに獲得できるボーナスクレジットです。" />
+          </div>
+          <div className="kpi-value" style={{ color: 'var(--accent-2)' }}>
+            +{Math.floor(summaryData.xm_points_earned || 0).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--accent-2)' }}>円</span>
+          </div>
+          <div className="kpi-desc">Credit In-XMP累計</div>
+        </div>
+      )}
+
+      {hasXmPointsUsed && (
+        <div className="kpi-card">
+          <div className="kpi-title" style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 15, fontWeight: 'bold', color: 'var(--muted)', margin: '0 0 8px' }}>
+            利用XMポイント
+            <HelpIcon text="ボーナスクレジットの失効や使用により減少した金額の合計です。" />
+          </div>
+          <div className="kpi-value" style={{ color: 'var(--loss)' }}>
+            -{Math.floor(summaryData.xm_points_used || 0).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: 'var(--loss)' }}>円</span>
+          </div>
+          <div className="kpi-desc">Credit Out累計</div>
         </div>
       )}
 
