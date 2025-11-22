@@ -143,13 +143,11 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
       setRealKpi(null);
       setRealTrades([]);
       try {
-        // JST日付からUTC範囲を計算（JST 00:00 = UTC 15:00 前日）
-        const jstDate = new Date(dateJst + 'T00:00:00+09:00');
-        const utcStartDate = new Date(jstDate.getTime() - (9 * 60 * 60 * 1000));
-        const utcEndDate = new Date(utcStartDate.getTime() + (24 * 60 * 60 * 1000));
-
-        const utcStart = utcStartDate.toISOString();
-        const utcEnd = utcEndDate.toISOString();
+        // JST日付からUTC範囲を計算
+        // JST 2025-10-15 00:00:00 = UTC 2025-10-14 15:00:00
+        // JST 2025-10-16 00:00:00 = UTC 2025-10-15 15:00:00
+        const utcStart = `${dateJst}T00:00:00+09:00`;
+        const utcEnd = `${dateJst}T23:59:59.999+09:00`;
 
         console.log(`Loading trades for JST date: ${dateJst}, UTC range: ${utcStart} to ${utcEnd}`);
 
@@ -157,7 +155,8 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
           .from('trades')
           .select('*')
           .gte('close_time', utcStart)
-          .lt('close_time', utcEnd)
+          .lte('close_time', utcEnd)
+          .eq('dataset', null)
           .order('close_time', { ascending: true });
 
         if (error) {
@@ -167,16 +166,9 @@ export default function DailyNotePage(props?: Partial<DailyNotePageProps>) {
           return;
         }
 
-        // JST日付でフィルタリング（タイムゾーン変換後）
-        const allTrades = data || [];
-        const dayTrades = allTrades.filter(t => {
-          const closeTimeUTC = new Date(t.close_time);
-          const closeTimeJST = new Date(closeTimeUTC.getTime() + (9 * 60 * 60 * 1000));
-          const tradeDateJST = closeTimeJST.toISOString().substring(0, 10);
-          return tradeDateJST === dateJst;
-        });
+        const dayTrades = data || [];
 
-        console.log(`DailyNotePage DB mode: dateJst=${dateJst}, UTC range trades=${allTrades.length}, JST filtered trades=${dayTrades.length}`);
+        console.log(`DailyNotePage DB mode: dateJst=${dateJst}, filtered trades=${dayTrades.length}`);
 
         const tradeCount = dayTrades.length;
         const winTrades = dayTrades.filter(t => t.profit > 0);
