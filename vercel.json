@@ -7,5 +7,7 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {},
+  "routes": []
 }
