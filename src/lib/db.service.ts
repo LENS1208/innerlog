@@ -527,6 +527,7 @@ export async function upsertAccountSummary(summary: {
   total_commission?: number;
   total_profit?: number;
   closed_pl?: number;
+  bonus_credit?: number;
 }): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
@@ -552,6 +553,7 @@ export async function upsertAccountSummary(summary: {
       total_commission: summary.total_commission || 0,
       total_profit: summary.total_profit || 0,
       closed_pl: summary.closed_pl || 0,
+      bonus_credit: summary.bonus_credit || 0,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id' });
 

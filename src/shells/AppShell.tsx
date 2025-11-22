@@ -636,6 +636,7 @@ export default function AppShell({ children }: Props) {
             total_commission: summary.totalCommission,
             total_profit: summary.totalProfit,
             closed_pl: summary.closedPL,
+            bonus_credit: summary.xmPointsUsed,
           });
           console.log('📊 Account summary saved to database');
         }
