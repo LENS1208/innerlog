@@ -109,6 +109,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
         swap: parsed.summary.totalSwap || 0,
         swap_long: 0,
         swap_short: 0,
+        bonus_credit: parsed.summary.xmPointsEarned || 0,
       });
 
       const dbTrades = trades.map(tradeToDb);
@@ -166,6 +167,7 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
           swap: parsed.summary.totalSwap || 0,
           swap_long: 0,
           swap_short: 0,
+          bonus_credit: parsed.summary.xmPointsEarned || 0,
         });
 
         setMessage(`HTML形式から${trades.length}件の取引データと口座サマリーを読み込みました`);
