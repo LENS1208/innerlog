@@ -12,6 +12,7 @@ import { parseCsvText } from "../lib/csv";
 import { tradeToDb, insertTrades, getTradesCount, deleteAllTrades, upsertAccountSummary } from "../lib/db.service";
 import { parseHtmlStatement, parseFullHtmlStatement, convertHtmlTradesToCsvFormat } from "../lib/html-parser";
 import { showToast } from "../lib/toast";
+import { supabase } from "../lib/supabase";
 
 type MenuItem = { key: string; label: string; active?: boolean };
 type Props = { children: React.ReactNode };
