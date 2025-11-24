@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTheme } from '../lib/theme.context';
 import { getAccentColor } from '../lib/chartColors';
-import logoImgLight from '../assets/inner-log-logo-l.svg';
-import logoImgDark from '../assets/inner-log-logo-d.svg';
+import logoImgLight from '../assets/inner-log-logo-l.png';
+import logoImgDark from '../assets/inner-log-logo-d.png';
 
 export default function SignupPage() {
   const { theme } = useTheme();
