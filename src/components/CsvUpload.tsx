@@ -97,7 +97,9 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
       }
 
       const csvText = convertHtmlTradesToCsvFormat(parsed.trades);
-      const trades = parseCsvText(csvText);
+      const allTrades = parseCsvText(csvText);
+      // balance型のエントリー（入金・出金・ボーナス）を除外
+      const trades = allTrades.filter(t => t.type?.toLowerCase() !== 'balance');
 
       await upsertAccountSummary({
         balance: parsed.summary.balance || 0,
@@ -155,7 +157,9 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
         }
 
         const csvText = convertHtmlTradesToCsvFormat(parsed.trades);
-        trades = parseCsvText(csvText);
+        const allTrades = parseCsvText(csvText);
+        // balance型のエントリー（入金・出金・ボーナス）を除外
+        trades = allTrades.filter(t => t.type?.toLowerCase() !== 'balance');
 
         await upsertAccountSummary({
           balance: parsed.summary.balance || 0,
@@ -172,13 +176,22 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
 
         setMessage(`HTML形式から${trades.length}件の取引データと口座サマリーを読み込みました`);
       } else {
-        trades = parseCsvText(text);
+        const allTrades = parseCsvText(text);
+        // balance型のエントリー（入金・出金・ボーナス）を除外
+        trades = allTrades.filter(t => t.type?.toLowerCase() !== 'balance');
+
         if (trades.length === 0) {
           setMessage('有効な取引データが見つかりませんでした');
           setUploading(false);
           return;
         }
-        setMessage(`${trades.length}件の取引データを読み込みました`);
+
+        const balanceCount = allTrades.length - trades.length;
+        if (balanceCount > 0) {
+          setMessage(`${trades.length}件の取引データを読み込みました（${balanceCount}件の入金・出金エントリーを除外）`);
+        } else {
+          setMessage(`${trades.length}件の取引データを読み込みました`);
+        }
       }
 
       const dbTrades = trades.map(tradeToDb);
