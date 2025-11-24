@@ -228,6 +228,9 @@ function BarSplit({ avgProfit, avgLoss, unit = '円' }: { avgProfit: number; avg
     return Math.round(val).toLocaleString('ja-JP')
   }
 
+  const labelPrefix = unit === 'pips' ? '勝ち平均' : ''
+  const labelSuffix = unit === 'pips' ? '負け平均' : ''
+
   return (
     <div>
       <div style={{ height: 10, borderRadius: 999, background: 'var(--chip)', border: '1px solid var(--line)', display: 'flex', overflow: 'hidden', marginTop: 6 }}>
@@ -235,8 +238,14 @@ function BarSplit({ avgProfit, avgLoss, unit = '円' }: { avgProfit: number; avg
         <div style={{ width: `${lossPct}%`, background: 'rgba(239,68,68,.35)' }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6, fontWeight: 600 }}>
-        <span style={{ color: 'var(--accent-2)' }}>+{formatValue(avgProfit)} <span style={{ fontSize: 12, color: 'var(--accent-2)' }}>{unit}</span></span>
-        <span style={{ color: 'var(--loss)' }}>-{formatValue(avgLoss)} <span style={{ fontSize: 12, color: 'var(--loss)' }}>{unit}</span></span>
+        <span style={{ color: 'var(--accent-2)' }}>
+          {labelPrefix && <span style={{ fontSize: 12, color: 'var(--accent-2)', marginRight: 4 }}>{labelPrefix}</span>}
+          +{formatValue(avgProfit)} <span style={{ fontSize: 12, color: 'var(--accent-2)' }}>{unit}</span>
+        </span>
+        <span style={{ color: 'var(--loss)' }}>
+          {labelSuffix && <span style={{ fontSize: 12, color: 'var(--loss)', marginRight: 4 }}>{labelSuffix}</span>}
+          -{formatValue(avgLoss)} <span style={{ fontSize: 12, color: 'var(--loss)' }}>{unit}</span>
+        </span>
       </div>
     </div>
   )
@@ -354,37 +363,7 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
             {dash.avgPips >= 0 ? '+' : ''}{dash.avgPips.toFixed(1)} <span className="kpi-unit" style={{ color: dash.avgPips < 0 ? 'var(--loss)' : 'var(--accent-2)' }}>pips</span>
           </div>
           <div className="kpi-desc">1取引あたりの平均</div>
-          <div style={{
-            marginTop: 8,
-            display: 'flex',
-            height: 4,
-            borderRadius: 2,
-            overflow: 'hidden',
-            background: 'var(--line)'
-          }}>
-            {dash.avgWinPips > 0 && (
-              <div
-                style={{
-                  width: `${(dash.avgWinPips / (dash.avgWinPips + Math.abs(dash.avgLossPips))) * 100}%`,
-                  background: 'var(--gain)',
-                  transition: 'width 0.3s ease'
-                }}
-              />
-            )}
-            {dash.avgLossPips < 0 && (
-              <div
-                style={{
-                  width: `${(Math.abs(dash.avgLossPips) / (dash.avgWinPips + Math.abs(dash.avgLossPips))) * 100}%`,
-                  background: 'var(--loss)',
-                  transition: 'width 0.3s ease'
-                }}
-              />
-            )}
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
-            <span style={{ color: 'var(--gain)' }}>勝 {dash.avgWinPips >= 0 ? '+' : ''}{dash.avgWinPips.toFixed(1)}</span>
-            <span style={{ color: 'var(--loss)' }}>負 {dash.avgLossPips.toFixed(1)}</span>
-          </div>
+          <BarSplit avgProfit={dash.avgWinPips} avgLoss={Math.abs(dash.avgLossPips)} unit="pips" />
         </div>
       </div>
 
