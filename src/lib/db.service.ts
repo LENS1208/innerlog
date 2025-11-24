@@ -555,47 +555,47 @@ export async function upsertAccountSummary(summary: {
     .eq('user_id', user.id)
     .maybeSingle();
 
-  // 渡された値のみを更新、undefinedの場合は既存の値を保持
+  // 渡された値のみを更新、undefinedの場合は既存の値を保持（既存がなければ0）
   const updateData: any = {
     user_id: user.id,
     updated_at: new Date().toISOString(),
   };
 
   if (summary.balance !== undefined) updateData.balance = summary.balance;
-  else if (existing) updateData.balance = existing.balance;
+  else updateData.balance = existing?.balance ?? 0;
 
   if (summary.equity !== undefined) updateData.equity = summary.equity;
-  else if (existing) updateData.equity = existing.equity;
+  else updateData.equity = existing?.equity ?? 0;
 
   if (summary.profit !== undefined) updateData.profit = summary.profit;
-  else if (existing) updateData.profit = existing.profit;
+  else updateData.profit = existing?.profit ?? 0;
 
   if (summary.deposit !== undefined) updateData.deposit = summary.deposit;
-  else if (existing) updateData.deposit = existing.deposit;
+  else updateData.deposit = existing?.deposit ?? 0;
 
   if (summary.withdraw !== undefined) updateData.withdraw = summary.withdraw;
-  else if (existing) updateData.withdraw = existing.withdraw;
+  else updateData.withdraw = existing?.withdraw ?? 0;
 
   if (summary.commission !== undefined) updateData.commission = summary.commission;
-  else if (existing) updateData.commission = existing.commission;
+  else updateData.commission = existing?.commission ?? 0;
 
   if (summary.swap !== undefined) updateData.swap = summary.swap;
-  else if (existing) updateData.swap = existing.swap;
+  else updateData.swap = existing?.swap ?? 0;
 
   if (summary.swap_long !== undefined) updateData.swap_long = summary.swap_long;
-  else if (existing) updateData.swap_long = existing.swap_long;
+  else updateData.swap_long = existing?.swap_long ?? 0;
 
   if (summary.swap_short !== undefined) updateData.swap_short = summary.swap_short;
-  else if (existing) updateData.swap_short = existing.swap_short;
+  else updateData.swap_short = existing?.swap_short ?? 0;
 
   if (summary.bonus_credit !== undefined) updateData.bonus_credit = summary.bonus_credit;
-  else if (existing) updateData.bonus_credit = existing.bonus_credit;
+  else updateData.bonus_credit = existing?.bonus_credit ?? 0;
 
   if (summary.xm_points_earned !== undefined) updateData.xm_points_earned = summary.xm_points_earned;
-  else if (existing) updateData.xm_points_earned = existing.xm_points_earned;
+  else updateData.xm_points_earned = existing?.xm_points_earned ?? 0;
 
   if (summary.xm_points_used !== undefined) updateData.xm_points_used = summary.xm_points_used;
-  else if (existing) updateData.xm_points_used = existing.xm_points_used;
+  else updateData.xm_points_used = existing?.xm_points_used ?? 0;
 
   const { error } = await supabase
     .from('account_summary')

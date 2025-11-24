@@ -181,30 +181,15 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
           return;
         }
 
-        // balance型エントリーから入金・出金・ボーナス情報を抽出
-        const balanceEntries = allTrades.filter(t => t.type?.toLowerCase() === 'balance');
-        let totalDeposit = 0;
-        let totalWithdraw = 0;
-        let totalBonus = 0;
-
-        balanceEntries.forEach(entry => {
-          const profit = entry.profit || 0;
-          const comment = (entry.comment || '').toLowerCase();
-
-          if (comment.includes('deposit') || comment.includes('入金')) {
-            totalDeposit += profit;
-          } else if (comment.includes('withdraw') || comment.includes('出金')) {
-            totalWithdraw += Math.abs(profit);
-          } else if (comment.includes('xm points') || comment.includes('bonus') || comment.includes('credit')) {
-            totalBonus += profit;
-          }
-        });
+        // parseCsvTextが計算した口座サマリーを取得（window._csvAccountSummary）
+        const csvSummary = (window as any)._csvAccountSummary || { deposit: 0, withdraw: 0, bonus_credit: 0 };
+        console.log('📊 CSV Summary extracted:', csvSummary);
 
         // 口座サマリーに入金・出金情報を保存
         await upsertAccountSummary({
-          deposit: totalDeposit,
-          withdraw: totalWithdraw,
-          bonus_credit: totalBonus,
+          deposit: csvSummary.deposit,
+          withdraw: csvSummary.withdraw,
+          bonus_credit: csvSummary.bonus_credit,
         });
 
         const balanceCount = allTrades.length - trades.length;
