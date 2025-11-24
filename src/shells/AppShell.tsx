@@ -625,6 +625,21 @@ export default function AppShell({ children }: Props) {
         console.log('📄 Parsing as CSV file...');
         trades = parseCsvText(text);
         console.log('📊 Parsed CSV trades:', trades.length);
+
+        // CSVからもsummary情報を取得（window._csvAccountSummaryから）
+        if ((window as any)._csvAccountSummary) {
+          summary = {
+            totalDeposits: (window as any)._csvAccountSummary.totalDeposits || 0,
+            totalWithdrawals: (window as any)._csvAccountSummary.totalWithdrawals || 0,
+            xmPointsEarned: (window as any)._csvAccountSummary.xmPointsEarned || 0,
+            xmPointsUsed: (window as any)._csvAccountSummary.xmPointsUsed || 0,
+            totalSwap: (window as any)._csvAccountSummary.totalSwap || 0,
+            totalCommission: (window as any)._csvAccountSummary.totalCommission || 0,
+            totalProfit: (window as any)._csvAccountSummary.totalProfit || 0,
+            closedPL: (window as any)._csvAccountSummary.closedPL || 0,
+          };
+          console.log('📊 CSV summary from window._csvAccountSummary:', summary);
+        }
       }
 
       if (trades.length > 0) {
