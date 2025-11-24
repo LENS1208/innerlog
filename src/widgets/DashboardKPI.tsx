@@ -340,7 +340,37 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
             {dash.avg >= 0 ? '+' : ''}{Math.round(dash.avg).toLocaleString('ja-JP')} <span className="kpi-unit" style={{ color: dash.avg < 0 ? 'var(--loss)' : 'var(--accent-2)' }}>円/件</span>
           </div>
           <div className="kpi-desc">1取引あたりの平均</div>
-          <BarSplit avgProfit={dash.avgProfit} avgLoss={dash.avgLoss} />
+          <div style={{
+            marginTop: 8,
+            display: 'flex',
+            height: 4,
+            borderRadius: 2,
+            overflow: 'hidden',
+            background: 'var(--line)'
+          }}>
+            {dash.avgProfit > 0 && (
+              <div
+                style={{
+                  width: `${(dash.avgProfit / (dash.avgProfit + dash.avgLoss)) * 100}%`,
+                  background: 'var(--gain)',
+                  transition: 'width 0.3s ease'
+                }}
+              />
+            )}
+            {dash.avgLoss > 0 && (
+              <div
+                style={{
+                  width: `${(dash.avgLoss / (dash.avgProfit + dash.avgLoss)) * 100}%`,
+                  background: 'var(--loss)',
+                  transition: 'width 0.3s ease'
+                }}
+              />
+            )}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, marginTop: 4 }}>
+            <span style={{ color: 'var(--gain)', fontWeight: 600 }}>+{Math.round(dash.avgProfit).toLocaleString('ja-JP')}円</span>
+            <span style={{ color: 'var(--loss)', fontWeight: 600 }}>-{Math.round(dash.avgLoss).toLocaleString('ja-JP')}円</span>
+          </div>
         </div>
       </div>
 
@@ -381,9 +411,9 @@ export default function DashboardKPI({ trades }: { trades: DashTrade[] }) {
               />
             )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
-            <span style={{ color: 'var(--gain)' }}>勝 {dash.avgWinPips >= 0 ? '+' : ''}{dash.avgWinPips.toFixed(1)}</span>
-            <span style={{ color: 'var(--loss)' }}>負 {dash.avgLossPips.toFixed(1)}</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, marginTop: 4 }}>
+            <span style={{ color: 'var(--gain)', fontWeight: 600 }}>{dash.avgWinPips >= 0 ? '+' : ''}{dash.avgWinPips.toFixed(1)}pips</span>
+            <span style={{ color: 'var(--loss)', fontWeight: 600 }}>{dash.avgLossPips.toFixed(1)}pips</span>
           </div>
         </div>
       </div>

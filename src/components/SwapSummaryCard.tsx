@@ -85,23 +85,22 @@ export default function SwapSummaryCard() {
       </div>
       {hasSwapBreakdown ? (
         <>
-          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10 }}>
-            スワップポイントの累計
-          </div>
+          <div className="kpi-desc">スワップポイントの累計</div>
           <div style={{
+            marginTop: 8,
             display: 'flex',
-            height: '12px',
-            borderRadius: '6px',
+            height: 4,
+            borderRadius: 2,
             overflow: 'hidden',
-            background: 'var(--line)',
-            marginBottom: 8
+            background: 'var(--line)'
           }}>
             {summaryData.swap_positive > 0 && (
               <div
                 style={{
-                  background: 'var(--accent-2)',
+                  background: 'var(--gain)',
                   width: `${(summaryData.swap_positive / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
-                  minWidth: summaryData.swap_positive > 0 ? '2px' : '0'
+                  minWidth: summaryData.swap_positive > 0 ? '2px' : '0',
+                  transition: 'width 0.3s ease'
                 }}
                 title={`受取: ${Math.floor(summaryData.swap_positive).toLocaleString('ja-JP')}円`}
               />
@@ -111,15 +110,16 @@ export default function SwapSummaryCard() {
                 style={{
                   background: 'var(--loss)',
                   width: `${(Math.abs(summaryData.swap_negative) / (summaryData.swap_positive + Math.abs(summaryData.swap_negative))) * 100}%`,
-                  minWidth: summaryData.swap_negative < 0 ? '2px' : '0'
+                  minWidth: summaryData.swap_negative < 0 ? '2px' : '0',
+                  transition: 'width 0.3s ease'
                 }}
                 title={`支払: ${Math.floor(Math.abs(summaryData.swap_negative)).toLocaleString('ja-JP')}円`}
               />
             )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-            <span style={{ color: 'var(--accent-2)', fontWeight: 600 }}>+{Math.floor(summaryData.swap_positive || 0).toLocaleString('ja-JP')} 円</span>
-            <span style={{ color: 'var(--loss)', fontWeight: 600 }}>-{Math.floor(Math.abs(summaryData.swap_negative || 0)).toLocaleString('ja-JP')} 円</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, marginTop: 4 }}>
+            <span style={{ color: 'var(--gain)', fontWeight: 600 }}>+{Math.floor(summaryData.swap_positive || 0).toLocaleString('ja-JP')}円</span>
+            <span style={{ color: 'var(--loss)', fontWeight: 600 }}>-{Math.floor(Math.abs(summaryData.swap_negative || 0)).toLocaleString('ja-JP')}円</span>
           </div>
         </>
       ) : (
