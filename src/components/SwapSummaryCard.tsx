@@ -25,6 +25,10 @@ export default function SwapSummaryCard() {
     try {
       if (useDatabase) {
         const data = await getAccountSummary('default');
+        // 新しい列が存在する場合は古い列にコピー
+        if (data) {
+          data.swap = data.total_swap || data.swap;
+        }
         setSummary(data);
         setLoading(false);
         return;
@@ -44,14 +48,15 @@ export default function SwapSummaryCard() {
         balance: demoData?.balance || 0,
         equity: demoData?.equity || 0,
         profit: demoData?.profit || 0,
-        deposit: demoData?.deposit || 0,
-        withdraw: demoData?.withdraw || 0,
+        deposit: demoData?.total_deposits || demoData?.deposit || 0,
+        withdraw: demoData?.total_withdrawals || demoData?.withdraw || 0,
         commission: demoData?.commission || 0,
-        swap: demoData?.swap || 0,
+        swap: demoData?.total_swap || demoData?.swap || 0,
         swap_long: demoData?.swap_long || 0,
         swap_short: demoData?.swap_short || 0,
         swap_positive: demoData?.swap_positive || 0,
         swap_negative: Math.abs(demoData?.swap_negative || 0),
+        total_swap: demoData?.total_swap || 0,
         updated_at: new Date().toISOString(),
       };
 

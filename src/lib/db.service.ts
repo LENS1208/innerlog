@@ -511,6 +511,12 @@ export type DbAccountSummary = {
   bonus_credit?: number;
   xm_points_earned?: number;
   xm_points_used?: number;
+  total_deposits?: number;
+  total_withdrawals?: number;
+  total_swap?: number;
+  total_commission?: number;
+  total_profit?: number;
+  closed_pl?: number;
   updated_at: string;
 };
 

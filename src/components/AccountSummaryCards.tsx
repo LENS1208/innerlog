@@ -38,6 +38,15 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
           swap_negative: data?.swap_negative,
           hasSwapBreakdown: data?.swap_positive !== undefined && data?.swap_negative !== undefined
         });
+
+        // 新しい列が存在する場合は古い列にコピー
+        if (data) {
+          data.deposit = data.total_deposits || data.deposit;
+          data.withdraw = data.total_withdrawals || data.withdraw;
+          data.swap = data.total_swap || data.swap;
+          console.log('💰 Using deposits:', data.deposit, 'withdrawals:', data.withdraw, 'swap:', data.swap);
+        }
+
         setSummary(data);
         setError(null);
         setLoading(false);
@@ -66,10 +75,10 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         balance: demoData?.balance || 0,
         equity: demoData?.equity || 0,
         profit: demoData?.profit || 0,
-        deposit: demoData?.deposit || csvSummary.deposit || 0,
-        withdraw: demoData?.withdraw || csvSummary.withdraw || 0,
+        deposit: demoData?.total_deposits || demoData?.deposit || csvSummary.deposit || 0,
+        withdraw: demoData?.total_withdrawals || demoData?.withdraw || csvSummary.withdraw || 0,
         commission: demoData?.commission || 0,
-        swap: demoData?.swap || 0,
+        swap: demoData?.total_swap || demoData?.swap || 0,
         swap_long: demoData?.swap_long || 0,
         swap_short: demoData?.swap_short || 0,
         swap_positive: demoData?.swap_positive || 0,
@@ -77,6 +86,9 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
         bonus_credit: demoData?.bonus_credit || csvSummary.bonus_credit || 0,
         xm_points_earned: demoData?.xm_points_earned || csvSummary.xm_points_earned || 0,
         xm_points_used: demoData?.xm_points_used || csvSummary.xm_points_used || 0,
+        total_deposits: demoData?.total_deposits || csvSummary.totalDeposits || 0,
+        total_withdrawals: demoData?.total_withdrawals || csvSummary.totalWithdrawals || 0,
+        total_swap: demoData?.total_swap || csvSummary.totalSwap || 0,
         updated_at: new Date().toISOString(),
       };
 
