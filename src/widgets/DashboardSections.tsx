@@ -20,6 +20,7 @@ type TradeWithProfit = {
   comment?: string
   memo?: string
   pips?: number
+  type?: string
 }
 
 function getProfit(t: TradeWithProfit): number {
@@ -53,9 +54,11 @@ function formatDateSafe(date: Date): string {
 export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
   const { theme } = useTheme()
   const { labels, equity, data, options } = useMemo(() => {
+    // balance型を除外して、純粋な取引のみを表示
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
-      return !isNaN(date.getTime())
+      const isBalance = t.type?.toLowerCase() === 'balance'
+      return !isNaN(date.getTime()) && !isBalance
     })
     const sorted = [...validTrades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
     const labels = sorted.map(t => parseDateTime(t.datetime || t.time).getTime())
@@ -140,9 +143,11 @@ export function EquityChart({ trades }: { trades: TradeWithProfit[] }) {
 export function DrawdownChart({ trades }: { trades: TradeWithProfit[] }) {
   const { theme } = useTheme()
   const { labels, dd, data, options } = useMemo(() => {
+    // balance型を除外して、純粋な取引のみを表示
     const validTrades = trades.filter(t => {
       const date = parseDateTime(t.datetime || t.time)
-      return !isNaN(date.getTime())
+      const isBalance = t.type?.toLowerCase() === 'balance'
+      return !isNaN(date.getTime()) && !isBalance
     })
     const sorted = [...validTrades].sort((a, b) => parseDateTime(a.datetime || a.time).getTime() - parseDateTime(b.datetime || b.time).getTime())
     const labels = sorted.map(t => parseDateTime(t.datetime || t.time).getTime())

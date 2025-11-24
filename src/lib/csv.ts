@@ -205,6 +205,7 @@ export function parseCsvText(text: string): Trade[] {
 
       // 追加フィールド
       ticket: get(iTicket),
+      type: get(iType), // 'buy', 'sell', 'balance' など
       openTime,
       openPrice: entry || undefined,
       closePrice: exit || undefined,
