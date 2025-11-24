@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase';
 
 export default function SwapSummaryCard() {
   const [summary, setSummary] = useState<DbAccountSummary | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { useDatabase, dataset } = useDataset();
 
   useEffect(() => {
@@ -21,6 +21,7 @@ export default function SwapSummaryCard() {
   }, [useDatabase, dataset]);
 
   const loadSummary = async () => {
+    setLoading(true);
     try {
       if (useDatabase) {
         const data = await getAccountSummary('default');
@@ -62,7 +63,7 @@ export default function SwapSummaryCard() {
     }
   };
 
-  if (loading) {
+  if (loading && !summary) {
     return null;
   }
 

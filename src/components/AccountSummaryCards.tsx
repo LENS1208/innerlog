@@ -10,7 +10,7 @@ type AccountSummaryCardsProps = {
 
 export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsProps = {}) {
   const [summary, setSummary] = useState<DbAccountSummary | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { useDatabase, dataset } = useDataset();
 
@@ -27,6 +27,7 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
   }, [useDatabase, dataset]);
 
   const loadSummary = async () => {
+    setLoading(true);
     try {
       // データベースモードの場合は実際にデータを取得
       if (useDatabase) {
@@ -97,11 +98,7 @@ export default function AccountSummaryCards({ peakEquity }: AccountSummaryCardsP
     }
   };
 
-  if (loading) {
-    return null;
-  }
-
-  if (error) {
+  if (error && !summary) {
     return null;
   }
 
