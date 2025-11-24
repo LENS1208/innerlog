@@ -419,19 +419,33 @@ export function tradeToDb(trade: Trade): Omit<DbTrade, 'id' | 'created_at'> {
     return dt.replace(/\./g, '-');
   };
 
+  // 必須フィールドのバリデーション
+  const openTime = normalizeDateTime(trade.openTime || trade.datetime);
+  const closeTime = normalizeDateTime(trade.datetime);
+
+  if (!openTime || !closeTime) {
+    console.error('Invalid trade: missing time data', trade);
+    throw new Error(`Invalid trade: missing time data for ticket ${trade.ticket || trade.id}`);
+  }
+
+  if (!trade.ticket && !trade.id) {
+    console.error('Invalid trade: missing ticket/id', trade);
+    throw new Error('Invalid trade: missing ticket or id');
+  }
+
   return {
     ticket: trade.ticket || trade.id,
-    item: (trade.pair || trade.symbol || '').toUpperCase(),
-    side: trade.side,
-    size: trade.volume,
-    open_time: normalizeDateTime(trade.openTime || trade.datetime),
+    item: (trade.pair || trade.symbol || '').toUpperCase() || 'UNKNOWN',
+    side: trade.side || 'LONG',
+    size: trade.volume || 0,
+    open_time: openTime,
     open_price: trade.openPrice || 0,
-    close_time: normalizeDateTime(trade.datetime),
+    close_time: closeTime,
     close_price: trade.closePrice || 0,
     commission: trade.commission || 0,
     swap: trade.swap || 0,
     profit: trade.profitYen || trade.profit || 0,
-    pips: trade.pips,
+    pips: trade.pips || 0,
     sl: trade.stopPrice || null,
     tp: trade.targetPrice || null,
   };
