@@ -33,7 +33,7 @@ export default function SettingsPage() {
   console.log('🚀 SettingsPage component mounted');
 
   const { theme, setTheme } = useTheme();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [traderName, setTraderName] = useState('');
@@ -558,7 +558,7 @@ export default function SettingsPage() {
   };
 
 
-  if (loading) {
+  if (loading && !user) {
     return (
       <div style={{ padding: 16 }}>
         <div>読み込み中...</div>
@@ -566,7 +566,7 @@ export default function SettingsPage() {
     );
   }
 
-  if (!user) {
+  if (!loading && !user) {
     return (
       <div style={{ padding: 16 }}>
         <div className="panel" style={{ padding: 24, textAlign: 'center' }}>
