@@ -65,7 +65,7 @@ const EquityCurvePage: React.FC = () => {
             volume: Number(t.size) || 0,
             profitYen: Number(t.profit),
             profit: Number(t.profit),
-            pips: 0,
+            pips: Number(t.pips) || 0,
             openPrice: Number(t.open_price),
             closePrice: Number(t.close_price),
             memo: t.memo || '',
