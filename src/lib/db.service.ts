@@ -548,30 +548,58 @@ export async function upsertAccountSummary(summary: {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('User not authenticated');
 
+  // 既存のデータを取得
+  const { data: existing } = await supabase
+    .from('account_summary')
+    .select('*')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  // 渡された値のみを更新、undefinedの場合は既存の値を保持
+  const updateData: any = {
+    user_id: user.id,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (summary.balance !== undefined) updateData.balance = summary.balance;
+  else if (existing) updateData.balance = existing.balance;
+
+  if (summary.equity !== undefined) updateData.equity = summary.equity;
+  else if (existing) updateData.equity = existing.equity;
+
+  if (summary.profit !== undefined) updateData.profit = summary.profit;
+  else if (existing) updateData.profit = existing.profit;
+
+  if (summary.deposit !== undefined) updateData.deposit = summary.deposit;
+  else if (existing) updateData.deposit = existing.deposit;
+
+  if (summary.withdraw !== undefined) updateData.withdraw = summary.withdraw;
+  else if (existing) updateData.withdraw = existing.withdraw;
+
+  if (summary.commission !== undefined) updateData.commission = summary.commission;
+  else if (existing) updateData.commission = existing.commission;
+
+  if (summary.swap !== undefined) updateData.swap = summary.swap;
+  else if (existing) updateData.swap = existing.swap;
+
+  if (summary.swap_long !== undefined) updateData.swap_long = summary.swap_long;
+  else if (existing) updateData.swap_long = existing.swap_long;
+
+  if (summary.swap_short !== undefined) updateData.swap_short = summary.swap_short;
+  else if (existing) updateData.swap_short = existing.swap_short;
+
+  if (summary.bonus_credit !== undefined) updateData.bonus_credit = summary.bonus_credit;
+  else if (existing) updateData.bonus_credit = existing.bonus_credit;
+
+  if (summary.xm_points_earned !== undefined) updateData.xm_points_earned = summary.xm_points_earned;
+  else if (existing) updateData.xm_points_earned = existing.xm_points_earned;
+
+  if (summary.xm_points_used !== undefined) updateData.xm_points_used = summary.xm_points_used;
+  else if (existing) updateData.xm_points_used = existing.xm_points_used;
+
   const { error } = await supabase
     .from('account_summary')
-    .upsert({
-      user_id: user.id,
-      balance: summary.balance || 0,
-      equity: summary.equity || 0,
-      profit: summary.profit || 0,
-      deposit: summary.deposit || 0,
-      withdraw: summary.withdraw || 0,
-      commission: summary.commission || 0,
-      swap: summary.swap || 0,
-      swap_long: summary.swap_long || 0,
-      swap_short: summary.swap_short || 0,
-      total_deposits: summary.total_deposits || 0,
-      total_withdrawals: summary.total_withdrawals || 0,
-      xm_points_earned: summary.xm_points_earned || 0,
-      xm_points_used: summary.xm_points_used || 0,
-      total_swap: summary.total_swap || 0,
-      total_commission: summary.total_commission || 0,
-      total_profit: summary.total_profit || 0,
-      closed_pl: summary.closed_pl || 0,
-      bonus_credit: summary.bonus_credit || 0,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: 'user_id' });
+    .upsert(updateData, { onConflict: 'user_id' });
 
   if (error) throw error;
 }

@@ -55,16 +55,11 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
 
       const closedPL = totalCommission + totalSwap + totalProfit;
 
+      // 既存の入金・出金情報を保持するため、undefined で渡す
       await upsertAccountSummary({
-        balance: 0,
-        equity: 0,
         profit: totalProfit,
-        deposit: 0,
-        withdraw: 0,
         commission: totalCommission,
         swap: totalSwap,
-        swap_long: 0,
-        swap_short: 0,
       });
 
       setMessage(`✅ サマリーを計算しました: ${trades.length}件の取引から`);
@@ -185,6 +180,32 @@ export default function CsvUpload({ useDatabase, onToggleDatabase, loading, data
           setUploading(false);
           return;
         }
+
+        // balance型エントリーから入金・出金・ボーナス情報を抽出
+        const balanceEntries = allTrades.filter(t => t.type?.toLowerCase() === 'balance');
+        let totalDeposit = 0;
+        let totalWithdraw = 0;
+        let totalBonus = 0;
+
+        balanceEntries.forEach(entry => {
+          const profit = entry.profit || 0;
+          const comment = (entry.comment || '').toLowerCase();
+
+          if (comment.includes('deposit') || comment.includes('入金')) {
+            totalDeposit += profit;
+          } else if (comment.includes('withdraw') || comment.includes('出金')) {
+            totalWithdraw += Math.abs(profit);
+          } else if (comment.includes('xm points') || comment.includes('bonus') || comment.includes('credit')) {
+            totalBonus += profit;
+          }
+        });
+
+        // 口座サマリーに入金・出金情報を保存
+        await upsertAccountSummary({
+          deposit: totalDeposit,
+          withdraw: totalWithdraw,
+          bonus_credit: totalBonus,
+        });
 
         const balanceCount = allTrades.length - trades.length;
         if (balanceCount > 0) {
