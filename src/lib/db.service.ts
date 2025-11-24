@@ -137,8 +137,17 @@ export async function getTradesCount(): Promise<number> {
 }
 
 export async function deleteAllTrades(): Promise<void> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('User not authenticated');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error('❌ Auth error in deleteAllTrades:', authError);
+    throw new Error('Authentication error: ' + authError.message);
+  }
+
+  if (!user) {
+    console.warn('⚠️ No user found in deleteAllTrades, skipping deletion');
+    return; // ユーザーがいない場合は何もしない（エラーにしない）
+  }
 
   // Only delete user-uploaded trades (dataset is null), keep demo data (A, B, C)
   const { error } = await supabase
@@ -163,8 +172,17 @@ export async function getTradeByTicket(ticket: string): Promise<DbTrade | null> 
 }
 
 export async function insertTrades(trades: Omit<DbTrade, 'id' | 'created_at' | 'user_id' | 'dataset'>[]): Promise<void> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('User not authenticated');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error('❌ Auth error in insertTrades:', authError);
+    throw new Error('Authentication error: ' + authError.message);
+  }
+
+  if (!user) {
+    console.error('❌ No user found in insertTrades');
+    throw new Error('User not authenticated');
+  }
 
   const tradesWithUser = trades.map(trade => ({
     ...trade,
@@ -545,8 +563,17 @@ export async function upsertAccountSummary(summary: {
   closed_pl?: number;
   bonus_credit?: number;
 }): Promise<void> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('User not authenticated');
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error('❌ Auth error in upsertAccountSummary:', authError);
+    throw new Error('Authentication error: ' + authError.message);
+  }
+
+  if (!user) {
+    console.error('❌ No user found in upsertAccountSummary');
+    throw new Error('User not authenticated');
+  }
 
   // 既存のデータを取得
   const { data: existing } = await supabase
